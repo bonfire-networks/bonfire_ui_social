@@ -46,7 +46,7 @@
           <div
             data-id="remote_media"
             data-video={true}
-            class="h-full sticky bg-base-100 z-[9999999999999]"
+            class="h-full sticky bg-base-100 z-fixed"
           >
             <Bonfire.UI.Social.Activity.RemoteMediaLive 
             id={deterministic_dom_id(__MODULE__, @media, @showing_within, @parent_id)}

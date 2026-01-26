@@ -374,7 +374,7 @@
                             {#match embed_url when is_binary(embed_url)}
                             {#if !(@show_embed || @autoplay) && socket_connected?(@__context__)}
                               {!-- Preview thumbnail with action buttons overlay --}
-                              <div id={"preview-#{id(@media)}"} class="relative">
+                              <div id={deterministic_dom_id(__MODULE__, id(@media), "preview", @parent_id)} class="relative">
                                 <LazyImage
                                   parent_id={deterministic_dom_id(__MODULE__, id(@media), "preview", @parent_id)}
                                   class="w-full aspect-video object-cover"

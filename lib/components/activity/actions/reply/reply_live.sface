@@ -1,34 +1,22 @@
-<div data-role="reply_action" class="relative z-20 flex items-center">
+<div data-role="reply_action" class="relative flex items-center">
   {#case (current_user(@__context__) == nil or @object_type == Bonfire.Data.Social.Message or
        (@object_boundary && Bonfire.Boundaries.can?(@__context__, :reply, @object_boundary))) ||
       !@object_boundary}
     {#match true}
-      <button
-        data-role="reply_enabled"
-        class={@class}
-        data-id="action_reply"
-        data-tip={l("Reply")}
-        phx-click={if @event_target || @activity_component_id,
-          do:
-            Bonfire.Social.Feeds.LiveHandler.reply_to_activity(
-              @event_target || "##{@activity_component_id}"
-            ),
+      <Bonfire.UI.Common.DesignSystem.icon_button
+        icon="ph:chat-circle-duotone"
+        aria_label={l("Reply")}
+        variant="ghost"
+        tooltip={l("Reply")}
+        tooltip_position="bottom"
+        phx_click={if @event_target || @activity_component_id,
+          do: Bonfire.Social.Feeds.LiveHandler.reply_to_activity(@event_target || "##{@activity_component_id}"),
           else: "Bonfire.Social.Threads:reply"}
-        phx-value-id={@object_id}
-        title={l("Reply")}
-      >
-        {!-- x-on:click={"show_smart_input('#{l("Reply")}')"} --}
-        <#Icon
-          iconify="ph:chat-circle-duotone"
-          class="w-5 h-5 group-hover:text-primary text-base-content/50"
-        />
-        <!-- "fill-base-content group-hover:fill-base-300": @reply_btn_text -->
-        <span class="sr-only">{l("Reply")}</span>
-        {!-- <span :if={@reply_btn_text} class="text-primary/80">
-          ({@reply_count})
-        </span> --}
-      </button>
-      {!-- {/if} --}
+        phx_values={%{id: @object_id}}
+        class={"text-base-content/50 hover:text-primary", @class}
+        data-role="reply_enabled"
+        data-id="action_reply"
+      />
       <span
         data-role="reply_count"
         :if={Bonfire.Common.Settings.get([:ui, :show_activity_counts], false, @__context__) &&
@@ -39,19 +27,15 @@
       </span>
     {#match _}
       {#if @object_boundary}
-        <button
-          type="button"
+        <Bonfire.UI.Common.DesignSystem.icon_button
+          icon="ph:chat-circle-duotone"
+          aria_label={@cannot_reply_text || l("Cannot reply")}
+          variant="ghost"
+          disabled={true}
+          class="text-base-content/20"
           data-role="reply_disabled"
-          class="btn btn-disabled btn-circle btn-sm cursor-not-allowed"
-          tabindex="-1"
-          role="button"
-          aria-disabled="true"
           data-id="action_reply"
-          title={l("You can't reply to this activity")}
-        >
-          <#Icon iconify="ph:chat-circle-duotone" class="w-5 h-5" />
-          <span class={if !@cannot_reply_text, do: "sr-only"}>{@cannot_reply_text || l("Cannot Reply")}</span>
-        </button>
+        />
         <span
           :if={Bonfire.Common.Settings.get([:ui, :show_activity_counts], false, @__context__) &&
             e(@reply_count, 0) > 0}

@@ -37,14 +37,13 @@ TODO: use preloaded boundaries for can? when available
   </:open_btn>
 
   <:action_btns>
-    <button
-      phx-click={@action || if @form_opts == %{}, do: "Bonfire.Social.Objects:delete"}
-      phx-value-id={id(@object)}
-      phx-disable-with={l("Deleting...")}
-      phx-value-redirect_after={@redirect_after}
-      class="normal-case  btn btn-error btn-sm"
+    <Bonfire.UI.Common.DesignSystem.button
+      variant="danger"
+      phx_click={@action || if @form_opts == %{}, do: "Bonfire.Social.Objects:delete"}
+      phx_values={%{id: id(@object), redirect_after: @redirect_after}}
+      loading_text={l("Deleting...")}
     >
-      <span class="truncate ellipsis">{l("Delete")} {e(@object_type_readable, l("object"))}</span>
-    </button>
+      {l("Delete")} {e(@object_type_readable, l("object"))}
+    </Bonfire.UI.Common.DesignSystem.button>
   </:action_btns>
 </OpenModalLive>

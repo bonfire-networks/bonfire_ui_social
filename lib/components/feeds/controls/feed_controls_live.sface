@@ -39,7 +39,7 @@
 
         <ul
           tabindex="0"
-          class="tooltip z-[999] menu bg-base-100 divide-y divide-base-content/20 border pt-0 border-base-content/20 shadow rounded-box absolute top-0 right-0 hidden w-72"
+          class="tooltip z-dropdown menu bg-base-100 divide-y divide-base-content/20 border pt-0 border-base-content/20 shadow rounded-box absolute top-0 right-0 hidden w-72"
         >
           {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
             <div class="pt-2" data-scope="boosts">
@@ -290,7 +290,7 @@
 
         <ul
           tabindex="0"
-          class="tooltip z-[999] menu bg-base-100 pt-0 shadow border border-base-content/20 rounded-box w-72 absolute top-0 right-0 hidden"
+          class="tooltip z-dropdown menu bg-base-100 pt-0 shadow border border-base-content/20 rounded-box w-72 absolute top-0 right-0 hidden"
         >
           <li>
             <a
@@ -349,7 +349,7 @@
         </label>
         <ul
           tabindex="0"
-          class="tooltip z-[999] menu bg-base-100 shadow border border-base-content/20 rounded-box w-72 absolute top-0 right-0 hidden"
+          class="tooltip z-dropdown menu bg-base-100 shadow border border-base-content/20 rounded-box w-72 absolute top-0 right-0 hidden"
         >
           <Bonfire.UI.Social.FeedExtraControlsLive
             event_target={@event_target}
