@@ -1,0 +1,131 @@
+{#case current_user(@__context__)}
+  {#match nil}
+    {!-- Not shown for logged out users --}
+  {#match current_user}
+    {#case load(current_user, @limit)}
+      {#match [events: []]}
+        {!-- Empty state with warm, inviting aesthetic --}
+        <aside class="events-widget events-widget--empty w-full rounded-2xl overflow-hidden" aria-label={l("Upcoming Events")}>
+          {!-- Decorative header strip --}
+          <div class="h-2 bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400"></div>
+
+          <div class="p-5 bg-base-100 border border-t-0 border-base-content/10 rounded-b-2xl">
+            <div class="flex flex-col items-center justify-center py-8 text-center">
+              {!-- Stylized calendar illustration --}
+              <div class="relative mb-4">
+                <div class="w-16 h-18 rounded-xl bg-gradient-to-br from-base-200 to-base-300 shadow-sm flex flex-col overflow-hidden">
+                  <div class="h-4 bg-gradient-to-r from-amber-400/80 to-orange-400/80"></div>
+                  <div class="flex-1 flex items-center justify-center">
+                    <#Icon iconify="ph:calendar-blank-duotone" class="w-8 h-8 text-base-content/20" />
+                  </div>
+                </div>
+                {!-- Decorative dots --}
+                <div class="absolute -top-1 left-3 w-1.5 h-1.5 rounded-full bg-base-content/20"></div>
+                <div class="absolute -top-1 right-3 w-1.5 h-1.5 rounded-full bg-base-content/20"></div>
+              </div>
+
+              <p class="text-base-content/70 text-sm font-medium mb-1">
+                {l("No upcoming events")}
+              </p>
+              <p class="text-base-content/40 text-xs max-w-[220px] leading-relaxed">
+                {l("Events from people and groups you follow will appear here")}
+              </p>
+            </div>
+          </div>
+        </aside>
+
+      {#match [events: events]}
+        <aside class="events-widget w-full rounded-2xl overflow-hidden" aria-label={l("Upcoming Events")}>
+          {!-- Warm gradient header strip like calendar binding --}
+          <div class="h-2 bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400"></div>
+
+          <div class="bg-base-100 border border-t-0 border-base-content/10 rounded-b-2xl">
+            {!-- Header --}
+            <div class="px-4 pt-4 pb-3 flex items-center justify-between">
+              <h3 class="text-base font-bold tracking-tight text-base-content flex items-center gap-2">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-amber-400 to-orange-500 text-white">
+                  <#Icon iconify="ph:calendar-check-bold" class="w-3.5 h-3.5" />
+                </span>
+                {@widget_title || l("Upcoming")}
+              </h3>
+              <LinkLive
+                to={~p"/feed/events"}
+                class="text-xs font-medium text-base-content/50 hover:text-primary transition-colors duration-200 flex items-center gap-1 group/link"
+              >
+                {l("View all")}
+                <#Icon iconify="ph:arrow-right" class="w-3 h-3 transition-transform duration-200 group-hover/link:translate-x-0.5" />
+              </LinkLive>
+            </div>
+
+            {!-- Events list --}
+            <div class="px-3 pb-3" role="list" aria-label={l("Upcoming events")}>
+              {#for event <- events}
+                <article
+                  class="event-card group relative rounded-xl p-2 -mx-0 transition-all duration-200 hover:bg-base-200/50"
+                  role="listitem"
+                >
+                  <div class="flex gap-3 items-start">
+                    {!-- Date badge - paper calendar aesthetic --}
+                    {#case extract_start_time(event)}
+                      {#match %DateTime{} = dt}
+                        <div class="event-date-badge flex-shrink-0 w-12 rounded-lg overflow-hidden shadow-sm transition-all duration-200 group-hover:shadow-md group-hover:scale-[1.02]">
+                          {!-- Month header --}
+                          <div class="h-4 bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center">
+                            <span class="text-[9px] font-bold uppercase tracking-widest text-white/95">
+                              {Calendar.strftime(dt, "%b")}
+                            </span>
+                          </div>
+                          {!-- Day number --}
+                          <div class="h-10 bg-base-100 flex items-center justify-center border-x border-b border-base-content/10">
+                            <span class="text-xl font-bold tabular-nums text-base-content">
+                              {Calendar.strftime(dt, "%d")}
+                            </span>
+                          </div>
+                        </div>
+                      {#match _}
+                        <div class="flex-shrink-0 w-12 h-14 rounded-lg bg-base-200/80 border border-base-content/10 flex items-center justify-center">
+                          <#Icon iconify="ph:calendar-blank-duotone" class="w-5 h-5 text-base-content/30" />
+                        </div>
+                    {/case}
+
+                    {!-- Event details --}
+                    <div class="flex-1 min-w-0 py-0.5">
+                      {!-- Event name --}
+                      <LinkLive
+                        to={event_url(event) || ~p"/discussion/#{event_id(event)}"}
+                        class="block font-semibold text-sm text-base-content line-clamp-2 leading-snug transition-colors duration-200 group-hover:text-primary"
+                      >
+                        {event_name(event) || l("Untitled event")}
+                      </LinkLive>
+
+                      {!-- Meta info row --}
+                      <div class="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
+                        {!-- Time --}
+                        {#case extract_start_time(event)}
+                          {#match %DateTime{} = dt}
+                            <div class="flex items-center gap-1 text-xs text-base-content/60">
+                              <#Icon iconify="ph:clock" class="w-3 h-3 text-amber-500/80" />
+                              <span>{format_relative_time(dt)}</span>
+                            </div>
+                          {#match _}
+                        {/case}
+
+                        {!-- Location --}
+                        {#case event_location(event)}
+                          {#match nil}
+                          {#match location}
+                            <div class="flex items-center gap-1 text-xs text-base-content/50 max-w-[140px]">
+                              <#Icon iconify="ph:map-pin" class="w-3 h-3 text-rose-400/70 flex-shrink-0" />
+                              <span class="truncate">{location}</span>
+                            </div>
+                        {/case}
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              {/for}
+            </div>
+          </div>
+        </aside>
+    {/case}
+{/case}
