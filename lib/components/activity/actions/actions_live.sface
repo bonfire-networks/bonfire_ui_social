@@ -97,7 +97,7 @@ data-show-plain-actions={!Settings.get(
               myself={@myself}
               object={@object}
               object_id={id(@object)}
-              parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
+              parent_id={@id || @activity_component_id || @parent_id}
               creator={@creator}
               object_type={@object_type}
               object_boundary={@object_boundary}
@@ -140,8 +140,15 @@ data-show-plain-actions={!Settings.get(
               my_bookmark={@my_bookmark}
             />
 
-            <Bonfire.UI.Social.Activity.MoreActionsLive
+            <StatefulComponent
               :if={!@hide_more_actions}
+              module={maybe_component(Bonfire.UI.Social.Activity.MoreActionsLive, @__context__)}
+              id={deterministic_dom_id(
+                Bonfire.UI.Social.Activity.MoreActionsLive,
+                id(@object),
+                "more_actions",
+                @activity_component_id || id(@activity)
+              )}
               object={@object}
               creator={@creator}
               activity={@activity}
@@ -158,7 +165,7 @@ data-show-plain-actions={!Settings.get(
               viewing_main_object={@viewing_main_object}
               activity_component_id={@activity_component_id}
               is_remote={@is_remote}
-              parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
+              parent_id={@id || @activity_component_id || @parent_id}
               published_in={@published_in}
               subject_user={@subject_user}
               participants={@participants}
@@ -176,12 +183,14 @@ data-show-plain-actions={!Settings.get(
           <StatefulComponent
             module={maybe_component(Bonfire.UI.Reactions.BoostActionLive, @__context__)}
             :if={@showing_within != :messages}
-            id={ComponentID.new(
+            id={deterministic_dom_id(
               Bonfire.UI.Reactions.BoostActionLive,
               id(@object),
+              "boost",
               @activity_component_id || id(@activity)
             )}
             object_id={id(@object)}
+            parent_id={@id || @activity_component_id || @parent_id}
             creator={@creator}
             object_type={@object_type}
             object_boundary={@object_boundary}
@@ -196,9 +205,10 @@ data-show-plain-actions={!Settings.get(
 
           <StatefulComponent
             module={maybe_component(Bonfire.UI.Reactions.LikeActionLive, @__context__)}
-            id={ComponentID.new(
+            id={deterministic_dom_id(
               Bonfire.UI.Reactions.LikeActionLive,
               id(@object),
+              "like",
               @activity_component_id || id(@activity)
             )}
             object_id={id(@object)}
@@ -215,9 +225,10 @@ data-show-plain-actions={!Settings.get(
           <StatefulComponent
             module={maybe_component(Bonfire.UI.Reactions.BookmarkActionLive, @__context__)}
             :if={not is_nil(current_user_id(@__context__))}
-            id={ComponentID.new(
+            id={deterministic_dom_id(
               Bonfire.UI.Reactions.BookmarkActionLive,
               id(@object),
+              "bookmark",
               @activity_component_id || id(@activity)
             )}
             object_id={id(@object)}
@@ -225,8 +236,15 @@ data-show-plain-actions={!Settings.get(
             object_boundary={@object_boundary}
           />
 
-          <Bonfire.UI.Social.Activity.MoreActionsLive
+          <StatefulComponent
             :if={!@hide_more_actions}
+            module={maybe_component(Bonfire.UI.Social.Activity.MoreActionsLive, @__context__)}
+            id={deterministic_dom_id(
+              Bonfire.UI.Social.Activity.MoreActionsLive,
+              id(@object),
+              "more_actions",
+              @activity_component_id || id(@activity)
+            )}
             object={@object}
             creator={@creator}
             activity={@activity}
@@ -243,7 +261,7 @@ data-show-plain-actions={!Settings.get(
             viewing_main_object={@viewing_main_object}
             activity_component_id={@activity_component_id}
             is_remote={@is_remote}
-            parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
+            parent_id={@id || @activity_component_id || @parent_id}
             published_in={@published_in}
             subject_user={@subject_user}
             participants={@participants}

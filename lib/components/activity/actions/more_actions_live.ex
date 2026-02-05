@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
-  use Bonfire.UI.Common.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateful_component
   # import Bonfire.UI.Social.Integration
   # alias Bonfire.UI.Common.OpenModalLive
   # alias Bonfire.UI.Social.Integration
@@ -32,24 +32,26 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   slot extra_items, required: false
   slot admin_items, required: false
 
-  def render(assigns) do
-    # TODO: optimise all of this
+  data menu_loaded, :boolean, default: false
 
-    # creator = creator_or_subject(assigns.activity, assigns.object) |> debug("crreator")
-
+  def update(assigns, socket) do
     creator = assigns[:creator]
 
-    assigns
-    # |> prepare()
-    |> assign(
-      #   creator: creator,
-      creator_id: id(creator),
-      # name(assigns.activity, assigns.object, creator)
-      creator_name:
-        e(creator, :profile, :name, nil) || e(creator, :character, :username, nil) ||
-          l("the user")
-    )
-    |> render_sface()
+    {:ok,
+     socket
+     |> assign(assigns)
+     |> assign_new(:menu_loaded, fn -> false end)
+     |> assign(
+       creator_id: id(creator),
+       creator_name:
+         e(creator, :profile, :name, nil) || e(creator, :character, :username, nil) ||
+           l("the user")
+     )}
+  end
+
+  def handle_event("load_menu_content", _params, socket) do
+    debug("load_menu_content event received!")
+    {:noreply, assign(socket, menu_loaded: true)}
   end
 
   def has_my_first_quote(quotes, my_id) when is_list(quotes) and not is_nil(my_id) do

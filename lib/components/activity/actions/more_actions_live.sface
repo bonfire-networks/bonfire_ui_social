@@ -1,9 +1,11 @@
 <div
   data-id="more_menu"
   phx-hook="Tooltip"
+  phx-target={@myself}
+  data-lazy="true"
   data-position="bottom-end"
   data-rendered={@showing_within}
-  id={deterministic_dom_id(__MODULE__, id(@activity), "more_menu", @parent_id)}
+  id={@id}
   aria-haspopup="true"
   class="feed_activity relative"
 >
@@ -21,13 +23,17 @@
   </button>
   <ul
     tabindex="0"
-    class="tooltip z-tooltip menu shadow bg-base-300 rounded-box w-64 absolute top-0 left-0 hidden tooltip-animated"
+    class="tooltip z-tooltip menu shadow bg-base-300 rounded-box w-64 absolute top-0 left-0 hidden"
     role="menu"
-    id={deterministic_dom_id(__MODULE__, id(@activity), "more_menu_content", @parent_id)}
-    phx-update="ignore"
+    id={"#{@id}_content"}
     aria-orientation="vertical"
     aria-labelledby="more-menu"
   >
+    {#if !@menu_loaded}
+      <li class="p-4 flex justify-center">
+        <span class="loading loading-spinner loading-sm" />
+      </li>
+    {#else}
     {#if @object_type == Bonfire.Data.Social.Message}
       <li class="hover:bg-base-100">
         <div class="hover:bg-base-100 cursor-default flex justify-between items-center gap-2">
@@ -550,5 +556,6 @@
     {/if}
 
     <#slot {@admin_items} />
+    {/if}
   </ul>
 </div>
