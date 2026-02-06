@@ -42,7 +42,7 @@ defmodule Bonfire.UI.Social.NotificationsFeedLive do
        #  feed: e(feed, :edges, []),
        #  page_info: e(feed, :page_info, []),
        loading: false,
-       nav_items: Bonfire.Common.ExtensionModule.default_nav(),
+       
        sidebar_widgets: [
          users: [
            secondary: [

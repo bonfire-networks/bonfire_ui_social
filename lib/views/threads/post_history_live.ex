@@ -16,8 +16,7 @@ defmodule Bonfire.UI.Social.PostHistoryLive do
        object: nil,
        object_id: nil,
        post_id: nil,
-       back: true,
-       nav_items: Bonfire.Common.ExtensionModule.default_nav()
+       back: true
      )}
   end
 

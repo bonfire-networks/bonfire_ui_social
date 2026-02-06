@@ -22,7 +22,6 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
      #  |> assign(:page_header_aside, [
      #    {Bonfire.UI.Social.ImportRefreshLive, [feed_id: :import_history]}
      #  ])
-     # |> assign(:nav_items, Bonfire.Common.ExtensionModule.default_nav())
      |> load_jobs_and_maybe_stats(current_user)}
   end
 
