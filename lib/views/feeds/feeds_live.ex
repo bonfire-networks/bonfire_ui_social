@@ -97,50 +97,54 @@ defmodule Bonfire.UI.Social.FeedsLive do
             ]}
 
   def mount(_params, session, socket) do
-    {:ok,
-     socket
-     |> assign(
-       selected_tab: nil,
-       #  page: :explore,
-       page_title: l("Activities"),
-       page_header_icon: "ph:house-duotone",
-       feed: nil,
-       page_info: nil,
-       no_header: false,
-       no_index: true,
-       loading: true,
-       back: true,
-       feed_id: nil,
-       feed_count: nil,
-       feed_title: nil,
-       feed_ids: nil,
-       feed_filters: %{},
-       tab_path_suffix: nil,
-       feed_component_id: nil,
-       feedback_title: l("Your feed is empty"),
-       feedback_message:
-         l("You can start by following some people, or writing a new post yourself."),
-       page_header_aside: [
-         {Bonfire.UI.Common.SmartInputButtonLive,
-          [
-            prompt: l("Compose"),
-            class: "btn-sm hidden md:inline-flex btn btn-primary"
-          ]}
-       ],
-       sidebar_widgets: [
-         users: [
-           secondary: [
-             #  {Bonfire.UI.Social.WidgetFeedLive, [event_target: ]},
-             {Bonfire.Tag.Web.WidgetTagsLive, []},
-             {Bonfire.UI.Social.WidgetTrendingLinksLive, []}
+    import Bonfire.UI.Common.Timing
+
+    time_section :lv_feeds_mount do
+      {:ok,
+       socket
+       |> assign(
+         selected_tab: nil,
+         #  page: :explore,
+         page_title: l("Activities"),
+         page_header_icon: "ph:house-duotone",
+         feed: nil,
+         page_info: nil,
+         no_header: false,
+         no_index: true,
+         loading: true,
+         back: true,
+         feed_id: nil,
+         feed_count: nil,
+         feed_title: nil,
+         feed_ids: nil,
+         feed_filters: %{},
+         tab_path_suffix: nil,
+         feed_component_id: nil,
+         feedback_title: l("Your feed is empty"),
+         feedback_message:
+           l("You can start by following some people, or writing a new post yourself."),
+         page_header_aside: [
+           {Bonfire.UI.Common.SmartInputButtonLive,
+            [
+              prompt: l("Compose"),
+              class: "btn-sm hidden md:inline-flex btn btn-primary"
+            ]}
+         ],
+         sidebar_widgets: [
+           users: [
+             secondary: [
+               #  {Bonfire.UI.Social.WidgetFeedLive, [event_target: ]},
+               {Bonfire.Tag.Web.WidgetTagsLive, []},
+               {Bonfire.UI.Social.WidgetTrendingLinksLive, []}
+             ]
+           ],
+           guests: [
+             secondary: [{Bonfire.Tag.Web.WidgetTagsLive, []}]
            ]
          ],
-         guests: [
-           secondary: [{Bonfire.Tag.Web.WidgetTagsLive, []}]
-         ]
-       ],
-       maybe_rss_or_atom: maybe_rss_or_atom(session)
-     )}
+         maybe_rss_or_atom: maybe_rss_or_atom(session)
+       )}
+    end
   end
 
   def handle_params(
@@ -241,15 +245,23 @@ defmodule Bonfire.UI.Social.FeedsLive do
     debug(feed, "feed")
     debug(attrs, "attrs")
 
-    socket
-    |> assign(
+    import Bonfire.UI.Common.Timing
+
+    feed_assigns = time_section :lv_feed_default_assigns do
       LiveHandler.feed_default_assigns(
         {feed || e(assigns(socket), :live_action, :default), input_to_atoms(attrs)},
         socket
       )
-      |> debug("feed_default_assigns")
-    )
-    |> assign(..., FeedLive.maybe_widgets(assigns(...)))
+    end
+
+    socket = socket
+    |> assign(feed_assigns |> debug("feed_default_assigns"))
+
+    widgets = time_section :lv_maybe_widgets do
+      FeedLive.maybe_widgets(assigns(socket))
+    end
+
+    assign(socket, widgets)
   end
 
   defp maybe_rss_or_atom(session) do

@@ -171,10 +171,16 @@ defmodule Bonfire.UI.Social.FeedLive do
     # end
   end
 
-  @decorate time()
-  def update(assigns, socket)
+  # Replaced @decorate time() with time_section for profiler dashboard integration
+  def update(assigns, socket) do
+    import Bonfire.UI.Common.Timing
 
-  def update(%{insert_stream: %{feed: entries}} = assigns, socket) do
+    time_section :lv_feed_component do
+      do_update(assigns, socket)
+    end
+  end
+
+  defp do_update(%{insert_stream: %{feed: entries}} = assigns, socket) do
     debug("feed stream is being poured into")
 
     socket
@@ -184,7 +190,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   # adding new feed item
-  def update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do
+  defp do_update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do
     debug("new_activity, add to top of feed")
 
     activity_id =
@@ -213,20 +219,20 @@ defmodule Bonfire.UI.Social.FeedLive do
   #   update(Map.merge(assigns, %{new_activity: new_activity}), socket)
   # end
 
-  def update(_assigns, %{assigns: %{loading: loading?, feed: feed}} = socket)
+  defp do_update(_assigns, %{assigns: %{loading: loading?, feed: feed}} = socket)
       when loading? == false and feed != :loading do
     debug("skip replacing feed unless it was loading")
     ok_socket(socket)
   end
 
-  def update(_assigns, %{assigns: %{feed: existing_feed}} = socket)
+  defp do_update(_assigns, %{assigns: %{feed: existing_feed}} = socket)
       when is_list(existing_feed) and length(existing_feed) > 0 do
     # FIXME: doesn't work because of temporary assigns?
     debug("skip replacing already loaded feed")
     ok_socket(socket)
   end
 
-  def update(%{feed: feed, page_info: page_info} = assigns, socket) when is_list(feed) do
+  defp do_update(%{feed: feed, page_info: page_info} = assigns, socket) when is_list(feed) do
     debug("an initial feed was provided via assigns, auto-converting to stream")
 
     socket =
@@ -257,7 +263,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   #   ok_socket(maybe_subscribe(socket))
   # end
 
-  def update(
+  defp do_update(
         %{feed: nil, feed_count: feed_count} = assigns,
         %{assigns: %{feed_count: feed_count}} = socket
       )
@@ -267,14 +273,14 @@ defmodule Bonfire.UI.Social.FeedLive do
     ok_socket(socket)
   end
 
-  def update(%{feed: nil, feed_count: feed_count} = assigns, socket)
+  defp do_update(%{feed: nil, feed_count: feed_count} = assigns, socket)
       when not is_nil(feed_count) do
     debug("a feed was NOT provided, but feed_count was passed")
 
     ok_socket(socket)
   end
 
-  def update(%{feed: nil, feed_filters: empty_feed_filters} = assigns, socket)
+  defp do_update(%{feed: nil, feed_filters: empty_feed_filters} = assigns, socket)
       when empty_feed_filters == %{} or empty_feed_filters == [] or empty_feed_filters == nil do
     socket = assign(socket, assigns)
     socket = assign(socket, :feed_component_id, assigns(socket).id)
@@ -306,7 +312,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     end
   end
 
-  def update(%{feed: nil} = assigns, socket) do
+  defp do_update(%{feed: nil} = assigns, socket) do
     socket = assign(socket, assigns)
     socket = assign(socket, :feed_component_id, assigns(socket).id)
 
@@ -336,19 +342,19 @@ defmodule Bonfire.UI.Social.FeedLive do
     end
   end
 
-  def update(%{feed: :loading} = assigns, socket) do
+  defp do_update(%{feed: :loading} = assigns, socket) do
     debug("a feed is being loaded async")
 
     ok_socket(assign(socket, assigns))
   end
 
-  def update(%{loading: true} = assigns, socket) do
+  defp do_update(%{loading: true} = assigns, socket) do
     debug("a feed is being loaded async")
 
     ok_socket(assign(socket, assigns))
   end
 
-  def update(_assigns, socket) do
+  defp do_update(_assigns, socket) do
     warn("No feed loaded")
     ok_socket(socket)
   end
