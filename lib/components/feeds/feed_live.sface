@@ -51,8 +51,10 @@
         class="flex justify-center w-full mx-auto btn btn-ghost text-primary z-50 border-0 border-b border-base-content/20 rounded-none border-t py-6 font-light"
         phx-show={JS.remove_class("hidden")}
       >
-          <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
-          {lp("Show %{count} new activity", "Show %{count} new activities", MapSet.size(@fresh_ids), count: MapSet.size(@fresh_ids))}
+        <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
+        {lp("Show %{count} new activity", "Show %{count} new activities", MapSet.size(@fresh_ids),
+          count: MapSet.size(@fresh_ids)
+        )}
       </div>
 
       {#if is_map(@streams) and is_struct(@streams.feed)}
@@ -76,31 +78,31 @@
             >
               {#case entry}
                 {#match %Bonfire.Files.Media{}}
-                <Bonfire.UI.Social.TopLevelMediaLive
-                  link={entry}
-                  show_thumbnail
-                  featured={e(entry, :featured, false)}
-                />
-              {#match _}
-                <ActivityLive
-                  id={ActivityLive.component_id(
-                    id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
-                      e(entry, :edge, :id, nil),
-                    "s_activity_#{entry_id}"
-                  )}
-                  activity={get_activity(entry)}
-                  custom_preview={e(@custom_preview, nil)}
-                  showing_within={@showing_within}
-                  hide_actions={@hide_actions}
-                  verb_default={@verb_default}
-                  feed_name={@feed_name}
-                  feed_id={@feed_id || @feed_ids}
-                  class={@activity_class}
-                  is_remote={@feed_name in [:remote]}
-                  hide_activity={@hide_activities}
-                  subject_user={@subject_user}
-                  activity_preloads={@activity_preloads}
-                />
+                  <Bonfire.UI.Social.TopLevelMediaLive
+                    link={entry}
+                    show_thumbnail
+                    featured={e(entry, :featured, false)}
+                  />
+                {#match _}
+                  <ActivityLive
+                    id={ActivityLive.component_id(
+                      id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
+                        e(entry, :edge, :id, nil),
+                      "s_activity_#{entry_id}"
+                    )}
+                    activity={get_activity(entry)}
+                    custom_preview={e(@custom_preview, nil)}
+                    showing_within={@showing_within}
+                    hide_actions={@hide_actions}
+                    verb_default={@verb_default}
+                    feed_name={@feed_name}
+                    feed_id={@feed_id || @feed_ids}
+                    class={@activity_class}
+                    is_remote={@feed_name in [:remote]}
+                    hide_activity={@hide_activities}
+                    subject_user={@subject_user}
+                    activity_preloads={@activity_preloads}
+                  />
               {/case}
             </div>
           {/for}

@@ -142,7 +142,7 @@
           </div>
         {#elseif @verb in ["Like", "React"]}
           <div data-role="liked_by" class="w-full -ml-[60px]">
-            <div class="flex items-center gap-3 justify-start ">
+            <div class="flex items-center gap-3 justify-start">
               <div class="flex flex-1 items-center gap-2">
                 {#case @emoji}
                   {#match %{media_type: "emoji"} = emoji}
@@ -237,7 +237,6 @@
             </div>
           </div>
         {#elseif @verb == "Follow"}
-        
           {!-- FOLLOW --}
           <div class="flex items-center gap-3 justify-start">
             <div class="flex items-center flex-1 gap-3 -ml-[60px]">
@@ -257,7 +256,6 @@
                 </LinkLive>
               </div>
             </div>
-            
           </div>
           {!-- {#elseif @published_in}
           <Bonfire.UI.Social.Activity.PublishedInLive
@@ -608,7 +606,7 @@
                   title={@profile_name || @character_username}
                   class="h-7 w-7 rounded-full"
                 /> -->
-                <!-- {#if @subjects_more != []}
+              <!-- {#if @subjects_more != []}
                   {#for {subject, idx} <- Enum.with_index(@subjects_more)}
                     {#if idx < 2}
                       <Bonfire.UI.Common.AvatarLive

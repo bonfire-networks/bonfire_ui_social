@@ -72,7 +72,10 @@
               phx-target={@myself}
               class="flex items-center visible p-2 click:invisible"
             >
-              <span style="border-left: 2px dashed" class="btn btn-sm btn-ghost text-primary border-l-2 border-dotted ml-[5px] rounded-none">{l("Load %{count} more replies", count: extra_replies_count(@comment, @threaded_replies_count))}</span>
+              <span
+                style="border-left: 2px dashed"
+                class="btn btn-sm btn-ghost text-primary border-l-2 border-dotted ml-[5px] rounded-none"
+              >{l("Load %{count} more replies", count: extra_replies_count(@comment, @threaded_replies_count))}</span>
             </button>
           {#else}
             <span class="btn btn-xs">

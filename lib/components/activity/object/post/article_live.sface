@@ -2,7 +2,12 @@
   {!-- Card widget layout with text overlay --}
   <article
     data-id="activity_article"
-    id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object) || "no-id", "article_widget", @parent_id)}
+    id={deterministic_dom_id(
+      __MODULE__,
+      id(@activity) || id(@object) || "no-id",
+      "article_widget",
+      @parent_id
+    )}
     data-rendered={@showing_within}
     class="group cursor-pointer"
   >
@@ -69,7 +74,7 @@
             <div
               class="absolute inset-0"
               style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)"
-            ></div>
+            />
 
             {!-- Content overlay --}
             <div class="absolute inset-x-0 bottom-0 p-4" style="color: white">
@@ -166,7 +171,8 @@
             style="width: fit-content;"
             class={
               "mt-4 mx-4 inline-flex items-center gap-2 px-3 py-1 text-xs font-medium tracking-wide uppercase bg-base-content/5 text-base-content/70 rounded-full w-fit",
-              "mb-2 !mx-0": @showing_within == :thread and @viewing_main_object}
+              "mb-2 !mx-0": @showing_within == :thread and @viewing_main_object
+            }
           >
             <span class="text-primary">⁂</span> {l("Article")}
           </span>

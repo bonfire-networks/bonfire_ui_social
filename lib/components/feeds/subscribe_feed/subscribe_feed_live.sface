@@ -69,8 +69,7 @@
   <:open_btn>
     <div class={"text-left cursor-pointer flex items-center w-full", "btn btn-sm btn-circle btn-ghost": @as_icon}>
       <span class={"flex-1 text-sm font-medium", "sr-only": @as_icon}>{l("Subscribe to feed")}</span>
-      <#Icon iconify="ph:rss-simple-duotone" class={"w-5 h-5", 
-      "!w-4 !h-4": @as_icon} />
+      <#Icon iconify="ph:rss-simple-duotone" class={"w-5 h-5", "!w-4 !h-4": @as_icon} />
     </div>
   </:open_btn>
 </Bonfire.UI.Common.OpenModalLive>

@@ -85,30 +85,30 @@
                 _ -> start_date
               end}
 
-              {#case object_field(@json, "displayEndTime") !="false" && object_field(@json, "endTime")}
-        {#match nil}
-        {#match false}
-        {#match end_date}
-              {l "until"}
-              {with {:ok, datetime, offset} <- DateTime.from_iso8601(end_date),
-                   # Convert back to original timezone to preserve local time
-                   local_datetime <- DateTime.add(datetime, -offset, :second) do
-                timezone_str =
-                  if offset >= 0,
-                    do:
-                      "+#{div(offset, 3600)}:#{rem(div(offset, 60), 60) |> Integer.to_string() |> String.pad_leading(2, "0")}",
-                    else:
-                      "#{div(offset, 3600)}:#{rem(div(abs(offset), 60), 60) |> Integer.to_string() |> String.pad_leading(2, "0")}"
+              {#case object_field(@json, "displayEndTime") != "false" && object_field(@json, "endTime")}
+                {#match nil}
+                {#match false}
+                {#match end_date}
+                  {l("until")}
+                  {with {:ok, datetime, offset} <- DateTime.from_iso8601(end_date),
+                       # Convert back to original timezone to preserve local time
+                       local_datetime <- DateTime.add(datetime, -offset, :second) do
+                    timezone_str =
+                      if offset >= 0,
+                        do:
+                          "+#{div(offset, 3600)}:#{rem(div(offset, 60), 60) |> Integer.to_string() |> String.pad_leading(2, "0")}",
+                        else:
+                          "#{div(offset, 3600)}:#{rem(div(abs(offset), 60), 60) |> Integer.to_string() |> String.pad_leading(2, "0")}"
 
-                case DatesTimes.format(local_datetime, format: "EEEE, MMMM d, y 'at' h:mm a") do
-                  {:ok, formatted} -> "#{formatted} (#{timezone_str})"
-                  formatted when is_binary(formatted) -> "#{formatted} (#{timezone_str})"
-                  _ -> end_date
-                end
-              else
-                _ -> end_date
-              end}
-      {/case}
+                    case DatesTimes.format(local_datetime, format: "EEEE, MMMM d, y 'at' h:mm a") do
+                      {:ok, formatted} -> "#{formatted} (#{timezone_str})"
+                      formatted when is_binary(formatted) -> "#{formatted} (#{timezone_str})"
+                      _ -> end_date
+                    end
+                  else
+                    _ -> end_date
+                  end}
+              {/case}
             </div>
           </div>
       {/case}

@@ -26,16 +26,17 @@
                     open_btn_class="w-full"
                     open_btn_wrapper_class="w-full h-full"
                   >
-                    <Bonfire.UI.Social.Activity.RemoteMediaLive 
-                    id={deterministic_dom_id(__MODULE__, @json, @showing_within, @parent_id)}
-                    media={%{
-                      media_type: "audio",
-                      path: audio_url,
-                      metadata: %{
-                        "name" => object_field(debug(@json, "apjson"), "name") || l("Untitled audio"),
-                        "icon" => e(object_field(@json, "image") || object_field(@json, "icon"), "url", nil)
-                      }
-                    }} />
+                    <Bonfire.UI.Social.Activity.RemoteMediaLive
+                      id={deterministic_dom_id(__MODULE__, @json, @showing_within, @parent_id)}
+                      media={%{
+                        media_type: "audio",
+                        path: audio_url,
+                        metadata: %{
+                          "name" => object_field(debug(@json, "apjson"), "name") || l("Untitled audio"),
+                          "icon" => e(object_field(@json, "image") || object_field(@json, "icon"), "url", nil)
+                        }
+                      }}
+                    />
 
                     <:open_btn>
                       <button class="">

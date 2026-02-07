@@ -247,19 +247,22 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
     import Bonfire.UI.Common.Timing
 
-    feed_assigns = time_section :lv_feed_default_assigns do
-      LiveHandler.feed_default_assigns(
-        {feed || e(assigns(socket), :live_action, :default), input_to_atoms(attrs)},
-        socket
-      )
-    end
+    feed_assigns =
+      time_section :lv_feed_default_assigns do
+        LiveHandler.feed_default_assigns(
+          {feed || e(assigns(socket), :live_action, :default), input_to_atoms(attrs)},
+          socket
+        )
+      end
 
-    socket = socket
-    |> assign(feed_assigns |> debug("feed_default_assigns"))
+    socket =
+      socket
+      |> assign(feed_assigns |> debug("feed_default_assigns"))
 
-    widgets = time_section :lv_maybe_widgets do
-      FeedLive.maybe_widgets(assigns(socket))
-    end
+    widgets =
+      time_section :lv_maybe_widgets do
+        FeedLive.maybe_widgets(assigns(socket))
+      end
 
     assign(socket, widgets)
   end

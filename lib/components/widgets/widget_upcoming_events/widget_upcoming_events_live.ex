@@ -43,6 +43,7 @@ defmodule Bonfire.UI.Social.WidgetUpcomingEventsLive do
         ap_activities =
           if object_ids != [] do
             import Ecto.Query
+
             Bonfire.Common.Repo.all(
               from(a in APActivity, where: a.id in ^object_ids, select: {a.id, a.json})
             )
@@ -186,7 +187,8 @@ defmodule Bonfire.UI.Social.WidgetUpcomingEventsLive do
       %{"address" => %{"streetAddress" => addr}} when is_binary(addr) and addr != "" ->
         addr
 
-      %{"address" => %{"addressLocality" => locality}} when is_binary(locality) and locality != "" ->
+      %{"address" => %{"addressLocality" => locality}}
+      when is_binary(locality) and locality != "" ->
         locality
 
       _ ->

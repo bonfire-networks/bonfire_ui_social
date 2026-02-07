@@ -220,13 +220,13 @@ defmodule Bonfire.UI.Social.FeedLive do
   # end
 
   defp do_update(_assigns, %{assigns: %{loading: loading?, feed: feed}} = socket)
-      when loading? == false and feed != :loading do
+       when loading? == false and feed != :loading do
     debug("skip replacing feed unless it was loading")
     ok_socket(socket)
   end
 
   defp do_update(_assigns, %{assigns: %{feed: existing_feed}} = socket)
-      when is_list(existing_feed) and length(existing_feed) > 0 do
+       when is_list(existing_feed) and length(existing_feed) > 0 do
     # FIXME: doesn't work because of temporary assigns?
     debug("skip replacing already loaded feed")
     ok_socket(socket)
@@ -264,24 +264,24 @@ defmodule Bonfire.UI.Social.FeedLive do
   # end
 
   defp do_update(
-        %{feed: nil, feed_count: feed_count} = assigns,
-        %{assigns: %{feed_count: feed_count}} = socket
-      )
-      when not is_nil(feed_count) do
+         %{feed: nil, feed_count: feed_count} = assigns,
+         %{assigns: %{feed_count: feed_count}} = socket
+       )
+       when not is_nil(feed_count) do
     debug("a feed was NOT provided, but we have a feed_count")
 
     ok_socket(socket)
   end
 
   defp do_update(%{feed: nil, feed_count: feed_count} = assigns, socket)
-      when not is_nil(feed_count) do
+       when not is_nil(feed_count) do
     debug("a feed was NOT provided, but feed_count was passed")
 
     ok_socket(socket)
   end
 
   defp do_update(%{feed: nil, feed_filters: empty_feed_filters} = assigns, socket)
-      when empty_feed_filters == %{} or empty_feed_filters == [] or empty_feed_filters == nil do
+       when empty_feed_filters == %{} or empty_feed_filters == [] or empty_feed_filters == nil do
     socket = assign(socket, assigns)
     socket = assign(socket, :feed_component_id, assigns(socket).id)
 

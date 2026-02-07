@@ -10,7 +10,10 @@
         tooltip={l("Reply")}
         tooltip_position="bottom"
         phx_click={if @event_target || @activity_component_id,
-          do: Bonfire.Social.Feeds.LiveHandler.reply_to_activity(@event_target || "##{@activity_component_id}"),
+          do:
+            Bonfire.Social.Feeds.LiveHandler.reply_to_activity(
+              @event_target || "##{@activity_component_id}"
+            ),
           else: "Bonfire.Social.Threads:reply"}
         phx_values={%{id: @object_id}}
         class={"text-base-content/50 hover:text-primary", @class}
@@ -31,7 +34,7 @@
           icon="ph:chat-circle-duotone"
           aria_label={@cannot_reply_text || l("Cannot reply")}
           variant="ghost"
-          disabled={true}
+          disabled
           class="text-base-content/20"
           data-role="reply_disabled"
           data-id="action_reply"

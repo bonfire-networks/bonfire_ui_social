@@ -26,7 +26,7 @@
                 <div class="aspect-video rounded-t-box">
                   {!-- TODO: only load external embed if autoplay or user clicks on a play button --}
                   <iframe
-                    src={rewrite_embed_url(url, %{"autoplay" => (if @autoplay, do: "1", else: "0")})}
+                    src={rewrite_embed_url(url, %{"autoplay" => if(@autoplay, do: "1", else: "0")})}
                     frameborder="0"
                     width="100%"
                     loading="lazy"
@@ -38,355 +38,415 @@
                   />
                 </div>
               {#match _}
-                    {#if is_binary(media_url)}
-                      {#if Bonfire.Files.has_extension?(media_url, [".mp4", ".mkv"])}
-                        {#if MediaLive.is_gif?(@media.path, e(@media, :media_type, nil), @media)}
-                          {!-- Handle GIF-labeled MP4 files (converted GIFs) --}
-                          <div id={deterministic_dom_id(__MODULE__, id(@media), "gif-wrapper", @parent_id)} class="relative h-full">
-                            <video
-                              class={@base_css, @video_css, "gif-as-mp4"}
-                              autoplay
-                              loop
-                              muted
-                              playsinline
-                              preload="metadata"
-                              title={Bonfire.Files.Media.media_label(@media)}
-                            >
-                              <source src={media_url} type="video/mp4">
-                              Your browser does not support the video tag.
-                            </video>
-                            <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
-                              GIF
-                            </div>
-                            <div data-role="media-fallback" style="display: none;" class="relative aspect-video rounded-box overflow-hidden border border-base-content/20 bg-base-200">
-                              {#case MediaLive.preview_img(@media)}
-                                {#match poster when is_binary(poster)}
-                                  <img src={poster} alt="" class="w-full h-full object-cover" />
-                                {#match _}
-                                  <div class="w-full h-full flex items-center justify-center">
-                                    <#Icon iconify="heroicons:gif" class="w-12 h-12 text-base-content/30" />
-                                  </div>
-                              {/case}
-                              <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
-                                GIF
+                {#if is_binary(media_url)}
+                  {#if Bonfire.Files.has_extension?(media_url, [".mp4", ".mkv"])}
+                    {#if MediaLive.is_gif?(@media.path, e(@media, :media_type, nil), @media)}
+                      {!-- Handle GIF-labeled MP4 files (converted GIFs) --}
+                      <div
+                        id={deterministic_dom_id(__MODULE__, id(@media), "gif-wrapper", @parent_id)}
+                        class="relative h-full"
+                      >
+                        <video
+                          class={@base_css, @video_css, "gif-as-mp4"}
+                          autoplay
+                          loop
+                          muted
+                          playsinline
+                          preload="metadata"
+                          title={Bonfire.Files.Media.media_label(@media)}
+                        >
+                          <source src={media_url} type="video/mp4">
+                          Your browser does not support the video tag.
+                        </video>
+                        <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
+                          GIF
+                        </div>
+                        <div
+                          data-role="media-fallback"
+                          style="display: none;"
+                          class="relative aspect-video rounded-box overflow-hidden border border-base-content/20 bg-base-200"
+                        >
+                          {#case MediaLive.preview_img(@media)}
+                            {#match poster when is_binary(poster)}
+                              <img src={poster} alt="" class="w-full h-full object-cover">
+                            {#match _}
+                              <div class="w-full h-full flex items-center justify-center">
+                                <#Icon iconify="heroicons:gif" class="w-12 h-12 text-base-content/30" />
                               </div>
-                              <a href={media_url} target="_blank" rel="noopener noreferrer" class="absolute bottom-2 right-2 btn btn-xs btn-neutral gap-1">
-                                <#Icon iconify="heroicons:arrow-top-right-on-square" class="w-3 h-3" />
-                                {l("Open")}
-                              </a>
-                            </div>
+                          {/case}
+                          <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
+                            GIF
                           </div>
-                        {#else}
-                          <div id={deterministic_dom_id(__MODULE__, id(@media), "mp4-wrapper", @parent_id)} class="h-full">
-                            <video
-                              class={@base_css, @video_css}
-                              controls
-                              autoplay={@autoplay}
-                              muted={@muted}
-                              preload={if @autoplay, do: "auto", else: "metadata"}
-                              poster={MediaLive.preview_img(@media)}
-                              title={Bonfire.Files.Media.media_label(@media)}
-                              playsinline
-                              crossorigin="anonymous"
-                            >
-                              <source src={media_url} type="video/mp4">
-                              {#if e(@media, :metadata, "captions", nil)}
-                                <track
-                                  kind="captions"
-                                  src={e(@media, :metadata, "captions", nil)}
-                                  srclang="en"
-                                  label="English"
-                                  default
-                                />
-                              {/if}
-                              Your browser does not support the video tag.
-                            </video>
-                            <div data-role="media-fallback" style="display: none;" class="relative aspect-video rounded-box overflow-hidden border border-base-content/20">
-                              {#case MediaLive.preview_img(@media)}
-                                {#match poster when is_binary(poster)}
-                                  <img src={poster} alt="" class="w-full h-full object-cover" />
-                                {#match _}
-                                  <div class="w-full h-full bg-base-200 flex items-center justify-center">
-                                    <#Icon iconify="heroicons:video-camera" class="w-12 h-12 text-base-content/30" />
-                                  </div>
-                              {/case}
-                              <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-3">
-                                <span class="text-white text-sm">{l("This video cannot be previewed")}</span>
-                                <a href={media_url} target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary gap-2">
-                                  <#Icon iconify="heroicons:arrow-top-right-on-square" class="w-4 h-4" />
-                                  {l("Open original")}
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        {/if}
-                      {#elseif Bonfire.Files.has_extension?(media_url, [".mov"])}
-                        {#if false}
-                          {!-- Handle short MOV files as GIF-style --}
-                          <div class="relative">
-                            <video
-                              class={@base_css, @video_css, "gif-as-mp4"}
-                              autoplay
-                              loop
-                              muted
-                              playsinline
-                              preload="metadata"
-                              title={Bonfire.Files.Media.media_label(@media)}
-                            >
-                              <source src={media_url} type="video/quicktime">
-                              Your browser does not support the video tag.
-                            </video>
-                            <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
-                              GIF
-                            </div>
-                          </div>
-                        {#else}
-                          <div id={deterministic_dom_id(__MODULE__, id(@media), "mov-wrapper", @parent_id)} >
-                            <video
-                              class={@base_css, @video_css}
-                              controls
-                              autoplay={@autoplay}
-                              muted={@muted}
-                              preload={if @autoplay, do: "auto", else: "metadata"}
-                              poster={MediaLive.preview_img(@media)}
-                              title={Bonfire.Files.Media.media_label(@media)}
-                              playsinline
-                              crossorigin="anonymous"
-                            >
-                              <source src={media_url} type="video/quicktime">
-                              {#if e(@media, :metadata, "captions", nil)}
-                                <track
-                                  kind="captions"
-                                  src={e(@media, :metadata, "captions", nil)}
-                                  srclang="en"
-                                  label="English"
-                                  default
-                                />
-                              {/if}
-                              Your browser does not support the video tag.
-                            </video>
-                            <div data-role="media-fallback" style="display: none;" class="relative aspect-video rounded-box overflow-hidden border border-base-content/20">
-                              {#case MediaLive.preview_img(@media)}
-                                {#match poster when is_binary(poster)}
-                                  <img src={poster} alt="" class="w-full h-full object-cover" />
-                                {#match _}
-                                  <div class="w-full h-full bg-base-200 flex items-center justify-center">
-                                    <#Icon iconify="heroicons:video-camera" class="w-12 h-12 text-base-content/30" />
-                                  </div>
-                              {/case}
-                              <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-3">
-                                <span class="text-white text-sm">{l("This video cannot be previewed")}</span>
-                                <a href={media_url} target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary gap-2">
-                                  <#Icon iconify="heroicons:arrow-top-right-on-square" class="w-4 h-4" />
-                                  {l("Open original")}
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        {/if}
-                      {#elseif Bonfire.Files.has_extension?(media_url, [".ogg", ".ogv", ".ogx", ".ogm", ".spx", ".opus"])}
-                        {#if false}
-                          {!-- Handle short OGG files as GIF-style --}
-                          <div class="relative">
-                            <video
-                              class={@base_css, @video_css, "gif-as-mp4"}
-                              autoplay
-                              loop
-                              muted
-                              playsinline
-                              preload="metadata"
-                              title={Bonfire.Files.Media.media_label(@media)}
-                            >
-                              <source src={media_url} type="video/ogg">
-                              Your browser does not support the video tag.
-                            </video>
-                            <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
-                              GIF
-                            </div>
-                          </div>
-                        {#else}
-                          <div id={deterministic_dom_id(__MODULE__, id(@media), "ogg-wrapper", @parent_id)} >
-                            <video
-                              class={@base_css, @video_css}
-                              controls
-                              autoplay={@autoplay}
-                              muted={@muted}
-                              preload={if @autoplay, do: "auto", else: "metadata"}
-                              poster={MediaLive.preview_img(@media)}
-                              title={Bonfire.Files.Media.media_label(@media)}
-                              playsinline
-                              crossorigin="anonymous"
-                            >
-                              <source src={media_url} type="video/ogg">
-                              {#if e(@media, :metadata, "captions", nil)}
-                                <track
-                                  kind="captions"
-                                  src={e(@media, :metadata, "captions", nil)}
-                                  srclang="en"
-                                  label="English"
-                                  default
-                                />
-                              {/if}
-                              Your browser does not support the video tag.
-                            </video>
-                            <div data-role="media-fallback" style="display: none;" class="relative aspect-video rounded-box overflow-hidden border border-base-content/20">
-                              {#case MediaLive.preview_img(@media)}
-                                {#match poster when is_binary(poster)}
-                                  <img src={poster} alt="" class="w-full h-full object-cover" />
-                                {#match _}
-                                  <div class="w-full h-full bg-base-200 flex items-center justify-center">
-                                    <#Icon iconify="heroicons:video-camera" class="w-12 h-12 text-base-content/30" />
-                                  </div>
-                              {/case}
-                              <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-3">
-                                <span class="text-white text-sm">{l("This video cannot be previewed")}</span>
-                                <a href={media_url} target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary gap-2">
-                                  <#Icon iconify="heroicons:arrow-top-right-on-square" class="w-4 h-4" />
-                                  {l("Open original")}
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        {/if}
-                      {#elseif Bonfire.Files.has_extension?(media_url, [".webm"])}
-                        {#if false}
-                          {!-- Handle short WebM files as GIF-style --}
-                          <div class="relative">
-                            <video
-                              class={@base_css, @video_css, "gif-as-mp4"}
-                              autoplay
-                              loop
-                              muted
-                              playsinline
-                              preload="metadata"
-                              title={Bonfire.Files.Media.media_label(@media)}
-                            >
-                              <source src={media_url} type="video/webm">
-                              Your browser does not support the video tag.
-                            </video>
-                            <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
-                              GIF
-                            </div>
-                          </div>
-                        {#else}
-                          <div id={deterministic_dom_id(__MODULE__, id(@media), "webm-wrapper", @parent_id)} >
-                            <video
-                              class={@base_css, @video_css}
-                              controls
-                              autoplay={@autoplay}
-                              muted={@muted}
-                              preload={if @autoplay, do: "auto", else: "metadata"}
-                              poster={MediaLive.preview_img(@media)}
-                              title={Bonfire.Files.Media.media_label(@media)}
-                              playsinline
-                              crossorigin="anonymous"
-                            >
-                              <source src={media_url} type="video/webm">
-                              {#if e(@media, :metadata, "captions", nil)}
-                                <track
-                                  kind="captions"
-                                  src={e(@media, :metadata, "captions", nil)}
-                                  srclang="en"
-                                  label="English"
-                                  default
-                                />
-                              {/if}
-                              Your browser does not support the video tag.
-                            </video>
-                            <div data-role="media-fallback" style="display: none;" class="relative aspect-video rounded-box overflow-hidden border border-base-content/20">
-                              {#case MediaLive.preview_img(@media)}
-                                {#match poster when is_binary(poster)}
-                                  <img src={poster} alt="" class="w-full h-full object-cover" />
-                                {#match _}
-                                  <div class="w-full h-full bg-base-200 flex items-center justify-center">
-                                    <#Icon iconify="heroicons:video-camera" class="w-12 h-12 text-base-content/30" />
-                                  </div>
-                              {/case}
-                              <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-3">
-                                <span class="text-white text-sm">{l("This video cannot be previewed")}</span>
-                                <a href={media_url} target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary gap-2">
-                                  <#Icon iconify="heroicons:arrow-top-right-on-square" class="w-4 h-4" />
-                                  {l("Open original")}
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        {/if}
-                      {#elseif MediaLive.is_supported_audio_format?(@media.path, e(@media, :media_type, nil)) or
-                          e(@media, :media_type, nil) == "audio"}
-                        <div id={deterministic_dom_id(__MODULE__, id(@media), "audio-wrapper", @parent_id)}  class="w-full">
-                          <div class="flex items-center gap-3">
-                            {#case MediaLive.preview_img(@media)}
-                              {#match nil}
-                              {#match media_img}
-                                <div :if={MediaLive.is_image?(media_img)} class="bg-base-200">
-                                  <LazyImage
-                                    parent_id={deterministic_dom_id(__MODULE__, id(@media), "media_preview", @parent_id)}
-                                    src={media_img}
-                                    media={@media}
-                                    alt=""
-                                    class="w-16 h-16 object-cover"
-                                    fallback_icon="octicon:file-media-24"
-                                  />
-                                </div>
-                            {/case}
-                            {#case e(@media, :metadata, "name", nil)}
-                              {#match nil}
-                              {#match name}
-                                <div class="text-sm text-left font-semibold text-base-content/70">
-                                  {name}
-                                </div>
-                            {/case}
-                          </div>
-                          <audio
-                            controls
-                            autoplay={@autoplay}
-                            class={@base_css}
-                            preload={if @autoplay, do: "auto", else: "metadata"}
-                            title={Bonfire.Files.Media.media_label(@media)}
-                            crossorigin="anonymous"
+                          <a
+                            href={media_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="absolute bottom-2 right-2 btn btn-xs btn-neutral gap-1"
                           >
-                            <source
-                              src={media_url}
-                              type={e(@media, :media_type, nil) || "audio/#{Bonfire.Files.file_extension_only(media_url) || "mp3"}"}
+                            <#Icon iconify="heroicons:arrow-top-right-on-square" class="w-3 h-3" />
+                            {l("Open")}
+                          </a>
+                        </div>
+                      </div>
+                    {#else}
+                      <div id={deterministic_dom_id(__MODULE__, id(@media), "mp4-wrapper", @parent_id)} class="h-full">
+                        <video
+                          class={@base_css, @video_css}
+                          controls
+                          autoplay={@autoplay}
+                          muted={@muted}
+                          preload={if @autoplay, do: "auto", else: "metadata"}
+                          poster={MediaLive.preview_img(@media)}
+                          title={Bonfire.Files.Media.media_label(@media)}
+                          playsinline
+                          crossorigin="anonymous"
+                        >
+                          <source src={media_url} type="video/mp4">
+                          {#if e(@media, :metadata, "captions", nil)}
+                            <track
+                              kind="captions"
+                              src={e(@media, :metadata, "captions", nil)}
+                              srclang="en"
+                              label="English"
+                              default
                             />
-                            Your browser does not support the audio tag.
-                          </audio>
-                          <div data-role="media-fallback" style="display: none;" class="flex items-center gap-3 p-3 rounded-box border border-base-content/20 bg-base-200">
-                            <div class="flex-shrink-0">
-                              <#Icon iconify="heroicons:musical-note" class="w-10 h-10 text-base-content/50" />
-                            </div>
-                            <div class="flex-1 min-w-0">
-                              <p class="text-sm text-base-content/70">{l("This audio cannot be previewed")}</p>
-                              <a href={media_url} target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary gap-2 mt-2">
-                                <#Icon iconify="heroicons:arrow-top-right-on-square" class="w-4 h-4" />
-                                {l("Open original")}
-                              </a>
-                            </div>
+                          {/if}
+                          Your browser does not support the video tag.
+                        </video>
+                        <div
+                          data-role="media-fallback"
+                          style="display: none;"
+                          class="relative aspect-video rounded-box overflow-hidden border border-base-content/20"
+                        >
+                          {#case MediaLive.preview_img(@media)}
+                            {#match poster when is_binary(poster)}
+                              <img src={poster} alt="" class="w-full h-full object-cover">
+                            {#match _}
+                              <div class="w-full h-full bg-base-200 flex items-center justify-center">
+                                <#Icon iconify="heroicons:video-camera" class="w-12 h-12 text-base-content/30" />
+                              </div>
+                          {/case}
+                          <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-3">
+                            <span class="text-white text-sm">{l("This video cannot be previewed")}</span>
+                            <a
+                              href={media_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="btn btn-sm btn-primary gap-2"
+                            >
+                              <#Icon iconify="heroicons:arrow-top-right-on-square" class="w-4 h-4" />
+                              {l("Open original")}
+                            </a>
                           </div>
                         </div>
-                      {#elseif MediaLive.preview_img(@media)}
-                        {!-- Handle media with preview images (like video.movie, video.other, etc.) --}
-                        <div class="rounded-box border border-base-content/20 overflow-hidden">
-                          {#case MediaLive.extract_oembed_url(e(@media, :metadata, "oembed", "html", nil)) ||
-                              e(@media, :metadata, "facebook", "video", nil) ||
-                              e(@media, :metadata, "twitter", "player", nil)}
-                            {#match embed_url when is_binary(embed_url)}
-                            {#if !(@show_embed || @autoplay) && socket_connected?(@__context__)}
-                              {!-- Preview thumbnail with action buttons overlay --}
-                              <div id={deterministic_dom_id(__MODULE__, id(@media), "preview", @parent_id)} class="relative">
-                                <LazyImage
-                                  parent_id={deterministic_dom_id(__MODULE__, id(@media), "preview", @parent_id)}
-                                  class="w-full aspect-video object-cover"
-                                  alt={Bonfire.Files.Media.media_label(@media) || "Media preview"}
-                                  src={MediaLive.preview_img(@media)}
-                                  media={@media}
-                                  fallback_icon="heroicons:play-circle"
-                                />
-                                {!-- Action buttons overlay --}
-                                <div class="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors flex items-center justify-center gap-3">
-                                  {!-- Play inline button --}
-                                  <div class="flex items-center bg-white/90 hover:bg-white rounded p-3 gap-6 shadow-lg transition-all hover:scale-110">
+                      </div>
+                    {/if}
+                  {#elseif Bonfire.Files.has_extension?(media_url, [".mov"])}
+                    {#if false}
+                      {!-- Handle short MOV files as GIF-style --}
+                      <div class="relative">
+                        <video
+                          class={@base_css, @video_css, "gif-as-mp4"}
+                          autoplay
+                          loop
+                          muted
+                          playsinline
+                          preload="metadata"
+                          title={Bonfire.Files.Media.media_label(@media)}
+                        >
+                          <source src={media_url} type="video/quicktime">
+                          Your browser does not support the video tag.
+                        </video>
+                        <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
+                          GIF
+                        </div>
+                      </div>
+                    {#else}
+                      <div id={deterministic_dom_id(__MODULE__, id(@media), "mov-wrapper", @parent_id)}>
+                        <video
+                          class={@base_css, @video_css}
+                          controls
+                          autoplay={@autoplay}
+                          muted={@muted}
+                          preload={if @autoplay, do: "auto", else: "metadata"}
+                          poster={MediaLive.preview_img(@media)}
+                          title={Bonfire.Files.Media.media_label(@media)}
+                          playsinline
+                          crossorigin="anonymous"
+                        >
+                          <source src={media_url} type="video/quicktime">
+                          {#if e(@media, :metadata, "captions", nil)}
+                            <track
+                              kind="captions"
+                              src={e(@media, :metadata, "captions", nil)}
+                              srclang="en"
+                              label="English"
+                              default
+                            />
+                          {/if}
+                          Your browser does not support the video tag.
+                        </video>
+                        <div
+                          data-role="media-fallback"
+                          style="display: none;"
+                          class="relative aspect-video rounded-box overflow-hidden border border-base-content/20"
+                        >
+                          {#case MediaLive.preview_img(@media)}
+                            {#match poster when is_binary(poster)}
+                              <img src={poster} alt="" class="w-full h-full object-cover">
+                            {#match _}
+                              <div class="w-full h-full bg-base-200 flex items-center justify-center">
+                                <#Icon iconify="heroicons:video-camera" class="w-12 h-12 text-base-content/30" />
+                              </div>
+                          {/case}
+                          <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-3">
+                            <span class="text-white text-sm">{l("This video cannot be previewed")}</span>
+                            <a
+                              href={media_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="btn btn-sm btn-primary gap-2"
+                            >
+                              <#Icon iconify="heroicons:arrow-top-right-on-square" class="w-4 h-4" />
+                              {l("Open original")}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    {/if}
+                  {#elseif Bonfire.Files.has_extension?(media_url, [".ogg", ".ogv", ".ogx", ".ogm", ".spx", ".opus"])}
+                    {#if false}
+                      {!-- Handle short OGG files as GIF-style --}
+                      <div class="relative">
+                        <video
+                          class={@base_css, @video_css, "gif-as-mp4"}
+                          autoplay
+                          loop
+                          muted
+                          playsinline
+                          preload="metadata"
+                          title={Bonfire.Files.Media.media_label(@media)}
+                        >
+                          <source src={media_url} type="video/ogg">
+                          Your browser does not support the video tag.
+                        </video>
+                        <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
+                          GIF
+                        </div>
+                      </div>
+                    {#else}
+                      <div id={deterministic_dom_id(__MODULE__, id(@media), "ogg-wrapper", @parent_id)}>
+                        <video
+                          class={@base_css, @video_css}
+                          controls
+                          autoplay={@autoplay}
+                          muted={@muted}
+                          preload={if @autoplay, do: "auto", else: "metadata"}
+                          poster={MediaLive.preview_img(@media)}
+                          title={Bonfire.Files.Media.media_label(@media)}
+                          playsinline
+                          crossorigin="anonymous"
+                        >
+                          <source src={media_url} type="video/ogg">
+                          {#if e(@media, :metadata, "captions", nil)}
+                            <track
+                              kind="captions"
+                              src={e(@media, :metadata, "captions", nil)}
+                              srclang="en"
+                              label="English"
+                              default
+                            />
+                          {/if}
+                          Your browser does not support the video tag.
+                        </video>
+                        <div
+                          data-role="media-fallback"
+                          style="display: none;"
+                          class="relative aspect-video rounded-box overflow-hidden border border-base-content/20"
+                        >
+                          {#case MediaLive.preview_img(@media)}
+                            {#match poster when is_binary(poster)}
+                              <img src={poster} alt="" class="w-full h-full object-cover">
+                            {#match _}
+                              <div class="w-full h-full bg-base-200 flex items-center justify-center">
+                                <#Icon iconify="heroicons:video-camera" class="w-12 h-12 text-base-content/30" />
+                              </div>
+                          {/case}
+                          <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-3">
+                            <span class="text-white text-sm">{l("This video cannot be previewed")}</span>
+                            <a
+                              href={media_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="btn btn-sm btn-primary gap-2"
+                            >
+                              <#Icon iconify="heroicons:arrow-top-right-on-square" class="w-4 h-4" />
+                              {l("Open original")}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    {/if}
+                  {#elseif Bonfire.Files.has_extension?(media_url, [".webm"])}
+                    {#if false}
+                      {!-- Handle short WebM files as GIF-style --}
+                      <div class="relative">
+                        <video
+                          class={@base_css, @video_css, "gif-as-mp4"}
+                          autoplay
+                          loop
+                          muted
+                          playsinline
+                          preload="metadata"
+                          title={Bonfire.Files.Media.media_label(@media)}
+                        >
+                          <source src={media_url} type="video/webm">
+                          Your browser does not support the video tag.
+                        </video>
+                        <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
+                          GIF
+                        </div>
+                      </div>
+                    {#else}
+                      <div id={deterministic_dom_id(__MODULE__, id(@media), "webm-wrapper", @parent_id)}>
+                        <video
+                          class={@base_css, @video_css}
+                          controls
+                          autoplay={@autoplay}
+                          muted={@muted}
+                          preload={if @autoplay, do: "auto", else: "metadata"}
+                          poster={MediaLive.preview_img(@media)}
+                          title={Bonfire.Files.Media.media_label(@media)}
+                          playsinline
+                          crossorigin="anonymous"
+                        >
+                          <source src={media_url} type="video/webm">
+                          {#if e(@media, :metadata, "captions", nil)}
+                            <track
+                              kind="captions"
+                              src={e(@media, :metadata, "captions", nil)}
+                              srclang="en"
+                              label="English"
+                              default
+                            />
+                          {/if}
+                          Your browser does not support the video tag.
+                        </video>
+                        <div
+                          data-role="media-fallback"
+                          style="display: none;"
+                          class="relative aspect-video rounded-box overflow-hidden border border-base-content/20"
+                        >
+                          {#case MediaLive.preview_img(@media)}
+                            {#match poster when is_binary(poster)}
+                              <img src={poster} alt="" class="w-full h-full object-cover">
+                            {#match _}
+                              <div class="w-full h-full bg-base-200 flex items-center justify-center">
+                                <#Icon iconify="heroicons:video-camera" class="w-12 h-12 text-base-content/30" />
+                              </div>
+                          {/case}
+                          <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-3">
+                            <span class="text-white text-sm">{l("This video cannot be previewed")}</span>
+                            <a
+                              href={media_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="btn btn-sm btn-primary gap-2"
+                            >
+                              <#Icon iconify="heroicons:arrow-top-right-on-square" class="w-4 h-4" />
+                              {l("Open original")}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    {/if}
+                  {#elseif MediaLive.is_supported_audio_format?(@media.path, e(@media, :media_type, nil)) or
+                      e(@media, :media_type, nil) == "audio"}
+                    <div
+                      id={deterministic_dom_id(__MODULE__, id(@media), "audio-wrapper", @parent_id)}
+                      class="w-full"
+                    >
+                      <div class="flex items-center gap-3">
+                        {#case MediaLive.preview_img(@media)}
+                          {#match nil}
+                          {#match media_img}
+                            <div :if={MediaLive.is_image?(media_img)} class="bg-base-200">
+                              <LazyImage
+                                parent_id={deterministic_dom_id(__MODULE__, id(@media), "media_preview", @parent_id)}
+                                src={media_img}
+                                media={@media}
+                                alt=""
+                                class="w-16 h-16 object-cover"
+                                fallback_icon="octicon:file-media-24"
+                              />
+                            </div>
+                        {/case}
+                        {#case e(@media, :metadata, "name", nil)}
+                          {#match nil}
+                          {#match name}
+                            <div class="text-sm text-left font-semibold text-base-content/70">
+                              {name}
+                            </div>
+                        {/case}
+                      </div>
+                      <audio
+                        controls
+                        autoplay={@autoplay}
+                        class={@base_css}
+                        preload={if @autoplay, do: "auto", else: "metadata"}
+                        title={Bonfire.Files.Media.media_label(@media)}
+                        crossorigin="anonymous"
+                      >
+                        <source
+                          src={media_url}
+                          type={e(@media, :media_type, nil) || "audio/#{Bonfire.Files.file_extension_only(media_url) || "mp3"}"}
+                        />
+                        Your browser does not support the audio tag.
+                      </audio>
+                      <div
+                        data-role="media-fallback"
+                        style="display: none;"
+                        class="flex items-center gap-3 p-3 rounded-box border border-base-content/20 bg-base-200"
+                      >
+                        <div class="flex-shrink-0">
+                          <#Icon iconify="heroicons:musical-note" class="w-10 h-10 text-base-content/50" />
+                        </div>
+                        <div class="flex-1 min-w-0">
+                          <p class="text-sm text-base-content/70">{l("This audio cannot be previewed")}</p>
+                          <a
+                            href={media_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="btn btn-sm btn-primary gap-2 mt-2"
+                          >
+                            <#Icon iconify="heroicons:arrow-top-right-on-square" class="w-4 h-4" />
+                            {l("Open original")}
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  {#elseif MediaLive.preview_img(@media)}
+                    {!-- Handle media with preview images (like video.movie, video.other, etc.) --}
+                    <div class="rounded-box border border-base-content/20 overflow-hidden">
+                      {#case MediaLive.extract_oembed_url(e(@media, :metadata, "oembed", "html", nil)) ||
+                          e(@media, :metadata, "facebook", "video", nil) ||
+                          e(@media, :metadata, "twitter", "player", nil)}
+                        {#match embed_url when is_binary(embed_url)}
+                          {#if !(@show_embed || @autoplay) && socket_connected?(@__context__)}
+                            {!-- Preview thumbnail with action buttons overlay --}
+                            <div id={deterministic_dom_id(__MODULE__, id(@media), "preview", @parent_id)} class="relative">
+                              <LazyImage
+                                parent_id={deterministic_dom_id(__MODULE__, id(@media), "preview", @parent_id)}
+                                class="w-full aspect-video object-cover"
+                                alt={Bonfire.Files.Media.media_label(@media) || "Media preview"}
+                                src={MediaLive.preview_img(@media)}
+                                media={@media}
+                                fallback_icon="heroicons:play-circle"
+                              />
+                              {!-- Action buttons overlay --}
+                              <div class="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors flex items-center justify-center gap-3">
+                                {!-- Play inline button --}
+                                <div class="flex items-center bg-white/90 hover:bg-white rounded p-3 gap-6 shadow-lg transition-all hover:scale-110">
                                   <button
                                     type="button"
                                     phx-click="show_embed"
@@ -397,75 +457,68 @@
                                     <#Icon iconify="ph:play-duotone" class="w-6 h-6 text-gray-800" />
                                   </button>
                                   {!-- Open in new tab button --}
-                                  <a
-                                    href={media_url}
-                                    target="_blank"
-                                    class=""
-                                    title={l("Open in new tab")}
-                                  >
+                                  <a href={media_url} target="_blank" class="" title={l("Open in new tab")}>
                                     <#Icon iconify="ph:arrow-square-out-duotone" class="w-6 h-6 text-gray-600" />
                                   </a>
-                                  </div>
                                 </div>
                               </div>
-                              {#else}
-                              {!-- Embedded iframe  --}
-                              <div class="aspect-video">
-
-                 
-                                <iframe
-                                  src={rewrite_embed_url(embed_url, %{"autoplay" => (if @autoplay, do: "1", else: "0")})}
-                                  frameborder="0"
-                                  width="100%"
-                                  loading="lazy"
-                                  height="100%"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                  allowfullscreen="allowfullscreen"
-                                  picture-in-picture
-                                  referrerpolicy="strict-origin-when-cross-origin"
-                                  class={"rounded-t-box", @base_css}
-                                />
+                            </div>
+                          {#else}
+                            {!-- Embedded iframe --}
+                            <div class="aspect-video">
+                              <iframe
+                                src={rewrite_embed_url(embed_url, %{"autoplay" => if(@autoplay, do: "1", else: "0")})}
+                                frameborder="0"
+                                width="100%"
+                                loading="lazy"
+                                height="100%"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen="allowfullscreen"
+                                picture-in-picture
+                                referrerpolicy="strict-origin-when-cross-origin"
+                                class={"rounded-t-box", @base_css}
+                              />
+                            </div>
+                          {/if}
+                        {#match _}
+                          {!-- Fallback: Open in new tab only --}
+                          <div class="relative">
+                            <a href={media_url} target="_blank" class="block">
+                              <LazyImage
+                                parent_id={deterministic_dom_id(__MODULE__, id(@media), "preview", @parent_id)}
+                                class="w-full aspect-video object-cover hover:opacity-90 transition-opacity"
+                                alt={Bonfire.Files.Media.media_label(@media) || "Media preview"}
+                                src={MediaLive.preview_img(@media)}
+                                media={@media}
+                                fallback_icon="heroicons:play-circle"
+                              />
+                              <div class="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors flex items-center justify-center">
+                                <div class="bg-white/90 rounded-full p-3 shadow-lg">
+                                  <#Icon iconify="heroicons:arrow-top-right-on-square-20-solid" class="w-8 h-8 text-gray-800" />
+                                </div>
                               </div>
-                              {/if}
-                            {#match _}
-                              {!-- Fallback: Open in new tab only --}
-                              <div class="relative">
-                                <a href={media_url} target="_blank" class="block">
-                                  <LazyImage
-                                    parent_id={deterministic_dom_id(__MODULE__, id(@media), "preview", @parent_id)}
-                                    class="w-full aspect-video object-cover hover:opacity-90 transition-opacity"
-                                    alt={Bonfire.Files.Media.media_label(@media) || "Media preview"}
-                                    src={MediaLive.preview_img(@media)}
-                                    media={@media}
-                                    fallback_icon="heroicons:play-circle"
-                                  />
-                                  <div class="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors flex items-center justify-center">
-                                    <div class="bg-white/90 rounded-full p-3 shadow-lg">
-                                      <#Icon iconify="heroicons:arrow-top-right-on-square-20-solid" class="w-8 h-8 text-gray-800" />
-                                    </div>
-                                  </div>
-                                </a>
-                              </div>
-                          {/case}
-                          {#case Bonfire.Files.Media.media_label(@media)}
-                            {#match nil}
-                            {#match title}
-                              <div class="p-3 text-left bg-base-100">
-                                <h3 class="font-semibold text-base-content line-clamp-2 text-balance">{title}</h3>
-                                {#case MediaLive.provider(@media)}
-                                  {#match nil}
-                                  {#match provider}
-                                    <p class="text-sm text-base-content/70 mt-1 text-pretty">{provider}</p>
-                                {/case}
-                              </div>
-                          {/case}
-                        </div>
-                      {#else}
-                        <div class="pt-4 text-center">
-                          <a href={media_url} target="_blank" class="link">{l("View the %{media}", media: e(@media, :media_type, l("media")))}</a>
-                        </div>
-                      {/if}
-                    {/if}
+                            </a>
+                          </div>
+                      {/case}
+                      {#case Bonfire.Files.Media.media_label(@media)}
+                        {#match nil}
+                        {#match title}
+                          <div class="p-3 text-left bg-base-100">
+                            <h3 class="font-semibold text-base-content line-clamp-2 text-balance">{title}</h3>
+                            {#case MediaLive.provider(@media)}
+                              {#match nil}
+                              {#match provider}
+                                <p class="text-sm text-base-content/70 mt-1 text-pretty">{provider}</p>
+                            {/case}
+                          </div>
+                      {/case}
+                    </div>
+                  {#else}
+                    <div class="pt-4 text-center">
+                      <a href={media_url} target="_blank" class="link">{l("View the %{media}", media: e(@media, :media_type, l("media")))}</a>
+                    </div>
+                  {/if}
+                {/if}
             {/case}
           {/if}
       {/case}
