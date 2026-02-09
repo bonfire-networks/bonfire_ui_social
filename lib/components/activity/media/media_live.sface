@@ -128,7 +128,7 @@
             class="flex gap-2 overflow-x-auto scroll-smooth snap-x snap-mandatory pl-1"
             style="scrollbar-width: none; -ms-overflow-style: none;"
           >
-            {#for %{} = m <- @visual_list}
+            {#for {%{} = m, visual_index} <- Enum.with_index(@visual_list)}
               {#case Bonfire.Files.Media.media_label(m) || l("Sorry, no caption provided by author")}
                 {#match media_label}
                   <div
@@ -227,6 +227,7 @@
                               type="button"
                               phx-click="open"
                               phx-target={"#" <> deterministic_dom_id("media_carousel_modal", @parent_id)}
+                              onclick={"window.__carouselStartIndex = #{visual_index}; window.dispatchEvent(new CustomEvent('carousel-goto', {detail:{index:#{visual_index}}}))"}
                               class="w-full h-full block"
                             >
                               <div class="relative h-full overflow-hidden w-full">

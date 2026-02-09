@@ -7,6 +7,7 @@ defmodule Bonfire.UI.Social.Activity.MediaCarouselModalLive do
   @doc "Parent ID for deterministic DOM IDs"
   prop parent_id, :string, required: true
   prop modal_id, :string, default: nil
+
   @doc "Whether showing within flags context"
   prop showing_within, :atom, default: nil
 
