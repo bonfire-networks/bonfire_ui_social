@@ -7,6 +7,6 @@
   x-on:click="document.querySelectorAll('.unread-activity').forEach((activity) => {activity.classList.remove('unread-activity')})"
   class="btn lg:tooltip lg:tooltip-bottom btn-sm btn-circle z-50 btn-ghost btn-outline border-base-content/20 !flex"
 >
-  <#Icon iconify="ph:checks" class="w-5 h-5 text-primary" />
+  <#Icon iconify="ph:checks-duotone" class="w-5 h-5 text-primary" />
   <span class="sr-only">{l("Mark all as read")}</span>
 </button>
