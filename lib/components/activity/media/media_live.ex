@@ -423,7 +423,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     |> unwrap()
   end
 
-  def preview_img(%{media: media}), do: preview_img(media)
+  def preview_img(%{media: %{id: _} = media}), do: preview_img(media)
 
   def preview_img(%{} = media) do
     # Check for common app/site tile images which are often good previews
@@ -452,7 +452,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     # Never use video URLs as poster images
     preview =
       preview ||
-        if is_image_media_type?(media.media_type), do: media_img(media), else: nil
+        if is_image_media_type?(e(media, :media_type, nil)), do: media_img(media), else: nil
 
     preview |> unwrap()
   end

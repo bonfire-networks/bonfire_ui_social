@@ -151,42 +151,41 @@
                       </div>
                     </div>
                   {#match _}
-                    
                     <#Icon iconify="ph:fire-fill" class="w-6 h-6 text-yellow-500 flex-shrink-0" />
                     <div class="flex flex-col gap-2">
                       <div class="flex items-center gap-1">
-                      <LinkLive
+                        <LinkLive
                           to={"/users/" <> @character_username}
                           opts={"data-id": "subject_name"}
                           parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                           class="link link-hover font-bold"
                         >
-                        <Bonfire.UI.Common.AvatarLive
-                          parent_id={deterministic_dom_id(__MODULE__, nil, "sm-main", @parent_id)}
-                          user_id={@profile_id}
-                          src={@profile_media}
-                          title={@profile_name || @character_username}
-                          class="h-7 w-7 rounded-full"
-                          wrapper_class="flex-shrink-0"
-                        />
+                          <Bonfire.UI.Common.AvatarLive
+                            parent_id={deterministic_dom_id(__MODULE__, nil, "sm-main", @parent_id)}
+                            user_id={@profile_id}
+                            src={@profile_media}
+                            title={@profile_name || @character_username}
+                            class="h-7 w-7 rounded-full"
+                            wrapper_class="flex-shrink-0"
+                          />
                         </LinkLive>
                         {#if @subjects_more != []}
                           {#for {subject, idx} <- Enum.with_index(@subjects_more)}
                             {#if idx < 2}
-                            <LinkLive
+                              <LinkLive
                                 to={"/users/" <> e(subject, :character, :username, "")}
                                 opts={"data-id": "subject_name"}
                                 parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                                 class="link link-hover font-bold"
                               >
-                              <Bonfire.UI.Common.AvatarLive
-                                parent_id={deterministic_dom_id(__MODULE__, idx, "sm", @parent_id)}
-                                user_id={id(subject)}
-                                src={nil}
-                                title={e(subject, :profile, :name, nil)}
-                                class="h-7 w-7 rounded-full"
-                                wrapper_class="flex-shrink-0"
-                              />
+                                <Bonfire.UI.Common.AvatarLive
+                                  parent_id={deterministic_dom_id(__MODULE__, idx, "sm", @parent_id)}
+                                  user_id={id(subject)}
+                                  src={nil}
+                                  title={e(subject, :profile, :name, nil)}
+                                  class="h-7 w-7 rounded-full"
+                                  wrapper_class="flex-shrink-0"
+                                />
                               </LinkLive>
                             {/if}
                           {/for}
@@ -244,71 +243,71 @@
             showing_within={@showing_within}
           /> --}
         {#elseif @verb == "Boost"}
-          <div data-role="boosted_by"  style="margin-left: -40px" class="w-full">
+          <div data-role="boosted_by" style="margin-left: -40px" class="w-full">
             <div class="flex items-center gap-3 justify-start">
               <div class="flex items-start gap-4">
                 <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="w-6 h-6 text-primary flex-shrink-0" />
-                
+
                 <div class="flex flex-col gap-2">
                   <div class="flex items-center gap-1">
-                  <LinkLive
-                    to={"/users/" <> @character_username}
-                    opts={"data-id": "subject_name"}
-                    parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-                    class="link link-hover font-bold"
-                  >
-                    <Bonfire.UI.Common.AvatarLive
-                      parent_id={deterministic_dom_id(__MODULE__, nil, "smb-main", @parent_id)}
-                      user_id={@profile_id}
-                      src={@profile_media}
-                      title={@profile_name || @character_username}
-                      class="h-7 w-7 rounded-full"
-                      wrapper_class="flex-shrink-0"
-                    />
-                  </LinkLive>
+                    <LinkLive
+                      to={"/users/" <> @character_username}
+                      opts={"data-id": "subject_name"}
+                      parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
+                      class="link link-hover font-bold"
+                    >
+                      <Bonfire.UI.Common.AvatarLive
+                        parent_id={deterministic_dom_id(__MODULE__, nil, "smb-main", @parent_id)}
+                        user_id={@profile_id}
+                        src={@profile_media}
+                        title={@profile_name || @character_username}
+                        class="h-7 w-7 rounded-full"
+                        wrapper_class="flex-shrink-0"
+                      />
+                    </LinkLive>
                     {#if @subjects_more != []}
                       {#for {subject, idx} <- Enum.with_index(@subjects_more)}
                         {#if idx < 2}
-                        <LinkLive
-                          to={"/users/" <> e(subject, :character, :username, "")}
-                          opts={"data-id": "subject_name"}
-                          parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-                          class="link link-hover font-bold"
-                        >
-                          <Bonfire.UI.Common.AvatarLive
-                            parent_id={deterministic_dom_id(__MODULE__, idx, "smb", @parent_id)}
-                            user_id={id(subject)}
-                            src={nil}
-                            title={e(subject, :profile, :name, nil)}
-                            class="h-7 w-7 rounded-full"
-                            wrapper_class="flex-shrink-0"
-                          />
+                          <LinkLive
+                            to={"/users/" <> e(subject, :character, :username, "")}
+                            opts={"data-id": "subject_name"}
+                            parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
+                            class="link link-hover font-bold"
+                          >
+                            <Bonfire.UI.Common.AvatarLive
+                              parent_id={deterministic_dom_id(__MODULE__, idx, "smb", @parent_id)}
+                              user_id={id(subject)}
+                              src={nil}
+                              title={e(subject, :profile, :name, nil)}
+                              class="h-7 w-7 rounded-full"
+                              wrapper_class="flex-shrink-0"
+                            />
                           </LinkLive>
                         {/if}
                       {/for}
                     {/if}
                   </div>
-                
-                <div class="text-sm text-base-content/70">
-                  <LinkLive
-                    to={@path}
-                    opts={"data-id": "subject_name"}
-                    parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-                    class="link link-hover font-bold"
-                  >
-                    {#if @object_id == current_user_id(@__context__)}
-                      {l("you")}
-                    {#else}
-                      {@profile_name || @character_username}
-                    {/if}
-                  </LinkLive>
-                  {#case length(@subjects_more)}
-                    {#match 0}
-                    {#match n}
-                      {lp("and %{number} other", "and %{number} others", n, number: n)}
-                  {/case}
-                  {raw(@verb_display)} {l(" your activity")}
-                </div>
+
+                  <div class="text-sm text-base-content/70">
+                    <LinkLive
+                      to={@path}
+                      opts={"data-id": "subject_name"}
+                      parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
+                      class="link link-hover font-bold"
+                    >
+                      {#if @object_id == current_user_id(@__context__)}
+                        {l("you")}
+                      {#else}
+                        {@profile_name || @character_username}
+                      {/if}
+                    </LinkLive>
+                    {#case length(@subjects_more)}
+                      {#match 0}
+                      {#match n}
+                        {lp("and %{number} other", "and %{number} others", n, number: n)}
+                    {/case}
+                    {raw(@verb_display)} {l(" your activity")}
+                  </div>
                 </div>
               </div>
             </div>
