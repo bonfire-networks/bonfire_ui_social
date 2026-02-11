@@ -87,57 +87,19 @@
             </button>
           </div>
         {#elseif @verb == "Request to Quote"}
-          <div class="flex items-center w-full justify-between">
-            <div class="flex items-center flex-1 gap-3">
-              <#Icon iconify="ph:quotes-duotone" class="flex-shrink-0 w-4 h-4 text-info" />
-              <div class="flex gap-2">
-                <div class="font-medium text-sm text-base-content/70">
-                  {@profile_name || @character_username}
-
-                  {raw(@verb_display)}
-                </div>
-              </div>
-            </div>
-            <div class="flex gap-2">
-              {#case {is_nil(e(@request, :accepted_at, nil)), is_nil(e(@request, :ignored_at, nil))}}
-                {#match {true, true}}
-                  <button
-                    :on-click="Bonfire.Social.Objects:quote_accept"
-                    phx-value-id={id(@activity_id)}
-                    type="button"
-                    class="btn btn-xs btn-success"
-                  >
-                    {l("Accept")}
-                  </button>
-                  <button
-                    :on-click="Bonfire.Social.Objects:quote_reject"
-                    phx-value-id={id(@activity_id)}
-                    type="button"
-                    class="btn btn-xs btn-error"
-                  >
-                    {l("Decline")}
-                  </button>
-                {#match {true, _false}}
-                  <span class="btn btn-xs btn-error cursor-default">{l("Previously rejected")}</span>
-
-                  <button
-                    :on-click="Bonfire.Social.Objects:quote_accept"
-                    phx-value-id={id(@activity_id)}
-                    type="button"
-                    class="btn btn-xs btn-success"
-                  >
-                    {l("Accept")}
-                  </button>
-                {#match {_false, _true}}
-                  <button
-                    :on-click="Bonfire.Social.Objects:quote_reject"
-                    phx-value-id={id(@activity_id)}
-                    type="button"
-                    class="btn btn-xs btn-error"
-                  >
-                    {l("Remove quote")}
-                  </button>
-              {/case}
+          <div class="flex items-center w-full gap-3">
+            <#Icon iconify="ph:quotes-duotone" class="flex-shrink-0 w-5 h-5 text-info" />
+            <div class="font-medium text-sm text-base-content/70">
+              <LinkLive
+                to={@path}
+                opts={"data-id": "subject_name"}
+                parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
+                class="link link-hover font-bold text-base-content"
+              >
+                {@profile_name || @character_username}
+              </LinkLive>
+              {" "}
+              {l("wants to quote your post")}
             </div>
           </div>
         {#elseif @verb in ["Like", "React"]}

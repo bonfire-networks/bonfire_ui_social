@@ -1,0 +1,59 @@
+{#case e(@activity, :edge, :request, nil)}
+  {#match nil}
+    <div />
+  {#match request}
+    <div data-role="quote_request_footer" class="flex items-center gap-4">
+      {#case {is_nil(e(request, :accepted_at, nil)), is_nil(e(request, :ignored_at, nil))}}
+        {#match {true, true}}
+          {!-- Pending: show Accept and Decline --}
+          <button
+            :on-click="Bonfire.Social.Objects:quote_accept"
+            phx-value-id={id(@activity)}
+            type="button"
+            class="btn btn-sm btn-success gap-1"
+          >
+            <#Icon iconify="ph:check-bold" class="w-4 h-4" />
+            {l("Accept quote")}
+          </button>
+          <button
+            :on-click="Bonfire.Social.Objects:quote_reject"
+            phx-value-id={id(@activity)}
+            type="button"
+            class="btn btn-sm btn-outline btn-error gap-1"
+          >
+            <#Icon iconify="ph:x-bold" class="w-4 h-4" />
+            {l("Decline")}
+          </button>
+        {#match {true, _false}}
+          {!-- Previously rejected: show status + Accept option --}
+          <span class="flex items-center gap-2 text-error text-sm">
+            <#Icon iconify="ph:x-duotone" class="w-3.5 h-3.5" />
+            {l("Previously declined")}
+          </span>
+          <button
+            :on-click="Bonfire.Social.Objects:quote_accept"
+            phx-value-id={id(@activity)}
+            type="button"
+            class="btn btn-sm btn-success gap-1"
+          >
+            <#Icon iconify="ph:check-bold" class="w-4 h-4" />
+            {l("Accept")}
+          </button>
+        {#match {_false, _true}}
+          {!-- Accepted: show status + Remove option --}
+          <span class="flex items-center gap-1 text-primary text-sm">
+            <#Icon iconify="ph:checks-duotone" class="w-3.5 h-3.5" />
+            {l("Quote accepted")}
+          </span>
+          <button
+            :on-click="Bonfire.Social.Objects:quote_reject"
+            phx-value-id={id(@activity)}
+            type="button"
+            class="btn btn-sm btn-outline btn-error gap-1"
+          >
+            <#Icon iconify="ph:trash" class="w-4 h-4" />
+            {l("Remove quote")}
+          </button>
+      {/case}
+    </div>
+{/case}

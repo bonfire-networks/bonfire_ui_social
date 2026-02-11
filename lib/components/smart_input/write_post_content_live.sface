@@ -13,6 +13,8 @@
     autocomplete="off"
     phx-target={@event_target || "#smart_input"}
     data-scope="composer_form"
+    x-on:keydown.meta.enter.prevent="document.getElementById('submit_btn')?.click()"
+    x-on:keydown.ctrl.enter.prevent="document.getElementById('submit_btn')?.click()"
     class="with_editor flex-1"
   >
     {#if e(@smart_input_opts, :create_object_type, nil) == "message" ||

@@ -627,9 +627,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
           subject_user
         )
         |> debug("component_activity_subject result")) ++
+       if(verb == "Request to Quote",
+         do: [],
+         else: component_object(object, object_type, %{primary_image: primary_image})
+       ) ++
+       if(verb == "Request to Quote" or showing_within == :media, do: [], else: attachments_component) ++
        component_maybe_quote_post(activity_component_id, quotes) ++
-       component_object(object, object_type, %{primary_image: primary_image}) ++
-       if(showing_within != :media, do: attachments_component, else: []) ++
        component_actions(
          verb,
          activity,
@@ -1224,37 +1227,57 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "Request to Quote" = verb,
         activity,
         object,
-        object_type,
+        _object_type,
         _,
         activity_inception,
         _
       ) do
-    # activity: repo().maybe_preload(activity, subject: [:character]),
+    quoter = e(activity, :subject, nil)
+    quoter_profile = e(quoter, :profile, nil)
+    quoter_character = e(quoter, :character, nil)
     quote_post = e(activity, :edge, :subject, nil)
-    id = "nested_quote_post_#{activity_inception}_#{id(quote_post)}"
 
-    ([
-       {Bonfire.UI.Social.Activity.SubjectMinimalLive,
-        %{
-          verb: verb,
-          subject_id: e(activity, :subject_id, nil),
-          subjects_more: e(activity, :subjects_more, []),
-          profile: e(activity, :subject, :profile, nil),
-          character: e(activity, :subject, :character, nil)
-        }},
-       {Bonfire.UI.Social.ActivityLive,
-        %{
-          id: id,
-          activity: %{subject: e(activity, :subject, nil)},
-          object: quote_post,
-          activity_inception: id,
-          showing_within: :quote_post,
-          viewing_main_object: false,
-          hide_actions: true,
-          class: "quote-preview"
-        }
-        |> prepare_assigns()}
-     ] ++ component_activity_maybe_creator(activity, object, object_type))
+    original_creator = e(object, :created, :creator, nil)
+    quoted_id = "quote_request_quoted_#{activity_inception}_#{id(object)}"
+
+    [
+      # Header: "nikita wants to quote your post"
+      {Bonfire.UI.Social.Activity.SubjectMinimalLive,
+       %{
+         verb: verb,
+         subject_id: e(activity, :subject_id, nil) || id(quoter),
+         subjects_more: e(activity, :subjects_more, []),
+         profile: quoter_profile,
+         character: quoter_character
+       }},
+      # Quoter's subject line (with avatar)
+      {Bonfire.UI.Social.Activity.SubjectLive,
+       %{
+         verb: "Create",
+         subject_id: id(quoter),
+         profile: quoter_profile,
+         character: quoter_character
+       }},
+      # Quoter's note
+      {Bonfire.UI.Social.Activity.NoteLive,
+       %{object: quote_post}},
+      # Your quoted post (with border + quote icon)
+      {Bonfire.UI.Social.ActivityLive,
+       %{
+         id: quoted_id,
+         activity: %{
+           subject: original_creator,
+           subject_id: e(object, :created, :creator_id, nil) || id(original_creator)
+         },
+         object: object,
+         activity_inception: quoted_id,
+         showing_within: :quote_preview,
+         viewing_main_object: false,
+         hide_actions: true,
+         class: "quote-preview"
+       }
+       |> prepare_assigns()}
+    ]
     |> debug("MATCHED react case for verb: #{verb} in component_activity_subject")
   end
 
@@ -2256,6 +2279,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_actions(_, _, _, showing_within, _, _)
       when showing_within == :smart_input,
       do: []
+
+  # Quote request notifications show a custom footer with quote preview + accept/decline buttons
+  def component_actions("Request to Quote", activity, _, _, _, _) do
+    [{Bonfire.UI.Social.Activity.QuoteRequestFooterLive, %{activity: activity}}]
+  end
 
   # WIP: THIS NEEDS TO BE REFACTORED ACCORDING TO actions_for_object_type
   def component_actions("Flag", _, _, _, _, _), do: [Bonfire.UI.Social.Activity.ActionsLive]
