@@ -4,7 +4,7 @@
   {#match suggested_profiles}
     <Bonfire.UI.Common.WidgetBlockLive
       :if={current_user_id(@__context__)}
-      class="w-full flex-auto mx-auto"
+      class="w-full p-3 rounded-xl bg-base-content/5 border border-base-content/10 overflow-hidden"
       widget_title={e(@widget_title, l("Who to follow"))}
     >
       <:action>
@@ -34,7 +34,7 @@
         >
           {#for user <- suggested_profiles}
             <div
-              class="flex-shrink-0 snap-start rounded-xl bg-base-200 overflow-hidden"
+              class="flex-shrink-0 snap-start rounded-xl bg-base-100 overflow-hidden"
               style="width: calc(50% - 8px);"
             >
               <StatelessComponent
