@@ -18,6 +18,9 @@
     participants={@participants}
     last_reply_id={@last_reply_id}
     thread_boost_count={@thread_boost_count}
+    object={@object}
+    activity={@activity}
+    is_remote={e(@object, :peered, :canonical_uri, nil) != nil}
   >
     <Bonfire.UI.Social.ThreadControlsLive
       event_target={@myself}

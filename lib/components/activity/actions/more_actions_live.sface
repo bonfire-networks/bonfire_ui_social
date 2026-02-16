@@ -113,7 +113,7 @@
         </Bonfire.UI.Common.OpenModalLive>
       </li>
 
-      {#case e(@object, :peered, :canonical_uri, nil) || @is_remote}
+      <!-- {#case e(@object, :peered, :canonical_uri, nil) || @is_remote}
         {#match nil}
         {#match false}
         {#match canonical_uri}
@@ -150,7 +150,7 @@
               <#Icon iconify="ph:arrow-square-out-duotone" class="w-5 h-5 shrink-0" />
             </a>
           </li>
-      {/case}
+      {/case} -->
 
       <li
         :if={module_enabled?(Bonfire.Social.Answers, @__context__) and @showing_within == :thread and
@@ -237,7 +237,7 @@
             @object,
             @object_boundary
           )}
-        <li>
+        <!-- <li>
           <StatefulComponent
             module={maybe_component(Bonfire.UI.Posts.DownloadMarkLive, @__context__)}
             id={deterministic_dom_id(
@@ -249,7 +249,7 @@
             object_id={id(@object)}
             as_icon={false}
           />
-        </li>
+        </li> -->
 
         <StatelessComponent
           :if={extension_enabled?(:bonfire_open_science)}
@@ -338,7 +338,19 @@
       {#match _}
     {/case}
 
-    {#if current_user_id(@__context__) != @creator_id and @verb != "Flag" and
+    
+
+    <StatelessComponent
+      module={maybe_component(Bonfire.Label.Web.ContentLabelLive, @__context__)}
+      object={@object}
+      scope={:activity}
+      parent_id={@activity_component_id || id(@activity)}
+      object_boundary={@object_boundary}
+      target={"##{@activity_component_id}"}
+      btn_label={l("Label this %{object}", object: e(@object_type_readable, l("object")))}
+    />
+  
+        {#if current_user_id(@__context__) != @creator_id and @verb != "Flag" and
         module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}
       <li class="m-1 border-t border-base-content/20" />
 
@@ -395,17 +407,7 @@
       {/if}
     {/if}
 
-    <StatelessComponent
-      module={maybe_component(Bonfire.Label.Web.ContentLabelLive, @__context__)}
-      object={@object}
-      scope={:activity}
-      parent_id={@activity_component_id || id(@activity)}
-      object_boundary={@object_boundary}
-      target={"##{@activity_component_id}"}
-      btn_label={l("Label this %{object}", object: e(@object_type_readable, l("object")))}
-    />
-
-    {!-- Block the author, etc --}
+        {!-- Block the author, etc --}
     <StatelessComponent
       :if={@creator_id && current_user_id(@__context__) != @creator_id}
       module={maybe_component(Bonfire.UI.Boundaries.BlockMenuButtonsLive, @__context__)}
@@ -417,7 +419,7 @@
       peered={e(@object, :peered, nil)}
       with_icon
     />
-
+      
     {#if @viewing_main_object && @thread_id && @object_type != Bonfire.Data.Social.Message &&
         module_enabled?(Bonfire.Boundaries.Locking.LiveHandler, @__context__)}
       {#if Bonfire.Boundaries.can?(@__context__, :grant, @object_boundary)}

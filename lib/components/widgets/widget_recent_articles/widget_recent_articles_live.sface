@@ -5,61 +5,67 @@
       {#match [articles: []]}
       {#match [articles: articles]}
         <Bonfire.UI.Common.WidgetBlockLive
-          title_class="text-lg mb-4 font-bold tracking-wide"
-          class="w-full flex-auto mx-auto"
           widget_title={@widget_title || l("Recent Articles")}
         >
-          <:action>
-            <div style="top: 140px;" class="flex relative gap-1">
-              <button
-                type="button"
-                class="btn btn-circle btn-primary btn-soft absolute left-0 z-50"
-                phx-click={JS.dispatch("scroll-left", to: "#recent-articles-carousel")}
-              >
-                <#Icon iconify="ph:caret-left" class="w-4 h-4" />
-              </button>
-              <button
-                type="button"
-                class="btn btn-circle btn-primary btn-soft absolute right-0 z-50"
-                phx-click={JS.dispatch("scroll-right", to: "#recent-articles-carousel")}
-              >
-                <#Icon iconify="ph:caret-right" class="w-4 h-4" />
-              </button>
-            </div>
-          </:action>
+          <div class="flex flex-col divide-y divide-base-content/20">
+            {#for fp <- articles}
+              {#case {e(fp, :activity, nil), e(fp, :activity, :object, nil) || e(fp, :object, nil),
+                 e(fp, :activity, :subject, nil) || e(fp, :subject, nil)}}
+                {#match {activity, object, subject} when not is_nil(object)}
+                  {#case Bonfire.Files.split_primary_image(
+                      e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
+                        e(object, :media, nil)
+                    )}
+                    {#match {primary_image, _files}}
+                      <article class="group flex gap-4 py-4 first:pt-0 last:pb-0">
+                        {!-- Content --}
+                        <div class="flex flex-col gap-1 flex-1 min-w-0">
+                          {!-- Author badge --}
+                          {#case subject}
+                            {#match author when not is_nil(author)}
+                              <span class="text-xs font-medium text-primary/80 uppercase tracking-wide truncate max-w-full">
+                                {e(author, :profile, :name, nil) || e(author, :character, :username, l("Unknown"))}
+                              </span>
+                            {#match _}
+                          {/case}
 
-          <div class="grid grid-cols-1 overflow-hidden">
-            <div
-              id="recent-articles-carousel"
-              class="flex gap-3 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2"
-              phx-hook="CarouselScroll"
-            >
-              {#for fp <- articles}
-                {#case {e(fp, :activity, nil), e(fp, :activity, :object, nil) || e(fp, :object, nil),
-                   e(fp, :activity, :subject, nil) || e(fp, :subject, nil)}}
-                  {#match {activity, object, subject} when not is_nil(object)}
-                    {#case Bonfire.Files.split_primary_image(
-                        e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
-                          e(object, :media, nil)
-                      )}
-                      {#match {primary_image, _files}}
-                        <div class="flex-shrink-0 snap-start" style="width: calc(100% - 64px);">
-                          <Bonfire.UI.Social.Activity.ArticleLive
-                            object={object}
-                            activity={activity}
-                            subject={subject}
-                            primary_image={primary_image}
-                            showing_within={:widget}
-                            viewing_main_object={false}
-                            activity_component_id={id(activity) || id(object)}
-                            parent_id="widget_articles"
-                          />
+                          {!-- Title --}
+                          <LinkLive
+                            to={path(object)}
+                            class="text-sm font-semibold link link-hover line-clamp-2 leading-snug transition-colors"
+                          >
+                            {rich(e(object, :post_content, :name, nil) || l("Untitled"))}
+                          </LinkLive>
+
+                          {!-- Description --}
+                          {#case e(object, :post_content, :summary, nil) || e(object, :post_content, :html_body, nil)}
+                            {#match description when is_binary(description) and description != ""}
+                              <p class="text-xs text-base-content/60 line-clamp-2 leading-relaxed">
+                                {Bonfire.Common.Text.sentence_truncate(Bonfire.Common.Text.text_only(description), 200, "...")}
+                              </p>
+                            {#match _}
+                          {/case}
                         </div>
-                    {/case}
-                  {#match _}
-                {/case}
-              {/for}
-            </div>
+
+                        {!-- Thumbnail --}
+                        {#case Media.media_url(primary_image)}
+                          {#match url when is_binary(url)}
+                            <LinkLive to={path(object)} class="block shrink-0 w-[82px] h-[82px] overflow-hidden rounded-lg">
+                              <LazyImage
+                                parent_id={deterministic_dom_id("article_widget_thumb", id(activity) || id(object))}
+                                class="w-[82px] h-[82px] rounded-lg object-cover transition-all"
+                                fallback_class="w-4 h-4 text-base-content/50"
+                                src={url}
+                                fallback_icon="ion:newspaper-outline"
+                              />
+                            </LinkLive>
+                          {#match _}
+                        {/case}
+                      </article>
+                  {/case}
+                {#match _}
+              {/case}
+            {/for}
           </div>
         </Bonfire.UI.Common.WidgetBlockLive>
     {/case}

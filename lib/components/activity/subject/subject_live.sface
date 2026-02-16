@@ -153,7 +153,9 @@
           class="btn btn-soft btn-accent btn-xs"
         >From {DatesTimes.format_duration(e(@extra_info, :info, "timestamps", "in", ""))} to {DatesTimes.format_duration(e(@extra_info, :info, "timestamps", "out", ""))}</button>
       {#else}
-        {#if @verb != "Create"}
+      <!-- NOTE: Need to find a better way to optionally display the info because it breakes the line -->
+        <!-- {#if @verb != "Create"}
+        
           <span class="text-sm text-[15px] text-base-content/60 hidden lg:inline-block">
             {#case @replies_more_count || 0}
               {#match 0}
@@ -168,7 +170,7 @@
                 )}
             {/case}
           </span>
-        {/if}
+        {/if} -->
       {/if}
 
       <span class="text-sm text-base-content/70">&nbsp;·&nbsp;</span>
