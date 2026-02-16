@@ -530,7 +530,12 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       else
         socket
         |> assign(assigns)
-        |> insert_comments({:replies, replies})
+        |> insert_comments(
+          {:replies,
+           Bonfire.Social.Activities.prepare_subject_and_creator(replies,
+             current_user: current_user(assigns) || current_user(socket)
+           )}
+        )
       end
     else
       e ->
@@ -664,7 +669,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     else
       debug("send flat replies to stream")
 
-      replies
+      Bonfire.Social.Activities.prepare_subject_and_creator(replies, opts)
       |> {:replies, ...}
     end
     |> send_thread_updates(
