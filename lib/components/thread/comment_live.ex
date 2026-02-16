@@ -25,9 +25,14 @@ defmodule Bonfire.UI.Social.CommentLive do
 
   prop activity_preloads, :tuple, default: {nil, nil}
 
+  @max_visual_depth 8
+
   def render(assigns) do
+    visual_level = min(assigns.thread_level, @max_visual_depth)
+
     assigns
     |> assign(:activity, get_activity(assigns.activity || assigns.comment))
+    |> assign(:visual_level, visual_level)
     |> render_sface()
   end
 

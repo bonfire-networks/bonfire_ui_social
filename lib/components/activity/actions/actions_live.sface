@@ -40,7 +40,7 @@ data-show-plain-actions={!Settings.get(
     --}
     <div
       x-transition
-      class="flex feed-clickable mt-2 flex-1 w-full md:w-auto items-center justify-end gap-4"
+      class="flex feed-clickable mt-2 flex-1 w-full md:w-auto items-center justify-between lg:justify-end gap-4"
     >
       <div class="" :if={@is_answer && @showing_within == :thread}>
         <div class="flex items-center gap-2 text-success text-sm">

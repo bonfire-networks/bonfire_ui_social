@@ -691,6 +691,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       tabIndex="0"
       class={[
         "p-5 activity-padding activity relative flex flex-col gap-1 #{@class}",
+        "activity-padding-compact": @showing_within == :thread && !@viewing_main_object,
         "hover:bg-primary hover:bg-opacity-5":
           @showing_within not in [:thread, :smart_input, :widget] && !@activity_inception,
         "replied !p-0 mb-8":

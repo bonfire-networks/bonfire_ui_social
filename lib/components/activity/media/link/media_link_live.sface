@@ -114,6 +114,7 @@
                   <Bonfire.UI.Common.AvatarLive
                     src={creator.avatar_url}
                     name={creator.display_name}
+                    title={creator.display_name}
                     wrapper_class="avatar"
                     class="w-4 h-4"
                   />

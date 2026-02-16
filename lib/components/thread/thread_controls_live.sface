@@ -1,7 +1,7 @@
 <div class="p-2 border-t border-base-content/20">
   <div :if={current_user_id(@__context__)} class="flex flex-1 gap-2">
     <div data-position="bottom" phx-hook="Tooltip" id="layout-dropdown" class="">
-      <label tabindex="0" class="tooltip-button btn btn-sm">
+      <label tabindex="0" class="tooltip-button btn btn-outline border-base-content/30 btn-sm">
         {#if @thread_mode == :flat}
           <#Icon iconify="bi:list" class="w-4 h-4" />
           <span class="hidden lg:block">{l("Linear")}</span>
@@ -14,7 +14,6 @@
         tabindex="0"
         class="tooltip z-dropdown menu bg-base-100 shadow-lg border rounded-xl border-base-content/20   w-52 absolute top-0 left-0 hidden"
         id="thread_controls_content"
-        phx-update="ignore"
       >
         <li
           phx-click="set"
@@ -26,7 +25,7 @@
             <!-- <#Icon iconify="bi:list-nested" class="w-4 h-4" /> -->
             {l("Threaded replies")}
             <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
-              {#if @thread_mode != :flat}
+              {#if @thread_mode == :nested}
                 <span class="w-[14px] h-[14px] bg-primary rounded-full" />
               {/if}
             </div>
@@ -41,9 +40,9 @@
         >
           <a class="flex gap-3 px-2 justify-between items-center text-base-content">
             <!-- <#Icon iconify="bi:list" class="w-4 h-4" /> -->
-            {l("Flat list")}
+            {l("Linear replies")}
             <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
-              {#if @thread_mode == :flat}
+              {#if @thread_mode != :nested}
                 <span class="w-[14px] h-[14px] bg-primary rounded-full" />
               {/if}
             </div>
@@ -53,7 +52,7 @@
     </div>
 
     <div data-position="bottom" phx-hook="Tooltip" id="order_dropdown_thread" class="flex relative">
-      <label tabindex="0" class="tooltip-button btn btn-sm">
+      <label tabindex="0" class="tooltip-button btn btn-outline border-base-content/30 btn-sm">
         {#case {@sort_by, @sort_order}}
           {#match {nil, :desc}}
             <span class="flex items-center">

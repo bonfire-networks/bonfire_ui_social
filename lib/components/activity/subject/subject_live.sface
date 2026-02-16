@@ -18,7 +18,7 @@
       aria-expanded="true"
     > --}
   <LinkLive
-    :if={@subject_id && !Media.hide_avatars?(@__context__, @showing_within)}
+    :if={@subject_id}
     opts={[
       "data-id": "subject_avatar",
       "data-subject-id": @subject_id,
@@ -30,7 +30,8 @@
       "!relative !ml-0 ": @viewing_main_object,
       "margin-compact":
         (@__context__[:ui_compact] && !@viewing_main_object) ||
-          @showing_within in [:smart_input, :quote_preview]
+          @showing_within in [:smart_input, :quote_preview] ||
+          (@showing_within == :thread && !@viewing_main_object)
     ]}
     to={@path}
     label={e(@character_username, "") <> " profile"}
@@ -46,7 +47,8 @@
         "rounded-full w-12 h-12",
         "avatar-compact":
           @__context__[:ui_compact] ||
-            @showing_within in [:smart_input, :quote_preview]
+            @showing_within in [:smart_input, :quote_preview] ||
+            (@showing_within == :thread && !@viewing_main_object)
       ]}
       disable_lazy={@disable_lazy}
     />
@@ -111,7 +113,7 @@
       </LinkLive>
     </div>
     <span
-      :if={@showing_within != :smart_input}
+      :if={@showing_within not in [:smart_input]}
       data-id="subject_secondary"
       class="flex flex-1 items-center gap-1"
     >

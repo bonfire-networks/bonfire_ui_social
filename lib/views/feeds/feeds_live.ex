@@ -247,10 +247,22 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
     import Bonfire.UI.Common.Timing
 
+    filters = input_to_atoms(attrs)
+
+    # Wrap single object_types string from URL param into a list, since feed_filters expects lists
+    filters =
+      case filters do
+        %{object_types: types} when is_binary(types) ->
+          Map.put(filters, :object_types, List.wrap(Types.maybe_to_atom(types)))
+
+        _ ->
+          filters
+      end
+
     feed_assigns =
       time_section :lv_feed_default_assigns do
         LiveHandler.feed_default_assigns(
-          {feed || e(assigns(socket), :live_action, :default), input_to_atoms(attrs)},
+          {feed || e(assigns(socket), :live_action, :default), filters},
           socket
         )
       end
