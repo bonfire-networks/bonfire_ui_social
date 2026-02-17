@@ -4,9 +4,7 @@
     {#case load(current_user, @limit)}
       {#match [articles: []]}
       {#match [articles: articles]}
-        <Bonfire.UI.Common.WidgetBlockLive
-          widget_title={@widget_title || l("Recent Articles")}
-        >
+        <Bonfire.UI.Common.WidgetBlockLive widget_title={@widget_title || l("Recent Articles")}>
           <div class="flex flex-col divide-y divide-base-content/20">
             {#for fp <- articles}
               {#case {e(fp, :activity, nil), e(fp, :activity, :object, nil) || e(fp, :object, nil),

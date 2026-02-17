@@ -1,80 +1,74 @@
 <div>
   <div class="flex justify-between px-4 p-2 pt-0 items-center">
-  <div class="flex items-center gap-2 ">
-    <div>
-      <div class="">
-        <div class="flex items-center">
-          <div class="flex items-center flex-1 gap-4">
-            {#case @last_reply_id}
-              {#match nil}
-                {!-- <span class="loading loading-spinner loading-sm text-base-content/70" />
+    <div class="flex items-center gap-2">
+      <div>
+        <div class="">
+          <div class="flex items-center">
+            <div class="flex items-center flex-1 gap-4">
+              {#case @last_reply_id}
+                {#match nil}
+                  {!-- <span class="loading loading-spinner loading-sm text-base-content/70" />
                   <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div> --}
-              {#match false}
-                <div class="flex items-center gap-1">
-                  <div class="text-sm font-medium text-base-content/90 text-center mr-1">0</div>
-                  <div class="sr-only text-sm tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
-                  <#Icon iconify="ph:chat-circle-duotone" class="w-4 h-4 text-base-content/70" />
-                </div>
-              {#match _}
-                <div class="text-sm tracking-wide text-base-content/70">
-                  {l("Last Reply")} <span class="font-medium text-sm text-base-content/90">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</span>
-                </div>
-            {/case}
-            <div :if={@reply_count != 0} class="flex items-center gap-1">
-              <div data-id="reply_count" class="text-sm font-medium text-base-content/90 text-center">{@reply_count || 0}</div>
-              <div class="sr-only text-sm tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
-              <#Icon iconify="ph:chat-circle-duotone" class="w-4 h-4 text-base-content/70" />
-            </div>
-            <div
-              :if={@showing_within != :messages and
-                extension_enabled?(:bonfire_ui_reactions, @__context__)}
-              class="flex items-center gap-1"
-            >
-              <div class="text-sm font-medium text-base-content/90 text-center">{@thread_boost_count || 0}</div>
+                {#match false}
+                  <div class="flex items-center gap-1">
+                    <div class="text-sm font-medium text-base-content/90 text-center mr-1">0</div>
+                    <div class="sr-only text-sm tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
+                    <#Icon iconify="ph:chat-circle-duotone" class="w-4 h-4 text-base-content/70" />
+                  </div>
+                {#match _}
+                  <div class="text-sm tracking-wide text-base-content/70">
+                    {l("Last Reply")} <span class="font-medium text-sm text-base-content/90">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</span>
+                  </div>
+              {/case}
+              <div :if={@reply_count != 0} class="flex items-center gap-1">
+                <div data-id="reply_count" class="text-sm font-medium text-base-content/90 text-center">{@reply_count || 0}</div>
+                <div class="sr-only text-sm tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
+                <#Icon iconify="ph:chat-circle-duotone" class="w-4 h-4 text-base-content/70" />
+              </div>
+              <div
+                :if={@showing_within != :messages and
+                  extension_enabled?(:bonfire_ui_reactions, @__context__)}
+                class="flex items-center gap-1"
+              >
+                <div class="text-sm font-medium text-base-content/90 text-center">{@thread_boost_count || 0}</div>
 
-              <div class="sr-only text-sm tracking-wide text-base-content/70 text-center">{l("Boosts")}</div>
-              <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="w-4 h-4 text-base-content/70" />
-            </div>
-            <div class="flex items-center gap-1">
-              <div class="text-sm font-medium text-base-content/90 text-center">{@participant_count || 0}</div>
-              <#Icon iconify="ph:users-duotone" class="w-4 h-4 text-base-content/70" />
-              <div class="text-sm sr-only tracking-wide text-base-content/70 text-center">{l("Participants")}</div>
+                <div class="sr-only text-sm tracking-wide text-base-content/70 text-center">{l("Boosts")}</div>
+                <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="w-4 h-4 text-base-content/70" />
+              </div>
+              <div class="flex items-center gap-1">
+                <div class="text-sm font-medium text-base-content/90 text-center">{@participant_count || 0}</div>
+                <#Icon iconify="ph:users-duotone" class="w-4 h-4 text-base-content/70" />
+                <div class="text-sm sr-only tracking-wide text-base-content/70 text-center">{l("Participants")}</div>
+              </div>
             </div>
           </div>
         </div>
-
-  
       </div>
     </div>
-  </div>
-  <div class="flex items-center gap-2">
-   
-  {#case e(@object, :peered, :canonical_uri, nil) || @is_remote}
+    <div class="flex items-center gap-2">
+      {#case e(@object, :peered, :canonical_uri, nil) || @is_remote}
         {#match nil}
         {#match false}
         {#match canonical_uri}
+          <a
+            phx-click="Bonfire.Social.Feeds:fetch_thread"
+            phx-target={@event_target}
+            phx-value-id={id(@object) || id(@activity)}
+            class="btn btn-outline border-base-content/30 btn-sm"
+          >
+            <span class="text-sm font-medium">{l("Get latest replies")}</span>
+            <!-- <#Icon iconify="bi:list-nested" class="w-5 h-5 shrink-0 text-base-content" /> -->
+          </a>
 
-            <a
-              phx-click="Bonfire.Social.Feeds:fetch_thread"
-              phx-target={@event_target}
-              phx-value-id={id(@object) || id(@activity)}
-              class="btn btn-outline border-base-content/30 btn-sm"
-            >
-              <span class="text-sm font-medium">{l("Get latest replies")}</span>
-              <!-- <#Icon iconify="bi:list-nested" class="w-5 h-5 shrink-0 text-base-content" /> -->
-            </a>
-
-
-            <a
-              href={canonical_uri}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn btn-outline btn-circle border-base-content/30 btn-sm"
-            >
-              <span class="text-sm sr-only font-medium">{l("View remotely")}</span>
-              <#Icon iconify="ph:arrow-square-out-duotone" class="w-5 h-5 shrink-0" />
-            </a>
-
+          <a
+            href={canonical_uri}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-outline btn-circle border-base-content/30 btn-sm"
+          >
+            <span class="text-sm sr-only font-medium">{l("View remotely")}</span>
+            <#Icon iconify="ph:arrow-square-out-duotone" class="w-5 h-5 shrink-0" />
+          </a>
       {/case}
 
       {#if Types.object_type(@object) in [Bonfire.Data.Social.Post] and
@@ -95,31 +89,34 @@
               "thread_stats"
             )}
             object_id={id(@object)}
-            as_icon={true}
+            as_icon
           />
         </div>
       {/if}
-      </div>
+    </div>
   </div>
-        <div :if={@participants && Enum.count(@participants) > 0} class="flex flex-wrap items-center gap-3 p-2">
-          {#for p <- @participants || []}
-            <div class="z-[9] relative">
-              <!-- show_controls={[:follow]} # convert in a absolute + button placed in the user top right when the profile item is rendered as an avatar -->
-              <div>
-                <StatelessComponent
-                  module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
-                  wrapper_class=""
-                  only_img
-                  with_popover
-                  avatar_class="w-8 h-8 rounded-full"
-                  profile={e(p, :profile, nil)}
-                  character={e(p, :character, nil)}
-                  parent_id="thread_stats"
-                  show_controls={[]}
-                />
-              </div>
-            </div>
-          {/for}
+  <div
+    :if={@participants && Enum.count(@participants) > 0}
+    class="flex flex-wrap items-center gap-3 p-2"
+  >
+    {#for p <- @participants || []}
+      <div class="z-[9] relative">
+        <!-- show_controls={[:follow]} # convert in a absolute + button placed in the user top right when the profile item is rendered as an avatar -->
+        <div>
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
+            wrapper_class=""
+            only_img
+            with_popover
+            avatar_class="w-8 h-8 rounded-full"
+            profile={e(p, :profile, nil)}
+            character={e(p, :character, nil)}
+            parent_id="thread_stats"
+            show_controls={[]}
+          />
         </div>
+      </div>
+    {/for}
+  </div>
   <#slot />
 </div>

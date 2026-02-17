@@ -631,7 +631,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
          do: [],
          else: component_object(object, object_type, %{primary_image: primary_image})
        ) ++
-       if(verb == "Request to Quote" or showing_within == :media, do: [], else: attachments_component) ++
+       if(verb == "Request to Quote" or showing_within == :media,
+         do: [],
+         else: attachments_component
+       ) ++
        component_maybe_quote_post(activity_component_id, quotes) ++
        component_actions(
          verb,
@@ -846,7 +849,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
           <form
             :if={!id(e(@activity, :seen, nil)) and not is_nil(@feed_id) and
-              @showing_within in [:messages, :thread, :notifications] and
+              @showing_within in [:messages, :notifications] and
               current_user_id(@__context__) !=
                 (e(@object, :created, :creator_id, nil) || e(@activity, :subject, :id, nil))}
             x-init={if @feed_id && current_user_id(@__context__),
@@ -1260,8 +1263,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          character: quoter_character
        }},
       # Quoter's note
-      {Bonfire.UI.Social.Activity.NoteLive,
-       %{object: quote_post}},
+      {Bonfire.UI.Social.Activity.NoteLive, %{object: quote_post}},
       # Your quoted post (with border + quote icon)
       {Bonfire.UI.Social.ActivityLive,
        %{
@@ -2236,9 +2238,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
       if object_type == :article, do: Bonfire.Files.split_primary_image(files), else: {nil, files}
 
     {primary_image,
-     [
-       {Bonfire.UI.Social.Activity.MediaLive, %{media: files}}
-     ]}
+     if object_type == :article do
+       []
+     else
+       [{Bonfire.UI.Social.Activity.MediaLive, %{media: files}}]
+     end}
   end
 
   def do_primary_image_and_component_maybe_attachments(id, other, _object_type) do

@@ -338,8 +338,6 @@
       {#match _}
     {/case}
 
-    
-
     <StatelessComponent
       module={maybe_component(Bonfire.Label.Web.ContentLabelLive, @__context__)}
       object={@object}
@@ -349,8 +347,8 @@
       target={"##{@activity_component_id}"}
       btn_label={l("Label this %{object}", object: e(@object_type_readable, l("object")))}
     />
-  
-        {#if current_user_id(@__context__) != @creator_id and @verb != "Flag" and
+
+    {#if current_user_id(@__context__) != @creator_id and @verb != "Flag" and
         module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}
       <li class="m-1 border-t border-base-content/20" />
 
@@ -407,7 +405,7 @@
       {/if}
     {/if}
 
-        {!-- Block the author, etc --}
+    {!-- Block the author, etc --}
     <StatelessComponent
       :if={@creator_id && current_user_id(@__context__) != @creator_id}
       module={maybe_component(Bonfire.UI.Boundaries.BlockMenuButtonsLive, @__context__)}
@@ -419,7 +417,7 @@
       peered={e(@object, :peered, nil)}
       with_icon
     />
-      
+
     {#if @viewing_main_object && @thread_id && @object_type != Bonfire.Data.Social.Message &&
         module_enabled?(Bonfire.Boundaries.Locking.LiveHandler, @__context__)}
       {#if Bonfire.Boundaries.can?(@__context__, :grant, @object_boundary)}
