@@ -248,6 +248,14 @@
                                 <figcaption class="sr-only">{media_label}</figcaption>
                               </div>
                             </button>
+                            {#if Bonfire.Files.Media.media_label(m)}
+                              <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top" onclick="event.stopPropagation()">
+                                <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">{l("alt")}</label>
+                                <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-200 w-52">
+                                  <div class="prose-sm prose text-base-content">{media_label}</div>
+                                </div>
+                              </div>
+                            {/if}
                           {/if}
                         {#else}
                           {#if is_gif?(m.path, m.media_type, m)}
@@ -262,6 +270,14 @@
                               </div>
                             {#else}
                               <img src={Media.media_url(m)} class="gif-image w-full h-full object-cover" alt={media_label}>
+                            {/if}
+                            {#if Bonfire.Files.Media.media_label(m)}
+                              <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top" onclick="event.stopPropagation()">
+                                <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">{l("alt")}</label>
+                                <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-200 w-52">
+                                  <div class="prose-sm prose text-base-content">{media_label}</div>
+                                </div>
+                              </div>
                             {/if}
                             <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
                               GIF
