@@ -414,7 +414,10 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     socket_connected = user_socket_connected?(socket)
     current_user = current_user(socket)
 
-    if (socket_connected || current_user != nil) && Config.env() != :test do
+    # Allow callers (e.g. benchmarks) to force synchronous loading via Process.put(:sync_load_thread, true).
+
+    if (socket_connected || current_user != nil) && Config.env() != :test &&
+         !ProcessTree.get(:sync_load_thread) do
       if socket_connected do
         debug("socket connected, so load async")
         pid = self()
