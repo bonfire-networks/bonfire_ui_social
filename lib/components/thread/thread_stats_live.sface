@@ -1,50 +1,39 @@
 <div>
   <div class="flex justify-between px-4 p-2 pt-0 items-center">
-    <div class="flex items-center gap-2">
-      <div>
-        <div class="">
-          <div class="flex items-center">
-            <div class="flex items-center flex-1 gap-4">
-              {#case @last_reply_id}
-                {#match nil}
-                  {!-- <span class="loading loading-spinner loading-sm text-base-content/70" />
-                  <div class="text-xs tracking-wide text-base-content/70 text-center">{l("Last Reply")}</div> --}
-                {#match false}
-                  <div class="flex items-center gap-1">
-                    <div class="text-sm font-medium text-base-content/90 text-center mr-1">0</div>
-                    <div class="sr-only text-sm tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
-                    <#Icon iconify="ph:chat-circle-duotone" class="w-4 h-4 text-base-content/70" />
-                  </div>
-                {#match _}
-                  <div class="text-sm tracking-wide text-base-content/70">
-                    {l("Last Reply")} <span class="font-medium text-sm text-base-content/90">{DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</span>
-                  </div>
-              {/case}
-              <div :if={@reply_count != 0} class="flex items-center gap-1">
-                <div data-id="reply_count" class="text-sm font-medium text-base-content/90 text-center">{@reply_count || 0}</div>
-                <div class="sr-only text-sm tracking-wide text-base-content/70 text-center">{l("Replies")}</div>
-                <#Icon iconify="ph:chat-circle-duotone" class="w-4 h-4 text-base-content/70" />
-              </div>
-              <div
-                :if={@showing_within != :messages and
-                  extension_enabled?(:bonfire_ui_reactions, @__context__)}
-                class="flex items-center gap-1"
-              >
-                <div class="text-sm font-medium text-base-content/90 text-center">{@thread_boost_count || 0}</div>
+    <div class="flex items-center gap-4">
+      {!-- Replies count + last reply time merged --}
+      <div class="flex items-center gap-1.5" title={l("Replies")}>
+        <#Icon iconify="ph:chat-circle-duotone" class="size-4 text-base-content/70" />
+        <span data-id="reply_count" class="text-sm tabular-nums font-medium text-base-content/90">{@reply_count || 0}</span>
+        {#if @last_reply_id != nil}
+          <span class="text-sm text-base-content/50">·</span>
+          <span class="text-sm text-base-content/50">{l("last")} {DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</span>
+        {/if}
+      </div>
 
-                <div class="sr-only text-sm tracking-wide text-base-content/70 text-center">{l("Boosts")}</div>
-                <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="w-4 h-4 text-base-content/70" />
-              </div>
-              <div class="flex items-center gap-1">
-                <div class="text-sm font-medium text-base-content/90 text-center">{@participant_count || 0}</div>
-                <#Icon iconify="ph:users-duotone" class="w-4 h-4 text-base-content/70" />
-                <div class="text-sm sr-only tracking-wide text-base-content/70 text-center">{l("Participants")}</div>
-              </div>
-            </div>
-          </div>
-        </div>
+      {!-- Boosts: only when > 0, not in messages, and extension enabled --}
+      <div
+        :if={@showing_within != :messages and
+          extension_enabled?(:bonfire_ui_reactions, @__context__) and
+          (@thread_boost_count || 0) > 0}
+        class="flex items-center gap-1.5"
+        title={l("Boosts")}
+      >
+        <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="size-4 text-base-content/70" />
+        <span class="text-sm tabular-nums font-medium text-base-content/90">{@thread_boost_count}</span>
+      </div>
+
+      {!-- Participants: only when > 0 and avatars aren't shown --}
+      <div
+        :if={(@participant_count || 0) > 0 and !(@participants && Enum.count(@participants) > 0)}
+        class="flex items-center gap-1.5"
+        title={l("Participants")}
+      >
+        <#Icon iconify="ph:users-duotone" class="size-4 text-base-content/70" />
+        <span class="text-sm tabular-nums font-medium text-base-content/90">{@participant_count}</span>
       </div>
     </div>
+
     <div class="flex items-center gap-2">
       {#case e(@object, :peered, :canonical_uri, nil) || @is_remote}
         {#match nil}
@@ -57,7 +46,6 @@
             class="btn btn-outline border-base-content/30 btn-sm"
           >
             <span class="text-sm font-medium">{l("Get latest replies")}</span>
-            <!-- <#Icon iconify="bi:list-nested" class="w-5 h-5 shrink-0 text-base-content" /> -->
           </a>
 
           <a
@@ -65,9 +53,10 @@
             target="_blank"
             rel="noopener noreferrer"
             class="btn btn-outline btn-circle border-base-content/30 btn-sm"
+            aria-label={l("View remotely")}
+            title={l("View remotely")}
           >
-            <span class="text-sm sr-only font-medium">{l("View remotely")}</span>
-            <#Icon iconify="ph:arrow-square-out-duotone" class="w-5 h-5 shrink-0" />
+            <#Icon iconify="ph:arrow-square-out-duotone" class="size-5 shrink-0" />
           </a>
       {/case}
 
@@ -79,7 +68,11 @@
             @object,
             if(@showing_within == :messages, do: :skip_boundary_check)
           )}
-        <div class="btn btn-outline border-base-content/30 btn-sm btn-circle">
+        <div
+          class="btn btn-outline border-base-content/30 btn-sm btn-circle"
+          aria-label={l("Download as markdown")}
+          title={l("Download as markdown")}
+        >
           <StatefulComponent
             module={maybe_component(Bonfire.UI.Posts.DownloadMarkLive, @__context__)}
             id={deterministic_dom_id(
@@ -95,28 +88,27 @@
       {/if}
     </div>
   </div>
+
+  {!-- Participant avatars --}
   <div
     :if={@participants && Enum.count(@participants) > 0}
-    class="flex flex-wrap items-center gap-3 p-2"
+    class="flex flex-wrap items-center gap-3 px-4 pb-2"
   >
+    <span class="text-xs text-base-content/50">{l("Participants")}</span>
     {#for p <- @participants || []}
-      <div class="z-[9] relative">
-        <!-- show_controls={[:follow]} # convert in a absolute + button placed in the user top right when the profile item is rendered as an avatar -->
-        <div>
-          <StatelessComponent
-            module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
-            wrapper_class=""
-            only_img
-            with_popover
-            avatar_class="w-8 h-8 rounded-full"
-            profile={e(p, :profile, nil)}
-            character={e(p, :character, nil)}
-            parent_id="thread_stats"
-            show_controls={[]}
-          />
-        </div>
-      </div>
+      <StatelessComponent
+        module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
+        wrapper_class=""
+        only_img
+        with_popover
+        avatar_class="size-7 rounded-full"
+        profile={e(p, :profile, nil)}
+        character={e(p, :character, nil)}
+        parent_id="thread_stats"
+        show_controls={[]}
+      />
     {/for}
   </div>
+
   <#slot />
 </div>

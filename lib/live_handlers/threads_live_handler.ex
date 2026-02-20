@@ -330,8 +330,11 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           create_object_type: create_object_type,
           recipients_editable: false,
           cw:
-            e(activity, :sensitive, :is_sensitive, nil) &&
-              e(activity, :object, :post_content, :summary, nil)
+            e(reply_to, :post_content, :summary, nil) ||
+              e(activity, :object, :post_content, :summary, nil),
+          inherit_sensitive:
+            e(reply_to, :sensitive, :is_sensitive, nil) ||
+              e(activity, :sensitive, :is_sensitive, nil) || false
         ],
         to_boundaries: [
           if(published_in_id,
