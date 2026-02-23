@@ -68,7 +68,7 @@
       /> -->
       <!-- </div> -->
 
-      <form phx-change="Bonfire.Common.Settings:set">
+      <form class="p-4" phx-change="Bonfire.Common.Settings:set">
         <Bonfire.UI.Common.Settings.NumberLive
           scope={@scope}
           name={l("How many items to show in feeds and other lists")}

@@ -7,9 +7,13 @@
     @parent_id
   )}
   phx-hook="Translate"
-  data-translate-debug="true"
-  data-activity-id={id(@activity)}
+  data-translate-from={e(@object, :language, :locale, nil)}
+  data-translate-to={to_string(Bonfire.Common.Localise.get_locale_id())}
   data-object-id={id(@object)}
+  data-translate-server-available={to_string(
+    Bonfire.Common.Extend.extension_enabled?(:bonfire_translation)
+    and Bonfire.Translation.any_adapter_configured?()
+  )}
   data-view-transition-name={"activity-#{id(@activity) || id(@object)}"}
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
@@ -46,7 +50,7 @@
                 summary={summary}
               />
             {#elseif not is_nil(summary)}
-              <div class="translatable prose max-w-prose prose-p:pt-1">
+              <div data-role="summary" class="translatable prose max-w-prose prose-p:pt-1">
                 {rich(summary)}
               </div>
             {/if}
@@ -71,13 +75,9 @@
     {/case}
   </Bonfire.UI.Common.OpenExternalLinkLive>
 
-  <button
-    id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object), "translate", @parent_id)}
-    class="translate-btn link link-primary link-hover text-sm"
-    style="display: none;"
-    phx-update="ignore"
-  >
-    <span class="loading-spinner" />
-    {l("Translate")}
-  </button>
+  <Bonfire.UI.Social.Activity.TranslateButtonsLive
+    object={@object}
+    activity={@activity}
+    parent_id={@parent_id}
+  />
 </div>

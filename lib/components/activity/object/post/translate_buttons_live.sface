@@ -1,0 +1,35 @@
+<div
+  phx-update="ignore"
+  id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object), "translate_wrap", @parent_id)}
+  class="flex items-center gap-2"
+>
+  <button
+    id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object), "translate_client", @parent_id)}
+    class="translate-btn-client link link-primary link-hover text-sm"
+    style="display: none;"
+  >
+    <span class="loading-spinner" />
+    {l("Translate")}
+  </button>
+
+  <button
+    id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object), "translate_server", @parent_id)}
+    class="translate-btn-server link link-primary link-hover text-sm"
+    style="display: none;"
+  >
+    <span class="loading-spinner" />
+    {l("Translate")}
+  </button>
+</div>
+
+{#case e(@object, :language, :locale, nil)}
+  {#match nil}
+  {#match post_locale}
+    <span
+      :if={to_string(post_locale) != to_string(Bonfire.Common.Localise.get_locale_id())}
+      class="text-xs font-medium text-base-content/50 uppercase"
+      title={l("This post was written in %{language}", language: post_locale)}
+    >
+      {String.upcase(to_string(post_locale))}
+    </span>
+{/case}

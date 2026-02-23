@@ -124,6 +124,14 @@
       "article_container",
       @parent_id
     )}
+    phx-hook="Translate"
+    data-translate-from={e(@object, :language, :locale, nil)}
+    data-translate-to={to_string(Bonfire.Common.Localise.get_locale_id())}
+    data-object-id={id(@object)}
+    data-translate-server-available={to_string(
+      Bonfire.Common.Extend.extension_enabled?(:bonfire_translation)
+      and Bonfire.Translation.any_adapter_configured?()
+    )}
     data-rendered={@showing_within}
     data-main-object={@viewing_main_object}
     class={
@@ -227,10 +235,13 @@
                     summary={summary}
                   />
                 {#elseif not is_nil(summary)}
-                  <div class={
-                    "translatable prose prose-sm prose-base-content/80 max-w-prose prose-p:leading-relaxed",
-                    "order-first italic text-base-content/60": @showing_within == :thread and @viewing_main_object
-                  }>
+                  <div
+                    data-role="summary"
+                    class={
+                      "translatable prose prose-sm prose-base-content/80 max-w-prose prose-p:leading-relaxed",
+                      "order-first italic text-base-content/60": @showing_within == :thread and @viewing_main_object
+                    }
+                  >
                     {rich(summary,
                       skip_markdown: @is_remote,
                       __unsafe__: !@is_remote
@@ -269,6 +280,14 @@
                 </div>
             {/case}
         {/case}
+      </div>
+
+      <div class="flex items-center gap-2 px-4 pb-3">
+        <Bonfire.UI.Social.Activity.TranslateButtonsLive
+          object={@object}
+          activity={@activity}
+          parent_id={@parent_id}
+        />
       </div>
     </Bonfire.UI.Common.OpenExternalLinkLive>
   </article>

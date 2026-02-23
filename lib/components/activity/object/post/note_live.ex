@@ -19,7 +19,8 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
 
   def preloads(),
     do: [
-      :post_content
+      :post_content,
+      :language
     ]
 
   def post_content(object) do

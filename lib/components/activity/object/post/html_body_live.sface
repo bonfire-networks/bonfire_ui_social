@@ -7,6 +7,7 @@
   )}
   data-ref={deterministic_dom_id(__MODULE__, id(@activity) || id(@object) || "no-id", "note_ref", @parent_id)}
   data-id="object_body"
+  data-role="html_body"
   data-inception={@activity_inception}
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
