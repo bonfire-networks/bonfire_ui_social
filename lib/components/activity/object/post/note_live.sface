@@ -11,8 +11,8 @@
   data-translate-to={to_string(Bonfire.Common.Localise.get_locale_id())}
   data-object-id={id(@object)}
   data-translate-server-available={to_string(
-    Bonfire.Common.Extend.extension_enabled?(:bonfire_translation)
-    and Bonfire.Translation.any_adapter_configured?()
+    Bonfire.Common.Extend.extension_enabled?(:bonfire_translation) and
+      Bonfire.Translation.any_adapter_configured?()
   )}
   data-view-transition-name={"activity-#{id(@activity) || id(@object)}"}
   data-rendered={@showing_within}
