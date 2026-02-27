@@ -57,10 +57,34 @@
         )}
       </div>
 
+      <div
+        :if={@resumed_from_marker}
+        id={"feed_resumed_banner_#{@feed_name || @feed_id || @id}"}
+        class="flex items-center w-full gap-3 px-4 py-3"
+      >
+        <div class="flex-1 h-px bg-primary/25" />
+        <div class="flex items-center gap-2">
+          <button
+            id={"jump_to_newest_btn_#{@feed_name || @feed_id || @id}"}
+            class="flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-base-content/50 hover:text-primary bg-base-content/5 hover:bg-primary/10 rounded-full border border-base-content/10 whitespace-nowrap transition-colors cursor-pointer"
+            :on-click="jump_to_newest"
+            phx-value-feed_name={@feed_name}
+            disabled={@jumping_to_newest}
+          >
+            <span :if={@jumping_to_newest} class="loading loading-spinner loading-xs" />
+            {l("Jump to newest")}
+          </button>
+        </div>
+        <div class="flex-1 h-px bg-primary/25" />
+      </div>
+
       {#if is_map(@streams) and is_struct(@streams.feed)}
         <div
           id={"feed_#{@feed_name || @feed_id || @id}"}
           data-id="feed_activity_list"
+          data-feed-name={@feed_name}
+          :hook="FeedScrollTracker"
+          phx-target={@myself}
           role="feed"
           aria-busy={to_string(@loading || @reloading || false)}
           phx-update="stream"

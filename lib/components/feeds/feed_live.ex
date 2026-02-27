@@ -67,6 +67,8 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   prop fresh_ids, :any, default: nil
   prop feed_count, :any, default: nil
+  prop resumed_from_marker, :any, default: nil
+  data jumping_to_newest, :boolean, default: false
   prop deferred_join_multiply_limit, :any, default: nil
   prop cute_gif, :any, default: nil
   prop custom_preview, :any, default: nil
@@ -183,8 +185,32 @@ defmodule Bonfire.UI.Social.FeedLive do
   defp do_update(%{insert_stream: %{feed: entries}} = assigns, socket) do
     debug("feed stream is being poured into")
 
+    # If the server detected a stale reading position, tell JS to clear it
+    socket =
+      case Map.get(assigns, :clear_stale_reading_position) do
+        feed_name when is_binary(feed_name) ->
+          push_event(socket, "clear_reading_position", %{feed_name: feed_name})
+
+        _ ->
+          socket
+      end
+
+    # When feed resumed from a saved cursor, mark it consumed in localStorage
+    # so the next navigate (full reconnect) won't send it → fresh feed load
+    socket =
+      case Map.get(assigns, :resumed_from_marker) do
+        marker when is_binary(marker) ->
+          feed_name = to_string(e(assigns(socket), :feed_name, nil) || e(assigns(socket), :feed_id, nil))
+          push_event(socket, "reading_position_consumed", %{feed_name: feed_name})
+
+        _ ->
+          socket
+      end
+
     socket
-    |> assign(Map.drop(assigns, [:insert_stream]))
+    |> assign(Map.drop(assigns, [:insert_stream, :clear_stale_reading_position]))
+    |> assign(resumed_from_marker: Map.get(assigns, :resumed_from_marker, nil))
+    |> assign(jumping_to_newest: false)
     |> LiveHandler.insert_feed(entries, reset: assigns[:reset_stream])
     |> ok_socket()
   end
@@ -990,5 +1016,31 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def handle_event("show_fresh", _attrs, socket) do
     {:noreply, assign(socket, fresh_ids: nil)}
+  end
+
+  def handle_event("jump_to_newest", %{"feed_name" => feed_name}, %{assigns: assigns} = socket) do
+    feed_id = e(assigns, :feed_name, nil) || e(assigns, :feed_id, nil)
+
+    socket =
+      socket
+      |> push_event("clear_reading_position", %{feed_name: feed_name})
+      |> assign(jumping_to_newest: true)
+
+    result =
+      LiveHandler.feed_assigns_maybe_async(
+        feed_id,
+        socket,
+        true,
+        true
+      )
+
+    case result do
+      new_assigns when is_list(new_assigns) ->
+        {:noreply, assign(socket, new_assigns)}
+
+      other ->
+        error(other, "jump_to_newest: unexpected result from feed_assigns_maybe_async")
+        {:noreply, socket}
+    end
   end
 end
