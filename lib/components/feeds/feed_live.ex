@@ -200,7 +200,9 @@ defmodule Bonfire.UI.Social.FeedLive do
     socket =
       case Map.get(assigns, :resumed_from_marker) do
         marker when is_binary(marker) ->
-          feed_name = to_string(e(assigns(socket), :feed_name, nil) || e(assigns(socket), :feed_id, nil))
+          feed_name =
+            to_string(e(assigns(socket), :feed_name, nil) || e(assigns(socket), :feed_id, nil))
+
           push_event(socket, "reading_position_consumed", %{feed_name: feed_name})
 
         _ ->
