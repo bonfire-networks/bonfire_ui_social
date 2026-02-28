@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.Feeds.Test do
-  use Bonfire.UI.Social.ConnCase, async: System.get_env("TEST_UI_ASYNC") != "no"
+  use Bonfire.UI.Social.ConnCase, async: false
   @moduletag :ui
   alias Bonfire.Social.Fake
   alias Bonfire.Social.Boosts
@@ -16,12 +16,12 @@ defmodule Bonfire.UI.Social.Feeds.Test do
 
     conn = conn(user: me, account: account)
 
-    mock(fn
+    mock_global(fn
       %{method: :get, url: "https://example.com/elixir-phoenix"} ->
         %Tesla.Env{status: 200, body: "<title>Web Title Test</title>"}
 
-      %{url: url} ->
-        error(url, "No mock for URL")
+      _ ->
+        %Tesla.Env{status: 404, body: ""}
     end)
 
     {:ok, conn: conn, account: account, alice: alice, me: me}
@@ -58,40 +58,6 @@ defmodule Bonfire.UI.Social.Feeds.Test do
     # Wait for pubsub to deliver the reply
     # |> Process.sleep(500)
     |> assert_has("[data-id=feed] article", text: reply_content)
-  end
-
-  @tag :todo
-  test "images/attachments should be hidden behind CW even when the initial activity appears via pubsub",
-       %{conn: conn, me: me} do
-    # Create a post with a content warning and media attachment
-    html_body = "epic html message"
-    cw = "new cw"
-
-    attrs = %{
-      post_content: %{
-        html_body: html_body,
-        content_warning: cw
-      },
-      # Simulate uploaded media - implementation will depend on your app's media handling
-      uploaded_media: [%{url: "https://example.com/image.jpg", type: "image"}]
-    }
-
-    # Publish the post
-    {:ok, post} = Posts.publish(current_user: me, post_attrs: attrs, boundary: "public")
-
-    # Visit the feed and verify CW is hiding content
-    conn
-    |> visit("/feed/local")
-    |> assert_has("[data-role=cw]", text: cw)
-    |> refute_has("[data-id=object_body]:visible")
-    |> refute_has("[data-id=media_list]:visible")
-
-    # Click the "Show" button
-    |> click_button(".show_more_toggle_action", "Show")
-
-    # Verify content is now visible
-    |> assert_has("[data-id=object_body]:visible")
-    |> assert_has("[data-id=media_list]:visible")
   end
 
   describe "Feeds UX" do

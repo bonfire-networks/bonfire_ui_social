@@ -353,11 +353,12 @@
   {/case}
 </div>
 <div
+  id={"cw_links_#{@parent_id}"}
   data-id="media_list"
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
   :if={@link_list != [] && @showing_within != :smart_input}
-  class="flex flex-col gap-2 my-2"
+  class={["flex flex-col gap-2 my-2", hidden: @cw]}
 >
   {#for m <- if @showing_within == :feed, do: Enum.take(@link_list, 1), else: @link_list}
     {#case Media.media_url(m)}

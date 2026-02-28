@@ -605,6 +605,33 @@ defmodule Bonfire.UI.Social.ActivityLive do
         activity_inception
       )
 
+    object_components =
+      if(verb == "Request to Quote",
+        do: [],
+        else: component_object(object, object_type, %{primary_image: primary_image})
+      )
+
+    # Show CW button at activity level when NoteLive isn't in the component list
+    # (e.g., media-only posts with no text body)
+    cw_fallback =
+      if opts[:cw] and
+           not Enum.any?(object_components, fn
+             {Bonfire.UI.Social.Activity.NoteLive, _} -> true
+             Bonfire.UI.Social.Activity.NoteLive -> true
+             _ -> false
+           end) do
+        [
+          {Bonfire.UI.Social.Activity.CWLive,
+           %{
+             cw: opts[:cw],
+             activity_component_id: activity_component_id,
+             summary: e(object, :post_content, :summary, nil)
+           }}
+        ]
+      else
+        []
+      end
+
     (if(showing_within == :media, do: attachments_component, else: []) ++
        component_maybe_thread_start_or_reply_to(
          reply_to,
@@ -627,15 +654,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
           subject_user
         )
         |> debug("component_activity_subject result")) ++
-       if(verb == "Request to Quote",
-         do: [],
-         else: component_object(object, object_type, %{primary_image: primary_image})
-       ) ++
+       cw_fallback ++
+       object_components ++
        if(verb == "Request to Quote" or showing_within == :media,
          do: [],
          else: attachments_component
        ) ++
-       component_maybe_quote_post(activity_component_id, quotes) ++
+       component_maybe_quote_post(activity_component_id, quotes, opts[:cw]) ++
        component_actions(
          verb,
          activity,
@@ -891,7 +916,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 @reply_to,
                 @quotes,
                 thread_start: @thread_start,
-                current_user_context: @__context__
+                current_user_context: @__context__,
+                cw: @cw
               ) || []}
             {#case component}
               {#match :html}
@@ -962,6 +988,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   show_minimal_subject_and_note={maybe_get(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
                   request={e(maybe_get(component_assigns, :activity, @activity), :edge, :request, nil)}
                   extra_info={e(@object, :extra_info, nil)}
+                />
+              {#match Bonfire.UI.Social.Activity.CWLive}
+                <Bonfire.UI.Social.Activity.CWLive
+                  cw={maybe_get(component_assigns, :cw, @cw)}
+                  activity_component_id={maybe_get(component_assigns, :activity_component_id, @activity_component_id)}
+                  summary={maybe_get(component_assigns, :summary, nil)}
                 />
               {#match Bonfire.UI.Social.Activity.NoteLive}
                 <span :if={@is_thread_start} class="badge badge-outline badge-warning mb-2">
@@ -2504,34 +2536,43 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   @doc """
-  Check if the object has quoted posts and return components to render them
+  Check if the object has quoted posts and return components to render them.
+  When `cw` is truthy, wraps quoted posts in a hidden div that can be toggled
+  by the CW button via `#cw_quotes_{activity_component_id}`.
   """
-  def component_maybe_quote_post(activity_component_id, quotes) do
+  def component_maybe_quote_post(activity_component_id, quotes, cw \\ nil) do
     case quotes do
       [] ->
         []
 
       quoted_objects when is_list(quoted_objects) ->
-        quoted_objects
-        |> Enum.with_index()
-        |> Enum.map(fn {quoted_object, index} ->
-          id = "#{activity_component_id}_quoted_post_#{index}_#{id(quoted_object)}"
+        quote_components =
+          quoted_objects
+          |> Enum.with_index()
+          |> Enum.map(fn {quoted_object, index} ->
+            id = "#{activity_component_id}_quoted_post_#{index}_#{id(quoted_object)}"
 
-          {Bonfire.UI.Social.ActivityLive,
-           %{
-             id: id,
-             activity: quoted_object |> debug("quoted_object"),
-             object: quoted_object,
-             activity_inception: id,
-             showing_within: :quote_preview,
-             viewing_main_object: false,
-             hide_actions: true,
-             thread_url: nil,
-             thread_id: id(quoted_object),
-             class: "quote-preview"
-           }
-           |> prepare_assigns()}
-        end)
+            {Bonfire.UI.Social.ActivityLive,
+             %{
+               id: id,
+               activity: quoted_object |> debug("quoted_object"),
+               object: quoted_object,
+               activity_inception: id,
+               showing_within: :quote_preview,
+               viewing_main_object: false,
+               hide_actions: true,
+               thread_url: nil,
+               thread_id: id(quoted_object),
+               class: "quote-preview"
+             }
+             |> prepare_assigns()}
+          end)
+
+        hidden_class = if cw, do: " hidden", else: ""
+
+        [{:html, "<div id=\"cw_quotes_#{activity_component_id}\" class=\"#{hidden_class}\">"}] ++
+          quote_components ++
+          [{:html, "</div>"}]
     end
   end
 end

@@ -26,7 +26,7 @@ defmodule Bonfire.UI.Social.ConnCase do
       import Bonfire.UI.Common.Testing.Helpers
 
       import Phoenix.LiveViewTest
-      import Surface.LiveViewTest
+      import Phoenix.LiveViewTest, except: [open_browser: 1, open_browser: 2]
       # import Bonfire.UI.Social.ConnCase
       import Bonfire.UI.Social.Test.ConnHelpers
       import Bonfire.UI.Social.Test.FakeHelpers
