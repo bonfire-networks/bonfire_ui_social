@@ -69,6 +69,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop activity_preloads, :tuple, default: {nil, nil}
   prop custom_preview, :any, default: nil
   prop quotes, :list, default: []
+  prop hashtags, :list, default: []
   prop autoplay, :any, default: nil
 
   def update_many(assigns_sockets) do
@@ -399,6 +400,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
           e(assigns, :parent_id, nil)
         )
 
+    {quotes, hashtags} = Bonfire.Social.Tags.tags_quotes_and_hashtags(activity)
+
     assigns
     |> prepare_mutable_assigns(
       verb: verb,
@@ -431,7 +434,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       current_url: current_url,
       thread_id: thread_id,
       thread_level: thread_level,
-      quotes: Bonfire.Social.Tags.tags_quote(activity),
+      quotes: quotes,
+      hashtags: hashtags,
       cw:
         if e(assigns, :activity_inception, nil) do
           # This may be a reply_to, calculate CW based on reply_to data structure
@@ -661,6 +665,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          else: attachments_component
        ) ++
        component_maybe_quote_post(activity_component_id, quotes, opts[:cw]) ++
+       component_maybe_hashtags_footer(opts[:hashtags]) ++
        component_actions(
          verb,
          activity,
@@ -917,7 +922,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 @quotes,
                 thread_start: @thread_start,
                 current_user_context: @__context__,
-                cw: @cw
+                cw: @cw,
+                hashtags: @hashtags
               ) || []}
             {#case component}
               {#match :html}
@@ -1141,6 +1147,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
                     />
                   {/if}
                 {/if}
+              {#match Bonfire.UI.Social.Activity.HashtagsFooterLive}
+                <StatelessComponent
+                  module={Bonfire.UI.Social.Activity.HashtagsFooterLive}
+                  {...component_assigns}
+                />
               {#match _}
                 <StatelessComponent
                   :if={@hide_activity != "dynamic"}
@@ -2573,6 +2584,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
         [{:html, "<div id=\"cw_quotes_#{activity_component_id}\" class=\"#{hidden_class}\">"}] ++
           quote_components ++
           [{:html, "</div>"}]
+    end
+  end
+
+  defp component_maybe_hashtags_footer(hashtags) do
+    case hashtags do
+      [_ | _] ->
+        [{Bonfire.UI.Social.Activity.HashtagsFooterLive, %{hashtags: hashtags}}]
+
+      _ ->
+        []
     end
   end
 end

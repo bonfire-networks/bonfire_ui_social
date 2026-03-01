@@ -1,0 +1,12 @@
+{#if @hashtags != []}
+  <div class="flex flex-wrap gap-1.5 mt-1">
+    {#for tag <- @hashtags}
+      <LinkLive
+        to={~p"/hashtag/" <> e(tag, :named, :name, "")}
+        class="badge badge-sm badge-ghost cursor-pointer gap-0.5 text-base-content/70 hover:text-base-content hover:badge-primary transition-colors"
+      >
+        #{e(tag, :named, :name, "")}
+      </LinkLive>
+    {/for}
+  </div>
+{/if}
