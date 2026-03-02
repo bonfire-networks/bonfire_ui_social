@@ -266,16 +266,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
         count: limit
       )
 
-      # Then visit the homepage which usually contains the local feed too
-      conn
-      |> visit("/")
-      |> assert_has("[data-id=feed] article",
-        count: limit
-      )
-      |> click_link("a[data-id=next_page]", "Next page")
-      |> assert_has("[data-id=feed] article",
-        count: limit
-      )
+      # NOTE: visiting "/" as guest redirects to /login which doesn't work with PhoenixTest static pages
     end
   end
 end

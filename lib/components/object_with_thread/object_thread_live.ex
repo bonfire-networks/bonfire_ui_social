@@ -18,6 +18,7 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
   prop sort_by, :any, default: nil
   prop sort_order, :any, default: nil
   prop activity_inception, :any, default: nil
+  prop hide_thread_stats, :boolean, default: false
 
   prop loading, :any, default: nil
   prop replies, :any, default: nil

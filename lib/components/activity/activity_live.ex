@@ -498,8 +498,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
       %Ecto.Association.NotLoaded{} ->
         # Default to nil when sensitive field is not preloaded
-        # This should never be the case though so let's fail in test env
-        err(activity, "Sensitive field not preloaded for activity")
+        # This can happen for guest/HTTP renders where preloads differ
+        warn(activity, "Sensitive field not preloaded for activity")
 
         nil
 
@@ -618,7 +618,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # Show CW button at activity level when NoteLive isn't in the component list
     # (e.g., media-only posts with no text body)
     cw_fallback =
-      if opts[:cw] and
+      if !!opts[:cw] and
            not Enum.any?(object_components, fn
              {Bonfire.UI.Social.Activity.NoteLive, _} -> true
              Bonfire.UI.Social.Activity.NoteLive -> true

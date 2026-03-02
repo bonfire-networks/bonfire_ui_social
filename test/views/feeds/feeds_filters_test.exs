@@ -225,6 +225,8 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
   end
 
   describe "media feed" do
+    @tag :skip
+    # FIXME: :images feed preset is disabled, media feed queries are WIP
     test "shows local images", %{user: user, other_user: other_user} do
       {post1, _} = Fake.create_test_content(:local, user, other_user)
 

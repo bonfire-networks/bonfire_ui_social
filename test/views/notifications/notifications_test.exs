@@ -14,15 +14,13 @@ defmodule Bonfire.UI.Social.Notifications.Test do
     #   assert [_] = Floki.find(doc, "[data-id=feed]")
     # end
 
-    @tag :skip_ci
     test "with user" do
       account = fake_account!()
       user = fake_user!(account)
-      conn = conn(user: user, account: account)
-      next = "/notifications"
-      # |> IO.inspect
-      {view, doc} = floki_live(conn, next)
-      refute [] == Floki.find(doc, "[data-id=feed]")
+
+      conn(user: user, account: account)
+      |> visit("/notifications")
+      |> assert_has("[data-id=feed]")
     end
   end
 

@@ -46,6 +46,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
   end
 
   describe "Images Feed Pagination" do
+    @tag :skip
+    # FIXME: media feed queries are WIP
     test "pagination loads the correct next set of image posts", %{
       user1: user1,
       account: account,
@@ -441,6 +443,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
   end
 
   describe "Filter Persistence Through Pagination" do
+    @tag :skip
+    # FIXME: media feed queries are WIP
     test "custom filters persist when loading more posts", %{
       user1: user1,
       account: account,

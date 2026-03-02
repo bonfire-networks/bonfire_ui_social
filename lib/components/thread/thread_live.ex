@@ -38,6 +38,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop depth_loaded, :any, default: nil
 
   prop showing_within, :atom, default: :thread
+  prop hide_thread_stats, :boolean, default: false
   prop loading, :boolean, default: false
 
   prop activity_inception, :any, default: nil

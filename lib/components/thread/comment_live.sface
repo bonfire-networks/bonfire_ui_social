@@ -26,7 +26,7 @@
   <div
     :if={@showing_within != :messages && @thread_mode != :flat}
     style={"left: #{reply * 6}px"}
-    :for={reply <- 0..(@visual_level - 1)}
+    :for={reply <- 0..max(@visual_level - 1, 0)//1}
     class={
       "absolute left-0 cursor-pointer top-0 border-l-2 bottom-0 border-primary/30 z-30",
       "!border-primary": reply == @visual_level - 1

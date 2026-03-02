@@ -59,6 +59,7 @@
           object={@object}
           showing_within={@showing_within || :thread}
           activity_inception={@activity_inception}
+          hide_thread_stats={@hide_thread_stats}
         />
       </div>
     </div>

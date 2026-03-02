@@ -52,6 +52,8 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
                :trending_links,
                :trending_discussions,
                :trending,
+               :research,
+               :local_media,
                nil
              ] <-
           feed_preset_test_params() do

@@ -17,9 +17,8 @@
     x-on:keydown.ctrl.enter.prevent="document.getElementById('submit_btn')?.click()"
     class="with_editor flex-1"
   >
-    {#if e(@smart_input_opts, :create_object_type, nil) == "message" ||
+    {#if e(@smart_input_opts, :create_object_type, nil) in [:message, "message"] ||
         e(@smart_input_opts, :recipients_editable, nil)}
-      <div class="relative bg-base-100 p-2">
         <Bonfire.UI.Common.SelectRecipientsLive
           preloaded_recipients={e(@preloaded_recipients, [])}
           to_boundaries={@to_boundaries}
@@ -30,7 +29,6 @@
           context_id={@context_id}
           is_editable={e(@smart_input_opts, :recipients_editable, true)}
         />
-      </div>
     {/if}
 
     <Bonfire.UI.Common.InputControlsLive
