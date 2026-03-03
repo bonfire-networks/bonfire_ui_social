@@ -20,8 +20,8 @@ defmodule Bonfire.UI.Social.ActivityCW.Test do
       %{method: :get, url: "https://example.com/elixir-phoenix"} ->
         %Tesla.Env{status: 200, body: "<title>Web Title Test</title>"}
 
-      _ ->
-        %Tesla.Env{status: 404, body: ""}
+      env ->
+        ActivityPub.Test.HttpRequestMock.request(env)
     end)
 
     {:ok, conn: conn, account: account, alice: alice, me: me}

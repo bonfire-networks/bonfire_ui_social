@@ -8,6 +8,7 @@ defmodule Bonfire.UI.Social.FeedsNavLive do
       Bonfire.Social.Feeds.feed_presets_permitted(current_user: current_user(assigns))
       |> Enum.filter(fn {_slug, preset} ->
         preset[:exclude_from_nav] == false and
+          preset[:icon] not in [nil, ""] and
           case preset[:parameterized] do
             nil ->
               true
