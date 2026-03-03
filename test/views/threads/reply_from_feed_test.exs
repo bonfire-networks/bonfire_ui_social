@@ -28,7 +28,11 @@ defmodule Bonfire.UI.Social.ReplyFromFeed.Test do
     |> assert_has("[data-id=action_reply]")
   end
 
-  test "reply created via API appears in the thread", %{conn: conn, me: me, other_user: other_user} do
+  test "reply created via API appears in the thread", %{
+    conn: conn,
+    me: me,
+    other_user: other_user
+  } do
     {:ok, post} =
       Posts.publish(
         current_user: me,
@@ -52,7 +56,11 @@ defmodule Bonfire.UI.Social.ReplyFromFeed.Test do
     |> assert_has("article", text: "This is a reply")
   end
 
-  test "reply shows original post context in thread", %{conn: conn, me: me, other_user: other_user} do
+  test "reply shows original post context in thread", %{
+    conn: conn,
+    me: me,
+    other_user: other_user
+  } do
     original_body = "Original context post #{System.unique_integer()}"
     reply_body = "Reply to context #{System.unique_integer()}"
 
