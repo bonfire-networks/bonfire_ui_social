@@ -82,7 +82,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # TODO: clean/document these?
       mode: :async,
       fetch_collection: :async,
-      fetch_collection_entries: :async,
+      fetch_collection_entries: true,
       triggered_by: "live_handler:fetch_thread"
     )
 
