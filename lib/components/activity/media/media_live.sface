@@ -303,7 +303,7 @@
                               {#if @cw || @showing_within == :flags ||
                                   Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                                 <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
-                                  <button class="btn btn-sm  normal-case btn-outline border-base-content/20 btn-active">{l("Media Hidden")}</button>
+                                  <button class="btn btn-sm  normal-case btn-outline border-base-content/10 btn-active">{l("Media Hidden")}</button>
                                 </div>
                                 <div class="absolute inset-0 backdrop-blur-sm bg-black/50 z-40 cursor-pointer rounded-md" />
                               {/if}

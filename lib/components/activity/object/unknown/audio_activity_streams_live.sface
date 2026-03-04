@@ -1,4 +1,4 @@
-<div class="border rounded-box border-base-content/20">
+<div class="border rounded-box border-base-content/10">
   <div class="flex w-full gap-3">
     {#case (!e(@activity, :files, nil) and object_field(@json, "url")) || object_field(@json, "id")}
       {#match audio when is_map(audio) or is_binary(audio)}

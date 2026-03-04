@@ -51,7 +51,7 @@
       <label
         tabindex="0"
         class={
-          "tooltip-button btn btn-sm btn-outline border-base-content/20 opacity-80 w-full capitalize",
+          "tooltip-button btn btn-sm btn-outline border-base-content/10 opacity-80 w-full capitalize",
           "opacity-50 cursor-not-allowed":
             get_preset_origin_info(@feed_filters, @__context__).preset_has_fixed_origin
         }
@@ -80,7 +80,7 @@
       <ul
         :if={not get_preset_origin_info(@feed_filters, @__context__).preset_has_fixed_origin}
         tabindex="0"
-        class="tooltip z-dropdown menu bg-base-100 shadow-lg border rounded-xl border-base-content/20  w-52 absolute top-0 left-0 hidden"
+        class="tooltip z-dropdown menu bg-base-100 shadow-lg border rounded-xl border-base-content/10  w-52 absolute top-0 left-0 hidden"
         id="feed_extra_origin_content"
         phx-update="ignore"
       >
@@ -91,7 +91,7 @@
             class="flex gap-3 px-2 justify-between items-center text-base-content"
           >
             {l("Only Local")}
-            <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+            <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
               {#if e(@feed_filters, :origin, nil) == :local or e(@feed_filters, :origin, nil) == [:local]}
                 <span class="w-[14px] h-[14px] bg-primary rounded-full" />
               {/if}
@@ -105,7 +105,7 @@
             class="flex gap-3 px-2 justify-between items-center text-base-content"
           >
             {l("Only Remote")}
-            <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+            <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
               {#if e(@feed_filters, :origin, nil) == :remote or e(@feed_filters, :origin, nil) == [:remote]}
                 <span class="w-[14px] h-[14px] bg-primary rounded-full" />
               {/if}
@@ -118,7 +118,7 @@
             class="flex gap-3 px-2 justify-between items-center text-base-content"
           >
             {l("Remote & Local")}
-            <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+            <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
               {#if is_nil(e(@feed_filters, :origin, nil)) or e(@feed_filters, :origin, nil) == :all}
                 <span class="w-[14px] h-[14px] bg-primary rounded-full" />
               {/if}
@@ -127,7 +127,7 @@
       </ul>
       <div
         :if={get_preset_origin_info(@feed_filters, @__context__).preset_has_fixed_origin}
-        class="tooltip z-dropdown bg-base-100 shadow-lg border rounded-xl border-base-content/20 p-3 w-52 absolute top-0 left-0 hidden"
+        class="tooltip z-dropdown bg-base-100 shadow-lg border rounded-xl border-base-content/10 p-3 w-52 absolute top-0 left-0 hidden"
       >
         <p class="text-sm text-base-content/70">
           {l("Origin filter is fixed for this feed preset")}
@@ -138,7 +138,7 @@
 </div>
 
 {!-- <div :if={:sort_by not in @hide_filters} class="flex flex-col gap-2 pt-3 w-full">
-  <span class="font-semibold uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/20 mb-2">{l("Sort by")}</span>
+  <span class="font-semibold uppercase text-xs text-base-content/60 pb-2 border-b border-base-content/10 mb-2">{l("Sort by")}</span>
   <StatelessComponent
     module={maybe_component(Bonfire.UI.Social.SortItemsLive, @__context__)}
     scope={:user}

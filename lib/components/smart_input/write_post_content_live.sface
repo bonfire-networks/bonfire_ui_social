@@ -1,4 +1,4 @@
-<div class="write_post_content">
+<div class="write_post_content flex flex-col flex-1 min-h-0">
   {!-- NOTE: if using Surface's Form component here it would cause it to override our @__context__ (containing current_user, etc) with the form metadata, causing issues in any component below this one --}
   <!-- for={%{}} -->
   {!-- DM RECIPIENTS --}
@@ -15,7 +15,7 @@
     data-scope="composer_form"
     x-on:keydown.meta.enter.prevent="document.getElementById('submit_btn')?.click()"
     x-on:keydown.ctrl.enter.prevent="document.getElementById('submit_btn')?.click()"
-    class="with_editor flex-1"
+    class="with_editor flex-1 flex flex-col min-h-0"
   >
     {#if e(@smart_input_opts, :create_object_type, nil) in [:message, "message"] ||
         e(@smart_input_opts, :recipients_editable, nil)}

@@ -26,7 +26,7 @@
       :if={!@hide_filters}
       selected_tab={@selected_tab}
       selected_name={@feed_title || @page_title}
-      class="flex items-center gap-2 w-full tabs border-b border-base-content/20"
+      class="flex items-center gap-2 w-full tabs border-b border-base-content/10"
       tab_class={@tab_class}
       item_class={@item_class}
       tab_primary_class={@tab_primary_class}
@@ -48,7 +48,7 @@
         phx-click={JS.show(to: ".fresh_hidden")
         |> JS.push("show_fresh", target: @myself)
         |> JS.add_class("hidden")}
-        class="flex justify-center w-full mx-auto btn btn-ghost text-primary z-50 border-0 border-b border-base-content/20 rounded-none border-t py-6 font-light"
+        class="flex justify-center w-full mx-auto btn btn-ghost text-primary z-50 border-0 border-b border-base-content/10 rounded-none border-t py-6 font-light"
         phx-show={JS.remove_class("hidden")}
       >
         <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
@@ -88,7 +88,7 @@
           role="feed"
           aria-busy={to_string(@loading || @reloading || false)}
           phx-update="stream"
-          class="flex flex-col divide-y divide-base-content/20 flex-1 h-full grow"
+          class="flex flex-col divide-y divide-base-content/10 flex-1 h-full grow"
         >
           {#for {entry_id, entry} <- @streams.feed}
             <div

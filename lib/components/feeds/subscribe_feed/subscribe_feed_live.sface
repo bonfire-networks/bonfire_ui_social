@@ -18,7 +18,7 @@
               phx-hook="Copy"
               id="rss-feed-copy-btn"
               href={rss_url |> URIs.based_url()}
-              class="btn btn-sm btn-outline border-base-content/20 flex items-center gap-2"
+              class="btn btn-sm btn-outline border-base-content/10 flex items-center gap-2"
               title={l("Copy RSS URL")}
               aria-label={l("Copy RSS URL")}
             >
@@ -29,7 +29,7 @@
               rel="alternate"
               type="application/rss+xml"
               href={rss_url}
-              class="btn btn-sm btn-outline border-base-content/20 flex items-center gap-2"
+              class="btn btn-sm btn-outline border-base-content/10 flex items-center gap-2"
               target="_blank"
               title={l("Open RSS feed")}
               aria-label={l("Open RSS feed")}
@@ -43,7 +43,7 @@
               phx-hook="Copy"
               id="atom-feed-copy-btn"
               href={atom_url |> URIs.based_url()}
-              class="btn btn-sm btn-outline border-base-content/20 flex items-center gap-2"
+              class="btn btn-sm btn-outline border-base-content/10 flex items-center gap-2"
               title={l("Copy Atom URL")}
               aria-label={l("Copy Atom URL")}
             >
@@ -54,7 +54,7 @@
               rel="alternate"
               type="application/atom+xml"
               href={atom_url}
-              class="btn btn-sm btn-outline border-base-content/20 flex items-center gap-2"
+              class="btn btn-sm btn-outline border-base-content/10 flex items-center gap-2"
               target="_blank"
               title={l("Open Atom feed")}
               aria-label={l("Open Atom feed")}

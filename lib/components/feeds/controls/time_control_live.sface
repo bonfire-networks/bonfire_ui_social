@@ -32,7 +32,7 @@
   <label
     role="button"
     tabindex="0"
-    class="tooltip-button btn-outline rounded-full btn w-full btn-sm border-base-content/20 capitalize"
+    class="tooltip-button btn-outline rounded-full btn w-full btn-sm border-base-content/10 capitalize"
   >
     {Enum.find_value(default_options(), fn {v, name} ->
       if v == @current_value, do: name, else: nil
@@ -46,7 +46,7 @@
   </label>
   <ul
     tabindex="0"
-    class="tooltip z-dropdown menu bg-base-100 pt-0 shadow border border-base-content/20 rounded-box w-72 absolute top-0 right-0 hidden"
+    class="tooltip z-dropdown menu bg-base-100 pt-0 shadow border border-base-content/10 rounded-box w-72 absolute top-0 right-0 hidden"
   >
     {#for {days, label} <- default_options()}
       <li>
@@ -57,7 +57,7 @@
           class="flex gap-3 px-2 text-base-content justify-between items-center"
         >
           {label}
-          <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+          <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
             <span :if={@current_value == days} class="w-[14px] h-[14px] bg-primary rounded-full" />
           </div>
         </a>

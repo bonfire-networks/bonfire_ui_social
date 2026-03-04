@@ -135,7 +135,7 @@
     data-rendered={@showing_within}
     data-main-object={@viewing_main_object}
     class={
-      "group article flex flex-col previewable_activity cursor-pointer bg-base-100 border border-base-content/20 rounded-xl overflow-hidden transition-all hover:border-base-content/20 hover:shadow-sm",
+      "group article flex flex-col previewable_activity cursor-pointer bg-base-100 border border-base-content/10 rounded-xl overflow-hidden transition-all hover:border-base-content/10 hover:shadow-sm",
       "!max-w-full !border-0 !cursor-default !rounded-none !shadow-none !bg-transparent":
         @showing_within == :thread && @viewing_main_object
     }

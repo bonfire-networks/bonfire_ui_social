@@ -87,7 +87,7 @@
       <div
         :if={@type != :blocks}
         x-data="{open: false}"
-        class="m-4 mt-0 border border-base-content/20 rounded-box p-3 bg-base-200/50"
+        class="m-4 mt-0 border border-base-content/10 rounded-box p-3 bg-base-200/50"
       >
         {!-- {...pry()} --}
         <div x-on:click="open = !open" class="flex items-start gap-4 justify-between cursor-pointer">
@@ -103,7 +103,7 @@
             </div>
           </div>
           <button type="button" x-cloak class="rounded btn btn-square btn-sm btn-ghost" x-show="open">
-            <#Icon iconify="ph:caret-down-duotone" class="w-5 h-5 text-base-content" />
+            <#Icon iconify="ph:caret-down" class="w-5 h-5 text-base-content" />
           </button>
           <button type="button" class="rounded btn btn-square btn-sm btn-ghost" x-show="!open">
             <#Icon iconify="ph:caret-up-duotone" class="w-5 h-5 text-base-content" />
@@ -131,7 +131,7 @@
           </div>
           <form inert={federating? == false} phx-submit="Bonfire.Social.Graph.Aliases:move_in">
             <div class="form-control  mt-4 w-full">
-              <div class="text-base font-bold pb-2 border-b border-base-content/20 mb-4">{l("Existing aliases")}</div>
+              <div class="text-base font-bold pb-2 border-b border-base-content/10 mb-4">{l("Existing aliases")}</div>
               <ul>
                 <li :for={%{edge: %{object: %{profile: profile, character: %{id: _} = character}}} <-
                   Bonfire.Social.Graph.Aliases.list_my_aliases(current_user(@__context__))

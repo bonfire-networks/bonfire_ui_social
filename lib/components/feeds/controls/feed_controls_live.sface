@@ -31,7 +31,7 @@
       >
         <label
           tabindex="0"
-          class="tooltip-button btn btn-circle btn-outline border-base-content/20 btn-sm"
+          class="tooltip-button btn btn-circle btn-outline border-base-content/10 btn-sm"
         >
           <div class="sr-only">{l("Filter by activity types")}</div>
           <#Icon iconify="ph:pulse-duotone" class="w-4 h-4 text-primary" />
@@ -39,7 +39,7 @@
 
         <ul
           tabindex="0"
-          class="tooltip z-dropdown menu bg-base-100 divide-y divide-base-content/20 border pt-0 border-base-content/20 shadow rounded-box absolute top-0 right-0 hidden w-72"
+          class="tooltip z-dropdown menu bg-base-100 divide-y divide-base-content/10 border pt-0 border-base-content/10 shadow rounded-box absolute top-0 right-0 hidden w-72"
         >
           {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
             <div class="pt-2" data-scope="boosts">
@@ -273,7 +273,7 @@
       >
         <label
           tabindex="0"
-          class="tooltip-button btn btn-circle btn-outline border-base-content/20 btn-sm"
+          class="tooltip-button btn btn-circle btn-outline border-base-content/10 btn-sm"
         >
           {#if e(@feed_filters, :sort_order, nil) == :asc}
             <span class="" data-tip={l("Oldest first")}>
@@ -290,7 +290,7 @@
 
         <ul
           tabindex="0"
-          class="tooltip z-dropdown menu bg-base-100 pt-0 shadow border border-base-content/20 rounded-box w-72 absolute top-0 right-0 hidden"
+          class="tooltip z-dropdown menu bg-base-100 pt-0 shadow border border-base-content/10 rounded-box w-72 absolute top-0 right-0 hidden"
         >
           <li>
             <a
@@ -303,7 +303,7 @@
                 <#Icon iconify="ph:sort-ascending-duotone" class="w-4 h-4" />
                 <span>{l("Newest first")}</span>
               </div>
-              <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+              <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
                 <span
                   :if={e(@feed_filters, :sort_order, nil) == :desc}
                   class="w-[14px] h-[14px] bg-primary rounded-full"
@@ -323,7 +323,7 @@
 
                 {l("Oldest first")}
               </div>
-              <div class="w-5 h-5 flex items-center justify-center border border-base-content/20 rounded-full">
+              <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
                 <span
                   :if={e(@feed_filters, :sort_order, nil) == :asc}
                   class="w-[14px] h-[14px] bg-primary rounded-full"
@@ -342,14 +342,14 @@
       >
         <label
           tabindex="0"
-          class="tooltip-button btn btn-circle btn-outline border-base-content/20 btn-sm"
+          class="tooltip-button btn btn-circle btn-outline border-base-content/10 btn-sm"
         >
           <div class="sr-only">{l("Extra Filters")}</div>
           <#Icon iconify="ph:sliders-horizontal-duotone" class="w-4 h-4 text-primary" />
         </label>
         <ul
           tabindex="0"
-          class="tooltip z-dropdown menu bg-base-100 shadow border border-base-content/20 rounded-box w-72 absolute top-0 right-0 hidden"
+          class="tooltip z-dropdown menu bg-base-100 shadow border border-base-content/10 rounded-box w-72 absolute top-0 right-0 hidden"
         >
           <Bonfire.UI.Social.FeedExtraControlsLive
             event_target={@event_target}
