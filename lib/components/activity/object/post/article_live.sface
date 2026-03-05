@@ -130,7 +130,7 @@
     data-object-id={id(@object)}
     data-translate-server-available={to_string(
       Bonfire.Common.Extend.extension_enabled?(:bonfire_translation) and
-        Bonfire.Translation.any_adapter_configured?()
+        Bonfire.Translation.any_adapter_configured?(@__context__)
     )}
     data-rendered={@showing_within}
     data-main-object={@viewing_main_object}
