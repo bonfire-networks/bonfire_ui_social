@@ -114,7 +114,7 @@
         </div>
         
       </div> -->
-      <form phx-change="Bonfire.Common.Settings:set">
+      <form class="p-4" phx-change="Bonfire.Common.Settings:set">
         <Bonfire.UI.Common.SettingsToggleLive
           id="infinite_scroll_toggle"
           show_label={Settings.get([:ui, :infinite_scroll], :preload, context: @__context__) == true}

@@ -24,7 +24,7 @@
         data-role="reply_count"
         :if={Bonfire.Common.Settings.get([:ui, :show_activity_counts], false, @__context__) &&
           e(@reply_count, 0) > 0}
-        class="ml-1 text-[13px] text-base-content/70"
+        class="sr-only"
       >
         {@reply_count}
       </span>
@@ -42,7 +42,7 @@
         <span
           :if={Bonfire.Common.Settings.get([:ui, :show_activity_counts], false, @__context__) &&
             e(@reply_count, 0) > 0}
-          class="ml-1 text-xs text-base-content text-opacity-70"
+          class="sr-only"
         >
           {@reply_count}
         </span>
