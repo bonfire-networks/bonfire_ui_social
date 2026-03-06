@@ -313,39 +313,22 @@
             </div>
           </div>
         {#elseif @verb == "Pin"}
-          <div data-role="pinned_by" class="">
-            {!-- PIN --}
-            <#Icon iconify="ph:arrows-counter-clockwise" class="w-6 h-6 stroke-1 text-success" />
-            <div class="flex-1 flex gap-2">
+          <div data-role="pinned_by" class="flex items-center gap-3 -ml-[60px]">
+            <#Icon iconify="ph:push-pin-duotone" class="w-5 h-5 text-primary flex-shrink-0" />
+            <div class="text-sm font-medium text-base-content/70">
               <LinkLive
                 to={@path}
                 opts={"data-id": "subject_name"}
-                parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_avatar", @parent_id)}
+                parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
+                class="link link-hover font-semibold"
               >
-                <Bonfire.UI.Common.AvatarLive
-                  parent_id={deterministic_dom_id(__MODULE__, @activity_component_id || @activity_id, "sm", nil)}
-                  user_id={@profile_id}
-                  src={@profile_media}
-                  title={@profile_name}
-                  class="h-7 w-7 rounded-full"
-                />
+                {#if @object_id == current_user_id(@__context__)}
+                  {l("You")}
+                {#else}
+                  {@profile_name || @character_username}
+                {/if}
               </LinkLive>
-              <div class="font-medium text-sm text-base-content/70">
-                <LinkLive
-                  to={@path}
-                  opts={"data-id": "subject_name"}
-                  parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-                  class="link link-hover font-semibold"
-                >
-                  {#if @object_id == current_user_id(@__context__)}
-                    {l("You")}
-                  {#else}
-                    {@profile_name || @character_username}
-                  {/if}
-                </LinkLive>
-
-                {l("pinned")}
-              </div>
+              {l("pinned")}
             </div>
           </div>
         {#elseif @verb in ["Reply", "Respond"]}
@@ -453,26 +436,22 @@
           </div>
         </div>
       {#elseif @verb == "Pin"}
-        <div data-role="pinned" class="flex items-center justify-between w-full mb-2 -ml-[60px]">
-          {!-- LIKE --}
-          <#Icon iconify="material-symbols:push-pin" class="w-5 h-5 text-base-content/70" />
-          <div class="flex-1 ml-3">
-            <div class="text-sm font-medium text-base-content/70">
-              <LinkLive
-                class="font-medium link link-hover text-base-content/70"
-                to={@path}
-                opts={"data-id": "subject_name"}
-                parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-              >
-                {#if @object_id == current_user_id(@__context__)}
-                  {l("You")}
-                {#else}
-                  {@profile_name || @character_username}
-                {/if}
-              </LinkLive>
-
-              {raw(@verb_display)}
-            </div>
+        <div data-role="pinned" class="flex items-center gap-3 w-full mb-2 -ml-[60px]">
+          <#Icon iconify="ph:push-pin-duotone" class="w-5 h-5 text-primary flex-shrink-0" />
+          <div class="text-sm font-medium text-base-content/70">
+            <LinkLive
+              class="link link-hover font-semibold"
+              to={@path}
+              opts={"data-id": "subject_name"}
+              parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
+            >
+              {#if @object_id == current_user_id(@__context__)}
+                {l("You")}
+              {#else}
+                {@profile_name || @character_username}
+              {/if}
+            </LinkLive>
+            {l("pinned")}
           </div>
         </div>
       {#elseif @verb in ["Like", "React"]}

@@ -21,7 +21,7 @@
   </button>
   <ul
     tabindex="0"
-    class="tooltip z-tooltip menu shadow bg-base-300 rounded-box w-64 absolute top-0 left-0 hidden tooltip-animated"
+    class="tooltip z-tooltip menu bg-base-100 rounded-box w-64 absolute top-0 left-0 hidden tooltip-animated"
     role="menu"
     id={deterministic_dom_id(__MODULE__, id(@activity), "more_menu_content", @parent_id)}
     phx-update="ignore"
@@ -204,7 +204,7 @@
             class="flex items-center px-4 text-sm text-neutral-content/80"
           />
         </li> --}
-        <li :if={Bonfire.Boundaries.can?(@__context__, :pin, :instance)}>
+        <li :if={Bonfire.Boundaries.can?(@__context__, :mediate, :instance)} data-id="pin_action">
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
             parent_id={deterministic_dom_id(

@@ -87,7 +87,7 @@ data-show-plain-actions={!Settings.get(
           class="!flex btn lg:tooltip lg:tooltip-bottom btn-sm btn-ghost btn-circle group hover:bg-primary/10 transition-transform duration-150 ease-out hover:scale-105 active:scale-95 hover:-translate-y-0.5"
         />
 
-        {#if LiveHandler.feed_live_update_many_preload_mode() == :async_actions}
+        {#if LiveHandler.feed_live_update_many_preload_mode() in [:async_actions, :inline]}
           {#if @object_boundary || !user_socket_connected?(@__context__)}
             <!-- LOAD ALL AS IF THEY WERE STATELESS COMPONENTS, since we preload data in this component -->
             <StatelessComponent
