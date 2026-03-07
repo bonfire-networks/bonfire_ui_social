@@ -88,8 +88,7 @@ data-show-plain-actions={!Settings.get(
         />
 
         {#if LiveHandler.feed_live_update_many_preload_mode() in [:async_actions, :inline]}
-          {#if @object_boundary || !user_socket_connected?(@__context__)}
-            <!-- LOAD ALL AS IF THEY WERE STATELESS COMPONENTS, since we preload data in this component -->
+          <!-- LOAD ALL AS IF THEY WERE STATELESS COMPONENTS, since we preload data in this component -->
             <StatelessComponent
               :if={@showing_within != :messages}
               module={maybe_component(Bonfire.UI.Reactions.BoostActionLive, @__context__)}
@@ -163,15 +162,6 @@ data-show-plain-actions={!Settings.get(
               subject_user={@subject_user}
               participants={@participants}
             />
-          {#else}
-            <!-- ACTIONS SKELETON GOES HERE -->
-            <div class="skeleton w-6 h-6 rounded-full shrink-0" />
-            <!-- <div class="skeleton w-6 h-6 ml-1 rounded-full shrink-0" /> -->
-            <!-- <div class="skeleton w-6 h-6 rounded-full shrink-0" /> -->
-            <div class="skeleton w-6 h-6 rounded-full shrink-0" />
-            <div class="skeleton w-6 h-6 rounded-full shrink-0" />
-            <div class="skeleton w-6 h-6 rounded-full shrink-0" />
-          {/if}
         {#else}
           <StatefulComponent
             module={maybe_component(Bonfire.UI.Reactions.BoostActionLive, @__context__)}

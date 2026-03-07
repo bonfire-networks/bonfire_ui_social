@@ -27,11 +27,12 @@ defmodule Bonfire.UI.Social.Activity.DeleteObjectLive do
 
   def can_delete?(context, object, object_boundary \\ nil) do
     Types.object_type(object) != Bonfire.Data.Identity.User and
-      Bonfire.Social.maybe_can?(
-        context,
-        :delete,
-        object,
-        object_boundary
-      )
+      (object_boundary == :skip_boundary_preload or
+         Bonfire.Social.maybe_can?(
+           context,
+           :delete,
+           object,
+           object_boundary
+         ))
   end
 end

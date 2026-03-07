@@ -23,7 +23,7 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop viewing_main_object, :boolean, default: false
   prop flagged, :any, default: nil
   prop thread_mode, :any, default: nil
-  prop object_boundary, :any, default: nil
+  prop object_boundary, :any, default: :skip_boundary_preload
   prop is_remote, :boolean, default: false
   prop hide_more_actions, :boolean, default: false
   prop parent_id, :any, default: nil

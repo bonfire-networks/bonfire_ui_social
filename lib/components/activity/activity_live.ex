@@ -47,7 +47,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop current_url, :string, default: nil
   prop permalink, :string, default: nil
   prop participants, :any, default: nil
-  prop object_boundary, :any, default: nil
+  prop object_boundary, :any, default: :skip_boundary_preload
   prop cw, :any, default: nil
   prop emoji, :any, default: nil
   prop check_object_boundary, :boolean, default: false

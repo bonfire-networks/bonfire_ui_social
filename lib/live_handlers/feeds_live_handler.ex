@@ -1548,15 +1548,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       )
 
     batch_opts = [
-      Utils.maybe_apply(
-        Bonfire.Boundaries.LiveHandler,
-        :update_many_opts,
-        [
-          Keyword.merge(opts,
-            verbs: [:read]
-          )
-        ]
-      ),
+      # NOTE: boundary verb preloading skipped for feed performance — buttons render enabled,
+      # boundaries checked on click (backend already enforces permissions at action time)
       # TODO: add Likes, Bookmarks, etc as in `actions_update_many`
       non_batch_opts
     ]
@@ -1624,15 +1617,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         assigns_sockets,
         if(opts[:showing_within] != :messages,
           do: [
-            Utils.maybe_apply(
-              Bonfire.Boundaries.LiveHandler,
-              :update_many_opts,
-              [
-                Keyword.merge(opts,
-                  verbs: [:read]
-                )
-              ]
-            ),
+            # NOTE: boundary verb preloading skipped for feed performance
             Utils.maybe_apply(
               Bonfire.Social.Boosts.LiveHandler,
               :update_many_opts,
