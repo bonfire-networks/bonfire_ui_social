@@ -202,12 +202,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         # end)
       end
 
+    new_count = count - (marked || 0)
+
+    # Update PersistentLive's cached badge count so it reflects after navigation
+    Bonfire.UI.Common.Presence.process_put(current_user_id(socket), {:badge_count, feed_id}, new_count)
+
     {:noreply,
      socket
-     |> assign(
-       # TODO
-       count: count - (marked || 0)
-     )}
+     |> assign(count: new_count)}
   end
 
   def handle_event(
@@ -231,9 +233,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           id: "mark_seen"
         )
 
+    new_count = count - 1
+    feed_id = e(assigns(socket), :feed_id, nil)
+
+    # Update PersistentLive's cached badge count so it reflects after navigation
+    if feed_id,
+      do: Bonfire.UI.Common.Presence.process_put(current_user_id(socket), {:badge_count, feed_id}, new_count)
+
     {:noreply,
      socket
-     |> assign(count: count - 1)}
+     |> assign(count: new_count)}
   end
 
   def handle_event("mark_seen", params, socket) do

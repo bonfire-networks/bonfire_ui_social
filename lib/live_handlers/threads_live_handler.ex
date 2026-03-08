@@ -56,12 +56,16 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         # end)
       end
 
+    new_count = count - (marked || 0)
+    feed_id = e(assigns(socket), :feed_id, nil)
+
+    # Update PersistentLive's cached badge count so it reflects after navigation
+    if feed_id,
+      do: Bonfire.UI.Common.Presence.process_put(current_user_id(socket), {:badge_count, feed_id}, new_count)
+
     {:noreply,
      socket
-     |> assign(
-       # TODO
-       count: count - (marked || 0)
-     )}
+     |> assign(count: new_count)}
   end
 
   def handle_event(

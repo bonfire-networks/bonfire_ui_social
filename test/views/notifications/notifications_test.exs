@@ -223,22 +223,21 @@ defmodule Bonfire.UI.Social.Notifications.Test do
       bob: bob,
       conn_alice: conn_alice
     } do
-      # Alice opens any page (not notifications)
+      # Alice opens a page — badge should render
       conn = visit(conn_alice, "/feed")
 
-      # Bob mentions Alice
+      # Bob mentions Alice, triggering a notification
       Task.start(fn ->
         Posts.publish(
           current_user: bob,
-          post_attrs: %{post_content: %{html_body: "Hey @alice!"}},
+          post_attrs: %{post_content: %{html_body: "Hey @alice check this!"}},
           boundary: "public"
         )
       end)
 
-      # TODO: Check that the notification badge/counter updates in real-time
-      # This tests the counter increment PubSub message
-      # conn
-      # |> assert_has_or_open_browser("[data-role=notifications_nav]", timeout: 3000)
+      # Badge counter should appear with count > 0 via PubSub increment
+      conn
+      |> assert_has_or_open_browser("#badge_counter_notifications .badge", timeout: 5000)
     end
   end
 end
