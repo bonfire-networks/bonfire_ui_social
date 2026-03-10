@@ -82,7 +82,8 @@
     {#if current_user_id(@__context__)}
       <li :if={@viewing_main_object && @thread_id &&
         (@object_type == Bonfire.Data.Social.Message ||
-           (@object_boundary == :skip_boundary_preload || Bonfire.Boundaries.can?(@__context__, :describe, @object_boundary)))}>
+           (@object_boundary == :skip_boundary_preload ||
+              Bonfire.Boundaries.can?(@__context__, :describe, @object_boundary)))}>
         <Bonfire.UI.Common.OpenModalLive
           id={deterministic_dom_id(__MODULE__, id(@activity) || @thread_id, "thread_title", @parent_id)}
           title_text={l("Edit the title of this discussion")}
@@ -231,12 +232,13 @@
       {#if @showing_within == :thread and
           @object_type in [Bonfire.Data.Social.Post] and
           not is_nil(e(@object, :post_content, nil)) and
-          (@object_boundary != :skip_boundary_preload && Bonfire.Social.maybe_can?(
-            @__context__,
-            :edit,
-            @object,
-            @object_boundary
-          ))}
+          (@object_boundary != :skip_boundary_preload &&
+             Bonfire.Social.maybe_can?(
+               @__context__,
+               :edit,
+               @object,
+               @object_boundary
+             ))}
         <!-- <li>
           <StatefulComponent
             module={maybe_component(Bonfire.UI.Posts.DownloadMarkLive, @__context__)}
@@ -420,7 +422,8 @@
 
     {#if @viewing_main_object && @thread_id && @object_type != Bonfire.Data.Social.Message &&
         module_enabled?(Bonfire.Boundaries.Locking.LiveHandler, @__context__)}
-      {#if @object_boundary == :skip_boundary_preload || Bonfire.Boundaries.can?(@__context__, :grant, @object_boundary)}
+      {#if @object_boundary == :skip_boundary_preload ||
+          Bonfire.Boundaries.can?(@__context__, :grant, @object_boundary)}
         <li>
           <Bonfire.UI.Common.OpenModalLive
             id={deterministic_dom_id(__MODULE__, id(@activity) || @thread_id, "thread_lock", @parent_id)}

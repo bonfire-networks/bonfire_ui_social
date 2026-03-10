@@ -6,7 +6,7 @@
       {#match [events: []]}
         {!-- Empty state with warm, inviting aesthetic --}
         <aside
-          class="events-widget events-widget--empty w-full rounded-2xl overflow-hidden"
+          class="events-widget events-widget--empty w-full lg:rounded-2xl overflow-hidden"
           aria-label={l("Upcoming Events")}
         >
           {!-- Decorative header strip --}
@@ -37,7 +37,10 @@
           </div>
         </aside>
       {#match [events: events]}
-        <aside class="events-widget w-full rounded-2xl overflow-hidden" aria-label={l("Upcoming Events")}>
+        <aside
+          class="events-widget w-full lg:rounded-2xl overflow-hidden"
+          aria-label={l("Upcoming Events")}
+        >
           {!-- Warm gradient header strip like calendar binding --}
           <div class="h-2 bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400" />
 

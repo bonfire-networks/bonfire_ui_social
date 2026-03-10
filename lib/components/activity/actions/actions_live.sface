@@ -89,79 +89,79 @@ data-show-plain-actions={!Settings.get(
 
         {#if LiveHandler.feed_live_update_many_preload_mode() in [:async_actions, :inline]}
           <!-- LOAD ALL AS IF THEY WERE STATELESS COMPONENTS, since we preload data in this component -->
-            <StatelessComponent
-              :if={@showing_within != :messages}
-              module={maybe_component(Bonfire.UI.Reactions.BoostActionLive, @__context__)}
-              id={"#{@id || id(@object)}_boost"}
-              myself={@myself}
-              object={@object}
-              object_id={id(@object)}
-              parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
-              creator={@creator}
-              object_type={@object_type}
-              object_boundary={@object_boundary}
-              showing_within={@showing_within}
-              my_boost={@my_boost}
-              boost_count={e(
-                the_activity(@activity, @object),
-                :boost_count,
-                :object_count,
-                nil
-              )}
-            />
+          <StatelessComponent
+            :if={@showing_within != :messages}
+            module={maybe_component(Bonfire.UI.Reactions.BoostActionLive, @__context__)}
+            id={"#{@id || id(@object)}_boost"}
+            myself={@myself}
+            object={@object}
+            object_id={id(@object)}
+            parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
+            creator={@creator}
+            object_type={@object_type}
+            object_boundary={@object_boundary}
+            showing_within={@showing_within}
+            my_boost={@my_boost}
+            boost_count={e(
+              the_activity(@activity, @object),
+              :boost_count,
+              :object_count,
+              nil
+            )}
+          />
 
-            <StatelessComponent
-              module={maybe_component(Bonfire.UI.Reactions.LikeActionLive, @__context__)}
-              id={"#{@id || id(@object)}_like"}
-              event_target={@myself}
-              myself={@myself}
-              object_id={id(@object)}
-              creator={@creator}
-              object_boundary={@object_boundary}
-              my_like={@my_like}
-              like_count={e(
-                the_activity(@activity, @object),
-                :like_count,
-                :object_count,
-                nil
-              )}
-            />
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Reactions.LikeActionLive, @__context__)}
+            id={"#{@id || id(@object)}_like"}
+            event_target={@myself}
+            myself={@myself}
+            object_id={id(@object)}
+            creator={@creator}
+            object_boundary={@object_boundary}
+            my_like={@my_like}
+            like_count={e(
+              the_activity(@activity, @object),
+              :like_count,
+              :object_count,
+              nil
+            )}
+          />
 
-            <StatelessComponent
-              module={maybe_component(Bonfire.UI.Reactions.BookmarkActionLive, @__context__)}
-              id={"#{@id || id(@object)}_bookmark"}
-              event_target={@myself}
-              myself={@myself}
-              :if={not is_nil(current_user_id(@__context__))}
-              object_id={id(@object)}
-              creator={@creator}
-              object_boundary={@object_boundary}
-              my_bookmark={@my_bookmark}
-            />
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Reactions.BookmarkActionLive, @__context__)}
+            id={"#{@id || id(@object)}_bookmark"}
+            event_target={@myself}
+            myself={@myself}
+            :if={not is_nil(current_user_id(@__context__))}
+            object_id={id(@object)}
+            creator={@creator}
+            object_boundary={@object_boundary}
+            my_bookmark={@my_bookmark}
+          />
 
-            <Bonfire.UI.Social.Activity.MoreActionsLive
-              :if={!@hide_more_actions}
-              object={@object}
-              creator={@creator}
-              activity={@activity}
-              object_type={@object_type}
-              object_boundary={@object_boundary}
-              object_type_readable={@object_type_readable}
-              verb={@verb}
-              thread_id={@thread_id}
-              thread_mode={@thread_mode}
-              thread_title={@thread_title}
-              showing_within={@showing_within}
-              quotes={@quotes}
-              feed_name={@feed_name}
-              viewing_main_object={@viewing_main_object}
-              activity_component_id={@activity_component_id}
-              is_remote={@is_remote}
-              parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
-              published_in={@published_in}
-              subject_user={@subject_user}
-              participants={@participants}
-            />
+          <Bonfire.UI.Social.Activity.MoreActionsLive
+            :if={!@hide_more_actions}
+            object={@object}
+            creator={@creator}
+            activity={@activity}
+            object_type={@object_type}
+            object_boundary={@object_boundary}
+            object_type_readable={@object_type_readable}
+            verb={@verb}
+            thread_id={@thread_id}
+            thread_mode={@thread_mode}
+            thread_title={@thread_title}
+            showing_within={@showing_within}
+            quotes={@quotes}
+            feed_name={@feed_name}
+            viewing_main_object={@viewing_main_object}
+            activity_component_id={@activity_component_id}
+            is_remote={@is_remote}
+            parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
+            published_in={@published_in}
+            subject_user={@subject_user}
+            participants={@participants}
+          />
         {#else}
           <StatefulComponent
             module={maybe_component(Bonfire.UI.Reactions.BoostActionLive, @__context__)}

@@ -61,7 +61,12 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
     # Update PersistentLive's cached badge count so it reflects after navigation
     if feed_id,
-      do: Bonfire.UI.Common.Presence.process_put(current_user_id(socket), {:badge_count, feed_id}, new_count)
+      do:
+        Bonfire.UI.Common.Presence.process_put(
+          current_user_id(socket),
+          {:badge_count, feed_id},
+          new_count
+        )
 
     {:noreply,
      socket
