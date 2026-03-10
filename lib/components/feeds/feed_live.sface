@@ -4,7 +4,7 @@
     data-id="feed"
     data-page="feed"
     phx-hook="Bonfire.UI.Common.PreviewContentLive#MainFeed"
-    class="w-full flex flex-col mt-2 feed bg-base-100 mx-auto lg:rounded-2xl shadow outline outline-base-content/10"
+    class="w-full flex flex-col feed bg-base-200 lg:bg-base-100 mx-auto lg:rounded-2xl shadow outline outline-base-content/10"
   >
     <div :if={!@hide_filters and current_user_id(@__context__)} id="feed_controls_wrapper">
       <StatelessComponent

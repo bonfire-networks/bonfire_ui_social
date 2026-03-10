@@ -1,4 +1,4 @@
-<div class="bg-base-100 outline outline-base-content/10 lg:rounded-2xl shadow">
+<div class="bg-base-200 lg:bg-base-100 outline outline-base-content/10 lg:rounded-2xl shadow">
   <StatelessComponent
     module={maybe_component(Bonfire.UI.Social.ObjectThreadLive)}
     myself={nil}
