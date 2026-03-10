@@ -30,7 +30,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
       Bonfire.UI.Messages.MessagesLive,
       # Bonfire.UI.Social.NotificationsFeedLive,
       Bonfire.UI.Me.ProfileLive,
-      # Bonfire.UI.Groups.ExploreLive,
+      Bonfire.UI.Groups.ExploreLive,
       Bonfire.UI.Boundaries.SidebarCirclesLive,
       Bonfire.PanDoRa.Components.SidebarPandoraLive,
       Bonfire.UI.Groups.SidebarGroupsLive

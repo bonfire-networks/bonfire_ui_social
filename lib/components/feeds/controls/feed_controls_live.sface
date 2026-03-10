@@ -1,7 +1,7 @@
 <div
   data-id="feed_controls"
   id="feed_controls"
-  class="relative  relative feed_control_wrapper bg-base-100"
+  class="relative  relative feed_control_wrapper bg-base-100 rounded-t-2xl"
 >
   {#if @reloading}
     <div class="absolute z-10 inset-0 flex items-center justify-center bg-base-content/10">

@@ -4,7 +4,7 @@
   {#match suggested_profiles}
     <Bonfire.UI.Common.WidgetBlockLive
       :if={current_user_id(@__context__)}
-      class="w-full p-3 rounded-xl bg-base-content/5 border border-base-content/10 overflow-hidden"
+      class="w-full p-4 flex-auto mx-auto rounded-2xl outline shadow outline-base-content/10 bg-base-100 overflow-hidden"
       widget_title={e(@widget_title, l("Who to follow"))}
     >
       <:action>
