@@ -185,32 +185,8 @@ defmodule Bonfire.UI.Social.FeedLive do
   defp do_update(%{insert_stream: %{feed: entries}} = assigns, socket) do
     debug("feed stream is being poured into")
 
-    # If the server detected a stale reading position, tell JS to clear it
-    socket =
-      case Map.get(assigns, :clear_stale_reading_position) do
-        feed_name when is_binary(feed_name) ->
-          push_event(socket, "clear_reading_position", %{feed_name: feed_name})
-
-        _ ->
-          socket
-      end
-
-    # When feed resumed from a saved cursor, mark it consumed in localStorage
-    # so the next navigate (full reconnect) won't send it → fresh feed load
-    socket =
-      case Map.get(assigns, :resumed_from_marker) do
-        marker when is_binary(marker) ->
-          feed_name =
-            to_string(e(assigns(socket), :feed_name, nil) || e(assigns(socket), :feed_id, nil))
-
-          push_event(socket, "reading_position_consumed", %{feed_name: feed_name})
-
-        _ ->
-          socket
-      end
-
     socket
-    |> assign(Map.drop(assigns, [:insert_stream, :clear_stale_reading_position]))
+    |> assign(Map.drop(assigns, [:insert_stream]))
     |> assign(resumed_from_marker: Map.get(assigns, :resumed_from_marker, nil))
     |> assign(jumping_to_newest: false)
     |> LiveHandler.insert_feed(entries, reset: assigns[:reset_stream])
@@ -1020,8 +996,21 @@ defmodule Bonfire.UI.Social.FeedLive do
     {:noreply, assign(socket, fresh_ids: nil)}
   end
 
+  def handle_event("load_more_newer", %{"before" => cursor} = attrs, %{assigns: assigns} = socket) do
+    LiveHandler.paginate_feed(
+      e(assigns, :feed_name, nil) || e(assigns, :feed_id, nil),
+      Map.put(attrs, "before", cursor),
+      socket |> assign(:resumed_from_marker, nil),
+      hide_activities: false,
+      at: 0
+    )
+  end
+
   def handle_event("jump_to_newest", %{"feed_name" => feed_name}, %{assigns: assigns} = socket) do
     feed_id = e(assigns, :feed_name, nil) || e(assigns, :feed_id, nil)
+
+    # Clear server-side reading position so it won't be restored from Presence/process dict
+    LiveHandler.clear_reading_position(current_user_id(socket), feed_name)
 
     socket =
       socket
