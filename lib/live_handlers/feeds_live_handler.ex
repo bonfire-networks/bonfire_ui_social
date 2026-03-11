@@ -26,6 +26,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     {:noreply, socket}
   end
 
+  def handle_event(
+        "reading_position_updated",
+        %{"feed_name" => feed_name, "cursor" => cursor},
+        socket
+      ) do
+    put_reading_position(current_user_id(socket), feed_name, cursor)
+    {:noreply, socket}
+  end
+
   def handle_event("load_more", %{"context" => feed_id} = attrs, socket)
       when is_binary(feed_id) do
     paginate_feed(feed_id, attrs, socket, hide_activities: false)
@@ -1002,13 +1011,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
          %Phoenix.LiveView.Socket{} = socket,
          reset_stream
        ) do
-    reading_positions = Process.get(:reading_positions, %{})
-
     opts =
       to_options(socket)
-      # Merge reading positions from process dict (stored there during mount
-      # to avoid broadcasting via assign_global/__context__ to all components)
-      |> Keyword.put(:reading_positions, reading_positions)
 
     # |> debug("ooopts")
     user_connected = user_socket_connected?(socket)
@@ -1018,6 +1022,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     if (user_connected || (current_user_id(opts) && !force_static?(opts))) &&
          Config.env() != :test do
       debug("socket connected or logged in (and not in test env)")
+
+      # Check for a reading position cursor before spawning async
+      # (must run in the parent process where Process dict is available)
+      {opts, saved_cursor} =
+        maybe_apply_reading_position(feed_name_id_or_tuple, opts, reset_stream)
 
       if user_connected do
         debug("load feed async")
@@ -1029,44 +1038,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
             try do
               debug(feed_name_id_or_tuple, "Query activities asynchronously")
 
-              # Check for a reading position cursor from connect params
-              # (set from localStorage by the JS client)
-              {opts, saved_cursor} =
-                maybe_apply_reading_position(feed_name_id_or_tuple, opts, reset_stream)
-
-              resumed? = is_binary(saved_cursor)
-
               with {entries, new_assigns} when is_list(new_assigns) <-
                      feed_assigns(feed_name_id_or_tuple, opts) do
                 new_assigns =
-                  if resumed? and entries != [] do
-                    Keyword.put(new_assigns, :resumed_from_marker, saved_cursor)
-                  else
-                    new_assigns
-                  end
-
-                # If we tried to resume but got no results, the cursor is stale —
-                # tell JS to clear the stale key from localStorage
-                new_assigns =
-                  if resumed? and entries == [] do
-                    feed_name_str =
-                      case feed_name_id_or_tuple do
-                        {name, _} when is_atom(name) -> to_string(name)
-                        name when is_atom(name) -> to_string(name)
-                        _ -> nil
-                      end
-
-                    if feed_name_str,
-                      do:
-                        Keyword.put(
-                          new_assigns,
-                          :clear_stale_reading_position,
-                          feed_name_str
-                        ),
-                      else: new_assigns
-                  else
-                    new_assigns
-                  end
+                  if is_binary(saved_cursor) and entries != [],
+                    do: Keyword.put(new_assigns, :resumed_from_marker, saved_cursor),
+                    else: new_assigns
 
                 send_feed_updates(
                   pid,
@@ -1191,51 +1168,64 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       e(opts, :assigns, :__context__, :force_static, nil)
   end
 
-  # Look up a reading position cursor from connect params (localStorage via JS).
+  # --- Reading position helpers ---
+  # Consistent storage using `{:reading_pos, feed_name}` tuple keys.
+  # Checks PersistentLive (via Presence) first, falls back to current process dict
+  # (seeded from connect_params before Presence is available).
+
+  @doc false
+  def get_reading_position(user_id, feed_name) when is_binary(feed_name) do
+    Bonfire.UI.Common.Presence.process_get(user_id, {:reading_pos, feed_name}) ||
+      Process.get({:reading_pos, feed_name})
+  end
+
+  @doc false
+  def put_reading_position(user_id, feed_name, cursor) when is_binary(feed_name) do
+    # Store in PersistentLive's process dict (survives live navigations)
+    Bonfire.UI.Common.Presence.process_put(user_id, {:reading_pos, feed_name}, cursor)
+    # Also store in current process dict (local fallback)
+    Process.put({:reading_pos, feed_name}, cursor)
+  end
+
+  @doc false
+  def clear_reading_position(user_id, feed_name) when is_binary(feed_name) do
+    Bonfire.UI.Common.Presence.process_put(user_id, {:reading_pos, feed_name}, nil)
+    Process.delete({:reading_pos, feed_name})
+  end
+
+  # Look up a reading position cursor and apply it as an inclusive cursor.
   # Skipped when reset_stream is true or when already paginating.
   defp maybe_apply_reading_position(feed_name_id_or_tuple, opts, reset_stream) do
-    # If opts already have a paginate cursor, use it directly
-    existing_cursor = e(opts[:paginate], :after, nil)
+    feed_atom = feed_name_atom(feed_name_id_or_tuple)
 
-    if is_binary(existing_cursor) do
-      {opts, existing_cursor}
-    else
-      feed_name_atom =
-        if !reset_stream do
-          case feed_name_id_or_tuple do
-            {name, _} when is_atom(name) -> name
-            name when is_atom(name) -> name
-            _ -> nil
-          end
+    cond do
+      reset_stream == true or opts[:paginate] != nil ->
+        {opts, nil}
+
+      is_atom(feed_atom) and not is_nil(feed_atom) ->
+        case get_reading_position(current_user_id(opts), to_string(feed_atom)) do
+          cursor when is_binary(cursor) and cursor != "" ->
+            debug(cursor, "reading_pos: restoring for :#{feed_atom}")
+
+            opts =
+              opts
+              |> Keyword.put(:paginate, after: cursor, cursor_inclusive: true)
+              |> Keyword.put(:time_limit, 0)
+
+            {opts, cursor}
+
+          _ ->
+            {opts, nil}
         end
 
-      reading_pos =
-        if feed_name_atom && !opts[:paginate] do
-          e(opts, :reading_positions, to_string(feed_name_atom), nil)
-          |> debug("reading_pos: from localStorage for :#{feed_name_atom}")
-        end
-
-      cursor =
-        case reading_pos do
-          %{"id" => id} when is_binary(id) and id != "" -> id
-          c when is_binary(c) and c != "" -> c
-          _ -> nil
-        end
-
-      case cursor do
-        c when is_binary(c) ->
-          opts =
-            opts
-            |> Keyword.put(:paginate, after: c)
-            |> Keyword.put(:time_limit, 0)
-
-          {opts, c}
-
-        _ ->
-          {opts, nil}
-      end
+      true ->
+        {opts, nil}
     end
   end
+
+  defp feed_name_atom({name, _}) when is_atom(name), do: name
+  defp feed_name_atom(name) when is_atom(name), do: name
+  defp feed_name_atom(_), do: nil
 
   defp feed_id_only({feed_id, _feed_ids}), do: feed_id
   defp feed_id_only(feed_id), do: feed_id
