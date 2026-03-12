@@ -1,7 +1,10 @@
 <div>
   <ul class="menu relative p-0 w-full mt-2">
-    <li>
-      <details open={Bonfire.Common.Settings.get([Bonfire.Social.FeedLive, :show_feeds_nav_open], true, @__context__)}>
+    <li class="w-full">
+      <details
+        open={Bonfire.Common.Settings.get([Bonfire.Social.FeedLive, :show_feeds_nav_open], true, @__context__)}
+        class="w-full overflow-hidden"
+      >
         <summary
           phx-click="Bonfire.Social.Feeds:toggle_feeds_nav_visibility"
           class="relative font-bold uppercase  text-xs text-base-content/50"
