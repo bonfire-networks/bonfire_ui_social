@@ -51,7 +51,10 @@
             />
           </div>
           <:open_btn>
-            <div data-id="boundary_details" class="flex items-center justify-between w-full gap-2 text-sm text-base-content">
+            <div
+              data-id="boundary_details"
+              class="flex items-center justify-between w-full gap-2 text-sm text-base-content"
+            >
               <span class="flex-1 text-sm font-medium">{l("View boundaries")}</span>
               <#Icon iconify="fluent:door-tag-20-filled" class="w-5 h-5 shrink-0" />
             </div>
@@ -215,7 +218,7 @@
           />
         </li>
       {/if}
-    
+
       <!-- <li :if={extension_enabled?(:bonfire_ui_topics) or extension_enabled?(:bonfire_ui_groups)}>
         <StatelessComponent
           module={maybe_component(Bonfire.Tag.Web.TagModalLive, @__context__)}
