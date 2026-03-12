@@ -50,7 +50,6 @@
             @showing_within in [:smart_input, :quote_preview] ||
             (@showing_within == :thread && !@viewing_main_object)
       ]}
-      disable_lazy={@disable_lazy}
     />
   </LinkLive>
   {!-- </label>
