@@ -24,10 +24,10 @@
     class="tooltip z-tooltip menu bg-base-100 rounded-box w-64 absolute top-0 left-0 hidden tooltip-animated"
     role="menu"
     id={deterministic_dom_id(__MODULE__, id(@activity), "more_menu_content", @parent_id)}
-    phx-update="ignore"
     aria-orientation="vertical"
     aria-labelledby="more-menu"
   >
+    <!-- phx-update="ignore" -->
     {#if @object_type == Bonfire.Data.Social.Message}
       <li class="hover:bg-base-100">
         <div class="hover:bg-base-100 cursor-default flex justify-between items-center gap-2">
@@ -35,33 +35,28 @@
         <#Icon iconify="ph:tray-duotone" class="w-5 h-5 shrink-0" />
       </li>
     {#else}
-      <li><div data-id="boundary_details" class="w-full p-0 flex bg-base-content/5">
-          {#if LiveHandler.feed_live_update_many_preload_mode() == :async_actions}
-            <StatelessComponent
-              module={maybe_component(Bonfire.UI.Boundaries.BoundaryIconStatelessLive, @__context__)}
-              object_id={id(@object)}
-              object_boundary={@object_boundary}
+      <li>
+        <Bonfire.UI.Common.OpenModalLive
+          id={deterministic_dom_id(__MODULE__, id(@activity || @object), "view_boundary", @parent_id)}
+          title_text={l("Activity boundary")}
+          no_actions
+        >
+          <div class="mt-4">
+            <StatefulComponent
+              module={maybe_component(Bonfire.UI.Boundaries.BoundaryIconLive, @__context__)}
+              id={deterministic_dom_id(__MODULE__, id(@activity || @object), "boundary_icon", @parent_id)}
+              object={@object}
               object_type={Types.object_type(@published_in) || @object_type}
-              parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
-              with_icon
-              with_label
-              class="w-full"
-              open_btn_wrapper_class="flex items-center w-full gap-2 text-sm py-3 px-4"
+              details_only
             />
-          {#else}
-            {!-- 
-      TODO:
-      <div
-            phx-click="open"
-            phx-target={"#modal_boundary_#{id(@activity || @object)}"}
-            class="flex items-center w-full gap-2 text-sm  px-4 py-2"
-          >
-            <#Icon iconify="fluent:door-tag-20-filled" class="w-4 h-4 shrink-0" />
-            {l("View boundaries")}     
-       </div>
-       --}
-          {/if}
-        </div>
+          </div>
+          <:open_btn>
+            <div data-id="boundary_details" class="flex items-center justify-between w-full gap-2 text-sm text-base-content">
+              <span class="flex-1 text-sm font-medium">{l("View boundaries")}</span>
+              <#Icon iconify="fluent:door-tag-20-filled" class="w-5 h-5 shrink-0" />
+            </div>
+          </:open_btn>
+        </Bonfire.UI.Common.OpenModalLive>
       </li>
     {/if}
 
@@ -205,7 +200,7 @@
             class="flex items-center px-4 text-sm text-neutral-content/80"
           />
         </li> --}
-        <li :if={Bonfire.Boundaries.can?(@__context__, :mediate, :instance)} data-id="pin_action">
+        <li :if={Bonfire.Boundaries.can?(@__context__, :describe, :instance)} data-id="pin_action">
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
             parent_id={deterministic_dom_id(
@@ -220,14 +215,14 @@
           />
         </li>
       {/if}
-
-      <li :if={extension_enabled?(:bonfire_ui_topics) or extension_enabled?(:bonfire_ui_groups)}>
+    
+      <!-- <li :if={extension_enabled?(:bonfire_ui_topics) or extension_enabled?(:bonfire_ui_groups)}>
         <StatelessComponent
           module={maybe_component(Bonfire.Tag.Web.TagModalLive, @__context__)}
           object={@object}
           parent_id={@activity_component_id || id(@activity)}
         />
-      </li>
+      </li> -->
 
       {#if @showing_within == :thread and
           @object_type in [Bonfire.Data.Social.Post] and
