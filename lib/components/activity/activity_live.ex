@@ -892,7 +892,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
               do:
                 "$el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true})); $el.parentNode.classList.remove('unread-activity');"}
             phx-submit={if @feed_id && current_user_id(@__context__), do: "Bonfire.Social.Feeds:mark_seen"}
-            phx-target={if @feed_id, do: "#badge_counter_#{@feed_id}"}
+            phx-target={if @feed_id, do: "#unseen_count_#{@feed_id}"}
           >
             <input type="hidden" name="feed_id" value={@feed_id}>
             <input type="hidden" name="activity_id" value={@activity_id}>
