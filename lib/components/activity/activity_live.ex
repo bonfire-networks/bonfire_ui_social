@@ -334,7 +334,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     object_type =
       cond do
-        is_article?(object_type, object) -> :article
+        !reply_to and Activities.is_article?(object_type, object, false) -> :article
         true -> object_type
       end
       |> debug("object_type!!")
@@ -2419,26 +2419,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
     fallback_id = if is_binary(fallback), do: fallback, else: "fallback"
     "#{activity_inception}#{fallback_id}"
   end
-
-  # This gets compiled in, but you can make the character threshold bigger at runtime
-  @default_char_threshold Bonfire.Social.Activities.article_char_threshold()
-  # Use a conservative multiplier - ASCII is 1 byte per char, so this should ensure we don't filter out posts that might reach the character threshold
-  @min_body_bytes div(@default_char_threshold * 2, 3)
-
-  def is_article?(Bonfire.Data.Social.Post, %{name: name, html_body: html_body})
-      when is_binary(name) and is_binary(html_body) and
-             byte_size(name) > 2 and byte_size(html_body) > @min_body_bytes do
-    String.length(html_body) >
-      (Bonfire.Social.Activities.article_char_threshold() ||
-         @default_char_threshold)
-  end
-
-  def is_article?(Bonfire.Data.Social.Post, %{
-        post_content: %{name: name, html_body: html_body}
-      }),
-      do: is_article?(Bonfire.Data.Social.Post, %{name: name, html_body: html_body})
-
-  def is_article?(_, _), do: false
 
   @doc """
   Returns a list of components for rendering nested object previews in APActivity JSON.
