@@ -49,7 +49,7 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
   } do
     # Visit my profile feed
     conn
-    |> visit("/user")
+    |> visit("/@meee")
     # |> PhoenixTest.open_browser()
 
     # Test that both my post and my boost of alice's post are in the feed
