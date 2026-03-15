@@ -7,7 +7,7 @@
       >
         <summary
           phx-click="Bonfire.Social.Feeds:toggle_feeds_nav_visibility"
-          class="relative font-bold uppercase  text-xs text-base-content/50"
+          class="relative font-medium uppercase pl-5 text-xs text-base-content/50"
         >
           <span>{l("Feeds")}</span>
           <!-- data-trigger="hover"
