@@ -3,7 +3,7 @@
     {#for tag <- @hashtags}
       <LinkLive
         to={~p"/hashtag/" <> e(tag, :named, :name, "")}
-        class="badge badge-sm badge-ghost cursor-pointer gap-0.5 text-base-content/70 hover:text-base-content hover:badge-primary transition-colors"
+        class="badge badge-sm badge-primary badge-soft"
       >
         #{e(tag, :named, :name, "")}
       </LinkLive>
