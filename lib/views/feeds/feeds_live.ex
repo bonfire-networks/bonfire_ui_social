@@ -129,8 +129,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
            users: [
              secondary: [
                #  {Bonfire.UI.Social.WidgetFeedLive, [event_target: ]},
-               {Bonfire.Tag.Web.WidgetTagsLive, []},
-               {Bonfire.UI.Social.WidgetTrendingLinksLive, []}
+               {Bonfire.Tag.Web.WidgetTagsLive, []}
+               #  {Bonfire.UI.Social.WidgetTrendingLinksLive, []}
              ]
            ],
            guests: [

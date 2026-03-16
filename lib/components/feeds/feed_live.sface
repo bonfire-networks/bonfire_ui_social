@@ -4,7 +4,7 @@
     data-id="feed"
     data-page="feed"
     phx-hook="Bonfire.UI.Common.PreviewContentLive#MainFeed"
-    class="w-full flex flex-col feed bg-base-200 lg:bg-base-100 mx-auto lg:rounded-2xl shadow outline outline-base-content/10"
+    class="w-full flex flex-col feed bonfire-wrapper mx-auto"
   >
     <div :if={!@hide_filters and current_user_id(@__context__)} id="feed_controls_wrapper">
       <StatelessComponent
@@ -98,7 +98,7 @@
           role="feed"
           aria-busy={to_string(@loading || @reloading || false)}
           phx-update="stream"
-          class="flex flex-col divide-y divide-base-content/10 flex-1 h-full grow"
+          class="flex flex-col divide-y divide-base-content/10 [&>*:last-child]:border-b-0 flex-1 h-full grow"
         >
           {#for {entry_id, entry} <- @streams.feed}
             <div

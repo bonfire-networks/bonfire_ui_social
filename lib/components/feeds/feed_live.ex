@@ -537,8 +537,8 @@ defmodule Bonfire.UI.Social.FeedLive do
             #    sort_order: e(assigns, :sort_order, nil),
             #    showing_within: e(assigns, :showing_within, nil)
             #  ]},
-            {Bonfire.Tag.Web.WidgetTagsLive, []},
-            {Bonfire.UI.Social.WidgetTrendingLinksLive, []}
+            {Bonfire.Tag.Web.WidgetTagsLive, []}
+            # {Bonfire.UI.Social.WidgetTrendingLinksLive, []}
           ]
         ]
       ]
