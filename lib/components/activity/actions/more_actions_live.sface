@@ -55,8 +55,8 @@
               data-id="boundary_details"
               class="flex items-center justify-between w-full gap-2 text-sm text-base-content"
             >
-              <span class="flex-1 text-sm font-medium">{l("View boundaries")}</span>
-              <#Icon iconify="fluent:door-tag-20-filled" class="w-5 h-5 shrink-0" />
+              <span class="flex-1 text-sm text-left font-medium">{l("View boundaries")}</span>
+              <#Icon iconify="ph:intersection-duotone" class="w-5 h-5 shrink-0" />
             </div>
           </:open_btn>
         </Bonfire.UI.Common.OpenModalLive>
