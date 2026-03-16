@@ -20,20 +20,15 @@ defmodule Bonfire.UI.Social.FeedsLive do
       Bonfire.Web.Views.DashboardLive,
       Bonfire.UI.Social.FeedsLive,
       Bonfire.UI.Social.FeedsNavLive,
-      # Bonfire.UI.Files.Web.MediaFeedLive,
       Bonfire.Search.Web.SearchLive,
-      # Bonfire.UI.Social.ExploreLive,
-      # Bonfire.UI.Social.Feeds.LocalLive,
-      # Bonfire.UI.Social.Feeds.FederationLive,
-      # Bonfire.UI.Reactions.BookmarksLive,
-      # Bonfire.UI.Social.Feeds.LikesLive,
       Bonfire.UI.Messages.MessagesLive,
       # Bonfire.UI.Social.NotificationsFeedLive,
       Bonfire.UI.Me.ProfileLive,
       Bonfire.UI.Groups.ExploreLive,
-      Bonfire.UI.Boundaries.SidebarCirclesLive,
-      Bonfire.PanDoRa.Components.SidebarPandoraLive,
-      Bonfire.UI.Groups.SidebarGroupsLive
+      Bonfire.UI.Boundaries.MyCirclesPageLive,
+      Bonfire.UI.Groups.SidebarGroupsLive,
+      # Bonfire.UI.Boundaries.SidebarCirclesLive,
+      Bonfire.PanDoRa.Components.SidebarPandoraLive
     ]
   )
 
