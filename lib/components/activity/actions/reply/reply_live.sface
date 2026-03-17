@@ -4,7 +4,7 @@
        (@object_boundary && Bonfire.Boundaries.can?(@__context__, :reply, @object_boundary))) ||
       !@object_boundary}
     {#match true}
-      <Bonfire.UI.Common.DesignSystem.icon_button
+      <.icon_button
         icon="ph:chat-circle-duotone"
         aria_label={l("Reply")}
         variant="ghost"
@@ -31,7 +31,7 @@
       </span>
     {#match _}
       {#if @object_boundary}
-        <Bonfire.UI.Common.DesignSystem.icon_button
+        <.icon_button
           icon="ph:chat-circle-duotone"
           aria_label={@cannot_reply_text || l("Cannot reply")}
           variant="ghost"

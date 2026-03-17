@@ -36,13 +36,9 @@
         </fieldset>
 
         <div class="flex justify-end">
-          <Bonfire.UI.Common.DesignSystem.button
-            type="submit"
-            variant="primary"
-            loading_text={l("Saving...")}
-          >
+          <.button type="submit" variant="primary" loading_text={l("Saving...")}>
             {l("Save feed")}
-          </Bonfire.UI.Common.DesignSystem.button>
+          </.button>
         </div>
       </form>
       <:open_btn>
