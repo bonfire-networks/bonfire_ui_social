@@ -237,7 +237,7 @@
                @object,
                @object_boundary
              ))}
-        <!-- <li>
+        <li>
           <StatefulComponent
             module={maybe_component(Bonfire.UI.Posts.DownloadMarkLive, @__context__)}
             id={deterministic_dom_id(
@@ -249,7 +249,7 @@
             object_id={id(@object)}
             as_icon={false}
           />
-        </li> -->
+        </li>
 
         <StatelessComponent
           :if={extension_enabled?(:bonfire_open_science)}

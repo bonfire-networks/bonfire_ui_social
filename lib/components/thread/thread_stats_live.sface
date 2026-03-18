@@ -60,6 +60,7 @@
           </a>
       {/case}
 
+      {!-- 
       {#if Types.object_type(@object) in [Bonfire.Data.Social.Post] and
           not is_nil(e(@object, :post_content, nil)) and
           Bonfire.Social.maybe_can?(
@@ -84,8 +85,8 @@
             object_id={id(@object)}
             as_icon
           />
-        </div>
-      {/if}
+        </div> 
+      {/if} --}
     </div>
   </div>
 
