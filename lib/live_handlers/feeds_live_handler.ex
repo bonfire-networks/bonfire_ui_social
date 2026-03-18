@@ -973,7 +973,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       existing_filters = e(assigns, :feed_filters, %{})
       updated_filters = Map.merge(existing_filters, preset_exclusions)
 
-      Keyword.put(assigns, :feed_filters, updated_filters)
+      assigns
+      |> Keyword.put(:feed_filters, updated_filters)
     else
       {:ok, _} ->
         # debug("No preset found with assigns")

@@ -1285,7 +1285,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
     quote_post = e(activity, :edge, :subject, nil)
 
     original_creator = e(object, :created, :creator, nil)
-    quoted_id = deterministic_dom_id("quote_request_quoted", object, activity_inception, id(activity))
+
+    quoted_id =
+      deterministic_dom_id("quote_request_quoted", object, activity_inception, id(activity))
 
     [
       # Header: "nikita wants to quote your post"

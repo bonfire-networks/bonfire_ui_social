@@ -91,8 +91,8 @@
           id={"feed_#{@feed_name || @feed_id || @id}"}
           data-id="feed_activity_list"
           data-feed-name={@feed_name}
-          data-save-position={is_atom(@feed_name) and not is_nil(@feed_name) and !e(@feed_filters, :sort_by, nil) and
-            (e(@feed_filters, :sort_order, nil) == :desc or !e(@feed_filters, :sort_order, nil))}
+          data-save-position={@enable_marker and e(@feed_filters, :sort_by, nil) in [:date_created, nil] and
+            e(@feed_filters, :sort_order, nil) in [:desc, nil]}
           :hook="FeedScrollTracker"
           phx-target={@myself}
           role="feed"
