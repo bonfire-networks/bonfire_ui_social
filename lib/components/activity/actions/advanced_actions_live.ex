@@ -59,5 +59,4 @@ defmodule Bonfire.UI.Social.Activity.AdvancedActionsLive do
     )
     |> render_sface()
   end
-
 end
