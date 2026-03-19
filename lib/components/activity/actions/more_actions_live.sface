@@ -34,33 +34,6 @@
           <span class="text-sm font-meium">{l("Direct Message")}</span></div>
         <#Icon iconify="ph:tray-duotone" class="w-5 h-5 shrink-0" />
       </li>
-    {#else}
-      <li>
-        <Bonfire.UI.Common.OpenModalLive
-          id={deterministic_dom_id(__MODULE__, id(@activity || @object), "view_boundary", @parent_id)}
-          title_text={l("Activity boundary")}
-          no_actions
-        >
-          <div class="mt-4">
-            <StatefulComponent
-              module={maybe_component(Bonfire.UI.Boundaries.BoundaryIconLive, @__context__)}
-              id={deterministic_dom_id(__MODULE__, id(@activity || @object), "boundary_icon", @parent_id)}
-              object={@object}
-              object_type={Types.object_type(@published_in) || @object_type}
-              details_only
-            />
-          </div>
-          <:open_btn>
-            <div
-              data-id="boundary_details"
-              class="flex items-center justify-between w-full gap-2 text-sm text-base-content"
-            >
-              <span class="flex-1 text-sm text-left font-medium">{l("View boundaries")}</span>
-              <#Icon iconify="ph:intersection-duotone" class="w-5 h-5 shrink-0" />
-            </div>
-          </:open_btn>
-        </Bonfire.UI.Common.OpenModalLive>
-      </li>
     {/if}
 
     <li>
@@ -78,40 +51,6 @@
     <#slot {@extra_items} />
 
     {#if current_user_id(@__context__)}
-      <li :if={@viewing_main_object && @thread_id &&
-        (@object_type == Bonfire.Data.Social.Message ||
-           (@object_boundary == :skip_boundary_preload ||
-              Bonfire.Boundaries.can?(@__context__, :describe, @object_boundary)))}>
-        <Bonfire.UI.Common.OpenModalLive
-          id={deterministic_dom_id(__MODULE__, id(@activity) || @thread_id, "thread_title", @parent_id)}
-          title_text={l("Edit the title of this discussion")}
-          no_actions
-          form_opts={%{"phx-submit" => "Bonfire.Social.Objects:set_name", "phx-target" => "##{@activity_component_id}"}}
-        >
-          <Field for={:thread} class="my-4">
-            <TextInput
-              placeholder="Set a name for the thread..."
-              name="name"
-              class="w-full bg-base-content/10 input input-bordered"
-              value={@thread_title || e(@activity, :replied, :thread, :named, :name, nil) ||
-                e(@object, :post_content, :name, nil) ||
-                e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, nil) ||
-                e(@object, :profile, :name, nil) || e(@object, :name, nil)}
-            />
-            <HiddenInput name="thread_id" value={@thread_id} />
-            <button class="normal-case w-full  btn-outline btn btn-primary mt-3">
-              {l("Save")}
-            </button>
-          </Field>
-          <:open_btn>
-            <div class="flex items-center justify-between w-full gap-2 text-base-content">
-              <span class="text-sm font-medium">{l("Edit discussion title")}</span>
-              <#Icon iconify="ph:text-h-one-duotone" class="w-5 h-5 shrink-0" />
-            </div>
-          </:open_btn>
-        </Bonfire.UI.Common.OpenModalLive>
-      </li>
-
       <!-- {#case e(@object, :peered, :canonical_uri, nil) || @is_remote}
         {#match nil}
         {#match false}
@@ -188,7 +127,7 @@
           />
         </li>
 
-        {!-- 
+        {!--
         # TODO: re-enable once pins are shown on profile
         <li
           :if={current_user_id(@__context__) == @creator_id}
@@ -227,41 +166,6 @@
         />
       </li> -->
 
-      {#if @showing_within == :thread and
-          @object_type in [Bonfire.Data.Social.Post] and
-          not is_nil(e(@object, :post_content, nil)) and
-          (@object_boundary != :skip_boundary_preload &&
-             Bonfire.Social.maybe_can?(
-               @__context__,
-               :edit,
-               @object,
-               @object_boundary
-             ))}
-        <li>
-          <StatefulComponent
-            module={maybe_component(Bonfire.UI.Posts.DownloadMarkLive, @__context__)}
-            id={deterministic_dom_id(
-              __MODULE__,
-              @activity_component_id || id(@activity),
-              "download_markdown",
-              @parent_id
-            )}
-            object_id={id(@object)}
-            as_icon={false}
-          />
-        </li>
-
-        <StatelessComponent
-          :if={extension_enabled?(:bonfire_open_science)}
-          module={maybe_component(Bonfire.OpenScience.ZenodoDoiButtonLive, @__context__)}
-          parent_id={@activity_component_id || id(@activity)}
-          object={@object}
-          media={e(@activity, :media, nil) || e(@object, :media, nil) || e(@activity, :files, nil) ||
-            e(@object, :files, nil)}
-          participants={@participants}
-        />
-      {/if}
-
       {#if @feed_name == :my}
         {#case e(@activity, :subject, :id, nil)}
           {#match nil}
@@ -293,34 +197,6 @@
       </li>
     {/if}
 
-    {#if @object_type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.Message] or
-        not is_nil(e(@object, :post_content, nil))}
-      {#if current_user_id(@__context__) && @object_boundary && @object_boundary != :skip_boundary_preload}
-        <StatelessComponent
-          module={maybe_component(Bonfire.UI.Social.EditPostLive)}
-          object={@object}
-          object_boundary={@object_boundary}
-          activity_component_id={@activity_component_id}
-          parent_id={@activity_component_id || id(@activity)}
-        />
-      {#else}
-        <li :if={Bonfire.Social.PostContents.versioning_enabled?(@__context__)}>
-          <a
-            href={"/post/#{id(@object)}/history/"}
-            class="flex items-center w-full gap-2 text-sm text-base-content"
-          >
-            <!-- <#Icon
-              iconify="material-symbols:difference-outline-rounded"
-              class="w-5 h-5 shrink-0 text-base-content"
-            /> -->
-            <div class="text-sm text-base-content">
-              {l("Version history")}
-            </div>
-          </a>
-        </li>
-      {/if}
-    {/if}
-
     {#case current_user_id(@__context__) && has_my_first_quote(@quotes, current_user_id(@__context__))}
       {#match id when is_binary(id)}
         <li>
@@ -337,16 +213,6 @@
         </li>
       {#match _}
     {/case}
-
-    <StatelessComponent
-      module={maybe_component(Bonfire.Label.Web.ContentLabelLive, @__context__)}
-      object={@object}
-      scope={:activity}
-      parent_id={@activity_component_id || id(@activity)}
-      object_boundary={@object_boundary}
-      target={"##{@activity_component_id}"}
-      btn_label={l("Label this %{object}", object: e(@object_type_readable, l("object")))}
-    />
 
     {#if current_user_id(@__context__) != @creator_id and @verb != "Flag" and
         module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}
@@ -418,137 +284,29 @@
       with_icon
     />
 
-    {#if @viewing_main_object && @thread_id && @object_type != Bonfire.Data.Social.Message &&
-        module_enabled?(Bonfire.Boundaries.Locking.LiveHandler, @__context__)}
-      {#if @object_boundary == :skip_boundary_preload ||
-          Bonfire.Boundaries.can?(@__context__, :grant, @object_boundary)}
-        <li>
-          <Bonfire.UI.Common.OpenModalLive
-            id={deterministic_dom_id(__MODULE__, id(@activity) || @thread_id, "thread_lock", @parent_id)}
-            title_text={l("Lock this discussion")}
-            no_actions
-          >
-            <p>{l(
-                "You can lock this discussion to prevent any replies from users on this instance and to block any remote replies from federating back to this instance."
-              )}</p>
-            <button
-              phx-click="Bonfire.Boundaries.Locking:lock"
-              phx-value-id={@thread_id}
-              class="normal-case w-full  btn-outline btn btn-primary mt-3"
-            >
-              {l("Lock this discussion")}
-            </button>
-            <:open_btn>
-              <div class="flex items-center w-full gap-2 text-sm text-base-content">
-                <!-- <#Icon iconify="ic:round-lock" class="w-4 h-4 shrink-0" /> -->
-                {l("Lock this discussion")}
-              </div>
-            </:open_btn>
-          </Bonfire.UI.Common.OpenModalLive>
-        </li>
-      {#elseif @creator_id == current_user_id(@__context__) or
-          Bonfire.Boundaries.can?(@__context__, :grant, :instance)}
-        <li>
-          <Bonfire.UI.Common.OpenModalLive
-            id={deterministic_dom_id(__MODULE__, id(@activity) || @thread_id, "thread_unlock", @parent_id)}
-            title_text={l("Unlock this discussion")}
-            no_actions
-          >
-            <p>{l("You can unlock this discussion to accept replies again.")}</p>
-            <button
-              phx-click="Bonfire.Boundaries.Locking:unlock"
-              phx-value-id={@thread_id}
-              class="normal-case w-full  btn-outline btn btn-primary mt-3"
-            >
-              {l("Unlock this discussion")}
-            </button>
-            <:open_btn>
-              <div class="flex items-center w-full gap-2 text-sm text-base-content">
-                <!-- <#Icon iconify="ic:round-lock" class="w-4 h-4 shrink-0" /> -->
-                {l("Unlock this discussion")}
-              </div>
-            </:open_btn>
-          </Bonfire.UI.Common.OpenModalLive>
-        </li>
-      {/if}
-    {/if}
-
-    <li class="m-1 border-t border-base-content/10" />
-
-    {#if @object_boundary && (id(@object) || id(@activity))}
-      {#if @object_type != Bonfire.Data.Social.Message}
-        {#if Bonfire.UI.Social.Activity.DeleteObjectLive.can_delete?(@__context__, @object, @object_boundary)}
-          <!-- <li>
-            <details>
-              <summary class="text-error/80">
-                <div class="flex items-center w-full gap-2 text-sm text-error/80">
-                  <span class="truncate ellipsis">{l("Delete")}</span>
-                </div>
-              </summary>
-              <ul> -->
-          <li :if={id(@object)}>
-            <StatelessComponent
-              module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
-              skip_permission_check
-              object={@object}
-              creator_id={@creator_id}
-              object_type_readable={@object_type_readable}
-              object_boundary={@object_boundary}
-              parent_id={deterministic_dom_id(
-                __MODULE__,
-                id(@activity_component_id || @activity),
-                "delete_object",
-                @parent_id
-              )}
-            />
-          </li>
-
-          {!-- Delete the activity --}
-          <li :if={id(@activity)}>
-            <StatelessComponent
-              module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
-              skip_permission_check
-              action="Bonfire.Social.Feeds:delete"
-              object={@activity}
-              object_boundary={@object_boundary}
-              object_type_readable={l("from feeds")}
-              creator_id={@creator_id}
-              parent_id={deterministic_dom_id(
-                __MODULE__,
-                id(@activity_component_id || @activity),
-                "delete_activity",
-                @parent_id
-              )}
-              explanation={l(
-                "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
-                object: @object_type_readable || l("object"),
-                verb: @verb
-              )}
-            />
-          </li>
-          <!-- </ul>
-            </details>
-          </li> -->
-        {/if}
-        {!-- Delete the object --}
-      {#else}
-        <li>
-          <StatelessComponent
-            module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
-            object={@object || @activity}
-            creator_id={@creator_id}
-            object_type_readable={@object_type_readable}
-            object_boundary={@object_boundary}
-            parent_id={deterministic_dom_id(
-              __MODULE__,
-              id(@activity_component_id || @activity),
-              "delete_object",
-              @parent_id
-            )}
-          />
-        </li>
-      {/if}
-    {/if}
+    {!-- Advanced actions (boundary-dependent: edit, delete, lock, boundary details, etc.) --}
+    <StatefulComponent
+      :if={@object_type != Bonfire.Data.Social.Message}
+      module={maybe_component(Bonfire.UI.Social.Activity.AdvancedActionsLive, @__context__)}
+      id={deterministic_dom_id(__MODULE__, id(@activity || @object), "advanced_actions", @parent_id)}
+      activity={@activity}
+      object={@object}
+      object_type={@object_type}
+      object_boundary={@object_boundary}
+      creator={@creator}
+      thread_id={@thread_id}
+      thread_title={@thread_title}
+      showing_within={@showing_within}
+      viewing_main_object={@viewing_main_object}
+      activity_component_id={@activity_component_id}
+      parent_id={@parent_id}
+      object_type_readable={@object_type_readable}
+      verb={@verb}
+      permalink={@permalink}
+      published_in={@published_in}
+      participants={@participants}
+      quotes={@quotes}
+    />
 
     <#slot {@admin_items} />
   </ul>
