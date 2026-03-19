@@ -19,6 +19,10 @@ defmodule Bonfire.UI.Social.Activity.AdvancedActionsLive do
   prop participants, :any, default: nil
   prop quotes, :list, default: []
 
+  data panel_prefix, :string, default: ""
+  data post_content, :any, default: nil
+  data object_type_label, :string, default: ""
+
   @doc "Batch-preloads object_boundary for all instances, delegating to Bonfire.Boundaries.LiveHandler"
   def update_many(assigns_sockets) do
     (Bonfire.Boundaries.LiveHandler.update_many(assigns_sockets,
@@ -41,8 +45,19 @@ defmodule Bonfire.UI.Social.Activity.AdvancedActionsLive do
       creator_name:
         e(assigns[:creator], :profile, :name, nil) ||
           e(assigns[:creator], :character, :username, nil) ||
-          l("the user")
+          l("the user"),
+      panel_prefix:
+        "av-" <>
+          deterministic_dom_id(
+            __MODULE__,
+            id(assigns[:activity] || assigns[:object]),
+            nil,
+            assigns[:parent_id]
+          ),
+      post_content: Bonfire.UI.Social.Activity.NoteLive.post_content(assigns[:object]),
+      object_type_label: e(assigns[:object_type_readable], l("object"))
     )
     |> render_sface()
   end
+
 end

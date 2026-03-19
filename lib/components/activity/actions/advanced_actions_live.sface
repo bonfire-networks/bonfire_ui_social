@@ -1,20 +1,358 @@
-{!-- Group 1: Boundary details modal --}
+<div>
 <li>
   <Bonfire.UI.Common.OpenModalLive
-    id={deterministic_dom_id(__MODULE__, id(@activity || @object), "view_boundary", @parent_id)}
-    title_text={l("Activity boundary")}
+    id={deterministic_dom_id(__MODULE__, id(@activity || @object), "advanced_actions", @parent_id)}
+    title_text={l("Advanced")}
     no_actions
   >
-    <div class="mt-4">
-      <StatefulComponent
-        module={maybe_component(Bonfire.UI.Boundaries.BoundaryIconLive, @__context__)}
-        id={deterministic_dom_id(__MODULE__, id(@activity || @object), "boundary_icon", @parent_id)}
-        object={@object}
-        object_boundary={@object_boundary}
-        object_type={Types.object_type(@published_in) || @object_type}
-        details_only
-      />
-    </div>
+        <div id={"#{@panel_prefix}_main"}>
+          <div class="flex flex-col -mx-1">
+            <section>
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-base-content/40 px-2 mt-4 mb-2">
+                {l("Boundary")}
+              </h3>
+              <StatefulComponent
+                module={maybe_component(Bonfire.UI.Boundaries.BoundaryIconLive, @__context__)}
+                id={deterministic_dom_id(__MODULE__, id(@activity || @object), "boundary_icon", @parent_id)}
+                object={@object}
+                object_boundary={@object_boundary}
+                object_type={Types.object_type(@published_in) || @object_type}
+                details_only
+              />
+            </section>
+
+            <section class="border-t border-base-content/10 pt-4 mt-4 [&:not(:has(li))]:hidden">
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-base-content/40 px-2 mb-2">
+                {l("Actions")}
+              </h3>
+              <ul class="menu w-full">
+                <li :if={current_user_id(@__context__) && @viewing_main_object && @thread_id &&
+                  (@object_type == Bonfire.Data.Social.Message ||
+                     Bonfire.Boundaries.can?(@__context__, :describe, @object_boundary))}>
+                  <button
+                    phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_edit_title")}
+                    class="flex items-center gap-3 w-full text-base-content"
+                  >
+                    <#Icon iconify="ph:text-h-one-duotone" class="w-4 h-4 shrink-0 text-base-content/60" />
+                    <span class="text-sm font-medium">{l("Edit discussion title")}</span>
+                    <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-base-content/30 ml-auto" />
+                  </button>
+                </li>
+
+                {#if (@object_type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.Message] or
+                    not is_nil(e(@object, :post_content, nil))) and
+                    current_user_id(@__context__) && @object_boundary &&
+                    Bonfire.Boundaries.can?(@__context__, :edit, @object_boundary)}
+                  <li>
+                    <button
+                      phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_edit_post")}
+                      class="flex items-center gap-3 w-full text-base-content"
+                    >
+                      <#Icon iconify="ph:pencil-simple-line-duotone" class="w-4 h-4 shrink-0 text-base-content/60" />
+                      <span class="text-sm font-medium">{l("Edit")}</span>
+                      <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-base-content/30 ml-auto" />
+                    </button>
+                  </li>
+                {#elseif Bonfire.Social.PostContents.versioning_enabled?(@__context__)}
+                  <li>
+                    <a href={"/post/#{id(@object)}/history/"} class="flex items-center gap-3 w-full text-base-content">
+                      <#Icon iconify="ph:clock-counter-clockwise-duotone" class="w-4 h-4 shrink-0 text-base-content/60" />
+                      <span class="text-sm">{l("Version history")}</span>
+                    </a>
+                  </li>
+                {/if}
+
+                {#if (current_user_id(@__context__) && @showing_within == :thread) and
+                    @object_type in [Bonfire.Data.Social.Post] and
+                    not is_nil(e(@object, :post_content, nil)) and
+                    Bonfire.Social.maybe_can?(@__context__, :edit, @object, @object_boundary)}
+                  <li>
+                    <StatefulComponent
+                      module={maybe_component(Bonfire.UI.Posts.DownloadMarkLive, @__context__)}
+                      id={deterministic_dom_id(__MODULE__, @activity_component_id || id(@activity), "download_markdown", @parent_id)}
+                      object_id={id(@object)}
+                      as_icon={false}
+                    />
+                  </li>
+
+                  <StatelessComponent
+                    :if={extension_enabled?(:bonfire_open_science)}
+                    module={maybe_component(Bonfire.OpenScience.ZenodoDoiButtonLive, @__context__)}
+                    parent_id={@activity_component_id || id(@activity)}
+                    object={@object}
+                    media={e(@activity, :media, nil) || e(@object, :media, nil) || e(@activity, :files, nil) || e(@object, :files, nil)}
+                    participants={@participants}
+                  />
+                {/if}
+
+                <StatelessComponent
+                  module={maybe_component(Bonfire.Label.Web.ContentLabelLive, @__context__)}
+                  object={@object}
+                  scope={:activity}
+                  parent_id={@activity_component_id || id(@activity)}
+                  object_boundary={@object_boundary}
+                  target={"##{@activity_component_id}"}
+                  btn_label={l("Label this %{object}", object: @object_type_label)}
+                />
+
+                {#if @viewing_main_object && @thread_id && @object_type != Bonfire.Data.Social.Message &&
+                    module_enabled?(Bonfire.Boundaries.Locking.LiveHandler, @__context__)}
+                  {#if Bonfire.Boundaries.can?(@__context__, :grant, @object_boundary)}
+                    <li>
+                      <button
+                        phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_lock")}
+                        class="flex items-center gap-3 w-full text-base-content"
+                      >
+                        <#Icon iconify="ph:lock-duotone" class="w-4 h-4 shrink-0 text-base-content/60" />
+                        <span class="text-sm font-medium">{l("Lock discussion")}</span>
+                        <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-base-content/30 ml-auto" />
+                      </button>
+                    </li>
+                  {#elseif @creator_id == current_user_id(@__context__) or
+                      Bonfire.Boundaries.can?(@__context__, :grant, :instance)}
+                    <li>
+                      <button
+                        phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_unlock")}
+                        class="flex items-center gap-3 w-full text-base-content"
+                      >
+                        <#Icon iconify="ph:lock-open-duotone" class="w-4 h-4 shrink-0 text-base-content/60" />
+                        <span class="text-sm font-medium">{l("Unlock discussion")}</span>
+                        <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-base-content/30 ml-auto" />
+                      </button>
+                    </li>
+                  {/if}
+                {/if}
+              </ul>
+            </section>
+
+            {#if @object_boundary && (id(@object) || id(@activity))}
+              <section class="border-t border-base-content/10 pt-4 mt-4">
+                <h3 class="text-xs font-semibold uppercase tracking-wider text-error px-2 mb-2">
+                  {l("Danger zone")}
+                </h3>
+                <ul class="menu w-full">
+                  {#if @object_type != Bonfire.Data.Social.Message}
+                    {#if Bonfire.UI.Social.Activity.DeleteObjectLive.can_delete?(@__context__, @object, @object_boundary)}
+                      <li :if={id(@object)}>
+                        <button
+                          phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_delete_object")}
+                          class="flex items-center gap-3 w-full text-error/80"
+                        >
+                          <#Icon iconify="ph:trash-duotone" class="w-4 h-4 shrink-0" />
+                          <span class="text-sm font-medium">{l("Delete")} {@object_type_label}</span>
+                          <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
+                        </button>
+                      </li>
+                      <li :if={id(@activity)}>
+                        <button
+                          phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_delete_activity")}
+                          class="flex items-center gap-3 w-full text-error/80"
+                        >
+                          <#Icon iconify="ph:trash-duotone" class="w-4 h-4 shrink-0" />
+                          <span class="text-sm font-medium">{l("Delete from feeds")}</span>
+                          <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
+                        </button>
+                      </li>
+                    {/if}
+                  {#else}
+                    <li>
+                      <button
+                        phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_delete_object")}
+                        class="flex items-center gap-3 w-full text-error/80"
+                      >
+                        <#Icon iconify="ph:trash-duotone" class="w-4 h-4 shrink-0" />
+                        <span class="text-sm font-medium">{l("Delete")} {@object_type_label}</span>
+                        <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
+                      </button>
+                    </li>
+                  {/if}
+                </ul>
+              </section>
+            {/if}
+          </div>
+        </div>
+
+        {!-- Edit discussion title --}
+        <div id={"#{@panel_prefix}_edit_title"} style="display:none">
+          <div class="">
+            <button
+              phx-click={JS.hide(to: "##{@panel_prefix}_edit_title") |> JS.show(to: "##{@panel_prefix}_main")}
+              class="btn btn-sm btn-soft mb-4 mt-4"
+              aria-label={l("Back")}
+            >
+              <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
+              <span class="text-sm font-semibold">{l("Edit discussion title")}</span>
+            </button>
+          </div>
+          <form phx-submit="Bonfire.Social.Objects:set_name" phx-target={"##{@activity_component_id}"}>
+            <div class="flex flex-col gap-3">
+              <input
+                name="name"
+                class="w-full bg-base-content/10 input input-bordered"
+                placeholder={l("Set a name for the thread...")}
+                value={@thread_title || e(@activity, :replied, :thread, :named, :name, nil) ||
+                  e(@object, :post_content, :name, nil) ||
+                  e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, nil) ||
+                  e(@object, :profile, :name, nil) || e(@object, :name, nil)}
+              />
+              <input type="hidden" name="thread_id" value={@thread_id} />
+              <button class="normal-case w-full btn btn-primary">{l("Save")}</button>
+            </div>
+          </form>
+        </div>
+
+        {!-- Edit post --}
+        <div id={"#{@panel_prefix}_edit_post"} style="display:none">
+          <div class="">
+            <button
+              phx-click={JS.hide(to: "##{@panel_prefix}_edit_post") |> JS.show(to: "##{@panel_prefix}_main")}
+              class="btn btn-sm btn-soft mb-4 mt-4"
+              aria-label={l("Back")}
+            >
+              <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
+              <span class="text-sm font-semibold">{l("Edit")}</span>
+            </button>
+          </div>
+          <form phx-submit="Bonfire.Posts:edit" phx-target={"##{@activity_component_id}"}>
+            <input type="hidden" name="post_id" value={id(@object)}>
+            <div class="flex flex-col gap-2">
+              <input
+                name="name"
+                class="w-full input"
+                autocomplete="off"
+                placeholder={l("Title")}
+                value={e(@post_content, :name, nil)}
+              />
+              <input
+                name="summary"
+                class="w-full input"
+                autocomplete="off"
+                placeholder={l("CW")}
+                value={e(@post_content, :summary, nil)}
+              />
+              <textarea
+                name="html_body"
+                class="w-full h-32 textarea"
+                autocomplete="off"
+                placeholder={l("Text")}
+              >{e(@post_content, :html_body, nil)}</textarea>
+              <button class="normal-case w-full btn btn-primary mt-1">{l("Done")}</button>
+            </div>
+          </form>
+        </div>
+
+        {!-- Delete object --}
+        <div id={"#{@panel_prefix}_delete_object"} style="display:none">
+          <div class="">
+            <button
+              phx-click={JS.hide(to: "##{@panel_prefix}_delete_object") |> JS.show(to: "##{@panel_prefix}_main")}
+              class="btn btn-sm btn-soft mb-4 mt-4"
+              aria-label={l("Back")}
+            >
+              <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
+            <span class="text-sm font-semibold">{l("Delete")} {@object_type_label}</span>
+            </button>
+          </div>
+          <div class="flex flex-col gap-4">
+            <p class="text-sm text-base-content/70">
+              {l("A request will be sent to remote instances to delete it as well.")}
+            </p>
+            <button
+              phx-click="Bonfire.Social.Objects:delete"
+              phx-value-id={id(@object)}
+              class="normal-case w-full btn btn-error"
+            >
+              <#Icon iconify="ph:trash-duotone" class="w-4 h-4" />
+              {l("Delete")} {@object_type_label}
+            </button>
+          </div>
+        </div>
+
+        {!-- Delete from feeds --}
+        <div id={"#{@panel_prefix}_delete_activity"} style="display:none">
+          <div class="">
+            <button
+              phx-click={JS.hide(to: "##{@panel_prefix}_delete_activity") |> JS.show(to: "##{@panel_prefix}_main")}
+              class="btn btn-sm btn-soft mb-4 mt-4"
+              aria-label={l("Back")}
+            >
+              <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
+            <span class="text-sm font-semibold">{l("Delete from feeds")}</span>
+            </button>
+          </div>
+          <div class="flex flex-col gap-4">
+            <p class="text-sm text-base-content/70">
+              {l(
+                "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
+                object: @object_type_label,
+                verb: @verb
+              )}
+            </p>
+            <button
+              phx-click="Bonfire.Social.Feeds:delete"
+              phx-value-id={id(@activity)}
+              class="normal-case w-full btn btn-error"
+            >
+              <#Icon iconify="ph:trash-duotone" class="w-4 h-4" />
+              {l("Delete from feeds")}
+            </button>
+          </div>
+        </div>
+
+        {!-- Lock discussion --}
+        <div id={"#{@panel_prefix}_lock"} style="display:none">
+          <div class="">
+            <button
+              phx-click={JS.hide(to: "##{@panel_prefix}_lock") |> JS.show(to: "##{@panel_prefix}_main")}
+              class="btn btn-sm btn-soft mb-4 mt-4"
+              aria-label={l("Back")}
+            >
+              <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
+            <span class="text-sm font-semibold">{l("Lock discussion")}</span>
+            </button>
+          </div>
+          <div class="flex flex-col gap-4">
+            <p class="text-sm text-base-content/70">
+              {l("You can lock this discussion to prevent any replies from users on this instance and to block any remote replies from federating back to this instance.")}
+            </p>
+            <button
+              phx-click="Bonfire.Boundaries.Locking:lock"
+              phx-value-id={@thread_id}
+              class="normal-case w-full btn btn-warning"
+            >
+              <#Icon iconify="ph:lock-duotone" class="w-4 h-4" />
+              {l("Lock this discussion")}
+            </button>
+          </div>
+        </div>
+
+        {!-- Unlock discussion --}
+        <div id={"#{@panel_prefix}_unlock"} style="display:none">
+          <div class="">
+            <button
+              phx-click={JS.hide(to: "##{@panel_prefix}_unlock") |> JS.show(to: "##{@panel_prefix}_main")}
+              class="btn btn-sm btn-soft mb-4 mt-4"
+              aria-label={l("Back")}
+            >
+              <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
+            <span class="text-sm font-semibold">{l("Unlock discussion")}</span>
+            </button>
+          </div>
+          <div class="flex flex-col gap-4">
+            <p class="text-sm text-base-content/70">
+              {l("You can unlock this discussion to accept replies again.")}
+            </p>
+            <button
+              phx-click="Bonfire.Boundaries.Locking:unlock"
+              phx-value-id={@thread_id}
+              class="normal-case w-full btn btn-primary"
+            >
+              <#Icon iconify="ph:lock-open-duotone" class="w-4 h-4" />
+              {l("Unlock this discussion")}
+            </button>
+          </div>
+        </div>
+
     <:open_btn>
       <div
         data-id="boundary_details"
@@ -26,230 +364,4 @@
     </:open_btn>
   </Bonfire.UI.Common.OpenModalLive>
 </li>
-
-{!-- Group 2: Edit discussion title --}
-<li :if={current_user_id(@__context__) && @viewing_main_object && @thread_id &&
-  (@object_type == Bonfire.Data.Social.Message ||
-     (@object_boundary == :skip_boundary_preload ||
-        Bonfire.Boundaries.can?(@__context__, :describe, @object_boundary)))}>
-  <Bonfire.UI.Common.OpenModalLive
-    id={deterministic_dom_id(__MODULE__, id(@activity) || @thread_id, "thread_title", @parent_id)}
-    title_text={l("Edit the title of this discussion")}
-    no_actions
-    form_opts={%{"phx-submit" => "Bonfire.Social.Objects:set_name", "phx-target" => "##{@activity_component_id}"}}
-  >
-    <Field for={:thread} class="my-4">
-      <TextInput
-        placeholder="Set a name for the thread..."
-        name="name"
-        class="w-full bg-base-content/10 input input-bordered"
-        value={@thread_title || e(@activity, :replied, :thread, :named, :name, nil) ||
-          e(@object, :post_content, :name, nil) ||
-          e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, nil) ||
-          e(@object, :profile, :name, nil) || e(@object, :name, nil)}
-      />
-      <HiddenInput name="thread_id" value={@thread_id} />
-      <button class="normal-case w-full  btn-outline btn btn-primary mt-3">
-        {l("Save")}
-      </button>
-    </Field>
-    <:open_btn>
-      <div class="flex items-center justify-between w-full gap-2 text-base-content">
-        <span class="text-sm font-medium">{l("Edit discussion title")}</span>
-        <#Icon iconify="ph:text-h-one-duotone" class="w-5 h-5 shrink-0" />
-      </div>
-    </:open_btn>
-  </Bonfire.UI.Common.OpenModalLive>
-</li>
-
-{!-- Group 3: Download markdown + Zenodo DOI --}
-{#if (current_user_id(@__context__) && @showing_within == :thread) and
-    @object_type in [Bonfire.Data.Social.Post] and
-    not is_nil(e(@object, :post_content, nil)) and
-    (@object_boundary != :skip_boundary_preload &&
-       Bonfire.Social.maybe_can?(
-         @__context__,
-         :edit,
-         @object,
-         @object_boundary
-       ))}
-  <li>
-    <StatefulComponent
-      module={maybe_component(Bonfire.UI.Posts.DownloadMarkLive, @__context__)}
-      id={deterministic_dom_id(
-        __MODULE__,
-        @activity_component_id || id(@activity),
-        "download_markdown",
-        @parent_id
-      )}
-      object_id={id(@object)}
-      as_icon={false}
-    />
-  </li>
-
-  <StatelessComponent
-    :if={extension_enabled?(:bonfire_open_science)}
-    module={maybe_component(Bonfire.OpenScience.ZenodoDoiButtonLive, @__context__)}
-    parent_id={@activity_component_id || id(@activity)}
-    object={@object}
-    media={e(@activity, :media, nil) || e(@object, :media, nil) || e(@activity, :files, nil) ||
-      e(@object, :files, nil)}
-    participants={@participants}
-  />
-{/if}
-
-{!-- Group 4: Edit post / Version history --}
-{#if @object_type in [Bonfire.Data.Social.Post, Bonfire.Data.Social.Message] or
-    not is_nil(e(@object, :post_content, nil))}
-  {#if current_user_id(@__context__) && @object_boundary && @object_boundary != :skip_boundary_preload}
-    <StatelessComponent
-      module={maybe_component(Bonfire.UI.Social.EditPostLive)}
-      object={@object}
-      object_boundary={@object_boundary}
-      activity_component_id={@activity_component_id}
-      parent_id={@activity_component_id || id(@activity)}
-    />
-  {#else}
-    <li :if={Bonfire.Social.PostContents.versioning_enabled?(@__context__)}>
-      <a
-        href={"/post/#{id(@object)}/history/"}
-        class="flex items-center w-full gap-2 text-sm text-base-content"
-      >
-        <div class="text-sm text-base-content">
-          {l("Version history")}
-        </div>
-      </a>
-    </li>
-  {/if}
-{/if}
-
-{!-- Group 5: Content label --}
-<StatelessComponent
-  module={maybe_component(Bonfire.Label.Web.ContentLabelLive, @__context__)}
-  object={@object}
-  scope={:activity}
-  parent_id={@activity_component_id || id(@activity)}
-  object_boundary={@object_boundary}
-  target={"##{@activity_component_id}"}
-  btn_label={l("Label this %{object}", object: e(@object_type_readable, l("object")))}
-/>
-
-{!-- Group 6: Lock/Unlock discussion --}
-{#if @viewing_main_object && @thread_id && @object_type != Bonfire.Data.Social.Message &&
-    module_enabled?(Bonfire.Boundaries.Locking.LiveHandler, @__context__)}
-  {#if @object_boundary == :skip_boundary_preload ||
-      Bonfire.Boundaries.can?(@__context__, :grant, @object_boundary)}
-    <li>
-      <Bonfire.UI.Common.OpenModalLive
-        id={deterministic_dom_id(__MODULE__, id(@activity) || @thread_id, "thread_lock", @parent_id)}
-        title_text={l("Lock this discussion")}
-        no_actions
-      >
-        <p>{l(
-            "You can lock this discussion to prevent any replies from users on this instance and to block any remote replies from federating back to this instance."
-          )}</p>
-        <button
-          phx-click="Bonfire.Boundaries.Locking:lock"
-          phx-value-id={@thread_id}
-          class="normal-case w-full  btn-outline btn btn-primary mt-3"
-        >
-          {l("Lock this discussion")}
-        </button>
-        <:open_btn>
-          <div class="flex items-center w-full gap-2 text-sm text-base-content">
-            {l("Lock this discussion")}
-          </div>
-        </:open_btn>
-      </Bonfire.UI.Common.OpenModalLive>
-    </li>
-  {#elseif @creator_id == current_user_id(@__context__) or
-      Bonfire.Boundaries.can?(@__context__, :grant, :instance)}
-    <li>
-      <Bonfire.UI.Common.OpenModalLive
-        id={deterministic_dom_id(__MODULE__, id(@activity) || @thread_id, "thread_unlock", @parent_id)}
-        title_text={l("Unlock this discussion")}
-        no_actions
-      >
-        <p>{l("You can unlock this discussion to accept replies again.")}</p>
-        <button
-          phx-click="Bonfire.Boundaries.Locking:unlock"
-          phx-value-id={@thread_id}
-          class="normal-case w-full  btn-outline btn btn-primary mt-3"
-        >
-          {l("Unlock this discussion")}
-        </button>
-        <:open_btn>
-          <div class="flex items-center w-full gap-2 text-sm text-base-content">
-            {l("Unlock this discussion")}
-          </div>
-        </:open_btn>
-      </Bonfire.UI.Common.OpenModalLive>
-    </li>
-  {/if}
-{/if}
-
-{!-- Group 7: Delete actions --}
-<li class="m-1 border-t border-base-content/10" />
-
-{#if @object_boundary && (id(@object) || id(@activity))}
-  {#if @object_type != Bonfire.Data.Social.Message}
-    {#if Bonfire.UI.Social.Activity.DeleteObjectLive.can_delete?(@__context__, @object, @object_boundary)}
-      <li :if={id(@object)}>
-        <StatelessComponent
-          module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
-          skip_permission_check
-          object={@object}
-          creator_id={@creator_id}
-          object_type_readable={@object_type_readable}
-          object_boundary={@object_boundary}
-          parent_id={deterministic_dom_id(
-            __MODULE__,
-            id(@activity_component_id || @activity),
-            "delete_object",
-            @parent_id
-          )}
-        />
-      </li>
-
-      {!-- Delete the activity --}
-      <li :if={id(@activity)}>
-        <StatelessComponent
-          module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
-          skip_permission_check
-          action="Bonfire.Social.Feeds:delete"
-          object={@activity}
-          object_boundary={@object_boundary}
-          object_type_readable={l("from feeds")}
-          creator_id={@creator_id}
-          parent_id={deterministic_dom_id(
-            __MODULE__,
-            id(@activity_component_id || @activity),
-            "delete_activity",
-            @parent_id
-          )}
-          explanation={l(
-            "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
-            object: @object_type_readable || l("object"),
-            verb: @verb
-          )}
-        />
-      </li>
-    {/if}
-  {#else}
-    <li>
-      <StatelessComponent
-        module={maybe_component(Bonfire.UI.Social.Activity.DeleteObjectLive, @__context__)}
-        object={@object || @activity}
-        creator_id={@creator_id}
-        object_type_readable={@object_type_readable}
-        object_boundary={@object_boundary}
-        parent_id={deterministic_dom_id(
-          __MODULE__,
-          id(@activity_component_id || @activity),
-          "delete_object",
-          @parent_id
-        )}
-      />
-    </li>
-  {/if}
-{/if}
+</div>

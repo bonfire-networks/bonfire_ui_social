@@ -292,7 +292,6 @@
       activity={@activity}
       object={@object}
       object_type={@object_type}
-      object_boundary={@object_boundary}
       creator={@creator}
       thread_id={@thread_id}
       thread_title={@thread_title}
