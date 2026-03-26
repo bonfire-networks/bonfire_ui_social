@@ -38,9 +38,9 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
       conn =
         conn(user: alice, account: account)
         |> visit("/@#{alice.character.username}/followers")
-        |> assert_has("#inner [data-id=profile_name]", count: limit)
+        |> assert_has("#main-content [data-id=profile_name]", count: limit)
         |> click_button("[data-id=load_more]", "Load more")
-        |> assert_has("#inner [data-id=profile_name]", count: 4)
+        |> assert_has("#main-content [data-id=profile_name]", count: 4)
     end
 
     test "Load more works in Search page" do
