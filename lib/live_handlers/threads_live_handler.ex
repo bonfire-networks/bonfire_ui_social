@@ -378,6 +378,27 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     end
   end
 
+  def reply(
+        reply_to,
+        activity,
+        object_boundary,
+        %{assigns: %{showing_within: :thread_embed}} = socket
+      ) do
+    with assigns when is_list(assigns) <-
+           prepare_reply_assigns(reply_to, activity, object_boundary, socket) do
+      # Components share the LiveView process — send a message so CommentsLive
+      # updates reply_to_id and re-targets the portal
+      send_self(reply_to_id: assigns[:reply_to_id])
+
+      {:noreply,
+       socket
+       |> maybe_push_event("mention_suggestions", %{text: assigns[:mention_text] || ""})}
+    else
+      false -> {:noreply, assign_error(socket, l("Sorry, you cannot reply to this"))}
+      _ -> {:noreply, socket}
+    end
+  end
+
   def reply(reply_to, activity, object_boundary \\ nil, socket) do
     debug(reply_to, "reply!")
 

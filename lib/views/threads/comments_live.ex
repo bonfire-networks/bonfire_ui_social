@@ -9,7 +9,8 @@ defmodule Bonfire.UI.Social.CommentsLive do
      |> assign(
        page_title: l("Comments"),
        page: "comments",
-       showing_within: :thread,
+       showing_within: :thread_embed,
+       reply_to_id: nil,
        no_mobile_header: true,
        hide_thread_stats: true,
        embed_theme: e(params, "theme", nil),
@@ -52,6 +53,10 @@ defmodule Bonfire.UI.Social.CommentsLive do
         {:noreply,
          assign_error(socket, l("Comment not found or you don't have permission to view it"))}
     end
+  end
+
+  def handle_info({:set_reply_to, reply_to_id}, socket) do
+    {:noreply, assign(socket, reply_to_id: reply_to_id)}
   end
 
   def handle_params(%{"id" => id} = params, _url, socket) when is_binary(id) do
