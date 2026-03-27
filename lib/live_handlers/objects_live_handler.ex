@@ -441,6 +441,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     current_url =
       current_url(socket)
       |> String.trim("#")
+      |> String.replace_trailing("/index.html", "")
       |> debug("current_url")
 
     uid = uid(id)
