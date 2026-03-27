@@ -81,4 +81,19 @@ defmodule Bonfire.UI.Social.CommentsLive do
        Bonfire.UI.Social.ActivityLive.component_id(id, "main_object", nil)
      end)}
   end
+
+  def handle_params(%{"media_uri" => uri} = params, _url, socket) when is_binary(uri) do
+    with {:ok, %{id: id} = _media} <-
+           Bonfire.Files.Media.get_or_add_media_by_uri(
+             params["creator"] || current_user_or_id(socket),
+             uri,
+             params["boundary"] || "public",
+             params["to_circles"], update_existing: false) do
+      handle_params(%{"id" => id}, nil, socket)
+    end
+  end
+
+  def handle_params(params, _url, socket) do
+    error(params, "Need an ID or media URI")
+  end
 end
