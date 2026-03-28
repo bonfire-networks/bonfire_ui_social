@@ -88,7 +88,9 @@ defmodule Bonfire.UI.Social.CommentsLive do
              params["creator"] || current_user_or_id(socket),
              uri,
              params["boundary"] || "public",
-             params["to_circles"], update_existing: false) do
+             params["to_circles"],
+             update_existing: false
+           ) do
       handle_params(%{"id" => id}, nil, socket)
     end
   end
