@@ -15,7 +15,7 @@
   >
     <#Icon
       iconify="ph:dots-three-outline-vertical-duotone"
-      class="w-[18px] h-[18px] group-hover:text-primary md:w-4 md:h-4 text-base-content/50"
+      class="w-[18px] h-[18px] group-hover:text-primary md:w-4 md:h-4 text-base-content/60"
     />
     <span class="sr-only">{l("More actions")}</span>
   </button>

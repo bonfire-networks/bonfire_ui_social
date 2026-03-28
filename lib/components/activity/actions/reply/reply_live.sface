@@ -17,7 +17,7 @@
             ),
           else: "Bonfire.Social.Threads:reply"}
         phx_values={%{id: @object_id}}
-        class={"text-base-content/50 hover:text-primary", @class}
+        class={"text-base-content/60 hover:text-primary", @class}
         data-role="reply_enabled"
         data-id="action_reply"
       />

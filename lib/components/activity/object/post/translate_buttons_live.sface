@@ -17,7 +17,7 @@
 
   <button
     id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object), "translate_client", @parent_id)}
-    class="translate-btn-client link link-primary link-hover text-sm"
+    class="translate-btn-client text-base-content/50 hover:text-primary text-sm"
     style="display: none;"
   >
     <span class="loading-spinner" />
@@ -26,7 +26,7 @@
 
   <button
     id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object), "translate_server", @parent_id)}
-    class="translate-btn-server link link-primary link-hover text-sm"
+    class="translate-btn-server text-base-content/50 hover:text-primary text-sm"
     style="display: none;"
   >
     <span class="loading-spinner" />

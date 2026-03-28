@@ -130,6 +130,36 @@
           scope={@scope}
         />
       </form>
+
+      <form class="p-4" data-scope="markers_enabled" phx-change="Bonfire.Common.Settings:set">
+        <Bonfire.UI.Common.SettingsToggleLive
+          id="markers_toggle"
+          name={l("Remember reading position")}
+          description={l("When enabled, feeds will resume from where you left off. When disabled, feeds always start from the newest.")}
+          keys={[Bonfire.Social.Markers, :enabled]}
+          enabled_value={true}
+          default_value={true}
+          scope={@scope}
+        />
+      </form>
+
+      <form class="p-4" data-scope="markers_ttl" phx-change="Bonfire.Common.Settings:set">
+        <Bonfire.UI.Common.SettingsSelectLive
+          id="markers_ttl"
+          name={l("Reading position duration")}
+          label_name={l("Reading position duration")}
+          description={l("How long to remember your reading position in feeds before it expires")}
+          keys={[Bonfire.Social.Markers, :ttl]}
+          options={[
+            {1800000, l("30 minutes")},
+            {14400000, l("4 hours")},
+            {43200000, l("12 hours")},
+            {172800000, l("2 days")}
+          ]}
+          default_value={172800000}
+          scope={@scope}
+        />
+      </form>
     </div>
   </div>
   <div class="">

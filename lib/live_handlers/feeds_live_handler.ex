@@ -31,7 +31,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         %{"feed_name" => feed_name, "cursor" => cursor},
         socket
       ) do
-    put_reading_position(current_user_id(socket), feed_name, cursor)
+    if socket.assigns[:enable_marker] != false do
+      put_reading_position(current_user_id(socket), feed_name, cursor)
+    end
+
     {:noreply, socket}
   end
 
@@ -1202,7 +1205,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp maybe_apply_reading_position(feed_name_id_or_tuple, opts, reset_stream) do
     feed_atom = feed_name_atom(feed_name_id_or_tuple)
 
+    markers_enabled =
+      Bonfire.Common.Settings.get([Bonfire.Social.Markers, :enabled], true,
+        current_user: current_user(opts)
+      )
+
     cond do
+      not markers_enabled ->
+        {opts, nil}
+
       reset_stream == true or opts[:paginate] != nil ->
         {opts, nil}
 

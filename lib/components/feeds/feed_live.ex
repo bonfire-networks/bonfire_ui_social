@@ -32,6 +32,8 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   prop hide_load_more, :boolean, default: false
   prop enable_marker, :boolean, default: false
+  # 48 hours in ms
+  prop markers_ttl, :integer, default: 172_800_000
 
   prop verb_default, :string, default: nil
 
@@ -189,9 +191,24 @@ defmodule Bonfire.UI.Social.FeedLive do
   defp do_update(%{insert_stream: %{feed: entries}} = assigns, socket) do
     debug("feed stream is being poured into")
 
+    markers_enabled =
+      assigns[:enable_marker] != false and
+        Bonfire.Common.Settings.get([Bonfire.Social.Markers, :enabled], true,
+          context: socket.assigns[:__context__]
+        )
+
+    markers_ttl =
+      if markers_enabled do
+        Bonfire.Common.Settings.get([Bonfire.Social.Markers, :ttl], 172_800_000,
+          context: socket.assigns[:__context__]
+        )
+      end
+
     socket
     |> assign(Map.drop(assigns, [:insert_stream]))
-    |> assign(resumed_from_marker: Map.get(assigns, :resumed_from_marker, nil))
+    |> assign(enable_marker: markers_enabled)
+    |> assign(markers_ttl: markers_ttl)
+    |> assign(resumed_from_marker: if(markers_enabled, do: assigns[:resumed_from_marker]))
     |> assign(jumping_to_newest: false)
     |> LiveHandler.insert_feed(entries, reset: assigns[:reset_stream])
     |> ok_socket()
