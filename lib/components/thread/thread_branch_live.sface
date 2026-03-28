@@ -46,6 +46,9 @@
       hide_actions={@hide_actions}
     />
 
+    {!-- Reply slot for portal teleport (used by CommentsLive embed) --}
+    <div :if={@showing_within == :thread_embed} id={"reply-slot-#{id(@comment)}"} />
+
     {!-- {#if is_list(@threaded_replies) and @threaded_replies != []} --}
     {#if @thread_mode != :flat}
       {!-- <div

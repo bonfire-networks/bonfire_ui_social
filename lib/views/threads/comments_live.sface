@@ -1,0 +1,43 @@
+<div
+  class="bonfire-wrapper"
+  data-theme={@embed_theme || Bonfire.UI.Common.ThemeHelper.current_theme(assigns)}
+>
+  {!-- Default reply slot at top: composer lands here when replying to the root post --}
+  <div id={"reply-slot-#{@thread_id}"} />
+
+  <StatefulComponent
+    module={maybe_component(Bonfire.UI.Social.ThreadLive)}
+    :if={@thread_id}
+    id={@thread_id}
+    thread_id={@thread_id}
+    highlight_reply_id={@reply_id}
+    include_path_ids={@include_path_ids}
+    current_url={@current_url}
+    sort_by={@sort_by}
+    sort_order={@sort_order}
+    participants={@participants}
+    thread_mode={@thread_mode}
+    loading={@loading}
+    replies={@replies}
+    threaded_replies={@threaded_replies}
+    page_info={@page_info}
+    showing_within={@showing_within || :thread}
+    hide_thread_stats={@hide_thread_stats}
+    main_object_component_id={@main_object_component_id}
+  />
+
+  {!-- Portal teleports the inline composer to the active reply slot --}
+  <.portal
+    :if={current_user_id(@__context__) && @thread_id}
+    id="inline-reply-portal"
+    target={"#reply-slot-#{@reply_to_id || @thread_id}"}
+  >
+    <StatefulComponent
+      module={maybe_component(Bonfire.UI.Common.SmartInputInlineLive, @__context__)}
+      id={:inline_reply}
+      reply_to_id={@reply_to_id || @thread_id}
+      context_id={@thread_id}
+      showing_within={:thread_embed}
+    />
+  </.portal>
+</div>

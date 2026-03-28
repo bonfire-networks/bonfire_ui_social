@@ -28,6 +28,20 @@ defmodule Bonfire.UI.Social.Routes do
         live("/discuss/:id", DiscussionLive, as: Bonfire.Data.Social.PostContent)
       end
 
+      # /comments/:id — embeddable iframe view of a thread's comments.
+      # Serves cached static HTML to guests (CDN-cacheable) and full interactive
+      # LiveView to signed-in users. Allows cross-origin iframe embedding.
+      pipeline :cacheable_comments_public do
+        plug(Bonfire.UI.Common.CacheControlPlug, purgeable: true)
+      end
+
+      scope "/", Bonfire.UI.Social do
+        pipe_through([:browser_or_cacheable, :cacheable_comments_public, :iframe_embeddable])
+
+        live("/comments/embed/:id", CommentsLive, as: :comments_embed)
+        live("/comments/embed", CommentsLive, as: :comments_embed)
+      end
+
       # pages you need to view as a user
       scope "/", Bonfire.UI.Social do
         pipe_through(:browser)
