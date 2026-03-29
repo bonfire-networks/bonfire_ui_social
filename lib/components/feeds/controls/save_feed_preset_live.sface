@@ -1,16 +1,18 @@
-<div class="justify-end flex items-center gap-3 pt-2 border-t border-base-content/10 mt-3">
-  <div>
-    <Bonfire.UI.Common.OpenModalLive
-      id="add_to_feed_preset_button"
-      title_text={l("Save this feed")}
-      no_actions
-      open_btn_wrapper_class={@open_btn_wrapper_class}
-    >
-      <div role="alert" class="alert my-2 mt-4 alert-info alert-soft">
-        <span>{l(
-            "You can save this feed configuration as a preset, to be able to access it anytime from your feed navbar."
-          )}</span>
-      </div>
+<div>
+  <button
+    type="button"
+    class="btn btn-ghost btn-sm text-base-content/70"
+    phx-click={JS.toggle(to: "#save_feed_preset_form", in: "fade-in", out: "fade-out")}
+  >
+    <#Icon iconify="bxs:save" class="w-4 h-4" />
+    <span>{l("Save custom feed")}</span>
+  </button>
+
+  <div id="save_feed_preset_form" class="hidden">
+    <div class="border-t border-base-content/10 mt-3 pt-3">
+      <p class="text-sm text-base-content/60 mb-3">
+        {l("Save this feed configuration as a preset to access it anytime from your feed navbar.")}
+      </p>
       <form
         id="form_create_feed_preset"
         class="w-full flex flex-col gap-2"
@@ -20,12 +22,12 @@
         <fieldset class="fieldset">
           <legend class="fieldset-legend">{l("Feed title")}</legend>
           <label for="feed_name" class="sr-only">{l("Feed title")}</label>
-          <input id="feed_name" name="name" class="input w-full" placeholder="Add a title...">
+          <input id="feed_name" name="name" class="input w-full" placeholder={l("Add a title...")}>
         </fieldset>
 
         <fieldset class="fieldset">
           <legend class="fieldset-legend">{l("Feed description")}</legend>
-          <textarea name="description" class="textarea w-full h-24" placeholder="Add a description..." />
+          <textarea name="description" class="textarea w-full h-24" placeholder={l("Add a description...")} />
         </fieldset>
 
         <fieldset class="fieldset">
@@ -41,12 +43,6 @@
           </.button>
         </div>
       </form>
-      <:open_btn>
-        <div class="btn btn-primary btn-sm">
-          <#Icon iconify="bxs:save" class="w-5 h-5" />
-          <span class="">{l("Save custom feed")}</span>
-        </div>
-      </:open_btn>
-    </Bonfire.UI.Common.OpenModalLive>
+    </div>
   </div>
 </div>

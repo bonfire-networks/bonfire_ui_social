@@ -66,26 +66,19 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
 
     conn
     |> visit("/feed")
-    # |> PhoenixTest.open_browser()
-    # Set time limit to Last Day by clicking dropdown and selecting option
-    |> click_link("Last Day")
+    # Set time limit via filter modal
+    |> click_button("[data-role=open_modal]", "Filters")
+    |> click_button("Last Day")
+    |> click_button("Apply filters")
+    |> wait_async()
 
-    # Click on Save button to open modal
-    |> click_button("Save")
-
-    # Fill in the form fields
-    |> within("form#form_create_feed_preset", fn session ->
-      session
-      |> fill_in("Feed title", with: preset_name)
-    end)
-
-    # Submit the form
+    # Reopen modal and save as preset
+    |> click_button("[data-role=open_modal]", "Filters")
+    |> fill_in("Feed title", with: preset_name)
     |> click_button("Save feed")
-    # |> PhoenixTest.open_browser()
-    # The feed should be saved and should appear in the navigation
-    |> visit("/settings/user/feeds")
 
-    # Check that our new feed is listed
+    # The feed should be saved and appear in the navigation
+    |> visit("/settings/user/feeds")
     |> assert_has_or_open_browser("div", text: preset_name)
   end
 
@@ -101,31 +94,26 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
     # Create the feed preset in a separate visit/session
     conn
     |> visit("/feed")
-    # |> PhoenixTest.open_browser()
-    # Set time limit to Last Day
-    # |> click_button("All time")
-    |> click_link("Last Day")
-    # Save the feed preset
-    |> click_button("Save")
-    |> within("form#form_create_feed_preset", fn session ->
-      session
-      |> fill_in("Feed title", with: preset_name)
-    end)
+    # Set time limit via filter modal
+    |> click_button("[data-role=open_modal]", "Filters")
+    |> click_button("Last Day")
+    |> click_button("Apply filters")
+    |> wait_async()
+
+    # Reopen modal and save as preset
+    |> click_button("[data-role=open_modal]", "Filters")
+    |> fill_in("Feed title", with: preset_name)
     |> click_button("Save feed")
 
     # Verify it was created by checking in settings
     |> visit("/settings/user/feeds")
     |> assert_has_or_open_browser("div", text: preset_name)
 
-    # Now in a new session, check that the time limit is preserved
-    # First visit the feed with the custom preset
+    # Check that the time limit is preserved in the custom feed
     |> visit("/feed/#{preset_name}")
-    # |> PhoenixTest.open_browser()
-    # Check if we can see the time limit is set to Last Day
-    |> assert_has("label", text: "Last Day")
-    # Now go to a different feed and verify the time limit reverts to default
+    |> assert_has("[data-id=feed_controls] .badge", text: "Last Day")
+    # Verify the time limit reverts to default on other feeds
     |> visit("/feed/local")
-    # |> PhoenixTest.open_browser()
-    |> assert_has("label", text: "All time")
+    |> refute_has("[data-id=feed_controls] .badge", text: "Last Day")
   end
 end

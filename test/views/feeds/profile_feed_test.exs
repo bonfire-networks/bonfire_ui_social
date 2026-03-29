@@ -97,17 +97,19 @@ defmodule Bonfire.UI.Social.Feeds.ProfileFeed.Test do
     |> assert_has_or_open_browser("[data-id=object_body]", text: my_post_content)
     |> assert_has("article [data-role=name]", text: "Post with Media")
 
-    #  then we hide images
+    # hide images via filter modal
+    |> click_button("[data-role=open_modal]", "Filters")
     |> click_button("[data-toggle=image] button", "Hide")
+    |> click_button("Apply filters")
     |> wait_async()
     |> assert_has_or_open_browser("[data-id=object_body]", text: my_post_content)
     |> refute_has_or_open_browser("article [data-role=name]", text: "Post with Media")
 
-    #  then we hide posts
+    # hide posts via filter modal
+    |> click_button("[data-role=open_modal]", "Filters")
     |> click_button("[data-toggle=post] button", "Hide")
+    |> click_button("Apply filters")
     |> wait_async()
-    # |> PhoenixTest.open_browser()
-    # should have nothing left
     |> refute_has("[data-id=feed] article", text: "This is my original post")
   end
 end

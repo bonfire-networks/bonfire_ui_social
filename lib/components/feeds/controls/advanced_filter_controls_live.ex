@@ -7,6 +7,7 @@ defmodule Bonfire.UI.Social.AdvancedFilterControlsLive do
   prop show_circles_button, :boolean, default: true
   prop show_sort_dropdown, :boolean, default: true
   prop circles_button_action, :string, default: nil
+  prop show_time_control, :boolean, default: true
 
   def update(assigns, socket) do
     preset_info = get_preset_origin_info(assigns)

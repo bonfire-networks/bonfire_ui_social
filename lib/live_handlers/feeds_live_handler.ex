@@ -2432,7 +2432,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                description: params["description"],
                icon: "ph:rss-simple-duotone",
                exclude_from_nav: params["show_in_nav"] != "on",
-               filters: Enums.struct_to_map(filters)
+               filters:
+                 filters
+                 |> Enums.nested_structs_to_maps()
+                 |> Map.take(Enum.map(Bonfire.Social.FeedFilters.supported_filters(), &to_string/1) ++ Bonfire.Social.FeedFilters.supported_filters())
              },
              current_user: current_user(socket)
            ) do

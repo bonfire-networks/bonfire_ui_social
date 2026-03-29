@@ -776,6 +776,21 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def handle_event(
+        "apply_filters",
+        %{"filters" => filters_json},
+        socket
+      ) do
+    with {:ok, filters} <- Jason.decode(filters_json) do
+      # Close the modal
+      Bonfire.UI.Common.OpenModalLive.close()
+
+      set_filters(filters, socket, true)
+    else
+      _ -> {:noreply, socket}
+    end
+  end
+
+  def handle_event(
         "set",
         attrs,
         socket

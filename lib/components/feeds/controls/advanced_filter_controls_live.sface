@@ -1,5 +1,5 @@
-<div class="w-full">
-  <div :if={current_user_id(@__context__)} class="flex gap-2 flex-1 w-full">
+<div>
+  <div :if={current_user_id(@__context__)}>
     <StatelessComponent
       :if={@show_sort_dropdown}
       module={maybe_component(Bonfire.UI.Social.SortItemsDropdownLive)}
@@ -121,6 +121,7 @@
     </div> --}
 
     <Bonfire.UI.Social.TimeControlLive
+      :if={@show_time_control}
       feed_name={@feed_name}
       event_target={@event_target}
       event_name="set_filter"

@@ -99,10 +99,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
     test "user can toggle filter options", %{} do
       conn(user: fake_user!())
       |> visit("/feed")
-      # Open filters section
-      # |> click_button("Filters")
-      # Toggle boost and follow filters
-
+      |> click_button("[data-role=open_modal]", "Filters")
       |> click_button("[data-toggle='boost'] button", "Only")
       |> assert_has("[data-toggle='boost'] [data-id='enabled'].active")
       |> click_button("[data-toggle='boost'] button", "Hide")
@@ -199,18 +196,15 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       # check the feed
       conn(user: user)
       |> visit("/feed/explore")
-      # |> PhoenixTest.open_browser()
-      # |> assert_has_or_open_browser("[data-id=feed] article[data-verb=Boost]", text: "default post")
+      |> click_button("[data-role=open_modal]", "Filters")
       |> click_button("[data-toggle='boost'] button", "Only")
-      # |> PhoenixTest.open_browser()
-      |> assert_has_or_open_browser("[data-id=feed] article[data-verb=Boost]",
-        text: "default post"
-      )
+      |> click_button("Apply filters")
+      |> wait_async()
+      |> assert_has_or_open_browser("[data-id=feed] [data-role=boosted_by]")
+      |> assert_has("[data-id=feed] article", text: "default post")
       |> assert_has("[data-id=subject_name]", text: "#{other_user.profile.name}")
       |> assert_has("[data-id=subject_username]", text: "#{other_user.character.username}")
       |> assert_has("[data-id=subject_name]", text: "#{user.profile.name}")
-
-      # |> assert_has("[data-id=subject_username]", text: "#{user.character.username}")
     end
   end
 
@@ -303,20 +297,22 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       booster = fake_user!("booster")
       {:ok, boost} = Bonfire.Social.Boosts.boost(booster, original_post)
 
-      session =
-        conn(user: user)
+      conn(user: user)
         |> visit("/feed/explore")
-        |> assert_has_or_open_browser("[data-id=feed] article[data-verb=Boost]")
-        # |> assert_has("[data-id=feed] article", count: 2)  # Original + boost - TODO: test this way with show_objects_only_once: false filter
-        # |> click_button("Filters")
+        |> assert_has_or_open_browser("[data-id=feed] [data-role=boosted_by]")
+        # Hide boosts
+        |> click_button("[data-role=open_modal]", "Filters")
         |> click_button("[data-toggle='boost'] button", "Hide")
+        |> click_button("Apply filters")
         |> wait_async()
-        # Verify boost is hidden
-        |> refute_has("[data-id=feed] article[data-verb=Boost]")
-        # Verify original post is still visible (don't check exact count as other seeded data may exist)
+        |> refute_has("[data-id=feed] [data-role=boosted_by]")
         |> assert_has("[data-id=feed] article", text: "filter test content")
+        # Show only boosts
+        |> click_button("[data-role=open_modal]", "Filters")
         |> click_button("[data-toggle='boost'] button", "Only")
-        |> assert_has("[data-id=feed] article[data-verb=Boost]")
+        |> click_button("Apply filters")
+        |> wait_async()
+        |> assert_has("[data-id=feed] [data-role=boosted_by]")
     end
   end
 end

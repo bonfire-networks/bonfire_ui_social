@@ -112,36 +112,35 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
   } do
     conn(user: user)
     |> visit("/feed")
-    # Test each time filter option using the range input
 
     # Set to "Last Day"
-    |> click_link("Last Day")
+    |> click_button("[data-role=open_modal]", "Filters")
+    |> click_button("Last Day")
+    |> click_button("Apply filters")
     |> wait_async()
-    # Verify we only see today's post
     |> assert_has_or_open_browser("[data-id=feed] article")
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
     |> refute_has_or_open_browser("[data-id=feed] article", text: "Post from 60 days ago")
-    |> assert_has("label", text: "Last Day")
+    |> assert_has("[data-id=feed_controls] .badge", text: "Last Day")
 
     # Set to "Last Month"
-    # |> click_button("Last Day")
-    |> click_link("Last Month")
+    |> click_button("[data-role=open_modal]", "Filters")
+    |> click_button("Last Month")
+    |> click_button("Apply filters")
     |> wait_async()
-    # Verify we see recent posts but not older than 30 days
     |> assert_has_or_open_browser("[data-id=feed] article")
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
     |> refute_has_or_open_browser("[data-id=feed] article", text: "Post from 60 days ago")
-    |> assert_has("label", text: "Last Month")
+    |> assert_has("[data-id=feed_controls] .badge", text: "Last Month")
 
-    # Set to "All time" to verify we can return to seeing everything
-    # |> click_button("Last Month")
-    |> click_link("All time")
+    # Set to "All time"
+    |> click_button("[data-role=open_modal]", "Filters")
+    |> click_button("All time")
+    |> click_button("Apply filters")
     |> wait_async()
-    # Verify we can see posts from all time periods
     |> assert_has_or_open_browser("[data-id=feed] article")
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
     |> assert_has("[data-id=feed] article", text: "Post from 60 days ago")
-    |> assert_has("label", text: "All time")
   end
 
   test "respects time filters", %{
@@ -152,18 +151,16 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
   } do
     conn(user: user)
     |> visit("/feed/local")
-    # Test with Monthly filter (shows posts from last 30 days)
 
-    # Select Month from dropdown
-    |> click_link("Last Month")
-    # Should show posts within the month limit
+    # Select Month filter
+    |> click_button("[data-role=open_modal]", "Filters")
+    |> click_button("Last Month")
+    |> click_button("Apply filters")
+    |> wait_async()
     |> assert_has_or_open_browser("[data-id=feed] article")
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
-    # Should not show posts older than a month
     |> refute_has_or_open_browser("[data-id=feed] article", text: "Post from 60 days ago")
-
-    # |> assert_has("label", text: "Last Month")
   end
 
   describe "time limit feed filters:" do
