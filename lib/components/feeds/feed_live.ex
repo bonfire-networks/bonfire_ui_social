@@ -517,12 +517,12 @@ defmodule Bonfire.UI.Social.FeedLive do
   defp curated_widgets() do
     [
       sidebar_widgets: [
-        guests: [
-          secondary: [
-            {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: :curated]},
-            {Bonfire.Tag.Web.WidgetTagsLive, []}
-          ]
-        ],
+        # guests: [
+        #   secondary: [
+        #     {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: :curated]},
+        #     {Bonfire.Tag.Web.WidgetTagsLive, []}
+        #   ]
+        # ],
         users: [
           secondary: [
             {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: :curated]},
