@@ -4,7 +4,10 @@
   class="relative feed_control_wrapper bg-base-200 lg:bg-base-100 rounded-t-2xl"
 >
   {#if @reloading}
-    <div class="absolute z-10 inset-0 flex items-center justify-center bg-base-content/10" role="status">
+    <div
+      class="absolute z-10 inset-0 flex items-center justify-center bg-base-content/10"
+      role="status"
+    >
       <span class="loading loading-ring loading-xl" />
       <span class="sr-only">{l("Loading...")}</span>
     </div>
@@ -36,7 +39,10 @@
                 <#Icon iconify="ph:sliders-duotone" class="w-4 h-4" />
                 <span>{l("Filters")}</span>
                 {#if active_filters != []}
-                  <span class="badge badge-primary badge-xs" aria-label={l("%{count} active filters", count: length(active_filters))}>{length(active_filters)}</span>
+                  <span
+                    class="badge badge-primary badge-xs"
+                    aria-label={l("%{count} active filters", count: length(active_filters))}
+                  >{length(active_filters)}</span>
                 {/if}
               </div>
             </:open_btn>
@@ -45,7 +51,11 @@
       </div>
 
       {#if active_filters != []}
-        <div class="flex gap-1.5 px-2 pb-2 overflow-x-auto scrollbar-none" aria-live="polite" role="status">
+        <div
+          class="flex gap-1.5 px-2 pb-2 overflow-x-auto scrollbar-none"
+          aria-live="polite"
+          role="status"
+        >
           {#for {label, chip_icon, _field, _key} <- active_filters}
             <span class="badge badge-soft badge-sm badge-primary gap-1 whitespace-nowrap">
               {#case chip_icon}

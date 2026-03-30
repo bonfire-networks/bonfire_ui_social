@@ -298,21 +298,21 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       {:ok, boost} = Bonfire.Social.Boosts.boost(booster, original_post)
 
       conn(user: user)
-        |> visit("/feed/explore")
-        |> assert_has_or_open_browser("[data-id=feed] [data-role=boosted_by]")
-        # Hide boosts
-        |> click_button("[data-role=open_modal]", "Filters")
-        |> click_button("[data-toggle='boost'] button", "Hide")
-        |> click_button("Apply filters")
-        |> wait_async()
-        |> refute_has("[data-id=feed] [data-role=boosted_by]")
-        |> assert_has("[data-id=feed] article", text: "filter test content")
-        # Show only boosts
-        |> click_button("[data-role=open_modal]", "Filters")
-        |> click_button("[data-toggle='boost'] button", "Only")
-        |> click_button("Apply filters")
-        |> wait_async()
-        |> assert_has("[data-id=feed] [data-role=boosted_by]")
+      |> visit("/feed/explore")
+      |> assert_has_or_open_browser("[data-id=feed] [data-role=boosted_by]")
+      # Hide boosts
+      |> click_button("[data-role=open_modal]", "Filters")
+      |> click_button("[data-toggle='boost'] button", "Hide")
+      |> click_button("Apply filters")
+      |> wait_async()
+      |> refute_has("[data-id=feed] [data-role=boosted_by]")
+      |> assert_has("[data-id=feed] article", text: "filter test content")
+      # Show only boosts
+      |> click_button("[data-role=open_modal]", "Filters")
+      |> click_button("[data-toggle='boost'] button", "Only")
+      |> click_button("Apply filters")
+      |> wait_async()
+      |> assert_has("[data-id=feed] [data-role=boosted_by]")
     end
   end
 end

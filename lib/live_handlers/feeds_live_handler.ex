@@ -2435,7 +2435,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                filters:
                  filters
                  |> Enums.nested_structs_to_maps()
-                 |> Map.take(Enum.map(Bonfire.Social.FeedFilters.supported_filters(), &to_string/1) ++ Bonfire.Social.FeedFilters.supported_filters())
+                 |> Map.take(
+                   Enum.map(Bonfire.Social.FeedFilters.supported_filters(), &to_string/1) ++
+                     Bonfire.Social.FeedFilters.supported_filters()
+                 )
              },
              current_user: current_user(socket)
            ) do

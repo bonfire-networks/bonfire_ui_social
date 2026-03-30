@@ -27,7 +27,11 @@
 
         <fieldset class="fieldset">
           <legend class="fieldset-legend">{l("Feed description")}</legend>
-          <textarea name="description" class="textarea w-full h-24" placeholder={l("Add a description...")} />
+          <textarea
+            name="description"
+            class="textarea w-full h-24"
+            placeholder={l("Add a description...")}
+          />
         </fieldset>
 
         <fieldset class="fieldset">

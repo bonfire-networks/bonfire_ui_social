@@ -34,8 +34,12 @@ defmodule Bonfire.UI.Social.FeedControlsLive do
 
   defp time_filter(filters) do
     case e(filters, :time_limit, nil) do
-      nil -> []
-      0 -> []
+      nil ->
+        []
+
+      0 ->
+        []
+
       days ->
         label =
           Enum.find_value(
@@ -64,18 +68,26 @@ defmodule Bonfire.UI.Social.FeedControlsLive do
 
   defp type_filters(filters) do
     filter_chips(filters, [:activity_types, :object_types, :media_types], :show) ++
-      filter_chips(filters, [:exclude_activity_types, :exclude_object_types, :exclude_media_types], :hide)
+      filter_chips(
+        filters,
+        [:exclude_activity_types, :exclude_object_types, :exclude_media_types],
+        :hide
+      )
   end
 
   defp filter_chips(filters, fields, icon) do
     Enum.flat_map(fields, fn field ->
       case e(filters, field, nil) do
-        false -> []
+        false ->
+          []
+
         list when is_list(list) and list != [] ->
           Enum.map(list, fn key ->
             {String.capitalize(to_string(key)), icon, field, key}
           end)
-        _ -> []
+
+        _ ->
+          []
       end
     end)
   end

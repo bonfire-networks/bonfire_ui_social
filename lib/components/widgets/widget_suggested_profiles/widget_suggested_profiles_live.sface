@@ -5,10 +5,11 @@
     <Bonfire.UI.Common.WidgetBlockLive
       :if={current_user_id(@__context__)}
       class="w-full p-4 flex-auto mx-auto bonfire-wrapper overflow-hidden"
+      title_class="flex items-center justify-between pb-1 text-sm font-semibold uppercase tracking-wider text-base-content/50 relative"
       widget_title={e(@widget_title, l("Who to follow"))}
     >
       <:action>
-        <div style="top: 100px;" class="flex relative gap-1">
+        <div style="top: 100px;" class="flex absolute w-full gap-1">
           <button
             type="button"
             class="btn btn-circle btn-sm bg-black/50 hover:bg-black/70 border-none text-white transition-opacity absolute left-0 z-50"
