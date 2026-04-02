@@ -238,10 +238,12 @@
             </div>
           </div>
         {#elseif @published_in}
-          <Bonfire.UI.Social.Activity.PublishedInLive
-            context={@published_in}
-            showing_within={@showing_within}
-          />
+          {!-- 
+        NOTE: shown in ActivityLive instead
+        <Bonfire.UI.Social.Activity.PublishedInLive
+          context={@published_in}
+          showing_within={@showing_within}
+        /> --}
         {#elseif @verb == "Boost"}
           <div data-role="boosted_by" style="margin-left: -40px" class="w-full">
             <div class="flex items-center gap-3 justify-start">
@@ -571,10 +573,12 @@
           </div>
         </div>
       {#elseif @published_in}
+        {!-- 
+        NOTE: shown in ActivityLive instead
         <Bonfire.UI.Social.Activity.PublishedInLive
           context={@published_in}
           showing_within={@showing_within}
-        />
+        /> --}
       {#elseif @verb == "Boost"}
         {!-- BOOST --}
         <div data-role="boosted_by" class="flex items-center justify-between w-full mb-2 -ml-[60px]">
