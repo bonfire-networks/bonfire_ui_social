@@ -27,7 +27,6 @@ defmodule Bonfire.UI.Social.FeedsLive do
       Bonfire.UI.Groups.ExploreLive,
       Bonfire.UI.Boundaries.MyCirclesPageLive,
       Bonfire.UI.Groups.SidebarGroupsLive,
-      # Bonfire.UI.Boundaries.SidebarCirclesLive,
       Bonfire.PanDoRa.Components.SidebarPandoraLive
     ]
   )

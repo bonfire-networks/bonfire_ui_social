@@ -164,38 +164,40 @@
       </form>
     </div>
   </div>
-  <div class="">
-    <div>
-      <div class="p-4 text-lg font-bold flex items-start gap-4 border-b border-base-content/10">
-        <#Icon iconify="ph:list-star-duotone" class="w-6 h-6 text-primary" />
-        <div>
-          <div>{l("Feed presets")}</div>
-          <div class="text-sm font-normal text-base-content/70">{l("Decide which feed you want to show in your sidebar.")}</div>
+  {#if @scope == :instance or
+      !Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
+    <div class="">
+      <div>
+        <div class="p-4 text-lg font-bold flex items-start gap-4 border-b border-base-content/10">
+          <#Icon iconify="ph:list-star-duotone" class="w-6 h-6 text-primary" />
+          <div>
+            <div>{l("Feed presets")}</div>
+            <div class="text-sm font-normal text-base-content/70">{l("Decide which feed you want to show in your sidebar.")}</div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <ul class="flex flex-col bg-base-100 menu-sm w-full">
-      {#for {preset, index} <- Enum.with_index(@presets || [])}
-        <li class="relative border-b border-base-content/10">
-          {!-- TODO? Draggable handle outside Alpine component --}
-          {!-- <div
+      <ul class="flex flex-col bg-base-100 menu-sm w-full">
+        {#for {preset, index} <- Enum.with_index(@presets || [])}
+          <li class="relative border-b border-base-content/10">
+            {!-- TODO? Draggable handle outside Alpine component --}
+            {!-- <div
                 data-sortable-handler
                 class="absolute left-0 top-0 bottom-0 w-23 flex items-center place-content-center border-r border-base-content/10"
               >
                 <#Icon iconify="ic:baseline-drag-indicator" class="w-5 h-5" />
               </div> --}
 
-          <div class="flex-col items-start flex w-full p-3">
-            <div class="flex gap-3 lg:items-center flex-1 w-full justify-between">
-              <div class="flex flex-1 items-center gap-3">
-                <div class="flex items-center gap-3">
-                  <Iconify.iconify icon={preset[:icon] || "ic:baseline-rss-feed"} class="w-7 h-7 opacity-70" />
-                  <div class="flex flex-col gap-0 flex-1">
-                    <div class="font-medium text-sm">{preset[:name] || preset[:description] || preset.id}</div>
-                    <div class="text-sm text-base-content/70">{preset[:description]}</div>
-                  </div>
-                  {!-- <div class="text-xs text-base-content/50 mt-1 flex gap-2 flex-wrap">
+            <div class="flex-col items-start flex w-full p-3">
+              <div class="flex gap-3 lg:items-center flex-1 w-full justify-between">
+                <div class="flex flex-1 items-center gap-3">
+                  <div class="flex items-center gap-3">
+                    <Iconify.iconify icon={preset[:icon] || "ic:baseline-rss-feed"} class="w-7 h-7 opacity-70" />
+                    <div class="flex flex-col gap-0 flex-1">
+                      <div class="font-medium text-sm">{preset[:name] || preset[:description] || preset.id}</div>
+                      <div class="text-sm text-base-content/70">{preset[:description]}</div>
+                    </div>
+                    {!-- <div class="text-xs text-base-content/50 mt-1 flex gap-2 flex-wrap">
                         {#if preset[:current_user_required]}
                           <span class="badge badge-info badge-soft badge-sm">{l("Requires login")}</span>
                         {/if}
@@ -209,57 +211,58 @@
                           <span class="badge badge-sm badge-info badge-soft">Media: {Enum.join(preset.filters.media_types, ", ")}</span>
                         {/if}
                       </div> --}
+                  </div>
                 </div>
-              </div>
-              <div class="flex items-center gap-2">
-                <!-- TODO: enable subscribing to feeds that require auth, maybe by generating a single-use token? -->
-                <div :if={!preset[:current_user_required] and
-                  module_enabled?(Bonfire.UI.Social.SubscribeFeedLive, @__context__)}>
-                  <Bonfire.UI.Social.SubscribeFeedLive feed_name={preset.id} as_icon />
-                </div>
-                <button
-                  :if={!preset[:built_in]}
-                  phx-click="Bonfire.Social.Feeds:preset_delete"
-                  phx-value-id={preset.id}
-                  class="btn btn-circle btn-error btn-sm btn-ghost"
-                >
-                  <#Icon iconify="ph:trash-bold" class="w-4 h-4" />
-                  <span class="sr-only">{l("Delete")}</span>
-                </button>
-                {#if preset[:exclude_from_nav] == false}
+                <div class="flex items-center gap-2">
+                  <!-- TODO: enable subscribing to feeds that require auth, maybe by generating a single-use token? -->
+                  <div :if={!preset[:current_user_required] and
+                    module_enabled?(Bonfire.UI.Social.SubscribeFeedLive, @__context__)}>
+                    <Bonfire.UI.Social.SubscribeFeedLive feed_name={preset.id} as_icon />
+                  </div>
                   <button
-                    phx-click="Bonfire.Social.Feeds:preset_nav_toggle"
+                    :if={!preset[:built_in]}
+                    phx-click="Bonfire.Social.Feeds:preset_delete"
                     phx-value-id={preset.id}
-                    phx-value-exclude="true"
-                    class=""
+                    class="btn btn-circle btn-error btn-sm btn-ghost"
                   >
-                    <input type="checkbox" checked class="checkbox checkbox-primary">
-                    <span class="sr-only">{l("Include in the sidebar")}</span>
+                    <#Icon iconify="ph:trash-bold" class="w-4 h-4" />
+                    <span class="sr-only">{l("Delete")}</span>
                   </button>
-                {#else}
-                  <button
-                    phx-click="Bonfire.Social.Feeds:preset_nav_toggle"
-                    phx-value-id={preset.id}
-                    phx-value-exclude="false"
-                    class=""
-                  >
-                    <input type="checkbox" class="checkbox checkbox-primary">
-                    <span class="sr-only">{l("Include in the sidebar")}</span>
-                  </button>
-                {/if}
-                {!-- <form phx-change="Bonfire.Social.Feeds:preset_nav_toggle" phx-value-id={preset.id}>
+                  {#if preset[:exclude_from_nav] == false}
+                    <button
+                      phx-click="Bonfire.Social.Feeds:preset_nav_toggle"
+                      phx-value-id={preset.id}
+                      phx-value-exclude="true"
+                      class=""
+                    >
+                      <input type="checkbox" checked class="checkbox checkbox-primary">
+                      <span class="sr-only">{l("Include in the sidebar")}</span>
+                    </button>
+                  {#else}
+                    <button
+                      phx-click="Bonfire.Social.Feeds:preset_nav_toggle"
+                      phx-value-id={preset.id}
+                      phx-value-exclude="false"
+                      class=""
+                    >
+                      <input type="checkbox" class="checkbox checkbox-primary">
+                      <span class="sr-only">{l("Include in the sidebar")}</span>
+                    </button>
+                  {/if}
+                  {!-- <form phx-change="Bonfire.Social.Feeds:preset_nav_toggle" phx-value-id={preset.id}>
                       <label>
                         <input type="checkbox" name="show_in_nav" checked={preset[:exclude_from_nav] == false}>
                         <span>{l("Show in navigation menu")}</span>
                       </label>
                     </form> --}
+                </div>
               </div>
             </div>
-          </div>
-        </li>
-      {/for}
-    </ul>
-  </div>
+          </li>
+        {/for}
+      </ul>
+    </div>
+  {/if}
   <!-- </div>
     </div> -->
 

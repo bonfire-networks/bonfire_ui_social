@@ -5,7 +5,7 @@
     <Bonfire.UI.Common.WidgetBlockLive
       :if={current_user_id(@__context__)}
       class="w-full p-4 flex-auto mx-auto bonfire-wrapper overflow-hidden"
-      title_class="flex items-center justify-between pb-1 text-sm font-semibold uppercase tracking-wider text-base-content/50 relative"
+      title_class="flex items-center justify-between pb-2 text-xs font-medium uppercase tracking-wide text-base-content/90 relative"
       widget_title={e(@widget_title, l("Who to follow"))}
     >
       <:action>

@@ -1,48 +1,82 @@
 <div>
+  {#case to_string(Bonfire.Common.Settings.get([:ui, :sidebar, :section_divider], "none", :instance))}
+    {#match "line"}
+      <div
+        class="my-1 mx-4"
+        style="border-top: 1px solid color-mix(in oklch, var(--color-base-content) 10%, transparent)"
+        aria-hidden="true"
+      />
+    {#match "custom"}
+      {#case to_string(Bonfire.Common.Settings.get([:ui, :sidebar, :section_divider_image], "", :instance))}
+        {#match src when src != ""}
+          <div class="my-1 flex justify-center" aria-hidden="true">
+            <img src={src} class="h-5 w-full object-contain mt-4" alt="">
+          </div>
+        {#match _}
+      {/case}
+    {#match _}
+  {/case}
   <ul class="menu relative p-0 w-full mt-2">
     <li class="w-full">
-      <details
-        open={Bonfire.Common.Settings.get([Bonfire.Social.FeedLive, :show_feeds_nav_open], true, @__context__)}
-        class="w-full overflow-hidden"
-      >
-        <summary
-          phx-click="Bonfire.Social.Feeds:toggle_feeds_nav_visibility"
-          class="relative font-medium uppercase pl-5 text-xs text-base-content/50"
-        >
-          <span>{l("Feeds")}</span>
-          <!-- data-trigger="hover"
-            data-position="top-end"
-            phx-hook="Tooltip"
-            id="feeds_nav_settings" -->
-          <div class="normal-case font-normal absolute right-6">
-            <LinkLive
-              to={~p"/settings/user/feeds"}
-              class="z-999 tooltip-button btn btn-circle btn-ghost btn-xs"
-            ><#Icon iconify="ph:gear-six-duotone" class="w-4 h-4" /></LinkLive>
-            {!-- <span class="tooltip z-tooltip bg-base-300 rounded-md px-2 py-1.5 text-base-content/90 text-[13px] font-medium border border-base-content/10 shadow hidden absolute top-0">{l "Settings"}</span> --}
+      {#if Bonfire.Common.Settings.get(
+          [:ui, :sidebar, :disable_collapsible],
+          false,
+          @__context__[:instance_settings] || :instance
+        )}
+        <details open class="details-static w-full overflow-hidden">
+          <summary class="relative font-medium uppercase pl-5 text-xs text-base-content/50">
+            <span>{l("Feeds")}</span>
+            {#if !Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
+              <div class="normal-case font-normal absolute right-6 pointer-events-auto">
+                <LinkLive
+                  to={~p"/settings/user/feeds"}
+                  class="z-999 tooltip-button btn btn-circle btn-ghost btn-xs"
+                ><#Icon iconify="ph:gear-six-duotone" class="w-4 h-4" /></LinkLive>
+              </div>
+            {/if}
+          </summary>
+
+          <div class="pointer-events-auto">
+            <Bonfire.UI.Common.WidgetsLive
+              id="feeds_nav_links"
+              widgets={@presets}
+              page={@page}
+              type={:link}
+              selected_tab={@selected_tab}
+              container_class="menu before:content-none after:content-none !ml-0 p-0 w-full gap-0"
+            />
           </div>
-        </summary>
+        </details>
+      {#else}
+        <details
+          open={Bonfire.Common.Settings.get([Bonfire.Social.FeedLive, :show_feeds_nav_open], true, @__context__)}
+          class="w-full overflow-hidden"
+        >
+          <summary
+            phx-click="Bonfire.Social.Feeds:toggle_feeds_nav_visibility"
+            class="relative font-medium uppercase pl-5 text-xs text-base-content/50"
+          >
+            <span>{l("Feeds")}</span>
+            {#if !Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
+              <div class="normal-case font-normal absolute right-6">
+                <LinkLive
+                  to={~p"/settings/user/feeds"}
+                  class="z-999 tooltip-button btn btn-circle btn-ghost btn-xs"
+                ><#Icon iconify="ph:gear-six-duotone" class="w-4 h-4" /></LinkLive>
+              </div>
+            {/if}
+          </summary>
 
-        <Bonfire.UI.Common.WidgetsLive
-          id="feeds_nav_links"
-          widgets={@presets}
-          page={@page}
-          type={:link}
-          selected_tab={@selected_tab}
-          container_class="menu before:content-none after:content-none !ml-0 p-0 w-full gap-0"
-        />
-
-        <!-- {#for {preset, index} <- Enum.with_index(@presets || [])}
-
-        <li><LinkLive to={~p"/feed/#{preset.id}"}>
-            <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center place-content-center">
-              <Iconify.iconify icon="mingcute:movie-fill" class="w-4 h-4 text-base-content/70" />
-            </div>
-            <span class="font-medium text-base-content/80">{preset.id}</span></LinkLive>
-          </li>
-        
-        {/for} -->
-      </details>
+          <Bonfire.UI.Common.WidgetsLive
+            id="feeds_nav_links"
+            widgets={@presets}
+            page={@page}
+            type={:link}
+            selected_tab={@selected_tab}
+            container_class="menu before:content-none after:content-none !ml-0 p-0 w-full gap-0"
+          />
+        </details>
+      {/if}
     </li>
   </ul>
 </div>

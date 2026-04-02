@@ -1,7 +1,7 @@
 <div
   data-role="subject"
   data-main-object={@viewing_main_object}
-  class="subject relative mb-1 flex items-start"
+  class="subject relative flex items-start"
 >
   {!-- <div
     data-trigger="hover"
