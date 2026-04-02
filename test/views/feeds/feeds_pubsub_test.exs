@@ -90,6 +90,27 @@ defmodule Bonfire.UI.Social.Feeds.PubSub.Test do
     |> assert_has_or_open_browser("[data-id=object_body]", text: reply_content, timeout: 3000)
   end
 
+  test "own new post appears directly in feed without requiring 'show fresh' click", %{
+    conn: conn,
+    me: me
+  } do
+    conn = visit(conn, "/feed/local")
+
+    new_post_content = "My own post should appear immediately"
+
+    Task.start(fn ->
+      Posts.publish(
+        current_user: me,
+        post_attrs: %{post_content: %{html_body: new_post_content}},
+        boundary: "public"
+      )
+    end)
+
+    conn
+    |> assert_has_or_open_browser("[data-id=object_body]", text: new_post_content, timeout: 3000)
+    |> refute_has("[id=show_fresh]")
+  end
+
   test "new boost appears in the local feed in real time with both booster and original creator",
        %{
          conn: conn,

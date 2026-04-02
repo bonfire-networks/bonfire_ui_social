@@ -527,8 +527,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     parent_id
   end
 
-  def maybe_published_in(_none, _verb) do
-    # debug(none, "none for #{verb}")
+  def maybe_published_in(none, verb) do
+    flood(none, "maybe_published_in: no match for verb=#{verb}")
     nil
   end
 
@@ -898,11 +898,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
             <input type="hidden" name="activity_id" value={@activity_id}>
           </form>
 
+          {!--
           <Bonfire.UI.Social.Activity.PublishedInLive
             :if={@published_in && @showing_within != :smart_input}
             context={@published_in}
             showing_within={@showing_within}
           />
+          --}
 
           {#for {component, component_assigns} when is_atom(component) <-
               activity_components(
