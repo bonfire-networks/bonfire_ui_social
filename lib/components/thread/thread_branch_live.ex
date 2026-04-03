@@ -27,13 +27,12 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   prop current_url, :string, default: nil
   prop activity_inception, :any, default: nil
   prop hide_actions, :any, default: false
+  prop active_ancestor_levels, :list, default: []
 
   prop activity_preloads, :tuple, default: {nil, nil}
 
   def update(%{insert_stream: {:threaded_replies, entries, at}} = assigns, socket) do
     debug("branch is being poured into")
-
-    # ui_compact = assigns[:__context__][:ui_compact] || assigns(socket)[:__context__][:ui_compact]
 
     {
       :ok,
@@ -43,12 +42,10 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
         :threaded_replies_count,
         e(assigns(socket), :threaded_replies_count, 0) + length(entries || [])
       )
+      |> assign_show_thread_lines(assigns)
       |> LiveHandler.insert_comments(
         {:threaded_replies, entries ++ e(assigns(socket), :threaded_replies, []), at}
       )
-      #  |> assign_global(
-      #    ui_compact: ui_compact || assigns[:thread_level] >= LiveHandler.max_depth(ui_compact) / 2
-      #  )
     }
   end
 
@@ -59,8 +56,19 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
      |> assign(
        :threaded_replies_count,
        length(assigns[:threaded_replies] || assigns(socket)[:threaded_replies] || [])
-     )}
+     )
+     |> assign_show_thread_lines(assigns)}
   end
+
+  defp assign_show_thread_lines(socket, assigns) do
+    assign(
+      socket,
+      :show_thread_lines,
+      assigns[:showing_within] != :messages && assigns[:thread_mode] != :flat
+    )
+  end
+
+  def has_replies?(replies), do: replies not in [nil, [], {}, [{}]]
 
   def sub_replies_count(comment) do
     activity = CommentLive.get_activity(comment)

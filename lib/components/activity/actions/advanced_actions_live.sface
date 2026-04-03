@@ -25,7 +25,7 @@
             <h3 class="text-xs font-semibold uppercase tracking-wider text-base-content/40 px-2 mb-2">
               {l("Actions")}
             </h3>
-            <ul class="menu w-full">
+            <ul class="menu px-0 w-full">
               <li :if={current_user_id(@__context__) && @viewing_main_object && @thread_id &&
                 (@object_type == Bonfire.Data.Social.Message ||
                    Bonfire.Boundaries.can?(@__context__, :describe, @object_boundary))}>
@@ -142,7 +142,7 @@
               <h3 class="text-xs font-semibold uppercase tracking-wider text-error px-2 mb-2">
                 {l("Danger zone")}
               </h3>
-              <ul class="menu w-full">
+              <ul class="menu px-0 w-full">
                 {#if @object_type != Bonfire.Data.Social.Message}
                   {#if Bonfire.UI.Social.Activity.DeleteObjectLive.can_delete?(@__context__, @object, @object_boundary)}
                     <li :if={id(@object)}>

@@ -1,4 +1,4 @@
-<div class="bonfire-wrapper">
+<div class="">
   <StatelessComponent
     module={maybe_component(Bonfire.UI.Social.ObjectThreadLive)}
     myself={nil}

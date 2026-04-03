@@ -1,13 +1,14 @@
 <div>
-  <div class="flex justify-between px-4 p-2 pt-0 items-center">
-    <div class="flex items-center gap-4">
-      {!-- Replies count + last reply time merged --}
-      <div class="flex items-center gap-1.5" title={l("Replies")}>
-        <#Icon iconify="ph:chat-circle-duotone" class="size-4 text-base-content/70" />
-        <span data-id="reply_count" class="text-sm tabular-nums font-medium text-base-content/90">{@reply_count || 0}</span>
-        {#if @last_reply_id != nil}
-          <span class="text-sm text-base-content/50">·</span>
-          <span class="text-sm text-base-content/50">{l("last")} {DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</span>
+  <div class="flex items-center justify-between px-4 lg:px-0 gap-3 pt-3 pb-2">
+    {!-- Left: thread stats --}
+    <div class="flex items-center gap-3" role="group" aria-label={l("Thread stats")}>
+      <div class="flex items-center gap-1.5" aria-label={l("Replies")} title={l("Replies")}>
+        <#Icon iconify="ph:chat-circle-duotone" class="size-4 text-base-content/70" aria-hidden="true" />
+        <span class="sr-only">{l("Replies:")}</span>
+        <span data-id="reply_count" class="text-sm tabular-nums font-semibold text-base-content">{@reply_count || 0}</span>
+        {#if @last_reply_id != nil and (@reply_count || 0) > 0}
+          <span class="text-sm text-base-content/50" aria-hidden="true">&middot;</span>
+          <span class="text-sm text-base-content/60">{l("last")} {DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</span>
         {/if}
       </div>
 
@@ -17,84 +18,65 @@
           extension_enabled?(:bonfire_ui_reactions, @__context__) and
           (@thread_boost_count || 0) > 0}
         class="flex items-center gap-1.5"
+        aria-label={l("Boosts")}
         title={l("Boosts")}
       >
-        <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="size-4 text-base-content/70" />
-        <span class="text-sm tabular-nums font-medium text-base-content/90">{@thread_boost_count}</span>
+        <#Icon
+          iconify="ph:arrows-counter-clockwise-duotone"
+          class="size-4 text-base-content/70"
+          aria-hidden="true"
+        />
+        <span class="sr-only">{l("Boosts:")}</span>
+        <span class="text-sm tabular-nums font-semibold text-base-content">{@thread_boost_count}</span>
       </div>
 
-      {!-- Participants: only when > 0 and avatars aren't shown --}
+      {!-- Participants count (when no avatars shown) --}
       <div
-        :if={(@participant_count || 0) > 0 and !(@participants && Enum.count(@participants) > 0)}
+        :if={(@participant_count || 0) > 0 and !(@participants && @participants != [])}
         class="flex items-center gap-1.5"
+        aria-label={l("Participants")}
         title={l("Participants")}
       >
-        <#Icon iconify="ph:users-duotone" class="size-4 text-base-content/70" />
-        <span class="text-sm tabular-nums font-medium text-base-content/90">{@participant_count}</span>
+        <#Icon iconify="ph:users-duotone" class="size-4 text-base-content/70" aria-hidden="true" />
+        <span class="sr-only">{l("Participants:")}</span>
+        <span class="text-sm tabular-nums font-semibold text-base-content">{@participant_count}</span>
       </div>
     </div>
 
+    {!-- Right: controls slot + remote actions --}
     <div class="flex items-center gap-2">
+      <#slot />
+
       {#case e(@object, :peered, :canonical_uri, nil) || @is_remote}
         {#match nil}
         {#match false}
         {#match canonical_uri}
-          <a
+          <button
+            type="button"
             phx-click="Bonfire.Social.Feeds:fetch_thread"
             phx-target={@event_target}
             phx-value-id={id(@object) || id(@activity)}
-            class="btn btn-outline border-base-content/30 btn-sm"
+            class="btn btn-outline border-base-content/30 btn-sm min-h-11 lg:min-h-0"
           >
             <span class="text-sm font-medium">{l("Get latest replies")}</span>
-          </a>
+          </button>
 
           <a
             href={canonical_uri}
             target="_blank"
             rel="noopener noreferrer"
-            class="btn btn-outline btn-circle border-base-content/30 btn-sm"
+            class="btn btn-outline btn-circle border-base-content/30 btn-sm min-h-11 min-w-11 lg:min-h-0 lg:min-w-0"
             aria-label={l("View remotely")}
             title={l("View remotely")}
           >
-            <#Icon iconify="ph:arrow-square-out-duotone" class="size-5 shrink-0" />
+            <#Icon iconify="ph:arrow-square-out-duotone" class="size-5 shrink-0" aria-hidden="true" />
           </a>
       {/case}
-
-      {!-- 
-      {#if Types.object_type(@object) in [Bonfire.Data.Social.Post] and
-          not is_nil(e(@object, :post_content, nil)) and
-          Bonfire.Social.maybe_can?(
-            @__context__,
-            :edit,
-            @object,
-            if(@showing_within == :messages, do: :skip_boundary_check)
-          )}
-        <div
-          class="btn btn-outline border-base-content/30 btn-sm btn-circle"
-          aria-label={l("Download as markdown")}
-          title={l("Download as markdown")}
-        >
-          <StatefulComponent
-            module={maybe_component(Bonfire.UI.Posts.DownloadMarkLive, @__context__)}
-            id={deterministic_dom_id(
-              __MODULE__,
-              id(@activity),
-              "download_markdown",
-              "thread_stats"
-            )}
-            object_id={id(@object)}
-            as_icon
-          />
-        </div> 
-      {/if} --}
     </div>
   </div>
 
   {!-- Participant avatars --}
-  <div
-    :if={@participants && Enum.count(@participants) > 0}
-    class="flex flex-wrap items-center gap-3 px-4 pb-2"
-  >
+  <div :if={@participants && @participants != []} class="flex flex-wrap items-center gap-2 pb-2">
     <span class="text-xs text-base-content/50">{l("Participants")}</span>
     {#for p <- @participants || []}
       <StatelessComponent
@@ -102,7 +84,7 @@
         wrapper_class=""
         only_img
         with_popover
-        avatar_class="size-7 rounded-full"
+        avatar_class="size-6 rounded-full"
         profile={e(p, :profile, nil)}
         character={e(p, :character, nil)}
         parent_id="thread_stats"
@@ -110,6 +92,4 @@
       />
     {/for}
   </div>
-
-  <#slot />
 </div>
