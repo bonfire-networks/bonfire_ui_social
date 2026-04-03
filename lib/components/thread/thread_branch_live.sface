@@ -19,15 +19,14 @@
 
   <div class="relative flex-1 w-full">
     {!-- Ancestor continuation lines (only where ancestor has more siblings below) --}
-    {#for {active, level} <- Enum.with_index(@active_ancestor_levels)}
+    <!-- {#for {active, level} <- Enum.with_index(@active_ancestor_levels)}
       <div
         :if={active && @show_thread_lines}
         style={"left: #{24 + level * 34}px"}
         class="absolute top-0 bottom-0 border-l border-base-content/20 z-30 pointer-events-none"
       />
-    {/for}
+    {/for} -->
 
-    {!-- Reddit-style branch connector: vertical line → 12px rounded corner → horizontal line --}
     <div
       :if={@thread_level > 1 && @show_thread_lines}
       style={"left: #{20 + (@thread_level - 2) * 34}px; width: 38px; height: 28px; border-bottom-left-radius: 12px"}
