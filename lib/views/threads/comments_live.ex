@@ -83,6 +83,7 @@ defmodule Bonfire.UI.Social.CommentsLive do
   end
 
   def handle_params(%{"media_uri" => uri} = params, _url, socket) when is_binary(uri) do
+    # TODO: cache result
     with {:ok, %{id: id} = _media} <-
            Bonfire.Files.Media.get_or_add_media_by_uri(
              params["creator"] || current_user_or_id(socket),
