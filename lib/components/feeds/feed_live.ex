@@ -222,19 +222,38 @@ defmodule Bonfire.UI.Social.FeedLive do
       id(new_activity) || e(new_activity, :activity, :id, nil) ||
         e(new_activity, :object, :id, nil) || e(new_activity, :edge, :id, nil)
 
+    # Show own activities immediately without requiring a "Show fresh" click
+    subject_id =
+      e(new_activity, :subject, :id, nil) ||
+        e(new_activity, :activity, :subject, :id, nil)
+
+    is_own_activity? =
+      current_user_id(socket) != nil and current_user_id(socket) == subject_id
+
     current_fresh_ids = e(assigns(socket), :fresh_ids, nil) || MapSet.new()
 
     updated_fresh_ids =
-      if activity_id, do: MapSet.put(current_fresh_ids, activity_id), else: current_fresh_ids
+      if is_own_activity?,
+        do: current_fresh_ids,
+        else:
+          if(activity_id,
+            do: MapSet.put(current_fresh_ids, activity_id),
+            else: current_fresh_ids
+          )
+
+    socket =
+      if is_own_activity?,
+        do: socket,
+        else:
+          push_event(socket, "js-exec-attr-event", %{
+            to: "#show_fresh",
+            attr: "phx-show"
+          })
 
     {
       :ok,
       socket
       |> assign(fresh_ids: updated_fresh_ids)
-      |> push_event("js-exec-attr-event", %{
-        to: "#show_fresh",
-        attr: "phx-show"
-      })
       |> LiveHandler.insert_feed(new_activity, at: 0, reset: false)
     }
   end

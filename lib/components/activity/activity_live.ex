@@ -521,14 +521,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def maybe_published_in(%{tree: %{parent: %{id: _} = parent}}, _) do
     parent
+    |> debug("maybe_published_in: matched tree.parent")
   end
 
-  def maybe_published_in(%{tree: %{parent_id: parent_id}}, _) do
+  def maybe_published_in(%{tree: %{parent_id: parent_id}}, _) when is_binary(parent_id) do
     parent_id
+    |> debug("maybe_published_in: matched tree.parent_id")
   end
 
-  def maybe_published_in(_none, _verb) do
-    # debug(none, "none for #{verb}")
+  def maybe_published_in(none, verb) do
+    debug(none, "maybe_published_in: no match for verb=#{verb}")
     nil
   end
 
