@@ -1182,10 +1182,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   @doc false
   def get_reading_position(user_id, feed_name) when is_binary(feed_name) do
-    # Check PersistentLive's process dict first (survives live navigations).
-    # Use :not_found sentinel so we can distinguish "explicitly cleared (nil)"
-    # from "PersistentLive not available yet". Without this, nil || Process.get(...)
-    # falls through to the stale connect_params value re-seeded by live_plug_helpers.
+    # Distinguish "explicitly cleared (nil)" from "PersistentLive not available (:not_found)"
     case Bonfire.UI.Common.Presence.process_get(user_id, {:reading_pos, feed_name}, :not_found) do
       :not_found -> Process.get({:reading_pos, feed_name})
       value -> value
