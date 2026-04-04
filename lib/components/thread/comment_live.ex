@@ -25,10 +25,17 @@ defmodule Bonfire.UI.Social.CommentLive do
 
   prop activity_preloads, :tuple, default: {nil, nil}
 
-  @max_visual_depth 8
+  @default_max_visual_depth 3
 
   def render(assigns) do
-    visual_level = min(assigns.thread_level, @max_visual_depth)
+    max_depth =
+      Bonfire.Common.Settings.get(
+        [:ui, :thread, :max_visual_depth],
+        @default_max_visual_depth,
+        assigns[:__context__]
+      )
+
+    visual_level = min(assigns.thread_level, max_depth)
 
     assigns
     |> assign(:activity, get_activity(assigns.activity || assigns.comment))

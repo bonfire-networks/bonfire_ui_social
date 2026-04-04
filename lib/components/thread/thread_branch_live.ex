@@ -11,7 +11,6 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   # import Bonfire.Me.Integration
   prop comment, :map
 
-  prop depth_loaded, :any, default: nil
   prop total_replies_in_thread, :any, default: 0
   prop index, :any, default: 0
   prop thread_object, :any
@@ -60,12 +59,21 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
      |> assign_show_thread_lines(assigns)}
   end
 
+  @default_max_visual_depth 3
+
   defp assign_show_thread_lines(socket, assigns) do
-    assign(
-      socket,
-      :show_thread_lines,
+    max_depth =
+      Bonfire.Common.Settings.get(
+        [:ui, :thread, :max_visual_depth],
+        @default_max_visual_depth,
+        assigns[:__context__]
+      )
+
+    socket
+    |> assign(:show_thread_lines,
       assigns[:showing_within] != :messages && assigns[:thread_mode] != :flat
     )
+    |> assign(:visual_level, min(assigns[:thread_level] || 1, max_depth))
   end
 
   def has_replies?(replies), do: replies not in [nil, [], {}, [{}]]
@@ -77,17 +85,4 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
       e(activity, :replied, :direct_replies_count, 0)
   end
 
-  def extra_replies_count(comment, threaded_replies_count) do
-    case {(e(comment, :direct_replies_count, nil) ||
-             e(comment, :replied, :direct_replies_count, 0)) -
-            threaded_replies_count,
-          e(comment, :nested_replies_count, nil) ||
-            e(comment, :replied, :nested_replies_count, nil) ||
-            0} do
-      {0, 0} -> ""
-      {0, nested} -> "~#{nested}"
-      {direct_left, nested} when nested > direct_left -> "#{direct_left}+"
-      {direct_left, _} -> direct_left
-    end
-  end
 end

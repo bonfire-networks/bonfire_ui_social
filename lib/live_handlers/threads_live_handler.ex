@@ -81,63 +81,6 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     live_more(thread_id, input_to_atoms(attrs), socket)
   end
 
-  def handle_event("load_more_replies", %{"id" => id, "level" => level}, socket) do
-    debug("load extra reply level(s)")
-
-    {level, _} = Integer.parse(level)
-
-    assigns = assigns(socket)
-    current_user = current_user(assigns)
-
-    load_more_replies_step =
-      Settings.get(:thread_default_max_depth, 3,
-        current_user: current_user,
-        description: l("Reply levels"),
-        description: l("How many levels of replies to load/display at a time")
-      )
-
-    load_depth = level + load_more_replies_step
-
-    thread_mode = e(assigns, :thread_mode, nil)
-    showing_within = e(assigns, :showing_within, :thread)
-
-    # TODO: take from assigns
-    preloads =
-      Bonfire.Social.Feeds.LiveHandler.feed_extra_preloads_list(showing_within, thread_mode)
-
-    opts = [
-      current_user: current_user,
-      max_depth: load_depth,
-      thread_mode: thread_mode,
-      sort_by: e(assigns, :sort_by, nil),
-      sort_order: e(assigns, :sort_order, nil),
-      preload: preloads
-    ]
-
-    %{edges: replies, page_info: page_info} = Bonfire.Social.Threads.list_replies(id, opts)
-
-    # TODO: do something with page_info? to support branch pagination
-
-    if opts[:thread_mode] == :flat and is_list(replies) and
-         e(assigns, :reply_count, 0) > 0 do
-      {:noreply,
-       socket
-       |> assign_generic(depth_loaded: load_depth)
-       |> insert_comments({:replies, replies})}
-    else
-      {:noreply,
-       socket
-       |> assign_generic(depth_loaded: load_depth)
-       |> insert_comments(
-         {:threaded_replies,
-          Threads.prepare_replies_tree(
-            replies,
-            opts
-          ) || []}
-       )}
-    end
-  end
-
   def handle_event("reply", %{"id" => reply_to_id} = _params, socket) do
     activity = e(assigns(socket), :activity, %{})
     object_boundary = e(assigns(socket), :object_boundary, nil)
@@ -594,16 +537,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     end
   end
 
-  def max_depth(ui_compact \\ nil, opts),
-    do:
-      debug(
-        # if using compact layout or not logged in, use *double* the instance/default max depth 
-        Settings.get(:thread_default_max_depth, 3, opts) *
-          if(ui_compact || !current_user_id(opts),
-            do: 2,
-            else: 1
-          )
-      )
+  def max_depth(_ui_compact \\ nil, _opts), do: nil
 
   def maybe_include_path_ids(reply_id, level, context) do
     current_user = current_user(context)
@@ -680,7 +614,6 @@ defmodule Bonfire.Social.Threads.LiveHandler do
            thread_id: thread_id,
            #  include_path_ids: nil,
            reply_count: reply_count,
-           depth_loaded: max_depth,
            activity_preloads: {preloads, nil}
          ]
          |> debug("extra assigns")}

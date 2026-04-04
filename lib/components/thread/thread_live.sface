@@ -7,7 +7,6 @@
     description: l("How to sort threads and their replies.")
   )}
   id={"thread_#{@id}"}
-  x-data="{show_replies: true}"
 >
   <Bonfire.UI.Social.Activity.ThreadStatsLive
     :if={socket_connected?(@__context__) && !@hide_thread_stats}
@@ -84,7 +83,7 @@
                     hide_actions={hide_actions}
                     activity_inception={@activity_inception}
                     activity_preloads={@activity_preloads}
-                    depth_loaded={@depth_loaded}
+
                   />
                 {/for}
               </div>
@@ -107,7 +106,7 @@
                     hide_actions={hide_actions}
                     activity_inception={@activity_inception}
                     activity_preloads={@activity_preloads}
-                    depth_loaded={@depth_loaded}
+
                   />
                 {/for}
               </div>

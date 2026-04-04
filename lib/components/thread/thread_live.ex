@@ -35,8 +35,6 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop thread_mode, :any, default: nil
   prop sort_by, :any, default: nil
   prop sort_order, :any, default: false
-  prop depth_loaded, :any, default: nil
-
   prop showing_within, :atom, default: :thread
   prop hide_thread_stats, :boolean, default: false
   prop loading, :boolean, default: false
@@ -98,6 +96,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     {:ok,
      socket
      |> assign(assigns)
+     |> assign_new(:reply_count, fn -> length(replies) end)
      |> LiveHandler.thread_init()}
   end
 
