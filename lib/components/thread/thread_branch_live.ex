@@ -70,7 +70,8 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
       )
 
     socket
-    |> assign(:show_thread_lines,
+    |> assign(
+      :show_thread_lines,
       assigns[:showing_within] != :messages && assigns[:thread_mode] != :flat
     )
     |> assign(:visual_level, min(assigns[:thread_level] || 1, max_depth))
@@ -84,5 +85,4 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
     e(activity, :replied, :nested_replies_count, 0) +
       e(activity, :replied, :direct_replies_count, 0)
   end
-
 end
