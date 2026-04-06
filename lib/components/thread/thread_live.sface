@@ -83,6 +83,7 @@
                     hide_actions={hide_actions}
                     activity_inception={@activity_inception}
                     activity_preloads={@activity_preloads}
+                    depth_loaded={@depth_loaded}
                   />
                 {/for}
               </div>
@@ -105,6 +106,7 @@
                     hide_actions={hide_actions}
                     activity_inception={@activity_inception}
                     activity_preloads={@activity_preloads}
+                    depth_loaded={@depth_loaded}
                   />
                 {/for}
               </div>

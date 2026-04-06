@@ -20,6 +20,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop highlight_reply_id, :any, default: nil
   prop reply_to_id, :any, default: nil
   prop include_path_ids, :any, default: nil
+  prop depth_loaded, :any, default: nil
 
   prop main_object_component_id, :any, default: nil
   # prop page, :any, default: "thread"

@@ -79,6 +79,33 @@
     <div :if={@showing_within == :thread_embed} id={"reply-slot-#{id(@comment)}"} />
 
     {#if @thread_mode != :flat}
+      {#if (@thread_level == @depth_loaded and
+           @threaded_replies_count) &&
+          (e(@comment, :total_replies_count, nil) || e(@comment, :replied, :total_replies_count, nil) || 0) >
+            @threaded_replies_count}
+        {!-- ||  (@thread_level + 1 >= LiveHandler.max_depth(@__context__[:ui_compact], @__context__) --}
+        <div class="flex items-center">
+          {#if user_socket_connected?(@__context__)}
+            <button
+              data-id="load_more_replies"
+              phx-click="Bonfire.Social.Threads:load_more_replies"
+              phx-value-id={e(@comment, :id, nil)}
+              phx-value-level={@thread_level + 1}
+              phx-target={@myself}
+              class="flex items-center visible p-2 click:invisible"
+            >
+              <span
+                style="border-left: 2px dashed"
+                class="btn btn-sm btn-ghost text-primary border-l-2 border-dotted ml-[5px] rounded-none"
+              >{l("Load %{count} more replies", count: extra_replies_count(@comment, @threaded_replies_count))}</span>
+            </button>
+          {#else}
+            <span class="btn btn-xs">
+              {extra_replies_count(@comment, @threaded_replies_count)} more replies (not shown)</span>
+          {/if}
+        </div>
+      {/if}
+
       <div id={"replies-#{@id}"} data-id="show_replies">
         <div
           :if={@threaded_replies != []}
@@ -108,6 +135,7 @@
                   activity_preloads={@activity_preloads}
                   hide_actions={@hide_actions}
                   active_ancestor_levels={@active_ancestor_levels ++ [index < @threaded_replies_count - 1]}
+                  depth_loaded={@depth_loaded}
                 />
               </div>
             {/for}
