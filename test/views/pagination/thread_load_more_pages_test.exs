@@ -116,7 +116,7 @@ defmodule Bonfire.UI.Social.Threads.LoadMoreTest do
       |> visit("/discussion/#{op.id}")
       |> assert_has("[data-id='comment']", count: limit)
       |> click_button("[data-id=load_more]", "Load more")
-      |> assert_has("[data-id='comment']", count: 2)
+      |> assert_has("[data-id='comment']", count: total_posts)
 
       Process.put([:bonfire_ui_social, Bonfire.UI.Social.ThreadLive, :thread_mode], :flat)
 
@@ -124,7 +124,7 @@ defmodule Bonfire.UI.Social.Threads.LoadMoreTest do
       |> visit("/discussion/#{op.id}")
       |> assert_has("[data-role='comment-flat']", count: limit)
       |> click_button("[data-id=load_more]", "Load more")
-      |> assert_has("[data-role='comment-flat']", count: 2)
+      |> assert_has("[data-role='comment-flat']", count: total_posts)
     end
 
     test "As a user when I click on load more I want to see next replies even without JavaScript (using HTTP)",

@@ -655,7 +655,10 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         thread_mode: thread_mode,
         sort_by: sort_by,
         sort_order: sort_order,
-        showing_within: showing_within
+        showing_within: showing_within,
+        total_replies_count:
+          e(assigns, :object, :replied, :total_replies_count, nil) ||
+            e(assigns, :object, :replied, :direct_replies_count, nil)
       ]
 
       # |> debug("load_thread_assigns opts")
