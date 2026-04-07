@@ -467,37 +467,38 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         pid = self()
 
         object = e(assigns(socket), :object, nil)
+        activity = e(assigns(socket), :activity, nil)
         thread_id = e(assigns(socket), :thread_id, nil) || id(object)
         component_id = e(assigns(socket), :id, nil) || thread_id
 
         apply_task(
           :start_async,
           fn ->
-            # compute & send stats
-
-            limit = 4
-
             participants =
-              e(assigns(socket), :participants, []) ||
-                Threads.list_participants(e(assigns(socket), :activity, nil) || object, thread_id,
-                  limit: limit,
-                  current_user: current_user
-                )
+              Threads.list_participants(activity || object, thread_id,
+                current_user: current_user,
+                limit: 20
+              )
 
-            participant_count = Enum.count(participants)
-
-            participant_count =
-              if participant_count == limit,
-                do: Threads.count_participants(thread_id, current_user: current_user),
-                else: participant_count
+            if participants != [] do
+              send(pid, {:assign, preview_sidebar_widgets: [
+                users: [
+                  secondary: [
+                    {Bonfire.UI.Social.WidgetParticipantsLive, [participants: participants]},
+                    {Bonfire.Tag.Web.WidgetTagsLive, []}
+                  ]
+                ],
+                guests: [
+                  secondary: nil
+                ]
+              ]})
+            end
 
             send_thread_updates(
               pid,
               component_id,
               %{
                 skip_loading_comments: true,
-                participants: participants,
-                participant_count: participant_count,
                 thread_boost_count:
                   Bonfire.Social.Boosts.count([in_thread: thread_id], current_user: current_user)
               },

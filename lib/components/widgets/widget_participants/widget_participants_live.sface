@@ -1,0 +1,22 @@
+{#case e(assigns, :participants, [])}
+  {#match participants when is_list(participants) and participants != []}
+    <Bonfire.UI.Common.WidgetBlockLive
+      widget_title={e(assigns, :widget_title, l("Participants"))}
+    >
+      <ul class="flex flex-col gap-3">
+        {#for participant <- participants}
+          <li>
+            <StatelessComponent
+              module={maybe_component(Bonfire.UI.Me.ProfileItemLive, @__context__)}
+              show_controls={[]}
+              parent_id="widget_participants"
+              character={e(participant, :character, nil)}
+              profile={e(participant, :profile, nil)}
+              avatar_class="w-8 h-8 rounded-full"
+            />
+          </li>
+        {/for}
+      </ul>
+    </Bonfire.UI.Common.WidgetBlockLive>
+  {#match _}
+{/case}

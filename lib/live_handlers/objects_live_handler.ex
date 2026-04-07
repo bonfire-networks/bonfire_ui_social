@@ -265,33 +265,6 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       |> repo().maybe_preload(:settings)
 
     thread_id = e(activity, :replied, :thread_id, id)
-    # |> debug("reply_to_id")
-    # reply_to_id = e(assigns, :reply_to_id, id)
-
-    # smart_input_prompt = l("Reply to object:")<>" "<>Text.text_only(e(object, :post_content, :name, e(object, :post_content, :summary, e(object, :post_content, :html_body, reply_to_id))))
-    # smart_input_prompt = l("Reply")
-
-    # participants =
-    #   Bonfire.Social.Threads.list_participants(Map.put(activity, :object, object), thread_id,
-    #     current_user: current_user
-    #   )
-
-    # to_circles =
-    #   if length(participants) > 0,
-    #     do: Enum.map(participants, &{e(&1, :character, :username, l("someone")), e(&1, :id, nil)})
-
-    # names = if length(participants)>0, do: Enum.map_join(participants, ", ", &e(&1, :profile, :name, e(&1, :character, :username, l "someone else")))
-
-    # mentions =
-    #   if length(participants) > 0,
-    #     do:
-    #       Enum.map_join(
-    #         participants |> Enum.reject(&(e(&1, :character, :id, nil) == uid(current_user))),
-    #         " ",
-    #         &("@" <> e(&1, :character, :username, ""))
-    #       ) <> " "
-
-    # debug(activity)
     thread_title = e(activity, :replied, :thread, :named, :name, nil)
 
     socket
@@ -304,7 +277,6 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       sidebar_widgets: [
         users: [
           secondary: [
-            # {Bonfire.AI.Web.SummaryLive, [text: e(object, :post_content, :html_body, nil)]},
             {Bonfire.Tag.Web.WidgetTagsLive, []}
           ]
         ],
@@ -312,28 +284,10 @@ defmodule Bonfire.Social.Objects.LiveHandler do
           secondary: nil
         ]
       ],
-      # url: url,
-      # page_header_aside: [
-      #   {
-      #     Bonfire.UI.Social.ObjectHeaderAsideLive,
-      #     [
-      #       participants: [],
-      #       thread_id: thread_id,
-      #       activity: activity
-      #     ]
-      #   }
-      # ],
-      # participants: participants,
       no_index:
         !Bonfire.Common.Extend.module_enabled?(Bonfire.Search.Indexer, author)
         |> debug("no_index"),
-      # Bonfire.Common.Settings.get([Bonfire.Me.Users, :undiscoverable], true,
-      #   current_user: author
-      # ),
       thread_id: thread_id,
-      # reply_to_id: object,
-      # smart_input_opts: %{text_suggestion: mentions, prompt: smart_input_prompt},
-      # to_circles: to_circles || []
       thread_title: thread_title
     )
     |> maybe_seo_assign(object, activity)

@@ -29,18 +29,6 @@
         <span class="sr-only">{l("Boosts:")}</span>
         <span class="text-sm tabular-nums font-semibold text-base-content">{@thread_boost_count}</span>
       </div>
-
-      {!-- Participants count (when no avatars shown) --}
-      <div
-        :if={(@participant_count || 0) > 0 and !(@participants && @participants != [])}
-        class="flex items-center gap-1.5"
-        aria-label={l("Participants")}
-        title={l("Participants")}
-      >
-        <#Icon iconify="ph:users-duotone" class="size-4 text-base-content/70" aria-hidden="true" />
-        <span class="sr-only">{l("Participants:")}</span>
-        <span class="text-sm tabular-nums font-semibold text-base-content">{@participant_count}</span>
-      </div>
     </div>
 
     {!-- Right: controls slot + remote actions --}
@@ -73,23 +61,5 @@
           </a>
       {/case}
     </div>
-  </div>
-
-  {!-- Participant avatars --}
-  <div :if={@participants && @participants != []} class="flex flex-wrap items-center gap-2 pb-2">
-    <span class="text-xs text-base-content/50">{l("Participants")}</span>
-    {#for p <- @participants || []}
-      <StatelessComponent
-        module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
-        wrapper_class=""
-        only_img
-        with_popover
-        avatar_class="size-6 rounded-full"
-        profile={e(p, :profile, nil)}
-        character={e(p, :character, nil)}
-        parent_id="thread_stats"
-        show_controls={[]}
-      />
-    {/for}
   </div>
 </div>

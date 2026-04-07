@@ -84,7 +84,7 @@
           (e(@comment, :total_replies_count, nil) || e(@comment, :replied, :total_replies_count, nil) || 0) >
             @threaded_replies_count}
         {!-- ||  (@thread_level + 1 >= LiveHandler.max_depth(@__context__[:ui_compact], @__context__) --}
-        <div class="flex items-center">
+        <div class="flex items-center" style={"padding-left: #{24 + (@visual_level - 1) * 34}px"}>
           {#if user_socket_connected?(@__context__)}
             <button
               data-id="load_more_replies"
@@ -92,11 +92,9 @@
               phx-value-id={e(@comment, :id, nil)}
               phx-value-level={@thread_level + 1}
               phx-target={@myself}
-              class="flex items-center visible p-2 click:invisible"
+              class="flex items-center visible p-2 pt-0 click:invisible"
             >
-              <span
-                style="border-left: 2px dashed"
-                class="btn btn-sm btn-ghost text-primary border-l-2 border-dotted ml-[5px] rounded-none"
+              <span class="btn btn-sm"
               >{l("Load %{count} more replies", count: extra_replies_count(@comment, @threaded_replies_count))}</span>
             </button>
           {#else}
@@ -119,7 +117,7 @@
               <div class="">
                 <StatefulComponent
                   module={maybe_component(Bonfire.UI.Social.ThreadBranchLive, @__context__)}
-                  id={deterministic_dom_id("nested_branch", id(subreply), @thread_id, index)}
+                  id={deterministic_dom_id("nested_branch", id(subreply), @id, index)}
                   total_replies_in_thread={@threaded_replies_count}
                   index={index}
                   comment={subreply}
