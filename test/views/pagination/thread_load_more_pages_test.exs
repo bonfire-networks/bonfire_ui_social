@@ -93,10 +93,10 @@ defmodule Bonfire.UI.Social.Threads.LoadMoreTest do
       Process.put([:bonfire, :default_pagination_limit], limit)
       Process.put([:bonfire, :pagination_hard_max_limit], limit)
 
-      # Visit the discussion page and check for load more button
+      # Visit the discussion   page and check for load more button
       conn
       |> visit("/discussion/#{op.id}")
-      |> assert_has("[data-id=load_more]")
+      |> assert_has_or_open_browser("[data-id=load_more]")
 
       Process.put([:bonfire_ui_social, Bonfire.UI.Social.ThreadLive, :thread_mode], :flat)
 
