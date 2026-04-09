@@ -229,7 +229,9 @@
                 l("this %{object}", object: @object_type_readable || l("object")),
                 @permalink || URIs.canonical_url(@object),
                 @__context__
-              ], fallback_return: "/login")}
+              ],
+              fallback_return: "/login"
+            )}
             class="flex items-center w-full gap-2 text-sm text-base-content"
           >
             <!-- <#Icon solid="Flag" class="w-4 h-4 shrink-0" /> -->

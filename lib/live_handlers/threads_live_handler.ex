@@ -602,11 +602,12 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   def max_depth(ui_compact \\ nil, opts),
     # if using compact layout or not logged in, use *double* the instance/default max depth 
     do:
-      Settings.get(:thread_default_max_depth, 3, opts) *
-        if(ui_compact || !current_user_id(opts),
-          do: 2,
-          else: 1
-        )
+      (Settings.get(:thread_default_max_depth, 3, opts) *
+         if(ui_compact || !current_user_id(opts),
+           do: 1.4,
+           else: 1
+         ))
+      |> round()
 
   # def max_depth(_ui_compact \\ nil, _opts), do: nil
 
