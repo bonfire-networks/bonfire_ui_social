@@ -11,6 +11,7 @@ defmodule Bonfire.UI.Social.CommentLive do
   prop threaded_replies, :any, default: nil
   prop thread_object, :any
   prop thread_level, :number, default: 0
+  prop visual_level, :number, default: 0
   prop thread_id, :any
   prop highlight_reply_id, :any, default: nil
   prop feed_id, :any, default: nil
@@ -20,26 +21,13 @@ defmodule Bonfire.UI.Social.CommentLive do
   # prop create_object_type, :any, default: nil
   prop current_url, :string, default: nil
   prop activity_inception, :any, default: nil
-  prop ui_compact, :any, default: nil
   prop hide_actions, :any, default: false
 
   prop activity_preloads, :tuple, default: {nil, nil}
 
-  @default_max_visual_depth 3
-
   def render(assigns) do
-    max_depth =
-      Bonfire.Common.Settings.get(
-        [:ui, :thread, :max_visual_depth],
-        @default_max_visual_depth,
-        assigns[:__context__]
-      )
-
-    visual_level = min(assigns.thread_level, max_depth)
-
     assigns
     |> assign(:activity, get_activity(assigns.activity || assigns.comment))
-    |> assign(:visual_level, visual_level)
     |> render_sface()
   end
 

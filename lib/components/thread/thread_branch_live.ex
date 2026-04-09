@@ -26,7 +26,6 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   prop current_url, :string, default: nil
   prop activity_inception, :any, default: nil
   prop hide_actions, :any, default: false
-  prop active_ancestor_levels, :list, default: []
   prop depth_loaded, :any, default: nil
 
   prop activity_preloads, :tuple, default: {nil, nil}
@@ -67,15 +66,18 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
       Bonfire.Common.Settings.get(
         [:ui, :thread, :max_visual_depth],
         @default_max_visual_depth,
-        assigns[:__context__]
+        current_user: current_user(assigns)
       )
+
+    thread_level = assigns[:thread_level] || 1
 
     socket
     |> assign(
       :show_thread_lines,
       assigns[:showing_within] != :messages && assigns[:thread_mode] != :flat
     )
-    |> assign(:visual_level, min(assigns[:thread_level] || 1, max_depth))
+    |> assign(:visual_level, min(thread_level, max_depth))
+    |> assign(:parent_visual_level, min(max(thread_level - 1, 0), max_depth))
   end
 
   def has_replies?(replies), do: replies not in [nil, [], {}, [{}]]
@@ -99,5 +101,15 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
       {direct_left, nested} when nested > direct_left -> "#{direct_left}+"
       {direct_left, _} -> direct_left
     end
+  end
+
+  def more_siblings_below?(parent_comment, index, loaded_count) do
+    total_direct =
+      e(parent_comment, :direct_replies_count, nil) ||
+        e(parent_comment, :replied, :direct_replies_count, 0) || 0
+
+    effective_total = max(total_direct, loaded_count || 0)
+
+    index < effective_total - 1
   end
 end

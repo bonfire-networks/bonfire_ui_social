@@ -4,7 +4,7 @@
     <button
       type="button"
       tabindex="0"
-      class="tooltip-button btn btn-outline border-base-content/30 btn-sm min-h-11 lg:min-h-0"
+      class="tooltip-button btn btn-ghost btn-sm min-h-11 lg:min-h-0"
       aria-haspopup="menu"
       aria-label={l("Thread layout")}
     >
@@ -74,7 +74,7 @@
     <button
       type="button"
       tabindex="0"
-      class="tooltip-button btn btn-outline border-base-content/30 btn-sm min-h-11 lg:min-h-0"
+      class="tooltip-button btn btn-ghost btn-sm min-h-11 lg:min-h-0"
       aria-haspopup="menu"
       aria-label={l("Sort order")}
     >

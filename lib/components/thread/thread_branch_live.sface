@@ -8,135 +8,132 @@
   }
 >
   <div class="relative flex-1 w-full">
-    {!-- Ancestor continuation lines (only where ancestor has more siblings below) --}
-    <!-- {#for {active, level} <- Enum.with_index(@active_ancestor_levels)}
-      <div
-        :if={active && @show_thread_lines}
-        style={"left: #{24 + level * 34}px"}
-        class="absolute top-0 bottom-0 border-l border-base-content/20 z-30 pointer-events-none"
-      />
-    {/for} -->
-
     <div
       :if={@visual_level > 1 && @show_thread_lines}
-      style={"left: #{20 + (@visual_level - 2) * 34}px; width: 38px; height: 28px; border-bottom-left-radius: 12px"}
+      style={"left: #{20 + (@parent_visual_level - 1) * 34}px; width: 38px; height: 28px; border-bottom-left-radius: 12px"}
       class="absolute top-0 border-l border-b border-base-content/20 z-30 pointer-events-none"
     />
 
-    {!-- Own continuation line downward (only when has children, clickable to collapse) --}
-    <div
-      :if={@show_thread_lines && has_replies?(@threaded_replies)}
-      id={"line-#{@id}"}
-      phx-click={JS.hide(to: "#replies-#{@id}")
-      |> JS.hide(to: "#line-#{@id}")
-      |> JS.hide(to: "#collapse-minus-#{@id}")
-      |> JS.show(to: "#collapse-plus-#{@id}")}
-      style={"left: #{24 + (@visual_level - 1) * 34}px; top: 40px"}
-      class="absolute bottom-0 border-l border-base-content/20 z-40 cursor-pointer px-1 -ml-1 hover:border-l-2 hover:border-base-content/40"
-    />
+    {!-- R1 piece A (parent trunk) + R2 collapse button. Wrapping CommentLive
+         in a relative box lets piece A span the parent's card without
+         overshooting into the children subtree. See THREAD_LINES.md §8 v3. --}
+    <div class="relative">
+      <div
+        :if={@show_thread_lines && has_replies?(@threaded_replies)}
+        id={"line-#{@id}"}
+        phx-click={JS.hide(to: "#replies-#{@id}")
+        |> JS.hide(to: "#line-#{@id}")
+        |> JS.hide(to: "#collapse-minus-#{@id}")
+        |> JS.show(to: "#collapse-plus-#{@id}")}
+        style={"left: #{24 + (@visual_level - 1) * 34}px; top: 20px"}
+        class="absolute bottom-0 border-l border-base-content/20 z-40 cursor-pointer px-1 -ml-1 hover:border-l-2 hover:border-base-content/40"
+      />
 
-    {!-- Collapse/expand button at the line junction --}
-    <div
-      :if={@show_thread_lines && has_replies?(@threaded_replies)}
-      phx-click={JS.toggle(to: "#replies-#{@id}")
-      |> JS.toggle(to: "#line-#{@id}")
-      |> JS.toggle(to: "#collapse-minus-#{@id}")
-      |> JS.toggle(to: "#collapse-plus-#{@id}")}
-      style={"left: #{20 + (@visual_level - 1) * 34}px; transform: translateX(-50%); top: 60px; width: 20px; height: 20px"}
-      class="absolute z-50 flex items-center justify-center rounded-full border border-base-content/20 bg-base-100 cursor-pointer hover:border-base-content/40 hover:bg-base-200 transition-colors"
-    >
-      <span
-        id={"collapse-minus-#{@id}"}
-        class="text-base-content/50 text-xs font-bold leading-none select-none"
-      >&minus;</span>
-      <span
-        id={"collapse-plus-#{@id}"}
-        style="display:none"
-        class="text-base-content/50 text-xs font-bold leading-none select-none"
-      >+</span>
+      {!-- Collapse/expand button at the line junction --}
+      <div
+        :if={@show_thread_lines && has_replies?(@threaded_replies)}
+        phx-click={JS.toggle(to: "#replies-#{@id}")
+        |> JS.toggle(to: "#line-#{@id}")
+        |> JS.toggle(to: "#collapse-minus-#{@id}")
+        |> JS.toggle(to: "#collapse-plus-#{@id}")}
+        style={"left: #{20 + (@visual_level - 1) * 34}px; transform: translateX(-50%); top: 60px; width: 20px; height: 20px"}
+        class="absolute z-50 flex items-center justify-center rounded-full border border-base-content/20 bg-base-100 cursor-pointer hover:border-base-content/40 hover:bg-base-200 transition-colors"
+      >
+        <span
+          id={"collapse-minus-#{@id}"}
+          class="text-base-content/50 text-xs font-bold leading-none select-none"
+        >&minus;</span>
+        <span
+          id={"collapse-plus-#{@id}"}
+          style="display:none"
+          class="text-base-content/50 text-xs font-bold leading-none select-none"
+        >+</span>
+      </div>
+
+      <Bonfire.UI.Social.CommentLive
+        comment={@comment}
+        total_replies_in_thread={@total_replies_in_thread}
+        thread_id={@thread_id}
+        index={@index}
+        highlight_reply_id={@highlight_reply_id}
+        feed_id={@feed_id || @thread_id}
+        current_url={@current_url}
+        threaded_replies={@threaded_replies}
+        thread_object={@thread_object}
+        thread_level={@thread_level}
+        visual_level={@visual_level}
+        thread_mode={@thread_mode}
+        showing_within={@showing_within || :thread}
+        activity_inception={@activity_inception}
+        activity_preloads={@activity_preloads}
+        hide_actions={@hide_actions}
+      />
     </div>
-
-    <Bonfire.UI.Social.CommentLive
-      comment={@comment}
-      total_replies_in_thread={@total_replies_in_thread}
-      thread_id={@thread_id}
-      index={@index}
-      highlight_reply_id={@highlight_reply_id}
-      feed_id={@feed_id || @thread_id}
-      current_url={@current_url}
-      threaded_replies={@threaded_replies}
-      thread_object={@thread_object}
-      thread_level={@thread_level}
-      thread_mode={@thread_mode}
-      showing_within={@showing_within || :thread}
-      activity_inception={@activity_inception}
-      ui_compact={@__context__[:ui_compact]}
-      activity_preloads={@activity_preloads}
-      hide_actions={@hide_actions}
-    />
 
     {!-- Reply slot for portal teleport (used by CommentsLive embed) --}
     <div :if={@showing_within == :thread_embed} id={"reply-slot-#{id(@comment)}"} />
 
     {#if @thread_mode != :flat}
-      {#if (@thread_level == @depth_loaded and
-           @threaded_replies_count) &&
-          (e(@comment, :total_replies_count, nil) || e(@comment, :replied, :total_replies_count, nil) || 0) >
-            @threaded_replies_count}
-        {!-- ||  (@thread_level + 1 >= LiveHandler.max_depth(@__context__[:ui_compact], @__context__) --}
-        <div class="flex items-center" style={"padding-left: #{24 + (@visual_level - 1) * 34}px"}>
-          {#if user_socket_connected?(@__context__)}
-            <button
-              data-id="load_more_replies"
-              phx-click="Bonfire.Social.Threads:load_more_replies"
-              phx-value-id={e(@comment, :id, nil)}
-              phx-value-level={@thread_level + 1}
-              phx-target={@myself}
-              class="flex items-center visible p-2 pt-0 click:invisible"
-            >
-              <span class="btn btn-sm"
-              >{l("Load %{count} more replies", count: extra_replies_count(@comment, @threaded_replies_count))}</span>
-            </button>
-          {#else}
-            <span class="btn btn-xs">
-              {extra_replies_count(@comment, @threaded_replies_count)} more replies (not shown)</span>
-          {/if}
-        </div>
-      {/if}
+      <div class="relative">
+        {#if (@thread_level == @depth_loaded and
+             @threaded_replies_count) &&
+            (e(@comment, :total_replies_count, nil) || e(@comment, :replied, :total_replies_count, nil) || 0) >
+              @threaded_replies_count}
+          <div class="flex items-center" style={"padding-left: #{24 + (@visual_level - 1) * 34}px"}>
+            {#if user_socket_connected?(@__context__)}
+              <button
+                data-id="load_more_replies"
+                phx-click="Bonfire.Social.Threads:load_more_replies"
+                phx-value-id={e(@comment, :id, nil)}
+                phx-value-level={@thread_level + 1}
+                phx-target={@myself}
+                class="flex items-center visible p-2 pt-0 click:invisible"
+              >
+                <span class="btn btn-sm"
+                >{l("Load %{count} more replies", count: extra_replies_count(@comment, @threaded_replies_count))}</span>
+              </button>
+            {#else}
+              <span class="btn btn-xs">
+                {extra_replies_count(@comment, @threaded_replies_count)} more replies (not shown)</span>
+            {/if}
+          </div>
+        {/if}
 
-      <div id={"replies-#{@id}"} data-id="show_replies">
-        <div
-          :if={@threaded_replies != []}
-          class={
-            "",
-            "!ml-0": @thread_level < 1
-          }
-        >
-          <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " "}>
-            {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@threaded_replies || [])}
-              <div class="">
-                <StatefulComponent
-                  module={maybe_component(Bonfire.UI.Social.ThreadBranchLive, @__context__)}
-                  id={deterministic_dom_id("nested_branch", id(subreply), @id, index)}
-                  total_replies_in_thread={@threaded_replies_count}
-                  index={index}
-                  comment={subreply}
-                  thread_id={@thread_id}
-                  highlight_reply_id={@highlight_reply_id}
-                  thread_object={@thread_object}
-                  feed_id={@feed_id || @thread_id}
-                  threaded_replies={sub_child_replies}
-                  thread_level={@thread_level + 1}
-                  showing_within={@showing_within}
-                  activity_inception={@activity_inception}
-                  current_url={@current_url || current_url(@__context__)}
-                  activity_preloads={@activity_preloads}
-                  hide_actions={@hide_actions}
-                  active_ancestor_levels={@active_ancestor_levels ++ [index < @threaded_replies_count - 1]}
-                  depth_loaded={@depth_loaded}
-                />
-              </div>
-            {/for}
+        <div id={"replies-#{@id}"} data-id="show_replies">
+          <div :if={@threaded_replies != []} class={"!ml-0": @thread_level < 1}>
+            <div class={"replies replies-level-" <> to_string(@thread_level + 1) <> " "}>
+              {#for {{subreply, sub_child_replies}, index} <- Enum.with_index(@threaded_replies || [])}
+                <div class="relative">
+                  {!-- R1 piece B: per-child trunk segment. Only non-last
+                       siblings need it; the last sibling's own R2 elbow
+                       takes over. See THREAD_LINES.md §8 v4. --}
+                  <div
+                    :if={@show_thread_lines && more_siblings_below?(@comment, index, @threaded_replies_count)}
+                    style={"left: #{20 + (@visual_level - 1) * 34}px"}
+                    class="absolute top-[18px] bottom-0 border-l border-base-content/20 z-30 pointer-events-none"
+                  />
+                  <StatefulComponent
+                    module={maybe_component(Bonfire.UI.Social.ThreadBranchLive, @__context__)}
+                    id={deterministic_dom_id("nested_branch", id(subreply), @id, index)}
+                    total_replies_in_thread={@threaded_replies_count}
+                    index={index}
+                    comment={subreply}
+                    thread_id={@thread_id}
+                    highlight_reply_id={@highlight_reply_id}
+                    thread_object={@thread_object}
+                    feed_id={@feed_id || @thread_id}
+                    threaded_replies={sub_child_replies}
+                    thread_level={@thread_level + 1}
+                    showing_within={@showing_within}
+                    activity_inception={@activity_inception}
+                    current_url={@current_url || current_url(@__context__)}
+                    activity_preloads={@activity_preloads}
+                    hide_actions={@hide_actions}
+                    depth_loaded={@depth_loaded}
+                  />
+                </div>
+              {/for}
+            </div>
           </div>
         </div>
       </div>
