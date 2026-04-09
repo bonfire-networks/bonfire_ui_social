@@ -1,6 +1,7 @@
 {!-- NOTE: we use a simple anchor here, so it gets overriden by OpenPreviewLive JS --}
 <a
   href={@permalink}
+  target="_top"
   data-role="subject_timestamp"
   class="preview_activity_link subject_timestamp text-sm no-underline text-base-content/60"
 >

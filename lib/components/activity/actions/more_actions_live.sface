@@ -37,15 +37,15 @@
     {/if}
 
     <li>
-      <a
+      <LinkLive
         phx-hook="Copy"
         id={deterministic_dom_id(__MODULE__, id(@activity), "more_action_copy_url", @parent_id)}
-        href={@permalink || URIs.canonical_url(@object, preload_if_needed: false)}
+        to={@permalink || URIs.canonical_url(@object, preload_if_needed: false)}
         class="flex items-center justify-between gap-2 text-sm text-base-content"
       >
         <span class="flex-1 text-sm font-medium" data-role="label">{l("Copy link")}</span>
         <#Icon iconify="ph:copy-duotone" class="w-5 h-5 shrink-0" />
-      </a>
+      </LinkLive>
     </li>
 
     <#slot {@extra_items} />
@@ -220,13 +220,21 @@
 
       {#if !current_user_id(@__context__)}
         <li>
-          <a
-            href={"/remote_interaction?type=flag&name=#{l("this %{object}", object: e(@object_type_readable, l("object")))}&url=#{@permalink || URIs.canonical_url(@object)}"}
+          <LinkLive
+            to={maybe_apply(
+              Bonfire.UI.Me.RemoteInteractionLive,
+              :generate_url,
+              [
+                "flag",
+                l("this %{object}", object: @object_type_readable || l("object")),
+                @permalink || URIs.canonical_url(@object),
+                @__context__
+              ], fallback_return: "/login")}
             class="flex items-center w-full gap-2 text-sm text-base-content"
           >
             <!-- <#Icon solid="Flag" class="w-4 h-4 shrink-0" /> -->
             <span class="truncate ellipsis">{l("Flag this %{object}", object: e(@object_type_readable, l("object")))}</span>
-          </a>
+          </LinkLive>
         </li>
       {#else}
         <!-- <details>

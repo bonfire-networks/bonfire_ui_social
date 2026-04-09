@@ -1,7 +1,11 @@
 defmodule Bonfire.UI.Social.CommentsLive do
   use Bonfire.UI.Common.Web, {:surface_live_view, layout: {Bonfire.UI.Common.LayoutView, :iframe}}
 
-  on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.LoadCurrentUser]}
+  on_mount {LivePlugs,
+            [
+              Bonfire.UI.Me.LivePlugs.LoadCurrentUser,
+              Bonfire.UI.Me.LivePlugs.LoadCurrentUserFromEmbedToken
+            ]}
 
   def mount(params, _session, socket) do
     {:ok,
@@ -92,7 +96,12 @@ defmodule Bonfire.UI.Social.CommentsLive do
              params["to_circles"],
              update_existing: false
            ) do
-      handle_params(%{"id" => id}, nil, socket)
+      handle_params(
+        %{"id" => id},
+        nil,
+        socket
+        |> assign_global(:go_after_sign_in, uri)
+      )
     end
   end
 

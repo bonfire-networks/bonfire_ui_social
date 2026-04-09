@@ -1,8 +1,6 @@
 {#case e(assigns, :participants, [])}
   {#match participants when is_list(participants) and participants != []}
-    <Bonfire.UI.Common.WidgetBlockLive
-      widget_title={e(assigns, :widget_title, l("Participants"))}
-    >
+    <Bonfire.UI.Common.WidgetBlockLive widget_title={e(assigns, :widget_title, l("Participants"))}>
       <ul class="flex flex-col gap-3">
         {#for participant <- participants}
           <li>

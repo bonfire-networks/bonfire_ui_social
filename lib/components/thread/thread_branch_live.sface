@@ -93,8 +93,16 @@
                 >{l("Load %{count} more replies", count: extra_replies_count(@comment, @threaded_replies_count))}</span>
               </button>
             {#else}
-              <span class="btn btn-xs">
-                {extra_replies_count(@comment, @threaded_replies_count)} more replies (not shown)</span>
+              <LinkLive to={maybe_apply(
+              Bonfire.UI.Me.RemoteInteractionLive,
+              :generate_url,
+              [
+                l("read"),
+                l("replies"),
+                URIs.canonical_url(@comment),
+                @__context__
+              ], fallback_return: "/login")} class="btn btn-xs">
+                {l "%{count} more replies (not shown)", count: extra_replies_count(@comment, @threaded_replies_count))}</LinkLive>
             {/if}
           </div>
         {/if}

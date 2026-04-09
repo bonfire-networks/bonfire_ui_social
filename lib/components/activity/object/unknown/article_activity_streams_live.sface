@@ -27,7 +27,7 @@
           {#match nil}
           {#match tags}
             {#for tag <- tags}
-              <a href={e(tag, :href, "#")} class="relative z-10 rounded-full px-3 py-1.5 font-medium">{e(tag, :name, "")}</a>
+              <LinkLive to={e(tag, :href, "#")} class="relative z-10 rounded-full px-3 py-1.5 font-medium">{e(tag, :name, "")}</LinkLive>
             {/for}
         {/case}
       </div>

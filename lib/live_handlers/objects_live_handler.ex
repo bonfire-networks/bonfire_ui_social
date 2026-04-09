@@ -437,13 +437,19 @@ defmodule Bonfire.Social.Objects.LiveHandler do
               if current_user_id(socket) do
                 {:error, msg}
               else
+                url =
+                  maybe_apply(
+                    Bonfire.UI.Me.RemoteInteractionLive,
+                    :generate_url,
+                    ["read", thing, Bonfire.Common.URIs.canonical_url(id), socket],
+                    fallback_return: "/login"
+                  )
+
                 socket
                 |> assign_error(msg)
                 # |> set_go_after()
                 # |> redirect_to(path(:login))
-                |> redirect_to(
-                  "/remote_interaction?type=read&url=#{Bonfire.Common.URIs.canonical_url(id)}&name=#{thing}"
-                )
+                |> redirect_to(url)
               end
 
             _ ->

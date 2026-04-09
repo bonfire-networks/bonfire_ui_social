@@ -57,6 +57,7 @@
                 <li>
                   <a
                     href={"/post/#{id(@object)}/history/"}
+                    target="_top"
                     class="flex items-center gap-3 w-full text-base-content"
                   >
                     <#Icon

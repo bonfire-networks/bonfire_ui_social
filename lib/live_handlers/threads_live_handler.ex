@@ -481,17 +481,21 @@ defmodule Bonfire.Social.Threads.LiveHandler do
               )
 
             if participants != [] do
-              send(pid, {:assign, preview_sidebar_widgets: [
-                users: [
-                  secondary: [
-                    {Bonfire.UI.Social.WidgetParticipantsLive, [participants: participants]},
-                    {Bonfire.Tag.Web.WidgetTagsLive, []}
-                  ]
-                ],
-                guests: [
-                  secondary: nil
-                ]
-              ]})
+              send(
+                pid,
+                {:assign,
+                 preview_sidebar_widgets: [
+                   users: [
+                     secondary: [
+                       {Bonfire.UI.Social.WidgetParticipantsLive, [participants: participants]},
+                       {Bonfire.Tag.Web.WidgetTagsLive, []}
+                     ]
+                   ],
+                   guests: [
+                     secondary: nil
+                   ]
+                 ]}
+              )
             end
 
             send_thread_updates(
