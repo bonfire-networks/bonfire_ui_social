@@ -87,6 +87,8 @@ defmodule Bonfire.UI.Social.CommentsLive do
   end
 
   def handle_params(%{"media_uri" => uri} = params, _url, socket) when is_binary(uri) do
+    socket = assign_global(socket, :go, uri)
+
     # TODO: cache result
     with {:ok, %{id: id} = _media} <-
            Bonfire.Files.Media.get_or_add_media_by_uri(
@@ -96,12 +98,7 @@ defmodule Bonfire.UI.Social.CommentsLive do
              params["to_circles"],
              update_existing: false
            ) do
-      handle_params(
-        %{"id" => id},
-        nil,
-        socket
-        |> assign_global(:go_after_sign_in, uri)
-      )
+      handle_params(%{"id" => id}, nil, socket)
     end
   end
 
