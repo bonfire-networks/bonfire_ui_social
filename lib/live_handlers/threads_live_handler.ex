@@ -481,13 +481,16 @@ defmodule Bonfire.Social.Threads.LiveHandler do
               )
 
             if participants != [] do
+              reply_counts = Threads.reply_counts_per_subject(thread_id)
+
               send(
                 pid,
                 {:assign,
                  preview_sidebar_widgets: [
                    users: [
                      secondary: [
-                       {Bonfire.UI.Social.WidgetParticipantsLive, [participants: participants]},
+                       {Bonfire.UI.Social.WidgetParticipantsLive,
+                        [participants: participants, reply_counts: reply_counts]},
                        {Bonfire.Tag.Web.WidgetTagsLive, []}
                      ]
                    ],

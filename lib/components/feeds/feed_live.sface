@@ -179,7 +179,8 @@
                                 live_handler={Bonfire.Social.Feeds}
                                 page_info={@page_info}
                                 cursor={end_cursor ||
-                                  if query_with_deferred_join?, do: final_end_cursor || previous_end_cursor}
+                                  if query_with_deferred_join? and e(@feed_filters, :sort_by, nil) in [nil, :date_created],
+                                    do: final_end_cursor || previous_end_cursor}
                                 infinite_scroll={infinite_scroll}
                                 target={@myself}
                                 entry_count={@feed_count}

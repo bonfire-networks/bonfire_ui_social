@@ -15,9 +15,10 @@ TODO: use preloaded boundaries for can? when available
   <input name="object_id" type="hidden" value={id(@object)}>
 
   {#if @with_password_prompt}
-    <div class="text-base mt-5 font-medium">{l("Enter password to confirm")}</div>
+    <div class="p-3 rounded-lg bg-base-content/5 border border-base-content/10 mt-4">
+    <div class="text-sm font-medium">{l("Enter password to confirm")}</div>
     <label class="label">
-      <span class="label-text">{l("For security purposes please enter the password of your account")}</span>
+      <span class="label-text text-sm">{l("For security purposes please enter the password of your account")}</span>
     </label>
     <input
       name="password"
@@ -25,6 +26,7 @@ TODO: use preloaded boundaries for can? when available
       placeholder="Type here"
       class="input input-bordered w-full"
     />
+    </div>
   {/if}
 
   <:open_btn>
@@ -39,6 +41,7 @@ TODO: use preloaded boundaries for can? when available
   <:action_btns>
     <.button
       variant="danger"
+      type={if @form_opts != %{}, do: "submit", else: "button"}
       phx_click={@action || if @form_opts == %{}, do: "Bonfire.Social.Objects:delete"}
       phx_values={%{id: id(@object), redirect_after: @redirect_after}}
       loading_text={l("Deleting...")}

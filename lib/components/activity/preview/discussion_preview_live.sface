@@ -1,0 +1,33 @@
+  {#case if(e(@activity, :replied, :thread, :post_content, nil),
+        do: {e(@activity, :replied, :thread, nil), e(@activity, :replied, :thread, :replied, :nested_replies_count, 0) + e(@activity, :replied, :thread, :replied, :direct_replies_count, 0)},
+        else: {@object, @reply_count})}
+    {#match {display_object, reply_count}}
+      {#case e(display_object, :created, :creator, nil) || e(@activity, :subject, nil)}
+        {#match nil}
+        {#match creator}
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Social.Activity.SubjectLive)}
+            profile_name={e(creator, :profile, :name, nil)}
+            character_username={e(creator, :character, :username, nil)}
+            subject_id={id(creator)}
+            profile_media={Media.avatar_url(e(creator, :profile, nil) || creator)}
+            path={path(creator, [], preload_if_needed: false)}
+            date_ago={@date_ago}
+            permalink={@permalink}
+            parent_id={"dp_#{@activity_component_id}"}
+            activity_id={id(@activity)}
+            object_id={id(display_object)}
+            is_remote={@is_remote}
+          />
+          <Bonfire.UI.Social.Activity.NoteLive
+            object={display_object}
+            activity={@activity}
+            activity_component_id={@activity_component_id}
+            parent_id={"dp_#{@activity_component_id}"}
+          />
+          <div class="flex items-center gap-1.5 mt-1.5 badge badge-lg">
+            <#Icon iconify="ph:chat-circle-duotone" class="w-4 h-4" />
+            <span>{e(reply_count, 0)} {if e(reply_count, 0) == 1, do: l("reply"), else: l("replies")}</span>
+          </div>
+      {/case}
+  {/case}

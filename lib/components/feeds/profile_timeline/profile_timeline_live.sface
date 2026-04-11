@@ -33,6 +33,7 @@
       feed_title={@feed_title}
       loading={@loading}
       showing_within={@showing_within}
+      custom_preview={@custom_preview}
     >
       <:bottom_or_empty_feed>
         <a

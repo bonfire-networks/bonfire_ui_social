@@ -32,7 +32,7 @@
     </div>
 
     {!-- Right: controls slot + remote actions --}
-    <div class="flex items-center gap-2">
+    <div :if={socket_connected?(@__context__)} class="flex items-center gap-2">
       <#slot />
 
       {#case e(@object, :peered, :canonical_uri, nil) || @is_remote}

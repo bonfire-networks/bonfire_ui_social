@@ -725,7 +725,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       aria-label="user activity"
       tabIndex="0"
       class={[
-        "p-5 activity-padding activity relative flex flex-col gap-1 touch-pan-y #{@class}",
+        "activity relative flex flex-col gap-1 touch-pan-y p-5 activity-padding #{@class}",
         "activity-padding-compact": @showing_within == :thread && !@viewing_main_object,
         "hover:bg-primary hover:bg-opacity-5":
           @showing_within not in [:thread, :smart_input, :widget] && !@activity_inception,
