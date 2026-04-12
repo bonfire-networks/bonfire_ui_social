@@ -711,6 +711,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         else:
           if(
             !@viewing_main_object and
+              is_nil(@activity_inception) and
               @showing_within not in [:thread, :smart_input, :widget],
             do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"
           )}
