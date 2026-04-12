@@ -16,16 +16,16 @@ TODO: use preloaded boundaries for can? when available
 
   {#if @with_password_prompt}
     <div class="p-3 rounded-lg bg-base-content/5 border border-base-content/10 mt-4">
-    <div class="text-sm font-medium">{l("Enter password to confirm")}</div>
-    <label class="label">
-      <span class="label-text text-sm">{l("For security purposes please enter the password of your account")}</span>
-    </label>
-    <input
-      name="password"
-      type="password"
-      placeholder="Type here"
-      class="input input-bordered w-full"
-    />
+      <div class="text-sm font-medium">{l("Enter password to confirm")}</div>
+      <label class="label">
+        <span class="label-text text-sm">{l("For security purposes please enter the password of your account")}</span>
+      </label>
+      <input
+        name="password"
+        type="password"
+        placeholder="Type here"
+        class="input input-bordered w-full"
+      />
     </div>
   {/if}
 

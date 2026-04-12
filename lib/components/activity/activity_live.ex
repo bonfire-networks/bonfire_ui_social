@@ -741,106 +741,97 @@ defmodule Bonfire.UI.Social.ActivityLive do
             @showing_within != :smart_input and @viewing_main_object == false
       ]}
     >
-      {#if @custom_preview}
-        <StatelessComponent
-          permalink={@permalink}
-          reply_count={@reply_count}
-          date_ago={@date_ago}
-          object={@object}
-          activity={@activity}
-          activity_component_id={@activity_component_id}
-          is_remote={@is_remote}
-          module={maybe_component(@custom_preview, @__context__)}
-        />
-      {#else}
-        {#if @hide_activity != "all"}
-          {#if current_user_id(@__context__) && @showing_within != :smart_input}
-            {#case is_nil(@thread_id) or @thread_id == (@object_id || @activity_id)}
-              {#match top_of_thread?}
-                {#case not is_nil(@thread_id) and @thread_id == e(@reply_to, :object, :id, nil)}
-                  {#match reply_to_top_of_thread?}
-                    {!-- TODO: make the list of preview paths/components/views configurable/hookable, and derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") --}
-                    {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
-                      <Bonfire.UI.Common.OpenPreviewLive
-                        href={@permalink}
-                        parent_id={@activity_component_id}
-                        open_btn_text=""
-                        title_text={@thread_title || e(@object, :name, nil) || e(@object, :post_content, :name, nil) ||
-                          l("Discussion")}
-                        modal_assigns={[
-                          post_id:
-                            if(
-                              @object_type in [Bonfire.Data.Social.Post, :article] or
-                                String.starts_with?(@permalink || "", ["/post/"]),
-                              do: @thread_id || @object_id
-                            ),
-                          thread_id: @thread_id,
-                          object_id: @thread_id || @object_id,
-                          reply_id: @object_id,
-                          include_path_ids:
-                            e(
-                              e(@activity, :replied, nil) ||
-                                e(@object, :replied, nil),
-                              :path,
-                              []
-                            ) ++ [@object_id],
-                          # ^ tells the comments loader to include the ancestors of the object regardless of max depth
-                          current_url: @permalink,
-                          show: true,
-                          hide_actions: false,
-                          cw: false,
-                          autoplay:
-                            @autoplay ||
-                              Settings.get([Bonfire.UI.Social.Activity.MediaLive, :autoplay], nil, @__context__) != false,
-                          label: "",
-                          object:
-                            cond do
-                              top_of_thread? -> @object
-                              reply_to_top_of_thread? -> e(@reply_to, :object, nil)
-                              true -> nil
-                            end,
-                          activity:
-                            cond do
-                              top_of_thread? -> @activity
-                              reply_to_top_of_thread? -> e(@reply_to, :activity, nil)
-                              true -> nil
-                            end,
-                          replies:
-                            cond do
-                              top_of_thread? ->
-                                nil
+      {!-- Preview click trigger (hidden `.open_preview_link`) — rendered alongside
+           both the default activity content and any `@custom_preview`, so that
+           clicking the article opens the PreviewContentLive modal in either case. --}
+      {#if @hide_activity != "all" and not is_nil(current_user_id(@__context__)) and
+          is_nil(@activity_inception) and @showing_within not in [:smart_input, :thread, :widget]}
+        {#case is_nil(@thread_id) or @thread_id == (@object_id || @activity_id)}
+          {#match top_of_thread?}
+            {#case not is_nil(@thread_id) and @thread_id == e(@reply_to, :object, :id, nil)}
+              {#match reply_to_top_of_thread?}
+                {!-- TODO: make the list of preview paths/components/views configurable/hookable, and derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") --}
+                {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
+                  <Bonfire.UI.Common.OpenPreviewLive
+                    href={@permalink}
+                    parent_id={@activity_component_id}
+                    open_btn_text=""
+                    title_text={@thread_title || e(@object, :name, nil) || e(@object, :post_content, :name, nil) ||
+                      l("Discussion")}
+                    modal_assigns={[
+                      post_id:
+                        if(
+                          @object_type in [Bonfire.Data.Social.Post, :article] or
+                            String.starts_with?(@permalink || "", ["/post/"]),
+                          do: @thread_id || @object_id
+                        ),
+                      thread_id: @thread_id,
+                      object_id: @thread_id || @object_id,
+                      reply_id: @object_id,
+                      include_path_ids:
+                        e(
+                          e(@activity, :replied, nil) ||
+                            e(@object, :replied, nil),
+                          :path,
+                          []
+                        ) ++ [@object_id],
+                      # ^ tells the comments loader to include the ancestors of the object regardless of max depth
+                      current_url: @permalink,
+                      show: true,
+                      hide_actions: false,
+                      cw: false,
+                      autoplay:
+                        @autoplay ||
+                          Settings.get([Bonfire.UI.Social.Activity.MediaLive, :autoplay], nil, @__context__) != false,
+                      label: "",
+                      object:
+                        cond do
+                          top_of_thread? -> @object
+                          reply_to_top_of_thread? -> e(@reply_to, :object, nil)
+                          true -> nil
+                        end,
+                      activity:
+                        cond do
+                          top_of_thread? -> @activity
+                          reply_to_top_of_thread? -> e(@reply_to, :activity, nil)
+                          true -> nil
+                        end,
+                      replies:
+                        cond do
+                          top_of_thread? ->
+                            nil
 
-                              reply_to_top_of_thread? ->
-                                [%{id: "preview-comment", activity: Map.put(@activity, :object, @object)}]
+                          reply_to_top_of_thread? ->
+                            [%{id: "preview-comment", activity: Map.put(@activity, :object, @object)}]
 
-                              true ->
-                                [
+                          true ->
+                            [
+                              %{
+                                id: "preview-comment-reply_to",
+                                activity: Map.put(e(@reply_to, :activity, %{}), :object, e(@reply_to, :object, nil)),
+                                replies: [
                                   %{
-                                    id: "preview-comment-reply_to",
-                                    activity: Map.put(e(@reply_to, :activity, %{}), :object, e(@reply_to, :object, nil)),
-                                    replies: [
-                                      %{
-                                        id: "preview-comment-reply",
-                                        activity:
-                                          Map.put(if(is_map(@activity), do: @activity, else: %{}), :object, @object)
-                                      }
-                                    ]
+                                    id: "preview-comment-reply",
+                                    activity:
+                                      Map.put(if(is_map(@activity), do: @activity, else: %{}), :object, @object)
                                   }
                                 ]
-                            end,
-                          modal_component: Bonfire.UI.Social.ObjectThreadLive,
-                          modal_component_stateful?: !top_of_thread? and !reply_to_top_of_thread?,
-                          loaded: true,
-                          activity_inception: "preview",
-                          showing_within: :thread,
-                          check_object_boundary: !top_of_thread? and !reply_to_top_of_thread?
-                        ]}
-                        root_assigns={[
-                          page_title: l("Discussion")
-                        ]}
-                      />
-                    {#elseif String.starts_with?(@permalink || "", ["/@", "/profile/", "/user"])}
-                      {!-- <Bonfire.UI.Common.OpenPreviewLive
+                              }
+                            ]
+                        end,
+                      modal_component: Bonfire.UI.Social.ObjectThreadLive,
+                      modal_component_stateful?: !top_of_thread? and !reply_to_top_of_thread?,
+                      loaded: true,
+                      activity_inception: "preview",
+                      showing_within: :thread,
+                      check_object_boundary: !top_of_thread? and !reply_to_top_of_thread?
+                    ]}
+                    root_assigns={[
+                      page_title: l("Discussion")
+                    ]}
+                  />
+                {#elseif String.starts_with?(@permalink || "", ["/@", "/profile/", "/user"])}
+                  {!-- <Bonfire.UI.Common.OpenPreviewLive
               href={@permalink}
               parent_id={@activity_component_id}
               open_btn_text={l("View profile")}
@@ -856,30 +847,43 @@ defmodule Bonfire.UI.Social.ActivityLive do
               }
             />
              --}
-                    {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"]) and
-                        module_enabled?(Bonfire.UI.Coordination.TaskLive)}
-                      <Bonfire.UI.Common.OpenPreviewLive
-                        href={@permalink}
-                        parent_id={@activity_component_id}
-                        open_btn_text={l("View task")}
-                        title_text={e(@object, :name, nil) || l("Task")}
-                        modal_assigns={[
-                          id: @thread_id || @object_id,
-                          current_url: @permalink,
-                          modal_view: Bonfire.UI.Coordination.TaskLive,
-                          activity_inception: "preview",
-                          check_object_boundary: false,
-                          loaded: true
-                        ]}
-                        root_assigns={[
-                          page_title: l("Task")
-                        ]}
-                      />
-                    {/if}
-                {/case}
+                {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"]) and
+                    module_enabled?(Bonfire.UI.Coordination.TaskLive)}
+                  <Bonfire.UI.Common.OpenPreviewLive
+                    href={@permalink}
+                    parent_id={@activity_component_id}
+                    open_btn_text={l("View task")}
+                    title_text={e(@object, :name, nil) || l("Task")}
+                    modal_assigns={[
+                      id: @thread_id || @object_id,
+                      current_url: @permalink,
+                      modal_view: Bonfire.UI.Coordination.TaskLive,
+                      activity_inception: "preview",
+                      check_object_boundary: false,
+                      loaded: true
+                    ]}
+                    root_assigns={[
+                      page_title: l("Task")
+                    ]}
+                  />
+                {/if}
             {/case}
-          {/if}
+        {/case}
+      {/if}
 
+      {#if @custom_preview}
+        <StatelessComponent
+          permalink={@permalink}
+          reply_count={@reply_count}
+          date_ago={@date_ago}
+          object={@object}
+          activity={@activity}
+          activity_component_id={@activity_component_id}
+          is_remote={@is_remote}
+          module={maybe_component(@custom_preview, @__context__)}
+        />
+      {#else}
+        {#if @hide_activity != "all"}
           <form
             :if={!id(e(@activity, :seen, nil)) and not is_nil(@feed_id) and
               @showing_within in [:messages, :notifications] and

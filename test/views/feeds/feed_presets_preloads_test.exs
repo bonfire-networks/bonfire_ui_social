@@ -132,10 +132,19 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
   end
 
   defp verify_preloads_in_html(conn, preset, expected, object, activity) do
+    # Presets that use a custom_preview (e.g. DiscussionPreviewLive) render the thread root
+    # instead of the default activity + article.replied structure, so reply_to DOM assertions don't apply.
+    has_custom_preview? =
+      preset &&
+        (Application.get_env(:bonfire_social, Bonfire.Social.Feeds)[:feed_presets] || [])
+        |> Keyword.get(preset, %{})
+        |> Map.get(:assigns, [])
+        |> Keyword.get(:custom_preview)
+
     conn
     |> verify_verb(Enum.member?(expected, :with_verb), activity)
     |> verify_object(Enum.member?(expected, :with_object), object)
-    |> verify_reply_to(Enum.member?(expected, :with_reply_to), activity)
+    |> verify_reply_to(!has_custom_preview? and Enum.member?(expected, :with_reply_to), activity)
     |> verify_peered(Enum.member?(expected, :with_object_peered), activity, object)
     # |> verify_tags(Enum.member?(expected, :tags), object) # TODO: needs test data
     #  TODO: needs test data

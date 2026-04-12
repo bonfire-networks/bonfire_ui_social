@@ -121,14 +121,10 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
          %{alice: alice, account: account, total_posts: total_posts, limit: limit} do
       conn = conn(user: alice, account: account)
 
-      # Visit feed and set time limit to 1 day using the UI control
+      # Visit feed with time_limit=1 via URL param (the time range control is now inside the Filters modal, so URL param is a more stable way to set it in tests)
       conn
-      |> visit("/feed/local")
+      |> visit("/feed/local?time_limit=1")
       |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]")
-      # Select Last Day from dropdown
-      # |> click_button("All time")
-      |> click_link("Last Day")
-      |> wait_async()
       # Check that we only see posts from today (count should be less than total)
       # Today's post
       |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]", count: 1)
@@ -163,15 +159,11 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
          %{alice: alice, account: account, total_posts: total_posts, limit: limit} do
       conn = conn(user: alice, account: account)
 
-      # Visit feed and set time limit to 1 day and sort by likes using UI controls
+      # Visit feed with time_limit=1 via URL param (the time range control is now inside the Filters modal, so URL param is a more stable way to set it in tests)
       conn
-      |> visit("/feed/local")
+      |> visit("/feed/local?time_limit=1")
       |> assert_has_or_open_browser("[data-id=feed] article")
-      # Select Last Day from dropdown
-      # |> click_button("All time")
-      |> click_link("Last Day")
-      |> wait_async()
-      # Set sort to likes
+      # Set sort to likes via the inline sort dropdown (still rendered on the page)
       |> within("#order_dropdown_feed", fn session ->
         session
         |> click_link("Most liked")
