@@ -204,11 +204,21 @@
                             {@profile_name || @character_username}
                           {/if}
                         </LinkLive>
-                        {#case length(@subjects_more)}
-                          {#match 0}
-                          {#match n}
-                            {lp("and %{number} other", "and %{number} others", n, number: n)}
-                        {/case}
+                        {#if @subjects_more != []}
+                          <Bonfire.UI.Social.Activity.SubjectListModalLive
+                            id={deterministic_dom_id(__MODULE__, @activity_id || @subject_id, "subject_list_modal", @parent_id)}
+                            verb={@verb}
+                            main_profile_id={@profile_id}
+                            main_profile_name={@profile_name}
+                            main_character_username={@character_username}
+                            main_profile_media={@profile_media}
+                            subjects_more={@subjects_more}
+                            trigger_text={lp("and %{number} other", "and %{number} others", length(@subjects_more),
+                              number: length(@subjects_more)
+                            )}
+                            parent_id={@parent_id}
+                          />
+                        {/if}
                         {if @verb == "React", do: l("reacted to your activity"), else: l("liked your activity")}
                       </div>
                     </div>
@@ -303,11 +313,21 @@
                         {@profile_name || @character_username}
                       {/if}
                     </LinkLive>
-                    {#case length(@subjects_more)}
-                      {#match 0}
-                      {#match n}
-                        {lp("and %{number} other", "and %{number} others", n, number: n)}
-                    {/case}
+                    {#if @subjects_more != []}
+                      <Bonfire.UI.Social.Activity.SubjectListModalLive
+                        id={deterministic_dom_id(__MODULE__, @activity_id || @subject_id, "subject_list_modal", @parent_id)}
+                        verb={@verb}
+                        main_profile_id={@profile_id}
+                        main_profile_name={@profile_name}
+                        main_character_username={@character_username}
+                        main_profile_media={@profile_media}
+                        subjects_more={@subjects_more}
+                        trigger_text={lp("and %{number} other", "and %{number} others", length(@subjects_more),
+                          number: length(@subjects_more)
+                        )}
+                        parent_id={@parent_id}
+                      />
+                    {/if}
                     {raw(@verb_display)} {l(" your activity")}
                   </div>
                 </div>
@@ -537,11 +557,21 @@
                         {@profile_name || @character_username}
                       {/if}
                     </LinkLive>
-                    {#case length(@subjects_more)}
-                      {#match 0}
-                      {#match n}
-                        {lp("and %{number} other", "and %{number} others", n, number: n)}
-                    {/case}
+                    {#if @subjects_more != []}
+                      <Bonfire.UI.Social.Activity.SubjectListModalLive
+                        id={deterministic_dom_id(__MODULE__, @activity_id || @subject_id, "subject_list_modal", @parent_id)}
+                        verb={@verb}
+                        main_profile_id={@profile_id}
+                        main_profile_name={@profile_name}
+                        main_character_username={@character_username}
+                        main_profile_media={@profile_media}
+                        subjects_more={@subjects_more}
+                        trigger_text={lp("and %{number} other", "and %{number} others", length(@subjects_more),
+                          number: length(@subjects_more)
+                        )}
+                        parent_id={@parent_id}
+                      />
+                    {/if}
                     {if @verb == "React", do: l("reacted to this activity"), else: l("liked this activity")}
                   </div>
               {/case}
@@ -621,11 +651,21 @@
                   {/if}
                 </LinkLive>
 
-                {#case length(@subjects_more)}
-                  {#match 0}
-                  {#match n}
-                    {lp("and %{number} other", "and %{number} others", n, number: n)}
-                {/case}
+                {#if @subjects_more != []}
+                  <Bonfire.UI.Social.Activity.SubjectListModalLive
+                    id={deterministic_dom_id(__MODULE__, @activity_id || @subject_id, "subject_list_modal", @parent_id)}
+                    verb={@verb}
+                    main_profile_id={@profile_id}
+                    main_profile_name={@profile_name}
+                    main_character_username={@character_username}
+                    main_profile_media={@profile_media}
+                    subjects_more={@subjects_more}
+                    trigger_text={lp("and %{number} other", "and %{number} others", length(@subjects_more),
+                      number: length(@subjects_more)
+                    )}
+                    parent_id={@parent_id}
+                  />
+                {/if}
 
                 {raw(@verb_display)}
               </div>
@@ -665,7 +705,7 @@
               </div>
             </div>
           </div>
-          <div :if={@thread_title} class="">
+          <div :if={@thread_title} class="w-full">
             <div class="relative w-full flex-1 text-sm text-base-content/90 flex items-baseline gap-1 alert alert-warning alert-soft alert-sm pl-8">
               <#Icon
                 iconify="mingcute:quote-left-fill"

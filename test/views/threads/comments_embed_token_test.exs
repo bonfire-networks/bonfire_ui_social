@@ -81,4 +81,55 @@ defmodule Bonfire.UI.Social.CommentsEmbedTokenTest do
       refute has_element?(view, "#inline-reply-portal")
     end
   end
+
+  describe "HTTP response for token-authenticated iframe" do
+    # The iframe HTML must load bonfire_live.js so the LiveView client can
+    # construct a socket — cross-origin iframes can't rely on the session
+    # cookie to signal authentication. (The CSRF meta tag is always rendered
+    # by the root layout, so we only assert on which JS bundle loads.)
+
+    setup %{user: user} do
+      {:ok, post} =
+        Bonfire.Posts.publish(
+          current_user: user,
+          post_attrs: %{post_content: %{html_body: "test post"}},
+          boundary: "public"
+        )
+
+      {:ok, post: post}
+    end
+
+    test "with a valid embed token: live socket script is enabled",
+         %{user: user, post: post} do
+      token = LoadCurrentUserFromEmbedToken.sign(@endpoint, user.id)
+
+      html =
+        conn()
+        |> get("/comments/embed/#{post.id}?bonfire_embed_token=#{token}")
+        |> html_response(200)
+
+      assert html =~ ~s(src='/assets/bonfire_live.js)
+      refute html =~ ~s(data-live-socket="false")
+    end
+
+    test "without a token: live socket script is disabled", %{post: post} do
+      html =
+        conn()
+        |> get("/comments/embed/#{post.id}")
+        |> html_response(200)
+
+      assert html =~ ~s(src='/assets/bonfire_basic.js)
+      assert html =~ ~s(data-live-socket="false")
+    end
+
+    test "with an invalid token: live socket script is disabled", %{post: post} do
+      html =
+        conn()
+        |> get("/comments/embed/#{post.id}?bonfire_embed_token=badtoken")
+        |> html_response(200)
+
+      assert html =~ ~s(src='/assets/bonfire_basic.js)
+      assert html =~ ~s(data-live-socket="false")
+    end
+  end
 end

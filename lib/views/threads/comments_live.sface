@@ -1,5 +1,5 @@
 <div
-  class="bonfire-wrapper"
+  class=""
   data-theme={@embed_theme || Bonfire.UI.Common.ThemeHelper.current_theme(assigns)}
 >
   {#if @thread_id}
@@ -22,7 +22,8 @@
       replies={@replies}
       threaded_replies={@threaded_replies}
       page_info={@page_info}
-      showing_within={@showing_within || :thread}
+      showing_within={:thread}
+      viewing_main_object={false}
       hide_thread_stats={@hide_thread_stats}
       main_object_component_id={@main_object_component_id}
     />

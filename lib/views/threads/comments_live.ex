@@ -38,7 +38,8 @@ defmodule Bonfire.UI.Social.CommentsLive do
              assigns(socket)[:__context__]
            ) || :nested,
        loading: false
-     )}
+     )
+     |> assign_global(:go, e(params, "embed_parent", nil))}
   end
 
   def handle_params(%{"id" => "comment_" <> comment_id} = _params, _url, socket)
@@ -87,7 +88,7 @@ defmodule Bonfire.UI.Social.CommentsLive do
   end
 
   def handle_params(%{"media_uri" => uri} = params, _url, socket) when is_binary(uri) do
-    socket = assign_global(socket, :go, uri)
+    socket = assign_global(socket, :go, e(params, "embed_parent", nil) || uri)
 
     # TODO: cache result
     with {:ok, %{id: id} = _media} <-

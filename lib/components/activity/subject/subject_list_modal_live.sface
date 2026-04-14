@@ -1,0 +1,68 @@
+<button
+  type="button"
+  data-role="open_subject_list"
+  class={@trigger_class}
+  onclick={"document.getElementById('#{@id}').showModal()"}
+>{@trigger_text}</button>
+<dialog id={@id} class="modal">
+  <div class="modal-box">
+    <h3 class="text-lg font-bold mb-4">{title_for_verb(@verb)}</h3>
+    <ul data-role="subject_list" class="flex flex-col gap-3 py-2">
+      <li :if={@main_profile_id} class="flex items-center gap-3">
+        <LinkLive
+          to={"/users/" <> (@main_character_username || "")}
+          parent_id={deterministic_dom_id(__MODULE__, @main_profile_id, "main", @parent_id)}
+          class="flex items-center gap-3 link link-hover w-full"
+        >
+          <Bonfire.UI.Common.AvatarLive
+            parent_id={deterministic_dom_id(__MODULE__, @main_profile_id, "main-av", @parent_id)}
+            user_id={@main_profile_id}
+            src={@main_profile_media}
+            title={@main_profile_name || @main_character_username}
+            class="h-8 w-8 rounded-full"
+            wrapper_class="flex-shrink-0"
+          />
+          <div class="flex flex-col">
+            <span class="text-sm font-semibold">{@main_profile_name || @main_character_username}</span>
+            <span :if={@main_character_username} class="text-xs text-base-content/60">@{@main_character_username}</span>
+          </div>
+        </LinkLive>
+      </li>
+
+      {#for {subject, idx} <- Enum.with_index(@subjects_more)}
+        <li class="flex items-center gap-3">
+          <LinkLive
+            to={"/users/" <> e(subject, :character, :username, "")}
+            parent_id={deterministic_dom_id(__MODULE__, id(subject) || idx, "more", @parent_id)}
+            class="flex items-center gap-3 link link-hover w-full"
+          >
+            <Bonfire.UI.Common.AvatarLive
+              parent_id={deterministic_dom_id(__MODULE__, id(subject) || idx, "more-av", @parent_id)}
+              user_id={id(subject)}
+              src={e(subject, :profile, :icon, nil)}
+              title={e(subject, :profile, :name, nil) || e(subject, :character, :username, nil)}
+              class="h-8 w-8 rounded-full"
+              wrapper_class="flex-shrink-0"
+            />
+            <div class="flex flex-col">
+              <span class="text-sm font-semibold">
+                {e(subject, :profile, :name, nil) || e(subject, :character, :username, l("User"))}
+              </span>
+              <span :if={e(subject, :character, :username, nil)} class="text-xs text-base-content/60">
+                @{e(subject, :character, :username, nil)}
+              </span>
+            </div>
+          </LinkLive>
+        </li>
+      {/for}
+    </ul>
+    <div class="modal-action">
+      <form method="dialog">
+        <button class="btn btn-sm btn-ghost">{l("Close")}</button>
+      </form>
+    </div>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>{l("Close")}</button>
+  </form>
+</dialog>

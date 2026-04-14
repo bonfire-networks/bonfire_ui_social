@@ -51,7 +51,7 @@
       </div>
 
       {#if @scope != :instance_wide and @type != :blocks}
-        <form data-scope="set_import" phx-change="Bonfire.Common.Settings:set">
+        <form class="px-4 pt-4" data-scope="set_import" phx-change="Bonfire.Common.Settings:set">
           <Bonfire.UI.Common.SettingsToggleLive
             name={l("Fetch replies on import")}
             description={l("Automatically fetch replies to my imported posts.")}
