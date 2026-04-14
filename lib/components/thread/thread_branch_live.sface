@@ -9,7 +9,7 @@
 >
   <div class="relative flex-1 w-full">
     <div
-      :if={@visual_level > 1 && @show_thread_lines}
+      :if={@visual_level > @parent_visual_level && @show_thread_lines}
       style={"left: #{20 + (@parent_visual_level - 1) * 34}px; width: 38px; height: 28px; border-bottom-left-radius: 12px"}
       class="absolute top-0 border-l border-b border-base-content/20 z-30 pointer-events-none"
     />

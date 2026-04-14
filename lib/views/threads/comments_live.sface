@@ -1,7 +1,4 @@
-<div
-  class=""
-  data-theme={@embed_theme || Bonfire.UI.Common.ThemeHelper.current_theme(assigns)}
->
+<div class="" data-theme={@embed_theme || Bonfire.UI.Common.ThemeHelper.current_theme(assigns)}>
   {#if @thread_id}
     {!-- Default reply slot at top: composer lands here when replying to the root post --}
     <div id={"reply-slot-#{@thread_id}"} />
