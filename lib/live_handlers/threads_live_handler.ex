@@ -363,7 +363,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
                e(published_in, :profile, :name, nil) || e(published_in, :named, :name, nil) ||
                  e(published_in, :name, nil)},
             else:
-              Bonfire.Boundaries.preset_boundary_tuple_from_acl(
+              Bonfire.Boundaries.Presets.preset_boundary_tuple_from_acl(
                 object_boundary,
                 object_type
               )
