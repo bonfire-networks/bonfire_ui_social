@@ -1,0 +1,124 @@
+<div
+  data-id="activity_actions_embed"
+  data-rendered={@showing_within}
+  class="feed_actions order-last"
+>
+  <div class="flex feed-clickable flex-1 w-full md:w-auto items-center justify-between md:justify-end gap-4">
+    <StatelessComponent
+      module={maybe_component(Bonfire.UI.Social.Activity.ReplyLive, @__context__)}
+      object_id={id(@object)}
+      object_type={@object_type}
+      object_boundary={@object_boundary}
+      permalink={@permalink}
+      reply_count={@reply_count}
+      showing_within={@showing_within}
+      hide_reply={@hide_reply}
+      activity_component_id={@activity_component_id}
+      event_target={@event_target}
+      class="!flex btn lg:tooltip lg:tooltip-bottom btn-sm btn-ghost btn-circle group hover:bg-primary/10 transition-transform duration-150 ease-out hover:scale-105 active:scale-95 hover:-translate-y-0.5"
+    />
+
+    <StatefulComponent
+      module={maybe_component(Bonfire.UI.Reactions.LikeActionLive, @__context__)}
+      id={ComponentID.new(
+        Bonfire.UI.Reactions.LikeActionLive,
+        id(@object),
+        @activity_component_id || id(@activity)
+      )}
+      object_id={id(@object)}
+      creator={@creator}
+      object_boundary={@object_boundary}
+      like_count={e(
+        Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object),
+        :like_count,
+        :object_count,
+        nil
+      )}
+    />
+
+    <div
+      data-id="embed_more_menu"
+      phx-hook="Tooltip"
+      data-position="bottom-end"
+      id={deterministic_dom_id(__MODULE__, id(@activity), "embed_more_menu", @parent_id)}
+      aria-haspopup="true"
+      class="feed_activity relative"
+    >
+      <button
+        tabindex="0"
+        class="tooltip-button btn btn-ghost group hover:bg-primary/10 btn-circle btn-sm"
+      >
+        <#Icon
+          iconify="ph:dots-three-outline-vertical-duotone"
+          class="w-[18px] h-[18px] group-hover:text-primary md:w-4 md:h-4 text-base-content/60"
+        />
+        <span class="sr-only">{l("More actions")}</span>
+      </button>
+      <ul
+        tabindex="0"
+        class="tooltip z-tooltip menu bg-base-100 rounded-box w-64 absolute top-0 left-0 hidden tooltip-animated"
+        role="menu"
+        id={deterministic_dom_id(__MODULE__, id(@activity), "embed_more_menu_content", @parent_id)}
+        aria-orientation="vertical"
+      >
+        <li>
+          <button
+            type="button"
+            phx-hook="Copy"
+            id={deterministic_dom_id(__MODULE__, id(@activity), "embed_copy_url", @parent_id)}
+            data-clipboard-text={@permalink || URIs.canonical_url(@object, preload_if_needed: false)}
+            class="flex items-center justify-between gap-2 text-sm text-base-content w-full"
+          >
+            <span class="flex-1 text-sm font-medium text-left" data-role="label">{l("Copy link")}</span>
+            <#Icon iconify="ph:copy-duotone" class="w-5 h-5 shrink-0" />
+          </button>
+        </li>
+
+        {#if current_user_id(@__context__) && current_user_id(@__context__) != @creator_id &&
+            module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}
+          <li data-role="flag_object">
+            <button
+              type="button"
+              phx-click="Bonfire.Social.Threads:select_inline_action"
+              phx-value-kind="report"
+              phx-value-target_slot_id={id(@object)}
+              phx-value-object_id={id(@object)}
+              phx-value-object_type={e(@object_type_readable, l("object"))}
+              phx-value-object_label={e(@object_type_readable, l("object"))}
+              phx-value-is_remote={to_string(
+                @is_remote ||
+                  not is_nil(e(@object, :peered, :canonical_uri, nil))
+              )}
+              phx-value-permalink={@permalink}
+              class="flex items-center justify-between gap-2 text-sm text-base-content w-full"
+            >
+              <span class="flex-1 text-sm font-medium text-left" data-role="label">
+                {l("Report this %{object}", object: e(@object_type_readable, l("object")))}
+              </span>
+              <#Icon iconify="ph:flag-duotone" class="w-5 h-5 shrink-0" />
+            </button>
+          </li>
+        {/if}
+
+        {#if @creator_id && current_user_id(@__context__) != @creator_id}
+          <li data-role="block_user">
+            <button
+              type="button"
+              phx-click="Bonfire.Social.Threads:select_inline_action"
+              phx-value-kind="block"
+              phx-value-target_slot_id={id(@object)}
+              phx-value-object_id={@creator_id}
+              phx-value-object_label={l("this user")}
+              class="flex items-center justify-between gap-2 text-sm text-base-content w-full"
+            >
+              <span class="flex-1 text-sm font-medium text-left" data-role="label">
+                {l("Block this user")}
+              </span>
+              <#Icon iconify="ph:prohibit-duotone" class="w-5 h-5 shrink-0" />
+            </button>
+          </li>
+        {/if}
+      </ul>
+    </div>
+  </div>
+</div>

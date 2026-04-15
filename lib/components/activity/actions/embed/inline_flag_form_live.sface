@@ -1,0 +1,66 @@
+<div class="rounded-box border border-base-content/10 bg-base-200 p-4 mt-2">
+  <form phx-submit="Bonfire.Social.Threads:inline_flag" class="flex flex-col gap-3">
+    <div class="flex items-start justify-between gap-3">
+      <h3 class="font-semibold text-sm text-base-content">
+        {l("Report %{user_or_thing}", user_or_thing: @object_label || @object_type || l("this"))}
+      </h3>
+      <button
+        type="button"
+        phx-click="Bonfire.Social.Threads:clear_inline_action"
+        aria-label={l("Close")}
+        class="btn btn-ghost btn-xs btn-circle"
+      >
+        <#Icon iconify="ph:x" class="w-4 h-4" />
+      </button>
+    </div>
+
+    <p class="text-xs text-base-content/70">
+      {l(
+        "This will go into a queue for moderators to review. They may get in touch with you and/or the author for clarification before taking action."
+      )}
+    </p>
+
+    <label for="inline-comment-flag" class="sr-only">{l("Add a comment for the flag")}</label>
+    <textarea
+      id="inline-comment-flag"
+      name="comment"
+      class="textarea textarea-bordered textarea-sm w-full h-[7rem] leading-[1.5]"
+      placeholder={l(
+        "Please write a small explanation for the moderators (what boundaries were broken, how it is harming you or others, what intervention you're requesting)..."
+      )}
+    />
+
+    <div :if={@is_remote} class="form-control">
+      <label class="label cursor-pointer justify-start gap-2 items-start p-0">
+        <input
+          type="checkbox"
+          name="forward"
+          value="true"
+          class="checkbox checkbox-xs mt-0.5 shrink-0"
+          checked={Settings.get(
+            [Bonfire.Social.Flags, :forward_by_default],
+            false,
+            @__context__
+          )}
+        />
+        <span class="text-xs text-base-content/80">{l("Forward to remote instance moderators")}</span>
+      </label>
+    </div>
+
+    <input name="object_id" value={@object_id} type="hidden">
+    <input name="type" value={@object_type} type="hidden">
+
+    <div class="flex justify-end gap-2">
+      <button
+        type="button"
+        phx-click="Bonfire.Social.Threads:clear_inline_action"
+        class="btn btn-sm btn-ghost"
+      >
+        {l("Cancel")}
+      </button>
+      <button data-role="submit_inline_flag" type="submit" class="btn btn-sm btn-warning">
+        {l("Send report")}
+      </button>
+    </div>
+  </form>
+</div>

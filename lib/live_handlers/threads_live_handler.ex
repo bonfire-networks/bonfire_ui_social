@@ -170,6 +170,56 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     )
   end
 
+  def handle_event("select_inline_action", %{"kind" => kind} = params, socket)
+      when kind in ["report", "block"] do
+    kind_atom = if(kind == "report", do: :report, else: :block)
+
+    send_self(
+      inline_action_kind: kind_atom,
+      inline_action_target_slot_id: params["target_slot_id"],
+      inline_action_object_id: params["object_id"],
+      inline_action_object_type: params["object_type"],
+      inline_action_object_label: params["object_label"],
+      inline_action_is_remote: params["is_remote"] == "true",
+      inline_action_permalink: params["permalink"]
+    )
+
+    {:noreply, socket}
+  end
+
+  def handle_event("clear_inline_action", _params, socket) do
+    send_self(clear_inline_action_assigns())
+    {:noreply, socket}
+  end
+
+  def handle_event("inline_flag", params, socket) do
+    with {:noreply, socket} <-
+           Bonfire.Social.Flags.LiveHandler.handle_event("flag", params, socket) do
+      send_self(clear_inline_action_assigns())
+      {:noreply, socket}
+    end
+  end
+
+  def handle_event("inline_block", params, socket) do
+    with {:noreply, socket} <-
+           Bonfire.Boundaries.Blocks.LiveHandler.handle_event("block", params, socket) do
+      send_self(clear_inline_action_assigns())
+      {:noreply, socket}
+    end
+  end
+
+  defp clear_inline_action_assigns do
+    [
+      inline_action_kind: nil,
+      inline_action_target_slot_id: nil,
+      inline_action_object_id: nil,
+      inline_action_object_type: nil,
+      inline_action_object_label: nil,
+      inline_action_is_remote: false,
+      inline_action_permalink: nil
+    ]
+  end
+
   def handle_event(
         "list_participants",
         _attrs,
@@ -392,7 +442,10 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
       {:noreply,
        socket
-       |> maybe_push_event("mention_suggestions", %{text: assigns[:mention_text] || ""})}
+       |> maybe_push_event("mention_suggestions", %{text: assigns[:mention_text] || ""})
+       |> Phoenix.LiveView.push_event("inline_composer:expand", %{
+         dom_id: to_string(Bonfire.UI.Common.SmartInputInlineLive.embed_reply_dom_id())
+       })}
     else
       false -> {:noreply, assign_error(socket, l("Sorry, you cannot reply to this"))}
       _ -> {:noreply, socket}

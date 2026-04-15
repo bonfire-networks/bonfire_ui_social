@@ -31,7 +31,7 @@
       "margin-compact":
         (@__context__[:ui_compact] && !@viewing_main_object) ||
           @showing_within in [:smart_input, :quote_preview] ||
-          (@showing_within == :thread && !@viewing_main_object)
+          (@showing_within in [:thread, :thread_embed] && !@viewing_main_object)
     ]}
     to={@path}
     label={e(@character_username, "") <> " profile"}
@@ -48,7 +48,7 @@
         "avatar-compact":
           @__context__[:ui_compact] ||
             @showing_within in [:smart_input, :quote_preview] ||
-            (@showing_within == :thread && !@viewing_main_object)
+            (@showing_within in [:thread, :thread_embed] && !@viewing_main_object)
       ]}
     />
   </LinkLive>

@@ -9,7 +9,7 @@
 >
   <div class="relative flex-1 w-full">
     <div
-      :if={@visual_level > @parent_visual_level && @show_thread_lines}
+      :if={@parent_visual_level >= 1 && @visual_level > @parent_visual_level && @show_thread_lines}
       style={"left: #{20 + (@parent_visual_level - 1) * 34}px; width: 38px; height: 28px; border-bottom-left-radius: 12px"}
       class="absolute top-0 border-l border-b border-base-content/20 z-30 pointer-events-none"
     />
@@ -76,7 +76,18 @@
     </div>
 
     {!-- Reply slot for portal teleport (used by CommentsLive embed) --}
-    <div :if={@showing_within == :thread_embed} id={"reply-slot-#{id(@comment)}"} />
+    <div
+      :if={@showing_within == :thread_embed}
+      id={"reply-slot-#{id(@comment)}"}
+      class="px-4 relative z-50"
+    />
+
+    {!-- Inline action slot for portal teleport (used by CommentsLive embed for report/block) --}
+    <div
+      :if={@showing_within == :thread_embed}
+      id={"action-slot-#{id(@comment)}"}
+      class="px-4 relative z-50"
+    />
 
     {#if @thread_mode != :flat}
       <div class="relative">

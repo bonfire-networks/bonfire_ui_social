@@ -727,9 +727,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
       tabIndex="0"
       class={[
         "activity relative flex flex-col gap-1 touch-pan-y p-5 activity-padding #{@class}",
-        "activity-padding-compact": @showing_within == :thread && !@viewing_main_object,
+        "activity-padding-compact":
+          @showing_within in [:thread, :thread_embed] && !@viewing_main_object,
         "hover:bg-primary hover:bg-opacity-5":
-          @showing_within not in [:thread, :smart_input, :widget] && !@activity_inception,
+          @showing_within not in [:thread, :thread_embed, :smart_input, :widget] && !@activity_inception,
         "replied !p-0 mb-8":
           @activity_inception &&
             @showing_within not in [:smart_input, :thread, :quote_preview, :quote_post, :nested_preview],

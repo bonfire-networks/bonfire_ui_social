@@ -432,6 +432,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def maybe_subscribe(socket) do
     case e(assigns(socket), :feed_ids, nil) |> Enums.filter_empty(nil) ||
+           e(assigns(socket), :feed_filters, :feed_ids, nil) |> Enums.filter_empty(nil) ||
            e(assigns(socket), :feed_id, nil) do
       nil ->
         debug("no feed_id known, not subscribing to live updates")
@@ -463,12 +464,8 @@ defmodule Bonfire.UI.Social.FeedLive do
     already_pubsub_subscribed = e(assigns(socket), :feed_pubsub_subscribed, nil)
 
     if already_pubsub_subscribed == feed_id do
-      warn(already_pubsub_subscribed, "already subscribed to this via pubsub")
-
       socket
     else
-      debug(feed_id, "live subscribing to")
-
       PubSub.subscribe(feed_id, socket)
 
       socket
@@ -477,7 +474,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   defp do_maybe_subscribe(socket, feed_id) do
-    debug(feed_id, "feed_id(s) not recognised, not subscribing to live updates")
+    debug(feed_id, "feed_id(s) not recognised, NOT subscribing")
     socket
   end
 

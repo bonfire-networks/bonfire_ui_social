@@ -285,10 +285,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def handle_info({:new_activity, data}, socket) do
-    feed_ids =
-      e(data, :feed_ids, nil)
-
-    # |> debug("received new_activity for these feed ids")
+    feed_ids = e(data, :feed_ids, nil)
 
     activity =
       e(data, :activity, nil)
@@ -303,7 +300,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         Bonfire.Common.Needles.exists?([id: e(activity, :object, :id, nil) || id(activity)],
           current_user: current_user
         )
-        |> debug("checked boundary upon receiving a LivePush - permitted?")
 
     if permitted? && is_list(feed_ids) do
       my_home_feed_ids = Bonfire.Social.Feeds.my_home_feed_ids(current_user)
@@ -316,8 +312,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         else
           feed_ids
         end
-
-      debug(feed_ids, "send_update to feeds")
 
       send_feed_updates(nil, feed_ids, [new_activity: activity], Bonfire.UI.Social.FeedLive)
     else
@@ -355,6 +349,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       target: target
     )
     |> Bonfire.UI.Common.SmartInput.LiveHandler.maximize()
+
+    # NOTE: inline_expand for the embed composer is dispatched server-side
+    # after the portal teleports (see threads_live_handler.ex :thread_embed),
+    # to avoid expanding the composer before it moves — which would glitch.
   end
 
   defp send_feed_updates(pid \\ nil, feed_ids, assigns, component \\ Bonfire.UI.Social.FeedLive)
@@ -740,12 +738,45 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       Keyword.merge(feed_default_assigns(feed_name, socket), loading: show_loader)
       |> debug("start by setting feed_default_assigns + feed_filter_assigns")
 
+    # Preserve caller-provided feed_ids when a preset name is also passed,
+    # and alias the component under those feed_ids so `send_feed_updates`
+    # (which dispatches off feed_ids broadcast by LivePush) can find it.
+    caller_feed_ids = extract_feed_ids(filters_or_custom_query_or_feed_id_or_ids)
+    assigns = merge_caller_feed_ids(assigns, caller_feed_ids)
+
+    if caller_feed_ids != [] and assigns[:feed_component_id] do
+      ComponentID.register_alias(
+        Bonfire.UI.Social.FeedLive,
+        caller_feed_ids,
+        assigns[:feed_component_id]
+      )
+    end
+
     feed_assigns_maybe_async_load(
       {feed_name, filters_or_custom_query_or_feed_id_or_ids},
       assigns,
       socket,
       reset_stream
     )
+  end
+
+  defp extract_feed_ids(filters) do
+    e(filters, :feed_ids, nil)
+    |> List.wrap()
+    |> Enum.filter(&is_binary/1)
+  end
+
+  defp merge_caller_feed_ids(assigns, []), do: assigns
+
+  defp merge_caller_feed_ids(assigns, caller_feed_ids) do
+    merged_filters =
+      (assigns[:feed_filters] || %{})
+      |> Map.put(:feed_ids, caller_feed_ids)
+
+    assigns
+    |> Keyword.put(:feed_ids, caller_feed_ids)
+    |> Keyword.put(:feed_id, List.first(caller_feed_ids))
+    |> Keyword.put(:feed_filters, merged_filters)
   end
 
   def feed_assigns_maybe_async(feed_name, socket, show_loader, reset_stream) do

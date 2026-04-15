@@ -1,7 +1,19 @@
 <div class="" data-theme={@embed_theme || Bonfire.UI.Common.ThemeHelper.current_theme(assigns)}>
   {#if @thread_id}
-    {!-- Default reply slot at top: composer lands here when replying to the root post --}
-    <div id={"reply-slot-#{@thread_id}"} />
+    {!-- Default reply slot at top: composer lands here when replying to the root post.
+         For guests (no live socket), portal teleportation can't run, so render the
+         composer inline here instead of via portal. --}
+    <div class="" id={"reply-slot-#{@thread_id}"}>
+      {!-- Guest fallback (twin of the portal composer below — keep props in sync) --}
+      <StatefulComponent
+        :if={!current_user_id(@__context__)}
+        module={maybe_component(Bonfire.UI.Common.SmartInputInlineLive, @__context__)}
+        id={Bonfire.UI.Common.SmartInputInlineLive.embed_reply_dom_id()}
+        reply_to_id={@thread_id}
+        context_id={@thread_id}
+        showing_within={:thread_embed}
+      />
+    </div>
 
     <StatefulComponent
       module={maybe_component(Bonfire.UI.Social.ThreadLive)}
@@ -19,7 +31,7 @@
       replies={@replies}
       threaded_replies={@threaded_replies}
       page_info={@page_info}
-      showing_within={:thread}
+      showing_within={@showing_within || :thread}
       viewing_main_object={false}
       hide_thread_stats={@hide_thread_stats}
       main_object_component_id={@main_object_component_id}
@@ -31,13 +43,39 @@
       id="inline-reply-portal"
       target={"#reply-slot-#{@reply_to_id || @thread_id}"}
     >
+      {!-- Logged-in composer (twin of the guest fallback above — keep props in sync) --}
       <StatefulComponent
         module={maybe_component(Bonfire.UI.Common.SmartInputInlineLive, @__context__)}
-        id={:inline_reply}
-        reply_to_id={@reply_to_id || @thread_id}
+        id={Bonfire.UI.Common.SmartInputInlineLive.embed_reply_dom_id()}
+        reply_to_id={@reply_to_id}
         context_id={@thread_id}
         showing_within={:thread_embed}
       />
+    </.portal>
+
+    {!-- Portal teleports inline report/block forms to the active activity's action slot --}
+    <.portal
+      :if={@inline_action_kind && @inline_action_target_slot_id}
+      id="inline-action-portal"
+      target={"#action-slot-#{@inline_action_target_slot_id}"}
+    >
+      {#case @inline_action_kind}
+        {#match :report}
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Social.Activity.InlineFlagFormLive, @__context__)}
+            object_id={@inline_action_object_id}
+            object_type={@inline_action_object_type}
+            object_label={@inline_action_object_label}
+            is_remote={@inline_action_is_remote}
+          />
+        {#match :block}
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Social.Activity.InlineBlockFormLive, @__context__)}
+            object_id={@inline_action_object_id}
+            object_label={@inline_action_object_label}
+          />
+        {#match _}
+      {/case}
     </.portal>
   {#else}
     {l("No comments possible here.")}

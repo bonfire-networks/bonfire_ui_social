@@ -1,0 +1,38 @@
+<div class="rounded-box border border-base-content/10 bg-base-200 p-4 mt-2">
+  <div class="flex items-start justify-between gap-3 mb-3">
+    <h3 class="font-semibold text-sm text-base-content">
+      {l("Block this user?")}
+    </h3>
+    <button
+      type="button"
+      phx-click="Bonfire.Social.Threads:clear_inline_action"
+      aria-label={l("Close")}
+      class="btn btn-ghost btn-xs btn-circle"
+    >
+      <#Icon iconify="ph:x" class="w-4 h-4" />
+    </button>
+  </div>
+
+  <p class="text-xs text-base-content/70 mb-4">
+    {l("You will no longer see their activities, and they won't be able to interact with you.")}
+  </p>
+
+  <div class="flex justify-end gap-2">
+    <button
+      type="button"
+      phx-click="Bonfire.Social.Threads:clear_inline_action"
+      class="btn btn-sm btn-ghost"
+    >
+      {l("Cancel")}
+    </button>
+    <button
+      data-role="submit_inline_block"
+      type="button"
+      phx-click="Bonfire.Social.Threads:inline_block"
+      phx-value-id={@object_id}
+      class="btn btn-sm btn-error"
+    >
+      {l("Block")}
+    </button>
+  </div>
+</div>

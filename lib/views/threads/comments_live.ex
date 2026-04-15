@@ -15,6 +15,13 @@ defmodule Bonfire.UI.Social.CommentsLive do
        page: "comments",
        showing_within: :thread_embed,
        reply_to_id: nil,
+       inline_action_kind: nil,
+       inline_action_target_slot_id: nil,
+       inline_action_object_id: nil,
+       inline_action_object_type: nil,
+       inline_action_object_label: nil,
+       inline_action_is_remote: false,
+       inline_action_permalink: nil,
        no_mobile_header: true,
        hide_thread_stats: true,
        embed_theme: e(params, "theme", nil),
@@ -62,6 +69,10 @@ defmodule Bonfire.UI.Social.CommentsLive do
 
   def handle_info({:set_reply_to, reply_to_id}, socket) do
     {:noreply, assign(socket, reply_to_id: reply_to_id)}
+  end
+
+  def handle_event("reset_reply_to", _params, socket) do
+    {:noreply, assign(socket, reply_to_id: nil)}
   end
 
   def handle_params(%{"id" => id} = params, _url, socket) when is_binary(id) do
