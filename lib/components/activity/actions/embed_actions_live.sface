@@ -3,38 +3,49 @@
   data-rendered={@showing_within}
   class="feed_actions order-last"
 >
-  <div class="flex feed-clickable flex-1 w-full md:w-auto items-center justify-between md:justify-end gap-4">
-    <StatelessComponent
-      module={maybe_component(Bonfire.UI.Social.Activity.ReplyLive, @__context__)}
-      object_id={id(@object)}
-      object_type={@object_type}
-      object_boundary={@object_boundary}
-      permalink={@permalink}
-      reply_count={@reply_count}
-      showing_within={@showing_within}
-      hide_reply={@hide_reply}
-      activity_component_id={@activity_component_id}
-      event_target={@event_target}
-      class="!flex btn lg:tooltip lg:tooltip-bottom btn-sm btn-ghost btn-circle group hover:bg-primary/10 transition-transform duration-150 ease-out hover:scale-105 active:scale-95 hover:-translate-y-0.5"
-    />
 
+
+
+  
+  <div class="flex feed-clickable flex-1 w-full md:w-auto items-center justify-between md:justify-end gap-2">
     <StatefulComponent
-      module={maybe_component(Bonfire.UI.Reactions.LikeActionLive, @__context__)}
-      id={ComponentID.new(
-        Bonfire.UI.Reactions.LikeActionLive,
-        id(@object),
-        @activity_component_id || id(@activity)
-      )}
-      object_id={id(@object)}
-      creator={@creator}
-      object_boundary={@object_boundary}
-      like_count={e(
-        Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object),
-        :like_count,
-        :object_count,
-        nil
-      )}
-    />
+    module={maybe_component(Bonfire.UI.Reactions.LikeActionLive, @__context__)}
+    id={ComponentID.new(
+      Bonfire.UI.Reactions.LikeActionLive,
+      id(@object),
+      @activity_component_id || id(@activity)
+    )}
+    object={@object}
+    object_id={id(@object)}
+    creator={@creator}
+    object_boundary={@object_boundary}
+    showing_within={@showing_within}
+    icon="ph:arrow-up-duotone"
+    icon_pressed="ph:arrow-up-duotone"
+    like_count={e(
+      Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object),
+      :like_count,
+      :object_count,
+      nil
+    )}
+  />
+    <button
+      type="button"
+      phx-click={if @event_target || @activity_component_id,
+        do:
+          Bonfire.Social.Feeds.LiveHandler.reply_to_activity(
+            @event_target || "##{@activity_component_id}"
+          ),
+        else: "Bonfire.Social.Threads:reply"}
+      phx-value-id={id(@object)}
+      class="btn btn-sm btn-ghost text-base-content/70 text-sm hover:text-primary normal-case font-medium"
+      data-role="reply_enabled"
+      data-id="action_reply"
+    >
+      {l("Reply")}
+    </button>
+
+    
 
     <div
       data-id="embed_more_menu"
