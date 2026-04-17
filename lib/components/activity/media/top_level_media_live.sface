@@ -3,7 +3,7 @@
   <div
     data-id="top_level_media"
     data-object_id={id(@link)}
-    class={"flex flex-col bg-base-100 overflow-hidden", @class}
+    class={"flex flex-col bg-base-100 overflow-hidden rounded-t-xl", @class}
   >
     {#case MediaLive.preview_img(@link)}
       {#match preview_img when is_binary(preview_img)}
