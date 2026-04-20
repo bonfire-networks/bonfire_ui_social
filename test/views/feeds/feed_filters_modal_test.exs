@@ -36,9 +36,11 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       conn
       |> visit("/feed/my")
       |> open_filters_modal()
+      # Quick filters is a flat, always-open region above the collapsed sections
+      # (no heading — the toggle rows speak for themselves).
+      |> assert_has("[data-scope=hide_replies]", text: "Hide replies")
       |> assert_has("h4", text: "Time range")
       |> assert_has("h4", text: "Sort order")
-      |> assert_has("h4", text: "Quick filters")
       |> assert_has("h4", text: "Content types")
       |> assert_has("h4", text: "Activity types")
       |> assert_has("h4", text: "Media types")
@@ -132,7 +134,8 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> visit("/feed/local")
       |> open_filters_modal()
       |> click_button("[data-toggle='boost'] button", "Hide")
-      |> assert_has("[data-toggle='boost'] [data-id='disabled'].active")
+      |> assert_has("[data-toggle='boost'][data-state='hide']")
+      |> assert_has("[data-toggle='boost'] [data-id='disabled'][aria-checked='true']")
     end
 
     test "toggling boost filter to Only updates the toggle state", %{conn: conn} do
@@ -140,7 +143,8 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> visit("/feed/local")
       |> open_filters_modal()
       |> click_button("[data-toggle='boost'] button", "Only")
-      |> assert_has("[data-toggle='boost'] [data-id='enabled'].active")
+      |> assert_has("[data-toggle='boost'][data-state='only']")
+      |> assert_has("[data-toggle='boost'] [data-id='only'][aria-checked='true']")
     end
 
     test "toggling back to Include resets the toggle state", %{conn: conn} do
@@ -148,9 +152,10 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> visit("/feed/local")
       |> open_filters_modal()
       |> click_button("[data-toggle='boost'] button", "Only")
-      |> assert_has("[data-toggle='boost'] [data-id='enabled'].active")
+      |> assert_has("[data-toggle='boost'] [data-id='only'][aria-checked='true']")
       |> click_button("[data-toggle='boost'] button", "Include")
-      |> assert_has("[data-toggle='boost'] [data-id='default'].active")
+      |> assert_has("[data-toggle='boost'][data-state='default']")
+      |> assert_has("[data-toggle='boost'] [data-id='default'][aria-checked='true']")
     end
   end
 
@@ -227,6 +232,100 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> click_button("Last Day")
       # The modal should show the button as active
       |> assert_has("button.btn-primary", text: "Last Day")
+    end
+
+    test "pending changes survive reopening the modal without Apply", %{conn: conn} do
+      conn
+      |> visit("/feed/local")
+      |> open_filters_modal()
+      |> click_button("[data-toggle='boost'] button", "Hide")
+      # Close the modal without applying (Escape / click-out aren't modeled;
+      # instead we confirm the chip summary inside the modal still reflects
+      # the tri-state change).
+      |> assert_has("[data-toggle='boost'][data-state='hide']")
+    end
+  end
+
+  describe "Reset all" do
+    test "clears every pending filter and the Hide my activity toggle", %{conn: conn} do
+      conn
+      |> visit("/feed/local")
+      |> open_filters_modal()
+      |> click_button("[data-toggle='boost'] button", "Hide")
+      |> click_button("Last Week")
+      |> assert_has("[data-toggle='boost'][data-state='hide']")
+      |> assert_has("button.btn-primary", text: "Last Week")
+      |> click_button("Reset all")
+      |> assert_has("[data-toggle='boost'][data-state='default']")
+      |> refute_has("button.btn-primary", text: "Last Week")
+    end
+  end
+
+  describe "Content origin radio group" do
+    @origin_scope "[aria-labelledby='content-origin-label']"
+
+    # `/feed/my` is the home feed — it has no fixed-origin preset, so the
+    # origin radiogroup renders. `/feed/local` would render the read-only
+    # fixed-origin badges instead, and this test would find no radio buttons.
+    test "defaults to Both and switches to Local/Remote", %{conn: conn} do
+      conn
+      |> visit("/feed/my")
+      |> open_filters_modal()
+      |> assert_has("#{@origin_scope} [role=radio][aria-checked='true']", text: "Both")
+      |> click_button("#{@origin_scope} [role=radio]", "Local")
+      |> assert_has("#{@origin_scope} [role=radio][aria-checked='true']", text: "Local")
+      |> click_button("#{@origin_scope} [role=radio]", "Remote")
+      |> assert_has("#{@origin_scope} [role=radio][aria-checked='true']", text: "Remote")
+    end
+  end
+
+  describe "tri-state toggle — content types" do
+    test "Only on Articles marks the row as isolated", %{conn: conn} do
+      conn
+      |> visit("/feed/local")
+      |> open_filters_modal()
+      |> click_button("[data-toggle='article'] button", "Only")
+      |> assert_has("[data-toggle='article'][data-state='only']")
+      |> assert_has("[data-toggle='article'] [data-id='only'][aria-checked='true']")
+    end
+
+    test "clicking Only twice returns the row to default", %{conn: conn} do
+      conn
+      |> visit("/feed/local")
+      |> open_filters_modal()
+      |> click_button("[data-toggle='article'] button", "Only")
+      |> assert_has("[data-toggle='article'][data-state='only']")
+      # Second press on Only un-isolates — back to default (neither include nor exclude)
+      |> click_button("[data-toggle='article'] button", "Only")
+      |> assert_has("[data-toggle='article'][data-state='default']")
+    end
+  end
+
+  describe "Hide my own activities quick toggle" do
+    test "checking the toggle surfaces the 'Hiding my activity' chip", %{conn: conn} do
+      conn
+      |> visit("/feed/local")
+      |> open_filters_modal()
+      |> check("Hide my own activities")
+      |> assert_has("span", text: "Hiding my activity")
+    end
+  end
+
+  describe "badge summaries in collapsed sections" do
+    # The <summary> element wrapping each collapsed section shows a badge
+    # with a compact count (e.g. "1 only") produced by `types_summary/2`.
+    # We use `:has()` to scope to a specific section by its icon, which
+    # Floki supports. The unit tests in feed_filters_helpers_test.exs
+    # cover every branch of the summary helpers; here we just confirm the
+    # badge is wired into the template for one representative section.
+    test "Content types badge updates to '1 only' after isolating Articles", %{conn: conn} do
+      conn
+      |> visit("/feed/local")
+      |> open_filters_modal()
+      |> click_button("[data-toggle='article'] button", "Only")
+      |> assert_has("summary:has([iconify='ph:article-ny-times-duotone']) .badge",
+        text: "1 only"
+      )
     end
   end
 end

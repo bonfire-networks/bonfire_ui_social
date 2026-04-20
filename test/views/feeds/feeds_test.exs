@@ -242,10 +242,14 @@ defmodule Bonfire.UI.Social.Feeds.Test do
       |> assert_has_or_open_browser("[data-role=boosted_by]",
         text: bob.profile.name || bob.character.username
       )
-      # Check for the text 'and X others boosted your post'
-      |> assert_has_or_open_browser("[data-role=boosted_by]",
-        text: "and 1 other boosted your activity"
-      )
+      # Check for the text 'and X others boosted your post'. The subject-list
+      # <dialog> is now rendered inline between the "and 1 other" trigger and
+      # the "boosted your activity" suffix, so the concatenated text content
+      # of the container includes dialog markup (headings, close buttons, etc)
+      # in between. Assert each substring separately instead.
+      |> assert_has_or_open_browser("[data-role=boosted_by]", text: "and 1 other")
+      |> assert_has_or_open_browser("[data-role=boosted_by]", text: "boosted")
+      |> assert_has_or_open_browser("[data-role=boosted_by]", text: "your activity")
     end
   end
 end

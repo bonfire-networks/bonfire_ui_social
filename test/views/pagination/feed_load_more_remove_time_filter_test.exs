@@ -164,10 +164,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       |> visit("/feed/local?time_limit=1")
       |> assert_has_or_open_browser("[data-id=feed] article")
       # Set sort to likes via the inline sort dropdown (still rendered on the page)
-      |> within("#order_dropdown_feed", fn session ->
-        session
-        |> click_link("Most liked")
-      end)
+      |> click_button("#order_dropdown_feed button[phx-value-sort_by='like_count']", "Most liked")
       |> wait_async()
       # Check that we only see posts from today (count should be less than total)
       # Today's post

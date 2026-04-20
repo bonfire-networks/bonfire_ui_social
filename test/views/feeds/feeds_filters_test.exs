@@ -97,15 +97,17 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
 
   describe "feed filters UI:" do
     test "user can toggle filter options", %{} do
+      # Tri-state rows expose state via data-state + aria-checked="true" on
+      # the active radio button (data-id is "only" / "default" / "disabled").
       conn(user: fake_user!())
       |> visit("/feed")
       |> click_button("[data-role=open_modal]", "Filters")
       |> click_button("[data-toggle='boost'] button", "Only")
-      |> assert_has("[data-toggle='boost'] [data-id='enabled'].active")
+      |> assert_has("[data-toggle='boost'] [data-id='only'][aria-checked='true']")
       |> click_button("[data-toggle='boost'] button", "Hide")
-      |> assert_has("[data-toggle='boost'] [data-id='disabled'].active")
+      |> assert_has("[data-toggle='boost'] [data-id='disabled'][aria-checked='true']")
       |> click_button("[data-toggle='boost'] button", "Include")
-      |> assert_has("[data-toggle='boost'] [data-id='default'].active")
+      |> assert_has("[data-toggle='boost'] [data-id='default'][aria-checked='true']")
     end
 
     @tag :todo
@@ -273,10 +275,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
 
       conn(user: user)
       |> visit("/feed/local")
-      |> within("#order_dropdown_feed", fn session ->
-        session
-        |> click_link("Most liked")
-      end)
+      |> click_button("#order_dropdown_feed button[phx-value-sort_by='like_count']", "Most liked")
       |> wait_async()
       # Verify the popular post appears first
       |> assert_has_or_open_browser("[data-id=feed] article:first-child",

@@ -176,7 +176,7 @@ defmodule Bonfire.UI.Social.SmartInputTest do
       |> assert_has_or_open_browser("input[name=files][type=file]")
       |> upload("Upload an attachment", file)
       |> upload("Upload an attachment", file2)
-      |> click_button("Post")
+      |> click_button("#submit_btn", "Post")
       |> visit("/feed/local")
       |> assert_has_or_open_browser("[data-id=feed] article[data-id=article_media]", count: 2)
     end
