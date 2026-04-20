@@ -1,15 +1,195 @@
 <div style="margin: 0 -16px" class="flex flex-col max-h-[calc(100vh-10rem)]">
-  <div class="flex flex-col divide-y divide-base-content/10 overflow-y-auto flex-1 min-h-0">
-    {!-- Time Range --}
-    <details open class="group">
-      <summary class="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-base-content/5">
-        <h4 class="text-xs font-semibold uppercase text-base-content/50">{l("Time range")}</h4>
-        <#Icon
-          iconify="ph:caret-down"
-          class="w-5 h-5 text-base-content/70 transition-transform group-open:rotate-180"
-        />
+  {#case @active_filters}
+    {#match []}
+      {#if @user_activities_excluded?}
+        <div class="flex items-start gap-2 px-4 py-2.5 border-b border-base-content/10">
+          <div class="flex-1 flex flex-wrap gap-1.5">
+            <span class="inline-flex items-center gap-1 h-7 px-2.5 rounded-full bg-base-100 border border-base-content/10 text-xs text-base-content/80">
+              <#Icon iconify="ph:user-minus-duotone" class="w-3.5 h-3.5 text-base-content/60" />
+              {l("Hiding my activity")}
+            </span>
+          </div>
+          <button
+            type="button"
+            phx-click="reset_pending"
+            phx-target={@myself}
+            class="shrink-0 h-7 px-2 rounded-full text-xs text-base-content/70 hover:text-base-content hover:bg-base-content/10 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100"
+          >
+            {l("Reset all")}
+          </button>
+        </div>
+      {/if}
+    {#match active_filters}
+      <div class="flex items-start gap-2 px-4 py-2.5 border-b border-base-content/10">
+        <div class="flex-1 flex flex-wrap gap-1.5">
+          {#if @user_activities_excluded?}
+            <span class="inline-flex items-center gap-1 h-7 pl-2.5 pr-1 rounded-full bg-base-100 border border-base-content/10 text-xs text-base-content/80">
+              <#Icon iconify="ph:user-minus-duotone" class="w-3.5 h-3.5 text-base-content/60" />
+              {l("Hiding my activity")}
+            </span>
+          {/if}
+          {#for {label, chip_icon, field, key} <- active_filters}
+            <span class="inline-flex items-center gap-1 h-7 pl-2.5 pr-1 rounded-full bg-base-100 border border-base-content/10 text-xs text-base-content/80">
+              {#case chip_icon}
+                {#match :show}
+                  <#Icon iconify="ph:target-duotone" class="w-3.5 h-3.5 text-primary" />
+                {#match :hide}
+                  <#Icon iconify="ph:eye-slash-duotone" class="w-3.5 h-3.5 text-base-content/60" />
+                {#match _}
+              {/case}
+              {label}
+              <button
+                type="button"
+                phx-click="remove_active_filter"
+                phx-value-field={to_string(field)}
+                phx-value-key={to_string(key)}
+                phx-target={@myself}
+                aria-label={l("Remove filter: %{label}", label: label)}
+                class="relative ml-0.5 inline-flex w-5 h-5 items-center justify-center rounded-full text-base-content/60 hover:text-base-content hover:bg-base-content/10 transition-colors duration-150 before:absolute before:content-[''] before:-inset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100"
+              >
+                <#Icon iconify="ph:x-bold" class="w-3 h-3" />
+              </button>
+            </span>
+          {/for}
+        </div>
+        <button
+          type="button"
+          phx-click="reset_pending"
+          phx-target={@myself}
+          class="shrink-0 h-7 px-2 rounded-full text-xs text-base-content/70 hover:text-base-content hover:bg-base-content/10 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100"
+        >
+          {l("Reset all")}
+        </button>
+      </div>
+  {/case}
+
+  <div class="flex flex-col divide-y divide-base-content/10 overflow-y-auto flex-1 min-h-0 mb-6">
+    <section>
+      <div class="px-4 py-2 flex flex-col gap-0">
+        {#if current_user_id(@__context__) &&
+            !(@showing_within == :profile && e(@pending_filters, :by, nil) == current_user_id(@__context__))}
+          <label
+            data-scope="include_my_activities"
+            class="flex items-center justify-between gap-3 min-h-11 py-1 cursor-pointer"
+          >
+            <span class="text-sm text-base-content/90">{l("Hide my own activities")}</span>
+            <input
+              type="checkbox"
+              checked={@user_activities_excluded?}
+              class="toggle toggle-sm toggle-primary"
+              phx-click="set_filter"
+              phx-value-toggle="subjects"
+              phx-value-toggle_type={current_user_id(@__context__)}
+              phx-value-toggle_value={if @user_activities_excluded?, do: "default", else: "false"}
+              phx-target={@myself}
+            />
+          </label>
+        {/if}
+
+        <label
+          data-scope="hide_replies"
+          class="flex items-center justify-between gap-3 min-h-11 py-1 cursor-pointer"
+        >
+          <span class="text-sm text-base-content/90">{l("Hide replies")}</span>
+          <input
+            type="checkbox"
+            checked={@replies_excluded?}
+            class="toggle toggle-sm toggle-primary"
+            phx-click="set_filter"
+            phx-value-toggle="activity_types"
+            phx-value-toggle_type="reply"
+            phx-value-toggle_value={if @replies_excluded?, do: "default", else: "false"}
+            phx-target={@myself}
+          />
+        </label>
+
+        <label
+          data-scope="hide_boosts"
+          class="flex items-center justify-between gap-3 min-h-11 py-1 cursor-pointer"
+        >
+          <span class="text-sm text-base-content/90">{l("Hide boosts")}</span>
+          <input
+            type="checkbox"
+            checked={@boosts_excluded?}
+            class="toggle toggle-sm toggle-primary"
+            phx-click="set_filter"
+            phx-value-toggle="activity_types"
+            phx-value-toggle_type="boost"
+            phx-value-toggle_value={if @boosts_excluded?, do: "default", else: "false"}
+            phx-target={@myself}
+          />
+        </label>
+
+        {#case @preset_origin_info}
+          {#match %{preset_has_fixed_origin: true, preset_origin: preset_origin}}
+            <div class="flex items-center justify-between gap-3 min-h-11 py-1">
+              <span class="text-sm text-base-content/90" title={l("Fixed for this feed")}>
+                {l("Content origin")}
+              </span>
+              <div class="inline-flex items-center gap-0.5 rounded-full bg-base-content/[0.04] p-0.5 text-[11px] opacity-60">
+                {#for {value, label} <- [{:all, l("Both")}, {:local, l("Local")}, {:remote, l("Remote")}]}
+                  <span class={
+                    "px-2.5 py-1 rounded-full",
+                    "bg-base-100 text-base-content":
+                      (value == :all and preset_origin not in [:local, :remote]) or preset_origin == value,
+                    "text-base-content/60":
+                      not ((value == :all and preset_origin not in [:local, :remote]) or preset_origin == value)
+                  }>{label}</span>
+                {/for}
+              </div>
+            </div>
+          {#match _}
+            <div class="flex items-center justify-between gap-3 min-h-11 py-1">
+              <span id="content-origin-label" class="text-sm text-base-content/90">{l("Content origin")}</span>
+              <div
+                role="radiogroup"
+                aria-labelledby="content-origin-label"
+                class="inline-flex items-center gap-0.5 rounded-full bg-base-content/[0.04] p-0.5 text-[11px] font-medium"
+              >
+                {#for {value, label} <- [{:all, l("Both")}, {:local, l("Local")}, {:remote, l("Remote")}]}
+                  <button
+                    type="button"
+                    role="radio"
+                    aria-checked={if Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, value),
+                      do: "true",
+                      else: "false"}
+                    phx-click="set_filter"
+                    phx-value-origin={value}
+                    phx-target={@myself}
+                    class={
+                      "relative px-2.5 py-1 rounded-full transition-colors duration-150 before:absolute before:content-[''] before:inset-x-0 before:-inset-y-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
+                      "bg-base-100 text-base-content":
+                        Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, value),
+                      "text-base-content/60 hover:text-base-content":
+                        not Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, value)
+                    }
+                  >
+                    {label}
+                  </button>
+                {/for}
+              </div>
+            </div>
+        {/case}
+      </div>
+    </section>
+
+    <details class="group">
+      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
+        <div class="flex items-center gap-3">
+          <#Icon iconify="ph:timer-duotone" class="size-4 text-base-content/80" />
+          <h4 class="text-sm font-medium text-base-content/80">{l("Time range")}</h4>
+        </div>
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="badge text-xs">
+            {Bonfire.UI.Social.FeedFiltersModalContentLive.time_range_summary(@pending_filters)}
+          </span>
+          <#Icon
+            iconify="ph:caret-down"
+            class="w-4 h-4 text-base-content/50 shrink-0 transition-transform duration-150 group-open:rotate-180"
+          />
+        </div>
       </summary>
-      <div class="px-4 pb-4 flex flex-wrap gap-2">
+      <div class="px-4 pb-3 flex flex-wrap gap-2">
         {#for {days, label} <- Bonfire.UI.Social.TimeControlLive.default_options()}
           <button
             type="button"
@@ -17,13 +197,10 @@
             phx-value-time_limit={days}
             phx-target={@myself}
             class={
-              "btn btn-sm sm:min-h-[44px] rounded-full",
+              "btn btn-sm",
               "btn-primary":
                 e(@pending_filters, :time_limit, 0) == days or
-                  (days == 0 and is_nil(e(@pending_filters, :time_limit, nil))),
-              "btn-outline border-base-content/10":
-                e(@pending_filters, :time_limit, 0) != days and
-                  not (days == 0 and is_nil(e(@pending_filters, :time_limit, nil)))
+                  (days == 0 and is_nil(e(@pending_filters, :time_limit, nil)))
             }
           >
             {label}
@@ -32,25 +209,31 @@
       </div>
     </details>
 
-    {!-- Sort Order --}
-    <details open class="group">
-      <summary class="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-base-content/5">
-        <h4 class="text-xs font-semibold uppercase text-base-content/50">{l("Sort order")}</h4>
-        <#Icon
-          iconify="ph:caret-down"
-          class="w-5 h-5 text-base-content/70 transition-transform group-open:rotate-180"
-        />
+    <details class="group">
+      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
+        <div class="flex items-center gap-3">
+          <#Icon iconify="ph:sort-ascending-duotone" class="size-4 text-base-content/80" />
+          <h4 class="text-sm font-medium text-base-content/80">{l("Sort order")}</h4>
+        </div>
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="badge text-xs">
+            {Bonfire.UI.Social.FeedFiltersModalContentLive.sort_order_summary(@pending_filters)}
+          </span>
+          <#Icon
+            iconify="ph:caret-down"
+            class="w-4 h-4 text-base-content/50 shrink-0 transition-transform duration-150 group-open:rotate-180"
+          />
+        </div>
       </summary>
-      <div class="px-4 pb-4 flex gap-2">
+      <div class="px-4 pb-3 flex flex-wrap gap-2">
         <button
           type="button"
           phx-click="set_filter"
           phx-value-sort_order={:desc}
           phx-target={@myself}
           class={
-            "btn btn-sm sm:min-h-[44px] rounded-full gap-2",
-            "btn-primary": e(@pending_filters, :sort_order, :desc) == :desc,
-            "btn-outline border-base-content/10": e(@pending_filters, :sort_order, :desc) != :desc
+            "btn btn-sm",
+            "btn-primary": e(@pending_filters, :sort_order, :desc) == :desc
           }
         >
           <#Icon iconify="ph:sort-ascending-duotone" class="w-4 h-4" />
@@ -62,9 +245,8 @@
           phx-value-sort_order={:asc}
           phx-target={@myself}
           class={
-            "btn btn-sm sm:min-h-[44px] rounded-full gap-2",
-            "btn-primary": e(@pending_filters, :sort_order, nil) == :asc,
-            "btn-outline border-base-content/10": e(@pending_filters, :sort_order, nil) != :asc
+            "btn btn-sm",
+            "btn-primary": e(@pending_filters, :sort_order, nil) == :asc
           }
         >
           <#Icon iconify="ph:sort-descending-duotone" class="w-4 h-4" />
@@ -73,38 +255,23 @@
       </div>
     </details>
 
-    {!-- Quick Filters --}
-    <details open class="group">
-      <summary class="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-base-content/5">
-        <h4 class="text-xs font-semibold uppercase text-base-content/50">{l("Quick filters")}</h4>
-        <#Icon
-          iconify="ph:caret-down"
-          class="w-5 h-5 text-base-content/70 transition-transform group-open:rotate-180"
-        />
-      </summary>
-      <div class="px-4 pb-4">
-        <Bonfire.UI.Social.FeedExtraControlsLive
-          event_target={@myself}
-          event_name="set_filter"
-          feed_id={@feed_id}
-          feed_name={@feed_name}
-          feed_filters={@pending_filters}
-          hide_filters={[:sort_by]}
-          showing_within={@showing_within}
-        />
-      </div>
-    </details>
-
-    {!-- Content Types --}
     <details class="group">
-      <summary class="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-base-content/5">
-        <h4 class="text-xs font-semibold uppercase text-base-content/50">{l("Content types")}</h4>
-        <#Icon
-          iconify="ph:caret-down"
-          class="w-5 h-5 text-base-content/70 transition-transform group-open:rotate-180"
-        />
+      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
+        <div class="flex items-center gap-3">
+          <#Icon iconify="ph:article-ny-times-duotone" class="size-4 text-base-content/80" />
+          <h4 class="text-sm font-medium text-base-content/80">{l("Content types")}</h4>
+        </div>
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="badge text-xs">
+            {Bonfire.UI.Social.FeedFiltersModalContentLive.types_summary(@pending_filters, :object_types)}
+          </span>
+          <#Icon
+            iconify="ph:caret-down"
+            class="w-4 h-4 text-base-content/50 shrink-0 transition-transform duration-150 group-open:rotate-180"
+          />
+        </div>
       </summary>
-      <div class="px-4 pb-4 flex flex-col gap-1">
+      <div class="px-3 pb-2 flex flex-col gap-0.5">
         <Bonfire.UI.Social.ToggleTypeLive
           label={l("All posts")}
           key={:post}
@@ -142,8 +309,17 @@
           label_default={l("Include")}
         />
 
-        {#for key when key not in [:post, "post", Bonfire.Data.Social.Post, :Event, "Event", "Edition"] <-
-            @pending_filters[:object_types] || []}
+        {#for key
+          when key not in [
+                 :post,
+                 "post",
+                 Bonfire.Data.Social.Post,
+                 :article,
+                 "article",
+                 :Event,
+                 "Event",
+                 "Edition"
+               ] <- @pending_filters[:object_types] || []}
           <Bonfire.UI.Social.ToggleTypeLive
             label={String.capitalize(to_string(key))}
             key={key}
@@ -157,17 +333,24 @@
       </div>
     </details>
 
-    {!-- Activity Types --}
     {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
       <details class="group">
-        <summary class="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-base-content/5">
-          <h4 class="text-xs font-semibold uppercase text-base-content/50">{l("Activity types")}</h4>
-          <#Icon
-            iconify="ph:caret-down"
-            class="w-5 h-5 text-base-content/70 transition-transform group-open:rotate-180"
-          />
+        <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
+          <div class="flex items-center gap-3">
+          <#Icon iconify="ph:pulse-duotone" class="size-4 text-base-content/80" />
+          <h4 class="text-sm font-medium text-base-content/80">{l("Activity types")}</h4>
+          </div>
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="badge text-xs">
+              {Bonfire.UI.Social.FeedFiltersModalContentLive.types_summary(@pending_filters, :activity_types)}
+            </span>
+            <#Icon
+              iconify="ph:caret-down"
+              class="w-4 h-4 text-base-content/50 shrink-0 transition-transform duration-150 group-open:rotate-180"
+            />
+          </div>
         </summary>
-        <div class="px-4 pb-4 flex flex-col gap-1">
+        <div class="px-3 pb-2 flex flex-col gap-0.5">
           <Bonfire.UI.Social.ToggleTypeLive
             label={l("Boosts")}
             key={:boost}
@@ -220,16 +403,23 @@
       </details>
     {/if}
 
-    {!-- Media Types --}
     <details class="group">
-      <summary class="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-base-content/5">
-        <h4 class="text-xs font-semibold uppercase text-base-content/50">{l("Media types")}</h4>
-        <#Icon
-          iconify="ph:caret-down"
-          class="w-5 h-5 text-base-content/70 transition-transform group-open:rotate-180"
-        />
+      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
+        <div class="flex items-center gap-3">
+          <#Icon iconify="ph:play-circle-duotone" class="size-4 text-base-content/80" />
+          <h4 class="text-sm font-medium text-base-content/80">{l("Media types")}</h4>
+        </div>
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="badge text-xs">
+            {Bonfire.UI.Social.FeedFiltersModalContentLive.types_summary(@pending_filters, :media_types)}
+          </span>
+          <#Icon
+            iconify="ph:caret-down"
+            class="w-4 h-4 text-base-content/50 shrink-0 transition-transform duration-150 group-open:rotate-180"
+          />
+        </div>
       </summary>
-      <div class="px-4 pb-4 flex flex-col gap-1">
+      <div class="px-3 pb-2 flex flex-col gap-0.5">
         <Bonfire.UI.Social.ToggleTypeLive
           label={l("Links")}
           key={:link}
@@ -302,7 +492,6 @@
       </div>
     </details>
 
-    {!-- Subject Types --}
     {#for key <- @pending_filters[:subject_types] || []}
       <div class="px-4 py-3">
         <Bonfire.UI.Social.ToggleTypeLive
@@ -317,25 +506,32 @@
       </div>
     {/for}
 
-    {!-- Circles --}
     <details class="group">
-      <summary class="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-base-content/5">
-        <h4 class="text-xs font-semibold uppercase text-base-content/50">{l("Filter by circles")}</h4>
-        <#Icon
-          iconify="ph:caret-down"
-          class="w-5 h-5 text-base-content/70 transition-transform group-open:rotate-180"
-        />
+      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
+        <div class="flex items-center gap-3">
+          <#Icon iconify="ph:circle-duotone" class="size-4 text-base-content/80" />
+          <h4 class="text-sm font-medium text-base-content/80">{l("Filter by circles")}</h4>
+        </div>
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="badge text-xs">
+            {Bonfire.UI.Social.FeedFiltersModalContentLive.circles_summary(@pending_filters)}
+          </span>
+          <#Icon
+            iconify="ph:caret-down"
+            class="w-4 h-4 text-base-content/50 shrink-0 transition-transform duration-150 group-open:rotate-180"
+          />
+        </div>
       </summary>
-      <div class="px-4 pb-4">
+      <div class="px-3 pb-3">
         {#case @my_circles}
           {#match []}
-            <p class="text-sm text-base-content/50">
+            <p class="text-sm text-base-content/60 px-1 py-1">
               {l(
-                "You haven't created any circles yet. You can create circles in your boundary settings to filter your feed by specific groups of people."
+                "You haven't created any circles yet. Create one in your boundary settings to filter by specific groups of people."
               )}
             </p>
           {#match my_circles}
-            <div class="flex flex-col gap-1">
+            <div class="flex flex-col gap-0.5">
               {#for circle <- my_circles}
                 <Bonfire.UI.Social.ToggleTypeLive
                   label={elem(circle, 1)[:name]}
@@ -351,20 +547,18 @@
         {/case}
       </div>
     </details>
-
-    {!-- Save as preset --}
-    <details class="group">
-      <summary class="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-base-content/5">
-        <h4 class="text-xs font-semibold uppercase text-base-content/50">{l("Save as custom feed")}</h4>
+    <details class="group shrink-0 mx-2 my-2 rounded-xl bg-base-content/[0.03] overflow-hidden">
+      <summary class="flex items-center gap-2 cursor-pointer list-none px-3 py-2.5 hover:bg-base-content/[0.05]">
+        <#Icon iconify="ph:bookmark-duotone" class="w-4 h-4 text-base-content/60 shrink-0" />
+        <span class="flex-1 text-sm font-medium text-base-content/90 truncate">
+          {l("Save as custom feed")}
+        </span>
         <#Icon
           iconify="ph:caret-down"
-          class="w-5 h-5 text-base-content/70 transition-transform group-open:rotate-180"
+          class="w-4 h-4 text-base-content/50 shrink-0 transition-transform duration-150 group-open:rotate-180"
         />
       </summary>
-      <div class="px-4 pb-4">
-        <p class="text-sm text-base-content/50 mb-3">
-          {l("Save this feed configuration as a preset to access it anytime from your feed navbar.")}
-        </p>
+      <div class="px-3 pb-3 pt-1">
         <form
           id="form_create_feed_preset"
           class="w-full flex flex-col gap-2"
@@ -381,19 +575,19 @@
             <legend class="fieldset-legend">{l("Feed description")}</legend>
             <textarea
               name="description"
-              class="textarea w-full h-24"
-              placeholder={l("Add a description...")}
+              class="textarea w-full h-20"
+              placeholder={l("Optional — what's this feed for?")}
             />
           </fieldset>
 
           <fieldset class="fieldset">
-            <label class="fieldset-label">
-              <input type="checkbox" name="show_in_nav" checked="checked" class="checkbox">
-              {l("Show in feeds navbar")}
+            <label class="fieldset-label cursor-pointer">
+              <input type="checkbox" name="show_in_nav" checked="checked" class="checkbox checkbox-sm">
+              <span class="text-sm text-base-content/90">{l("Show in feeds navbar")}</span>
             </label>
           </fieldset>
 
-          <div class="flex justify-end mb-3">
+          <div class="flex justify-end">
             <.button type="submit" variant="primary" loading_text={l("Saving...")}>
               {l("Save feed")}
             </.button>
@@ -403,14 +597,14 @@
     </details>
   </div>
 
-  {!-- Apply button --}
-  <div class="flex items-center justify-end p-4 border-t border-base-content/10 shrink-0 bg-base-100 sticky bottom-0">
+
+  <div class="flex items-center justify-end gap-2 p-4 border-t border-base-content/10 shrink-0 bg-base-100 sticky bottom-0">
     <button
       type="button"
       phx-click="apply_filters"
       phx-target={@event_target}
       phx-value-filters={Bonfire.UI.Social.FeedFiltersModalContentLive.encode_filters(@pending_filters)}
-      class="btn btn-primary btn-sm sm:min-h-[44px]"
+      class="btn btn-primary min-h-11 rounded-full px-6"
     >
       {l("Apply filters")}
     </button>

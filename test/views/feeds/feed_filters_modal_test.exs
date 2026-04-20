@@ -135,7 +135,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> open_filters_modal()
       |> click_button("[data-toggle='boost'] button", "Hide")
       |> assert_has("[data-toggle='boost'][data-state='hide']")
-      |> assert_has("[data-toggle='boost'] [data-id='disabled'][aria-checked='true']")
+      |> assert_has("[data-toggle='boost'] [data-id='hide'][aria-checked='true']")
     end
 
     test "toggling boost filter to Only updates the toggle state", %{conn: conn} do

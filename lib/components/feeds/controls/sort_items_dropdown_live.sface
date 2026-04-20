@@ -5,8 +5,31 @@
     id="order_dropdown_feed"
     class="flex w-full relative"
   >
-    <label
-      tabindex="0"
+    <button
+      type="button"
+      id="order_dropdown_feed_btn"
+      aria-haspopup="menu"
+      aria-expanded="false"
+      aria-controls="order_dropdown_feed_menu"
+      aria-label={case e(@feed_filters, :sort_by, nil) do
+        :reply_count ->
+          if e(@feed_filters, :sort_order, nil) == :asc,
+            do: l("Sort: least replied"),
+            else: l("Sort: most replied")
+
+        :boost_count ->
+          if e(@feed_filters, :sort_order, nil) == :asc,
+            do: l("Sort: least boosted"),
+            else: l("Sort: most boosted")
+
+        :like_count ->
+          if e(@feed_filters, :sort_order, nil) == :asc,
+            do: l("Sort: least liked"),
+            else: l("Sort: most liked")
+
+        _ ->
+          l("Sort: chronological")
+      end}
       class="tooltip-button btn-sm w-full btn btn-outline border-base-content/10 rounded-full"
     >
       {#case e(@feed_filters, :sort_by, nil)}
@@ -32,20 +55,23 @@
           </span>
       {/case}
 
-      <#Icon iconify="mdi:chevron-down" class="w-4 h-4" />
-    </label>
+      <#Icon iconify="mdi:chevron-down" class="w-4 h-4" aria-hidden="true" />
+    </button>
     <ul
-      tabindex="0"
+      id="order_dropdown_feed_menu"
+      role="menu"
+      aria-labelledby="order_dropdown_feed_btn"
       class="tooltip z-dropdown menu bg-base-100 pt-0 shadow border border-base-content/10 rounded-box w-72 absolute top-0 right-0 hidden"
     >
       <li>
-        <a
+        <button
+          type="button"
+          role="menuitem"
           phx-click="set_filter"
           phx-value-sort_by="date_created"
           phx-target={@event_target}
-          class="flex gap-3 px-2 text-base-content justify-between items-center"
+          class="w-full flex gap-3 px-2 text-base-content justify-between items-center"
         >
-          <!-- <#Icon iconify="mdi:order-alphabetical-ascending" class="w-4 h-4" /> -->
           {l("Chronological")}
           <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
             <span
@@ -53,15 +79,18 @@
               class="w-[14px] h-[14px] bg-primary rounded-full"
             />
           </div>
-        </a></li>
+        </button>
+      </li>
 
       <li>
-        <a
+        <button
+          type="button"
+          role="menuitem"
           phx-click="set_filter"
           phx-value-sort_by="reply_count"
           phx-value-sort_order="desc"
           phx-target={@event_target}
-          class="flex gap-3 px-2 text-base-content justify-between items-center"
+          class="w-full flex gap-3 px-2 text-base-content justify-between items-center"
         >
           {l("Most replied")}
           <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
@@ -70,17 +99,19 @@
               class="w-[14px] h-[14px] bg-primary rounded-full"
             />
           </div>
-        </a>
+        </button>
       </li>
 
       {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
         <li>
-          <a
+          <button
+            type="button"
+            role="menuitem"
             phx-click="set_filter"
             phx-value-sort_by="boost_count"
             phx-value-sort_order="desc"
             phx-target={@event_target}
-            class="flex gap-3 px-2 text-base-content justify-between items-center"
+            class="w-full flex gap-3 px-2 text-base-content justify-between items-center"
           >
             {l("Most boosted")}
             <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
@@ -89,16 +120,18 @@
                 class="w-[14px] h-[14px] bg-primary rounded-full"
               />
             </div>
-          </a>
+          </button>
         </li>
 
         <li>
-          <a
+          <button
+            type="button"
+            role="menuitem"
             phx-click="set_filter"
             phx-value-sort_by="like_count"
             phx-value-sort_order="desc"
             phx-target={@event_target}
-            class="flex gap-3 px-2 text-base-content justify-between items-center"
+            class="w-full flex gap-3 px-2 text-base-content justify-between items-center"
           >
             {l("Most liked")}
             <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
@@ -107,7 +140,7 @@
                 class="w-[14px] h-[14px] bg-primary rounded-full"
               />
             </div>
-          </a>
+          </button>
         </li>
       {/if}
     </ul>

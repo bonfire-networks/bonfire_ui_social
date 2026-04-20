@@ -105,7 +105,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       |> click_button("[data-toggle='boost'] button", "Only")
       |> assert_has("[data-toggle='boost'] [data-id='only'][aria-checked='true']")
       |> click_button("[data-toggle='boost'] button", "Hide")
-      |> assert_has("[data-toggle='boost'] [data-id='disabled'][aria-checked='true']")
+      |> assert_has("[data-toggle='boost'] [data-id='hide'][aria-checked='true']")
       |> click_button("[data-toggle='boost'] button", "Include")
       |> assert_has("[data-toggle='boost'] [data-id='default'][aria-checked='true']")
     end

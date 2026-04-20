@@ -11,7 +11,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
     # Don't overwrite pending changes on subsequent updates
     socket =
       if socket.assigns[:pending_filters] do
-        socket |> assign(assigns)
+        socket |> assign(assigns) |> assign_derived()
       else
         filters = Enums.maybe_to_map(assigns[:feed_filters]) || %{}
         context = assigns[:__context__] || socket.assigns[:__context__]
@@ -29,6 +29,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
         socket
         |> assign(assigns)
         |> assign(pending_filters: filters, my_circles: my_circles)
+        |> assign_derived()
       end
 
     {:ok, socket}
@@ -105,6 +106,38 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
      end)}
   end
 
+  def handle_event("reset_pending", _params, socket) do
+    {:noreply, assign(socket, :pending_filters, %{})}
+  end
+
+  def handle_event("remove_active_filter", %{"field" => field, "key" => key}, socket) do
+    field_atom = maybe_to_atom(field)
+
+    {:noreply,
+     update_pending_fn(socket, fn filters ->
+       case Map.get(filters, field_atom) do
+         list when is_list(list) ->
+           remaining = Enum.reject(list, fn v -> to_string(v) == key end)
+
+           if remaining == [],
+             do: Map.delete(filters, field_atom),
+             else: Map.put(filters, field_atom, remaining)
+
+         _ ->
+           Map.delete(filters, field_atom)
+       end
+     end)}
+  end
+
+  def handle_event("remove_active_filter", %{"field" => field}, socket) do
+    field_atom = maybe_to_atom(field)
+    {:noreply, update_pending_fn(socket, &Map.delete(&1, field_atom))}
+  end
+
+  @doc "True when the current :origin filter matches the given option (`:all`, `:local`, `:remote`)."
+  def origin_matches?(filters, :all), do: e(filters, :origin, nil) in [nil, :all]
+  def origin_matches?(filters, origin), do: e(filters, :origin, nil) in [origin, [origin]]
+
   @doc "Encodes filters map to JSON for passing via phx-value."
   def encode_filters(filters) do
     filters
@@ -112,13 +145,71 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
     |> Jason.encode!()
   end
 
+  @doc "Human-readable summary shown in the collapsed Time range section header."
+  def time_range_summary(filters) do
+    case e(filters, :time_limit, nil) do
+      days when days in [nil, 0] ->
+        l("All time")
+
+      days ->
+        Enum.find_value(
+          Bonfire.UI.Social.TimeControlLive.default_options(),
+          fn {v, name} -> if v == days, do: name end
+        ) || "#{days}d"
+    end
+  end
+
+  @doc "Human-readable summary shown in the collapsed Sort order section header."
+  def sort_order_summary(filters) do
+    case e(filters, :sort_order, nil) do
+      :asc -> l("Oldest first")
+      _ -> l("Newest first")
+    end
+  end
+
+  @doc "Short summary for a type field, e.g. 'All', '2 only', '1 hidden', '2 only · 1 hidden'."
+  def types_summary(filters, field) do
+    include = length(List.wrap(e(filters, field, [])))
+    exclude = length(List.wrap(e(filters, maybe_to_atom("exclude_#{field}"), [])))
+
+    case {include, exclude} do
+      {0, 0} -> l("All")
+      {n, 0} -> l("%{count} only", count: n)
+      {0, n} -> l("%{count} hidden", count: n)
+      {a, b} -> l("%{a} only · %{b} hidden", a: a, b: b)
+    end
+  end
+
+  @doc "Short summary for the circles section: 'None' or 'N selected'."
+  def circles_summary(filters) do
+    case List.wrap(e(filters, :subject_circles, [])) do
+      [] -> l("None")
+      list -> l("%{count} selected", count: length(list))
+    end
+  end
+
   defp update_pending(socket, key, value) do
     pending = socket.assigns[:pending_filters] || %{}
-    assign(socket, :pending_filters, Map.put(pending, key, value))
+    socket |> assign(:pending_filters, Map.put(pending, key, value)) |> assign_derived()
   end
 
   defp update_pending_fn(socket, fun) do
     pending = socket.assigns[:pending_filters] || %{}
-    assign(socket, :pending_filters, fun.(pending))
+    socket |> assign(:pending_filters, fun.(pending)) |> assign_derived()
+  end
+
+  defp assign_derived(socket) do
+    filters = socket.assigns[:pending_filters] || %{}
+    context = socket.assigns[:__context__]
+
+    assign(socket,
+      active_filters: Bonfire.UI.Social.FeedControlsLive.active_filters(filters, context),
+      user_activities_excluded?:
+        Bonfire.UI.Social.FeedExtraControlsLive.user_activities_excluded?(filters, context),
+      replies_excluded?: Bonfire.UI.Social.FeedExtraControlsLive.replies_excluded?(filters),
+      boosts_excluded?: Bonfire.UI.Social.FeedExtraControlsLive.boosts_excluded?(filters),
+      preset_origin_info:
+        Bonfire.UI.Social.FeedExtraControlsLive.get_preset_origin_info(filters, context)
+    )
   end
 end

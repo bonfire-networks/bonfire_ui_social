@@ -1,26 +1,99 @@
-<div class="flex-1 w-full p-0" data-toggle={@key}>
-  {!-- FIXME: don't use dynamic @key in keys for https://github.com/bonfire-networks/bonfire-app/issues/1239 --}
-  <Bonfire.UI.Common.SettingsToggleThroupleLive
-    name={@label}
-    icon={@icon}
-    with_icons={@with_icons}
-    keys={[Bonfire.Social.Feeds, :include, @key]}
-    input="toggle_value"
-    default_value={nil}
-    current_value={check_throuple(
-      @key,
-      e(@feed_filters, @field, []),
-      e(@feed_filters, maybe_to_atom("exclude_#{@field}"), [])
-    )}
-    compact
-    event_target={@event_target}
-    event_name={@event_name}
-    label_yes={l("Only")}
-    label_default={@label_default || l("Default")}
-    label_no={l("Hide")}
-    phx_values={%{
-      "phx-value-toggle" => @field,
-      "phx-value-toggle_type" => @key
-    }}
-  />
-</div>
+{#case Bonfire.UI.Social.ToggleTypeLive.tri_state(
+    @key,
+    e(@feed_filters, @field, []),
+    e(@feed_filters, Bonfire.Common.Types.maybe_to_atom("exclude_#{@field}"), [])
+  )}
+  {#match state}
+    <div
+      data-toggle={@key}
+      data-state={state}
+      class={
+        "group flex items-center gap-3 rounded-lg px-2 py-1 transition-colors duration-150",
+        "bg-primary/[0.05]": state == :only,
+        "bg-base-content/[0.03]": state == :hide
+      }
+    >
+      <span class={
+        "flex-1 text-sm text-base-content/90 truncate",
+        "line-through text-base-content/70": state == :hide,
+        "text-primary font-medium": state == :only
+      }>
+        {@label}
+      </span>
+
+      <div
+        role="radiogroup"
+        aria-label={l("Filter mode for %{label}", label: @label)}
+        class="inline-flex items-center rounded-full bg-base-content/[0.04] p-0.5 text-[11px] font-medium"
+      >
+        <button
+          type="button"
+          role="radio"
+          data-id="only"
+          aria-checked={if state == :only, do: "true", else: "false"}
+          title={l("Show only this — hide everything else")}
+          phx-click={@event_name}
+          phx-value-toggle={@field}
+          phx-value-toggle_type={@key}
+          phx-value-toggle_value={if state == :only, do: "default", else: "true"}
+          phx-target={@event_target}
+          class={
+            "relative inline-flex items-center gap-1 px-2 py-1 rounded-full cursor-pointer transition-colors duration-150 before:absolute before:inset-x-0 before:-inset-y-2 before:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
+            "text-base-content/50 hover:text-base-content/80": state != :only,
+            "bg-primary text-primary-content": state == :only
+          }
+        >
+          <#Icon iconify="ph:target-duotone" class={"w-3 h-3", hidden: state != :only} />
+          <span aria-hidden="true">{l("Only")}</span>
+          <span class="sr-only">
+            {l("Show only %{label} — hide everything else", label: @label)}
+          </span>
+        </button>
+        <button
+          type="button"
+          role="radio"
+          data-id="default"
+          aria-checked={if state == :default, do: "true", else: "false"}
+          title={l("Show alongside everything else (default)")}
+          phx-click={@event_name}
+          phx-value-toggle={@field}
+          phx-value-toggle_type={@key}
+          phx-value-toggle_value="default"
+          phx-target={@event_target}
+          class={
+            "relative inline-flex items-center px-2 py-1 rounded-full cursor-pointer transition-colors duration-150 before:absolute before:inset-x-0 before:-inset-y-2 before:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
+            "text-base-content/50 hover:text-base-content/80": state != :default,
+            "bg-base-100 text-base-content/90": state == :default
+          }
+        >
+          <span aria-hidden="true">{@label_default || l("Include")}</span>
+          <span class="sr-only">
+            {l("Show %{label} alongside everything else", label: @label)}
+          </span>
+        </button>
+        <button
+          type="button"
+          role="radio"
+          data-id="hide"
+          aria-checked={if state == :hide, do: "true", else: "false"}
+          title={l("Hide this from the feed")}
+          phx-click={@event_name}
+          phx-value-toggle={@field}
+          phx-value-toggle_type={@key}
+          phx-value-toggle_value={if state == :hide, do: "default", else: "false"}
+          phx-target={@event_target}
+          class={
+            "relative inline-flex items-center gap-1 px-2 py-1 rounded-full cursor-pointer transition-colors duration-150 before:absolute before:inset-x-0 before:-inset-y-2 before:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
+            "text-base-content/50 hover:text-base-content/80": state != :hide,
+            "bg-base-content/75 text-base-100": state == :hide
+          }
+        >
+          <#Icon iconify="ph:eye-slash-duotone" class={"w-3 h-3", hidden: state != :hide} />
+          <span aria-hidden="true">{l("Hide")}</span>
+          <span class="sr-only">
+            {l("Hide %{label} from the feed", label: @label)}
+          </span>
+        </button>
+      </div>
+    </div>
+{/case}

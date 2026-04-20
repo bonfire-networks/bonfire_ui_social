@@ -39,4 +39,19 @@ defmodule Bonfire.UI.Social.ToggleTypeLive do
       _ -> nil
     end
   end
+
+  @doc """
+  Semantic tri-state for the current filter row.
+
+  `:only` means this key is isolated (included, everything else hidden).
+  `:hide` means this key is suppressed.
+  `:default` means this key neither isolates nor hides — it flows with the rest.
+  """
+  def tri_state(value, include, exclude) do
+    case check_throuple(value, include, exclude) do
+      true -> :only
+      false -> :hide
+      _ -> :default
+    end
+  end
 end
