@@ -34,7 +34,7 @@
           (@showing_within in [:thread, :thread_embed] && !@viewing_main_object)
     ]}
     to={@path}
-    label={e(@character_username, "") <> " profile"}
+    label={l("%{username}'s profile", username: @character_username || @profile_name || "")}
   >
     <Bonfire.UI.Common.AvatarLive
       parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject", @parent_id)}

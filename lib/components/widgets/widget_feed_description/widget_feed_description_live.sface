@@ -1,45 +1,16 @@
 <Bonfire.UI.Common.WidgetBlockLive>
-  <div class="">
-    {#case @feed_name}
-      {#match :my}
-        <div class="flex items-center gap-2">
-          <#Icon iconify="ph:house-duotone" class="w-5 h-5 text-primary" />
-          <span class="text-sm font-semibold">{l("Following")}</span>
-        </div>
-        <div class="prose mt-2 text-sm prose-sm">{l("All visible activities by people you follow")}</div>
-      {#match :local}
-        <div class="flex items-center gap-2">
-          <#Icon iconify="ph:campfire-duotone" class="w-5 h-5 text-primary" />
-          <span class="text-sm font-semibold">{l("Local feed")}</span>
-        </div>
-        <div class="prose mt-2 text-sm prose-sm">{l("All visible activities by users of this instance")}
-        </div>
-      {#match :remote}
-        <div class="flex items-center gap-2">
-          <#Icon iconify="streamline:planet" class="w-5 h-5 text-primary" />
-          <span class="text-sm font-semibold">{l("Remote")}</span>
-        </div>
-        <div class="prose mt-2 text-sm prose-sm">{l(
-            "All visible activities by people on other fediverse instances (who have been followed or somehow interacted with by users of this instance)"
-          )}</div>
-      {#match :explore}
-        <div class="flex items-center gap-2">
-          <#Icon iconify="mingcute:compass-fill" class="w-5 h-5 text-primary" />
-          <span class="text-sm font-semibold">{l("Explore")}</span>
-        </div>
-        <div class="prose mt-2 text-sm prose-sm">{l("All visible local and remote activities.")}</div>
-      {#match :curated}
-        <div class="flex items-center gap-2">
-          <#Icon iconify="material-symbols:push-pin" class="w-5 h-5 text-primary" />
-          <span class="text-sm font-semibold">{l("Curated feed")}</span>
-        </div>
-        <div class="prose mt-2 text-sm prose-sm">{l("Local or remote activities hand-picked by curators or admins of this instance.")}</div>
-      {#match _}
-        <div class="flex items-center gap-2">
-          <#Icon iconify="ph:globe-duotone" class="w-5 h-5 text-primary" />
-          <span class="text-sm font-semibold">{l("Public feed")}</span>
-        </div>
-        <div class="prose mt-2 text-sm prose-sm">Public feed</div>
-    {/case}
-  </div>
+  {#case preset(@feed_name, @__context__)}
+    {#match %{} = preset}
+      <div class="flex items-center gap-2">
+        <Iconify.iconify icon={e(preset, :icon, "ph:globe-duotone")} class="w-5 h-5 text-primary" />
+        <span class="text-sm font-semibold">{e(preset, :name, l("Feed"))}</span>
+      </div>
+      <div :if={e(preset, :description, nil)} class="prose mt-2 text-sm prose-sm">{e(preset, :description, nil)}</div>
+    {#match _}
+      <div class="flex items-center gap-2">
+        <#Icon iconify="ph:globe-duotone" class="w-5 h-5 text-primary" />
+        <span class="text-sm font-semibold">{l("Public feed")}</span>
+      </div>
+      <div class="prose mt-2 text-sm prose-sm">{l("Public feed")}</div>
+  {/case}
 </Bonfire.UI.Common.WidgetBlockLive>

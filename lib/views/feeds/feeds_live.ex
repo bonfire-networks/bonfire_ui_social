@@ -18,8 +18,9 @@ defmodule Bonfire.UI.Social.FeedsLive do
     # FIXME: these should be set somewhere in config
     default_nav: [
       Bonfire.Web.Views.DashboardLive,
+      Bonfire.UI.Social.FeedsNavLinkLive,
       Bonfire.UI.Social.FeedsLive,
-      Bonfire.UI.Social.FeedsNavLive,
+      # Bonfire.UI.Social.FeedsNavLive, # moved to right sidebar as WidgetFeedsLive
       Bonfire.Search.Web.SearchLive,
       Bonfire.UI.Messages.MessagesLive,
       # Bonfire.UI.Social.NotificationsFeedLive,
@@ -99,7 +100,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
        |> assign(
          selected_tab: nil,
          #  page: :explore,
-         page_title: l("Activities"),
+         page_title: nil,
          page_header_icon: "ph:house-duotone",
          feed: nil,
          page_info: nil,
@@ -127,6 +128,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
          sidebar_widgets: [
            users: [
              secondary: [
+               {Bonfire.UI.Social.WidgetFeedsLive, []},
                #  {Bonfire.UI.Social.WidgetFeedLive, [event_target: ]},
                {Bonfire.Tag.Web.WidgetTagsLive, []}
                #  {Bonfire.UI.Social.WidgetTrendingLinksLive, []}

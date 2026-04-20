@@ -105,6 +105,7 @@
             <div
               id={entry_id}
               :if={@hide_activities != "component"}
+              role="article"
               class={
                 "activity_wrapper w-full max-w-full",
                 "infinite_scroll_hidden hidden": @hide_activities == "infinite_scroll",

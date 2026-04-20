@@ -503,9 +503,6 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def maybe_widgets(assigns, feed_name) do
     cond do
-      feed_name in [:my, :explore, :remote, :local] ->
-        widgets(assigns)
-
       feed_name in [:curated] ->
         curated_widgets()
 
@@ -520,6 +517,9 @@ defmodule Bonfire.UI.Social.FeedLive do
             # {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: "notifications"]}
           ]
         ]
+
+      match?({:ok, _}, Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, assigns)) ->
+        widgets(assigns)
 
       true ->
         [
@@ -542,6 +542,7 @@ defmodule Bonfire.UI.Social.FeedLive do
         users: [
           secondary: [
             {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: :curated]},
+            {Bonfire.UI.Social.WidgetFeedsLive, []},
             {Bonfire.Tag.Web.WidgetTagsLive, []}
           ]
         ]
@@ -565,6 +566,7 @@ defmodule Bonfire.UI.Social.FeedLive do
         users: [
           secondary: [
             {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: feed_name]},
+            {Bonfire.UI.Social.WidgetFeedsLive, []},
             # {Bonfire.UI.Social.WidgetFeedLive,
             #  [
             #    event_target: "##{e(assigns, :feed_component_id, nil)}",

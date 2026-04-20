@@ -994,8 +994,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def feed_default_assigns_from_preset(feed_name, opts) do
     # TODO: optimise by avoiding loading the preset twice (here and in prepare_filters_assigns_preloads_posloads)
-    with {:ok, %{assigns: assigns, filters: filters}} <-
+    with {:ok, %{filters: filters} = preset} <-
            Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, opts) do
+      assigns = e(preset, :assigns, []) |> List.wrap()
+
       # Include preset exclusions in feed_filters so child components don't need to re-fetch
       preset_exclusions = %{
         preset_excludes_activity_types: e(filters, :exclude_activity_types, []) |> List.wrap(),
@@ -1009,6 +1011,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
       assigns
       |> Keyword.put(:feed_filters, updated_filters)
+      |> maybe_put_new(:page_title, e(preset, :name, nil))
     else
       {:ok, _} ->
         # debug("No preset found with assigns")
@@ -1019,6 +1022,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         []
     end
   end
+
+  defp maybe_put_new(list, _key, nil), do: list
+  defp maybe_put_new(list, key, value), do: Keyword.put_new(list, key, value)
 
   defp component_id(_feed_id_or_tuple, %{feed_component_id: feed_component_id} = _assigns)
        when not is_nil(feed_component_id),

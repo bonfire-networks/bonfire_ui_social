@@ -5,15 +5,27 @@
       )}</div>
   </div>
 
-  <div class="">
-    <div>
-      <div class="p-4 text-lg font-bold flex items-center gap-4 border-b border-base-content/10">
-        <#Icon iconify="ph:list-bullets-duotone" class="w-6 h-6 text-primary" />
-        <span>{l("Default settings")}</span>
-      </div>
+  <div x-data="{open: false}" class="">
+    <div
+      x-on:click="open = !open"
+      x-on:keydown.enter.prevent="open = !open"
+      x-on:keydown.space.prevent="open = !open"
+      x-bind:aria-expanded="open"
+      role="button"
+      tabindex="0"
+      class="p-4 text-lg font-bold flex items-center gap-4 border-b border-base-content/10 cursor-pointer select-none"
+    >
+      <#Icon iconify="ph:list-bullets-duotone" class="w-6 h-6 text-primary" />
+      <span class="flex-1">{l("Default settings")}</span>
+      <span
+        class="transition-transform"
+        x-bind:class="{'rotate-180': !open}"
+      >
+        <#Icon iconify="ph:caret-down" class="w-4 h-4 text-base-content/70" />
+      </span>
     </div>
 
-    <div class="bg-base-100 divide-y divide-base-content/10">
+    <div x-show="open" x-cloak x-collapse class="bg-base-100 divide-y divide-base-content/10">
       <form data-scope="time_limit" class="p-4" phx-change="Bonfire.Common.Settings:set">
         <label for="set_default_time_limit" class="sr-only">{l("Set default time limit")}</label>
         <Bonfire.UI.Common.SettingsSelectLive
@@ -168,7 +180,7 @@
       !Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
     <div class="">
       <div>
-        <div class="p-4 text-lg font-bold flex items-start gap-4 border-b border-base-content/10">
+        <div class="p-4 text-lg font-bold flex items-start gap-4">
           <#Icon iconify="ph:list-star-duotone" class="w-6 h-6 text-primary" />
           <div>
             <div>{l("Feed presets")}</div>
@@ -179,7 +191,7 @@
 
       <ul class="flex flex-col bg-base-100 menu-sm w-full">
         {#for {preset, index} <- Enum.with_index(@presets || [])}
-          <li class="relative border-b border-base-content/10">
+          <li class="relative">
             {!-- TODO? Draggable handle outside Alpine component --}
             {!-- <div
                 data-sortable-handler
@@ -195,7 +207,7 @@
                     <Iconify.iconify icon={preset[:icon] || "ic:baseline-rss-feed"} class="w-7 h-7 opacity-70" />
                     <div class="flex flex-col gap-0 flex-1">
                       <div class="font-medium text-sm">{preset[:name] || preset[:description] || preset.id}</div>
-                      <div class="text-sm text-base-content/70">{preset[:description]}</div>
+                      <div class="text-xs text-base-content/90">{preset[:description]}</div>
                     </div>
                     {!-- <div class="text-xs text-base-content/50 mt-1 flex gap-2 flex-wrap">
                         {#if preset[:current_user_required]}
@@ -223,7 +235,7 @@
                     :if={!preset[:built_in]}
                     phx-click="Bonfire.Social.Feeds:preset_delete"
                     phx-value-id={preset.id}
-                    class="btn btn-circle btn-error btn-sm btn-ghost"
+                    class="btn btn-circle btn-error btn-sm rounded-md"
                   >
                     <#Icon iconify="ph:trash-bold" class="w-4 h-4" />
                     <span class="sr-only">{l("Delete")}</span>
@@ -233,20 +245,22 @@
                       phx-click="Bonfire.Social.Feeds:preset_nav_toggle"
                       phx-value-id={preset.id}
                       phx-value-exclude="true"
-                      class=""
+                      class="btn btn-square btn-sm btn-primary btn-soft rounded-md"
+                      title={l("Unpin from sidebar")}
                     >
-                      <input type="checkbox" checked class="checkbox checkbox-primary">
-                      <span class="sr-only">{l("Include in the sidebar")}</span>
+                      <#Icon iconify="ph:push-pin-simple-fill" class="w-4 h-4" />
+                      <span class="sr-only">{l("Pinned to sidebar")}</span>
                     </button>
                   {#else}
                     <button
                       phx-click="Bonfire.Social.Feeds:preset_nav_toggle"
                       phx-value-id={preset.id}
                       phx-value-exclude="false"
-                      class=""
+                      class="btn btn-square btn-sm btn-ghost rounded-md"
+                      title={l("Pin to sidebar")}
                     >
-                      <input type="checkbox" class="checkbox checkbox-primary">
-                      <span class="sr-only">{l("Include in the sidebar")}</span>
+                      <#Icon iconify="ph:push-pin-simple" class="w-4 h-4" />
+                      <span class="sr-only">{l("Pin to sidebar")}</span>
                     </button>
                   {/if}
                   {!-- <form phx-change="Bonfire.Social.Feeds:preset_nav_toggle" phx-value-id={preset.id}>
