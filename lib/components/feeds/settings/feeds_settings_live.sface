@@ -17,10 +17,7 @@
     >
       <#Icon iconify="ph:list-bullets-duotone" class="w-6 h-6 text-primary" />
       <span class="flex-1">{l("Default settings")}</span>
-      <span
-        class="transition-transform"
-        x-bind:class="{'rotate-180': !open}"
-      >
+      <span class="transition-transform" x-bind:class="{'rotate-180': !open}">
         <#Icon iconify="ph:caret-down" class="w-4 h-4 text-base-content/70" />
       </span>
     </div>

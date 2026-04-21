@@ -154,7 +154,9 @@ defmodule Bonfire.UI.Social.FeedFiltersHelpersTest do
       assert FeedFiltersModalContentLive.circles_summary(%{subject_circles: ["id1"]}) ==
                "1 selected"
 
-      assert FeedFiltersModalContentLive.circles_summary(%{subject_circles: ["id1", "id2", "id3"]}) ==
+      assert FeedFiltersModalContentLive.circles_summary(%{
+               subject_circles: ["id1", "id2", "id3"]
+             }) ==
                "3 selected"
     end
   end

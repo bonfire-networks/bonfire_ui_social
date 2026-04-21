@@ -337,8 +337,8 @@
       <details class="group">
         <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
           <div class="flex items-center gap-3">
-          <#Icon iconify="ph:pulse-duotone" class="size-4 text-base-content/80" />
-          <h4 class="text-sm font-medium text-base-content/80">{l("Activity types")}</h4>
+            <#Icon iconify="ph:pulse-duotone" class="size-4 text-base-content/80" />
+            <h4 class="text-sm font-medium text-base-content/80">{l("Activity types")}</h4>
           </div>
           <div class="flex items-center gap-2 min-w-0">
             <span class="badge text-xs">
@@ -596,7 +596,6 @@
       </div>
     </details>
   </div>
-
 
   <div class="flex items-center justify-end gap-2 p-4 border-t border-base-content/10 shrink-0 bg-base-100 sticky bottom-0">
     <button
