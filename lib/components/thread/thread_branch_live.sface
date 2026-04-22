@@ -3,7 +3,7 @@
   data-id="branch"
   class={
     "reply thread-level-#{@thread_level} flex relative",
-    "border-b-4 border-base-content/10": @thread_level == 1,
+    "border-b border-base-content/10": @thread_level == 1,
     "border-b border-base-content/10": @thread_mode == :flat
   }
 >
