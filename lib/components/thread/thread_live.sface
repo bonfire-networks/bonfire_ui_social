@@ -39,7 +39,7 @@
   {/if}
 
   {#if @loading != true || @replies != []}
-    <div class="flex flex-col flex-1">
+    <div class="flex bonfire-wrapper flex-col flex-1">
       <div data-id="replies" class="flex flex-col flex-1">
         <Bonfire.UI.Common.LoadPreviousLive
           live_handler={Bonfire.Social.Threads}
@@ -88,7 +88,7 @@
               </div>
 
               {!-- nested mode stream --}
-              <div class="flex flex-col gap-3" id={"stream_#{@id}"} phx-update="stream">
+              <div class="flex flex-col gap-0" id={"stream_#{@id}"} phx-update="stream">
                 {#for {entry_id, {reply, child_replies}} <- @streams.threaded_replies}
                   <ThreadBranchLive
                     id={entry_id}
@@ -132,12 +132,12 @@
               </div>
 
               {!-- flat mode stream --}
-              <div class="flex flex-col gap-3" id={"stream_#{@id}"} phx-update="stream">
+              <div class="flex flex-col gap-0" id={"stream_#{@id}"} phx-update="stream">
                 {#for {entry_id, reply} <- @streams.replies}
                   <div
                     id={entry_id}
                     data-role="comment-flat"
-                    class="reply flex relative w-full bonfire-wrapper mx-auto"
+                    class="reply flex relative w-full mx-auto"
                   >
                     <CommentLive
                       comment={reply}
