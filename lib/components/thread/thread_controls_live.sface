@@ -121,6 +121,11 @@
             <#Icon iconify="ph:fire-duotone" class="lg:hidden block h-[20px] w-[18px]" aria-hidden="true" />
             <span class="hidden lg:block">{l("Most liked")}</span>
           </span>
+        {#match {:popularity_score, _}}
+          <span class="flex items-center">
+            <#Icon iconify="ph:trend-up-duotone" class="lg:hidden block w-4 h-4" aria-hidden="true" />
+            <span class="hidden lg:block">{l("Trending")}</span>
+          </span>
         {#match _}
           <span class="flex items-center">
             <#Icon
@@ -281,6 +286,30 @@
               aria-hidden="true"
             >
               {#if @sort_by == :like_count}
+                <span class="w-[14px] h-[14px] bg-primary rounded-full" />
+              {/if}
+            </div>
+          </a>
+        </li>
+
+        <li role="none">
+          <a
+            role="menuitemradio"
+            aria-checked={if @sort_by == :popularity_score, do: "true", else: "false"}
+            phx-click="set"
+            phx-value-to_atoms="true"
+            phx-value-sort_by="popularity_score"
+            phx-value-sort_order="desc"
+            phx-value-assign_global="true"
+            phx-target={@event_target}
+            class="flex gap-3 px-2 text-base-content justify-between items-center"
+          >
+            {l("Popularity")}
+            <div
+              class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full"
+              aria-hidden="true"
+            >
+              {#if @sort_by == :popularity_score}
                 <span class="w-[14px] h-[14px] bg-primary rounded-full" />
               {/if}
             </div>
