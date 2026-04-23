@@ -98,6 +98,52 @@ defmodule Bonfire.UI.Social.CommentsLive do
      end)}
   end
 
+  def handle_params(%{"canonical_slug" => slug} = params, url, socket) when is_binary(slug) do
+    handle_ghost_params(slug, params, url, socket)
+  end
+
+  def handle_params(%{"canonical_id" => id} = params, url, socket) when is_binary(id) do
+    handle_ghost_params("id:#{id}", params, url, socket)
+  end
+
+  defp handle_ghost_params(slug_or_id, params, _url, socket) do
+    socket = assign_global(socket, :go, e(params, "embed_parent", nil))
+    current_user = current_user(socket) || params["creator"]
+    url = e(params, "media_uri", nil) || e(params, "embed_parent", nil)
+
+    with {:ok, %{id: id}} <-
+           maybe_apply(Bonfire.Ghost.EmbedHelper, :get_or_create_post_for_article, [
+             slug_or_id,
+             url,
+             [
+               current_user: current_user,
+               boundary: params["boundary"],
+               group_id: params["group_id"],
+               require_topic: params["require_topic"] == "true"
+             ]
+           ]) do
+      handle_params(%{"id" => id}, nil, socket)
+    else
+      {:error, :ghost_not_configured} ->
+        uri = e(params, "media_uri", nil) || e(params, "embed_parent", nil)
+
+        if uri,
+          do: handle_params(Map.merge(params, %{"media_uri" => uri}), nil, socket),
+          else: {:noreply, assign_error(socket, l("Could not find article"))}
+
+      {:error, :topic_required} ->
+        {:noreply,
+         assign_error(
+           socket,
+           l("This article is not associated with a topic on this Bonfire instance")
+         )}
+
+      error ->
+        debug(error, "Ghost article lookup failed")
+        {:noreply, assign_error(socket, l("Could not find article"))}
+    end
+  end
+
   def handle_params(%{"media_uri" => uri} = params, _url, socket) when is_binary(uri) do
     socket = assign_global(socket, :go, e(params, "embed_parent", nil) || uri)
 
