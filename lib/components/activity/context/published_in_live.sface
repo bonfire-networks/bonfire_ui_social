@@ -1,6 +1,6 @@
 {flood({@showing_within, @context}, "pubbbbl") && ""}
 {!-- Something published in a Category / Topic --}
-<div data-role="published_in" class={@class}>
+<div style="margin-left: -32px; margin-bottom: 4px" data-role="published_in" class={@class}>
   {!-- and Types.object_type(@context) != @showing_within --}
   <#Icon iconify="ph:users-three-duotone" class="w-5 h-5 text-info" />
   <div class="flex-1 ml-3">

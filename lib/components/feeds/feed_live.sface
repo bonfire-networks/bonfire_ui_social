@@ -48,7 +48,7 @@
         phx-click={JS.show(to: ".fresh_hidden")
         |> JS.push("show_fresh", target: @myself)
         |> JS.add_class("hidden")}
-        class="flex justify-center w-full mx-auto btn btn-ghost text-primary z-50 border-0 border-b border-base-content/20 rounded-none border-t py-6 font-light"
+        class="flex justify-center w-full mx-auto btn btn-ghost text-primary z-50 border-0 border-b border-base-content/20 rounded-none py-6 font-light"
         phx-show={JS.remove_class("hidden")}
       >
         <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
