@@ -128,7 +128,15 @@ defmodule Bonfire.UI.Social.CommentsLive do
         uri = e(params, "media_uri", nil) || e(params, "embed_parent", nil)
 
         if uri,
-          do: handle_params(Map.merge(params, %{"media_uri" => uri}), nil, socket),
+          do:
+            handle_params(
+              params
+              |> Map.delete("canonical_slug")
+              |> Map.delete("canonical_id")
+              |> Map.put("media_uri", uri),
+              nil,
+              socket
+            ),
           else: {:noreply, assign_error(socket, l("Could not find article"))}
 
       {:error, :topic_required} ->
