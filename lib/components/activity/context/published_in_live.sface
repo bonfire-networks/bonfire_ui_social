@@ -1,9 +1,7 @@
-<div
-  :if={not is_nil(@context) and @showing_within not in [:group, :topic, :thread]}
-  data-role="published_in"
-  class={@class}
->
-  {!-- Something published in a Category / Topic --}
+{flood({@showing_within, @context}, "pubbbbl") && ""}
+{!-- Something published in a Category / Topic --}
+<div data-role="published_in" class={@class}>
+  {!-- and Types.object_type(@context) != @showing_within --}
   <#Icon iconify="ph:users-three-duotone" class="w-5 h-5 text-info" />
   <div class="flex-1 ml-3">
     <div class="text-sm font-medium text-base-content/70">

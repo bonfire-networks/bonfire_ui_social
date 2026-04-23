@@ -206,7 +206,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
           nil -> e(socket_assigns, :thread_mode, nil)
           existing -> existing
         end,
-      published_in: maybe_published_in(activity, verb),
+      published_in:
+        if(@showing_within != :smart_input,
+          do: maybe_published_in(flood(activity, "accct"), verb) |> flood("maybppp")
+        ),
       labelled: maybe_labelled(activity, verb),
       peered: peered,
       is_remote:
@@ -872,6 +875,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
         {/case}
       {/if}
 
+      <Bonfire.UI.Social.Activity.PublishedInLive
+        :if={@published_in && id(@published_in) != @feed_id && @showing_within != :topic}
+        context={@published_in}
+        showing_within={@showing_within}
+      />
+
       {#if @custom_preview}
         <StatelessComponent
           permalink={@permalink}
@@ -905,12 +914,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
             <input type="hidden" name="feed_id" value={@feed_id}>
             <input type="hidden" name="activity_id" value={@activity_id}>
           </form>
-
-          <Bonfire.UI.Social.Activity.PublishedInLive
-            :if={@published_in && @showing_within != :smart_input}
-            context={@published_in}
-            showing_within={@showing_within}
-          />
 
           {#for {component, component_assigns} when is_atom(component) <-
               activity_components(
