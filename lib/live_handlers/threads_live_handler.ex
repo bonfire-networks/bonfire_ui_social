@@ -533,19 +533,37 @@ defmodule Bonfire.Social.Threads.LiveHandler do
                 limit: 20
               )
 
-            if participants != [] do
-              reply_counts = Threads.reply_counts_per_subject(thread_id)
+            thread_context_widget =
+              case Bonfire.UI.Social.ActivityLive.maybe_published_in(activity, nil) do
+                %{id: _} = parent ->
+                  [{Bonfire.UI.Social.WidgetThreadContextLive, [category: parent]}]
 
+                _ ->
+                  []
+              end
+
+            participants_and_tags =
+              if participants != [] do
+                reply_counts = Threads.reply_counts_per_subject(thread_id)
+
+                [
+                  {Bonfire.UI.Social.WidgetParticipantsLive,
+                   [participants: participants, reply_counts: reply_counts]},
+                  {Bonfire.Tag.Web.WidgetTagsLive, []}
+                ]
+              else
+                []
+              end
+
+            secondary_widgets = thread_context_widget ++ participants_and_tags
+
+            if secondary_widgets != [] do
               send(
                 pid,
                 {:assign,
                  preview_sidebar_widgets: [
                    users: [
-                     secondary: [
-                       {Bonfire.UI.Social.WidgetParticipantsLive,
-                        [participants: participants, reply_counts: reply_counts]},
-                       {Bonfire.Tag.Web.WidgetTagsLive, []}
-                     ]
+                     secondary: secondary_widgets
                    ],
                    guests: [
                      secondary: nil

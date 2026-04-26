@@ -876,7 +876,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       {/if}
 
       <Bonfire.UI.Social.Activity.PublishedInLive
-        :if={@published_in && id(@published_in) != @feed_id && @showing_within != :topic}
+        :if={@published_in && id(@published_in) != @feed_id && @showing_within != :topic &&
+          !@viewing_main_object}
         context={@published_in}
         showing_within={@showing_within}
       />
