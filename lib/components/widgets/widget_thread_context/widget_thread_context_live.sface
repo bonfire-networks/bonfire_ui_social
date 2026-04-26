@@ -17,16 +17,9 @@
         <div class="flex items-center gap-2 min-w-0">
           {#case Media.avatar_url(category)}
             {#match "/images/avatar.png"}
-              <Iconify.iconify
-                icon={icon(category)}
-                class="size-5 shrink-0 text-primary/70"
-              />
+              <Iconify.iconify icon={icon(category)} class="size-5 shrink-0 text-primary/70" />
             {#match url}
-              <img
-                src={url}
-                alt=""
-                class="size-5 shrink-0 rounded-md object-cover"
-              >
+              <img src={url} alt="" class="size-5 shrink-0 rounded-md object-cover">
           {/case}
 
           <span class="font-semibold text-base text-base-content leading-tight truncate motion-safe:transition-colors motion-safe:duration-150 group-hover:text-primary group-focus-visible:text-primary">
