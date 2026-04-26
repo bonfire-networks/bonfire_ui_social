@@ -30,14 +30,6 @@
     />
   </Bonfire.UI.Social.Activity.ThreadStatsLive>
 
-  {#if @loading == false and Enum.count(@streams.threaded_replies) == [] and
-      Enum.count(@streams.replies) == []}
-    <Bonfire.UI.Common.EmptyFeed
-      feedback_title={l("No replies yet")}
-      feedback_message={l("Be the first to reply!")}
-    />
-  {/if}
-
   {#if @loading != true || @replies != []}
     <div class="flex bonfire-wrapper flex-col flex-1">
       <div data-id="replies" class="flex flex-col flex-1">
@@ -47,6 +39,10 @@
           target={@myself}
           context={@thread_id}
         />
+
+        {#if @loading != true and @reply_count == 0}
+          <StatelessComponent module={maybe_component(Bonfire.UI.Social.ThreadEmptyLive, @__context__)} />
+        {/if}
 
         {!-- flat mode simple list (use for manually set assigns, like the clicked comment while the thread is loading) --}
         {#case Settings.get(

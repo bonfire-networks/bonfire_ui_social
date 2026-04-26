@@ -1,51 +1,40 @@
 {#case @category}
   {#match %{id: _} = category}
-    <section
-      data-role="thread_context"
-      aria-label={"#{eyebrow(category)}: #{category_name(category)}"}
-      class="px-4 pt-3 pb-4 mb-2 border-b border-base-content/10"
-    >
-      <p class="text-[11px] font-medium uppercase tracking-wider text-base-content/45 mb-1.5">
-        {eyebrow(category)}
-      </p>
+    <div data-role="thread_context">
+      <Bonfire.UI.Common.WidgetBlockLive widget_title={eyebrow(category)}>
+        <LinkLive
+          to={path(category)}
+          class="group block focus:outline-none"
+          data-role="thread_context_link"
+          aria-label={"#{eyebrow(category)}: #{category_name(category)}"}
+        >
+          <div class="flex items-center gap-2 min-w-0">
+            {#case Media.avatar_url(category)}
+              {#match "/images/avatar.png"}
+                <Iconify.iconify icon={icon(category)} class="size-5 shrink-0 text-primary/70" />
+              {#match url}
+                <img src={url} alt="" class="size-5 shrink-0 rounded-md object-cover">
+            {/case}
 
-      <LinkLive
-        to={path(category)}
-        class="group block focus:outline-none"
-        data-role="thread_context_link"
-      >
-        <div class="flex items-center gap-2 min-w-0">
-          {#case Media.avatar_url(category)}
-            {#match "/images/avatar.png"}
-              <Iconify.iconify icon={icon(category)} class="size-5 shrink-0 text-primary/70" />
-            {#match url}
-              <img src={url} alt="" class="size-5 shrink-0 rounded-md object-cover">
+            <span class="font-semibold text-base text-base-content leading-tight truncate motion-safe:transition-colors motion-safe:duration-150 group-hover:text-primary group-focus-visible:text-primary">
+              {category_name(category)}
+            </span>
+          </div>
+
+          <p
+            :if={e(category, :profile, :summary, "") != ""}
+            class="mt-1 text-sm text-base-content/65 leading-snug line-clamp-2"
+          >{e(category, :profile, :summary, "")}</p>
+
+          {#case e(category, :type, nil)}
+            {#match :group}
+              <p class="mt-1.5 text-xs text-base-content/45">
+                {members_count(category)} {l("members")}
+              </p>
+            {#match _}
           {/case}
-
-          <span class="font-semibold text-base text-base-content leading-tight truncate motion-safe:transition-colors motion-safe:duration-150 group-hover:text-primary group-focus-visible:text-primary">
-            {category_name(category)}
-          </span>
-        </div>
-
-        <p
-          :if={e(category, :profile, :summary, "") != ""}
-          class="mt-1 text-sm text-base-content/65 leading-snug line-clamp-2"
-        >{e(category, :profile, :summary, "")}</p>
-
-        {#case e(category, :type, nil)}
-          {#match :group}
-            <p class="mt-1.5 text-xs text-base-content/45">
-              {members_count(category)} {l("members")}
-            </p>
-          {#match _}
-        {/case}
-      </LinkLive>
-
-      {!-- TODO: soft follow / join action when the user can act and isn't already
-           following / a member. Needs follow-state preload in threads_live_handler
-           (currently only `tree.parent` profile/character is loaded). Deferring
-           keeps the brief's "soft text-link, not button" goal honest — embedding
-           CategoryActionsLive here would render a full-width button. --}
-    </section>
+        </LinkLive>
+      </Bonfire.UI.Common.WidgetBlockLive>
+    </div>
   {#match _}
 {/case}
