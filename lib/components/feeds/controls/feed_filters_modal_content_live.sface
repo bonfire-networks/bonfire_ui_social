@@ -1,4 +1,4 @@
-<div style="margin: 0 -16px" class="flex flex-col max-h-[calc(100vh-10rem)]">
+<div class="flex flex-col max-h-[calc(100vh-10rem)]">
   {#case @active_filters}
     {#match []}
       {#if @user_activities_excluded?}
