@@ -22,7 +22,7 @@ defmodule Bonfire.Social.Feeds.LocalFeed.Test do
       conn()
       |> visit("/feed/local")
       |> assert_has("a", text: "Log in")
-      |> assert_has("span", text: "Explore local activities")
+      |> assert_has("[data-role=page_title]", text: "Explore local activities")
     end
 
     test "with user", %{conn: conn, user: user, account: account} do
@@ -30,7 +30,7 @@ defmodule Bonfire.Social.Feeds.LocalFeed.Test do
 
       conn(user: user, account: account)
       |> visit("/feed/local")
-      |> assert_has("span", text: "Explore local activities")
+      |> assert_has("[data-role=page_title]", text: "Explore local activities")
     end
 
     test "my own posts in instance feed (with local preset selected)", %{

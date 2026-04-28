@@ -133,7 +133,9 @@ defmodule Bonfire.Social.UI.Feeds.MyFeed.Test do
         }
       }
 
-      assert {:ok, post} = Posts.publish(current_user: user, post_attrs: attrs)
+      # `mentions` boundary only grants read to users mentioned in the post.
+      # user2 follows user but isn't mentioned, so they shouldn't see it.
+      assert {:ok, post} = Posts.publish(current_user: user, post_attrs: attrs, boundary: "mentions")
       assert post.post_content.html_body =~ attrs[:post_content][:html_body]
 
       feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, user2)
