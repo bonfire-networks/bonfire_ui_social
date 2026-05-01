@@ -1942,7 +1942,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       # cases where we do not show reply_to
       when is_nil(reply_to) or
              (not is_nil(activity_inception) or
-                (viewing_main_object != true and showing_within in [:thread, :smart_input] and
+                (viewing_main_object != true and
+                   showing_within in [:thread, :thread_embed, :smart_input] and
                    thread_mode != :flat)),
       do: []
 
@@ -1957,7 +1958,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         _
       )
       when thread_mode == :flat and reply_to_id == thread_id and
-             showing_within in [:thread, :messages],
+             showing_within in [:thread, :thread_embed, :messages],
       do: []
 
   def component_maybe_in_reply_to(

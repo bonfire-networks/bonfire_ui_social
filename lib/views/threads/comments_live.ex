@@ -8,8 +8,11 @@ defmodule Bonfire.UI.Social.CommentsLive do
             ]}
 
   def mount(params, _session, socket) do
+    embed_theme = e(params, "theme", nil)
+
     {:ok,
      socket
+     |> Bonfire.UI.Common.ThemeHelper.push_theme(embed_theme)
      |> assign(
        page_title: l("Comments"),
        page: "comments",
@@ -24,7 +27,7 @@ defmodule Bonfire.UI.Social.CommentsLive do
        inline_action_permalink: nil,
        no_mobile_header: true,
        hide_thread_stats: true,
-       embed_theme: e(params, "theme", nil),
+       embed_theme: embed_theme,
        participants: nil,
        sort_by: maybe_to_atom(e(params, "sort_by", nil)),
        sort_order: maybe_to_atom(e(params, "sort_order", nil)),

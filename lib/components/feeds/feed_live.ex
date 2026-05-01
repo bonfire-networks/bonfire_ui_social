@@ -565,6 +565,7 @@ defmodule Bonfire.UI.Social.FeedLive do
         ],
         users: [
           secondary: [
+            {Bonfire.UI.Social.WidgetGettingStartedLive, [type: Surface.LiveComponent]},
             {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: feed_name]},
             {Bonfire.UI.Social.WidgetFeedsLive, []},
             # {Bonfire.UI.Social.WidgetFeedLive,

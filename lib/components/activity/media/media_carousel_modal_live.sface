@@ -15,6 +15,7 @@
         onTouchEnd(e) {
             let dx = e.changedTouches[0].clientX - this.startX;
             let dy = e.changedTouches[0].clientY - this.startY;
+            if (Math.abs(dy) > Math.abs(dx) && dy > 80) { this.$refs.closeBtn.click(); return }
             if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) { dx < 0 ? this.next() : this.prev() }
         }
     }"}
@@ -27,37 +28,26 @@
     role="region"
     aria-roledescription={l("carousel")}
     aria-label={l("Media viewer")}
-    class="flex relative w-full h-full flex-col outline-none"
+    class="flex relative w-full h-full flex-col focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-white/80"
   >
-    {!-- Top bar: counter + close --}
-    <div class="absolute top-0 left-0 right-0 z-40 flex items-center justify-between p-4">
-      {#if length(@media_list) > 1}
+    {!-- Counter pill — close X is provided by the wrapping ReusableModalLive (image_preview mode) --}
+    <div :if={length(@media_list) > 1} class="absolute top-0 left-0 z-40 p-4">
+      <div class="pt-safe">
         <span class="text-white/90 text-sm bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full tabular-nums select-none">
           <span x-text="currentIndex + 1" /> / <span x-text="totalImages" />
         </span>
-      {#else}
-        <span />
-      {/if}
-
-      <button
-        x-ref="closeBtn"
-        phx-click="close"
-        phx-target={"[id='#{e(@modal_id, nil)}']"}
-        class="btn btn-circle btn-sm bg-black/50 hover:bg-black/70 text-white border-none backdrop-blur-sm transition-colors"
-        aria-label={l("Close")}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
-          class="w-5 h-5"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-        </svg>
-      </button>
+      </div>
     </div>
+
+    {!-- Hidden close target for $refs.closeBtn (keyboard escape, swipe-down, click-outside) --}
+    <button
+      x-ref="closeBtn"
+      phx-click="close"
+      phx-target={"[id='#{e(@modal_id, nil)}']"}
+      class="sr-only"
+      aria-hidden="true"
+      tabindex="-1"
+    >{l("Close")}</button>
 
     {!-- Main slider area --}
     <div class="flex-1 flex items-center relative min-h-0">
@@ -67,6 +57,8 @@
         x-on:click="prev()"
         class="absolute left-3 z-30 btn btn-circle bg-black/50 hover:bg-black/70 border-none text-white backdrop-blur-sm shadow-lg transition-all duration-200"
         x-bind:class="atBeginning ? 'opacity-0 pointer-events-none scale-90' : 'opacity-100 scale-100'"
+        x-bind:aria-hidden="atBeginning ? 'true' : 'false'"
+        x-bind:tabindex="atBeginning ? '-1' : '0'"
         aria-label={l("Previous image")}
       >
         <svg
@@ -184,6 +176,8 @@
         x-on:click="next()"
         class="absolute right-3 z-30 btn btn-circle bg-black/50 hover:bg-black/70 border-none text-white backdrop-blur-sm shadow-lg transition-all duration-200"
         x-bind:class="atEnd ? 'opacity-0 pointer-events-none scale-90' : 'opacity-100 scale-100'"
+        x-bind:aria-hidden="atEnd ? 'true' : 'false'"
+        x-bind:tabindex="atEnd ? '-1' : '0'"
         aria-label={l("Next image")}
       >
         <svg
@@ -205,26 +199,31 @@
         {!-- Caption (switches per slide) --}
         <div class="text-center px-6 pb-2 min-h-[2.5rem]">
           {#for {%{} = m, counter} <- Enum.with_index(@media_list)}
-            <div x-show={"currentIndex === #{counter}"} x-cloak>
-              <p class="text-white/90 text-sm leading-relaxed">
-                {Bonfire.Files.Media.media_label(m) || l("Sorry, no caption provided by author")}
-              </p>
-              <p :if={Bonfire.Files.Media.description(m.metadata)} class="text-white/60 text-xs mt-1">
-                {Bonfire.Files.Media.description(m.metadata)}
-              </p>
-            </div>
+            {#case Bonfire.Files.Media.media_label(m)}
+              {#match label}
+                <div x-show={"currentIndex === #{counter}"} x-cloak>
+                  <p :if={label not in [nil, ""]} class="text-white/90 text-sm leading-relaxed">{label}</p>
+                  <p :if={Bonfire.Files.Media.description(m.metadata) not in [nil, ""]} class="text-white/60 text-xs mt-1">
+                    {Bonfire.Files.Media.description(m.metadata)}
+                  </p>
+                </div>
+            {/case}
           {/for}
         </div>
 
         {!-- Dot indicators --}
-        <div :if={length(@media_list) > 1} class="flex justify-center pb-4 pt-1 gap-1.5">
+        <div :if={length(@media_list) > 1} class="flex justify-center pb-2 pt-1 gap-0.5">
           {#for {_, index} <- Enum.with_index(@media_list)}
             <button
               x-on:click={"goTo(#{index})"}
-              x-bind:class={"currentIndex === #{index} ? 'bg-white scale-125' : 'bg-white/40 hover:bg-white/60'"}
-              class="w-2 h-2 rounded-full transition-all duration-200"
+              class="group w-9 h-9 grid place-items-center"
               aria-label={l("Go to image") <> " " <> to_string(index + 1)}
-            />
+            >
+              <span
+                x-bind:class={"currentIndex === #{index} ? 'bg-white scale-125' : 'bg-white/40 group-hover:bg-white/60'"}
+                class="block w-2 h-2 rounded-full transition-all duration-200"
+              />
+            </button>
           {/for}
         </div>
       </div>

@@ -1,0 +1,158 @@
+<div
+  id={@id}
+  data-id="widget_getting_started"
+  data-state={Bonfire.UI.Social.WidgetGettingStartedLive.render_state(assigns) |> Atom.to_string()}
+  :hook
+>
+  {#case Bonfire.UI.Social.WidgetGettingStartedLive.render_state(assigns)}
+    {#match :hidden}
+      {!-- empty: hook hides the parent <li> via dataset.state --}
+    {#match :celebrate}
+      <section
+        role="status"
+        aria-live="polite"
+        class="w-full p-4 rounded-box border border-base-content/20 bg-base-100/60"
+      >
+        <div class="flex items-start justify-between gap-3 pb-3">
+          <span class="text-xs font-medium uppercase tracking-wide text-base-content/60">{l("Getting started")}</span>
+          <button
+            type="button"
+            aria-label={l("Hide getting started")}
+            data-id="widget_getting_started_dismiss"
+            phx-click={JS.push("dismiss", target: @myself)}
+            class="text-base-content/50 hover:text-base-content transition-colors"
+          >
+            <#Icon iconify="ph:x" class="w-4 h-4" />
+          </button>
+        </div>
+
+        <div class="flex items-center gap-1 pb-3">
+          {#for _step <- @steps}
+            <span class="h-1 flex-1 rounded-full bg-primary" />
+          {/for}
+        </div>
+
+        <p class="text-sm font-medium text-base-content">{l("You're all set. Welcome to Bonfire.")}</p>
+        <p class="text-sm text-base-content/60 pt-1">{l("Click the X above to tuck this away.")}</p>
+      </section>
+
+    {#match :step}
+      {#case Bonfire.UI.Social.WidgetGettingStartedLive.viewing_step(assigns)}
+        {#match nil}
+          {!-- defensive — handled by render_state but keeps Surface happy --}
+        {#match step}
+          <section
+            role="region"
+            aria-label={l("Getting started")}
+            class="w-full p-4 rounded-box border border-base-content/20 bg-base-100/60"
+          >
+            <div class="flex items-center justify-between gap-2 pb-3">
+              <div class="flex items-center gap-1">
+                <button
+                  type="button"
+                  aria-label={l("Previous step")}
+                  data-id="widget_getting_started_prev"
+                  phx-click={JS.push("prev", target: @myself)}
+                  disabled={@total_count <= 1}
+                  class="text-base-content/50 hover:text-base-content disabled:opacity-30 disabled:hover:text-base-content/50 transition-colors p-0.5"
+                >
+                  <#Icon iconify="ph:caret-left" class="w-3.5 h-3.5" />
+                </button>
+                <span class="text-xs font-medium uppercase tracking-wide text-base-content/60 px-1" data-id="widget_getting_started_progress">
+                  {l("Step %{n} of %{total}", n: @viewing_index + 1, total: @total_count)}
+                </span>
+                <button
+                  type="button"
+                  aria-label={l("Next step")}
+                  data-id="widget_getting_started_next"
+                  phx-click={JS.push("next", target: @myself)}
+                  disabled={@total_count <= 1}
+                  class="text-base-content/50 hover:text-base-content disabled:opacity-30 disabled:hover:text-base-content/50 transition-colors p-0.5"
+                >
+                  <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5" />
+                </button>
+              </div>
+              <button
+                type="button"
+                aria-label={l("Hide getting started")}
+                data-id="widget_getting_started_dismiss"
+                phx-click={JS.push("dismiss", target: @myself)}
+                class="text-base-content/50 hover:text-base-content transition-colors"
+              >
+                <#Icon iconify="ph:x" class="w-4 h-4" />
+              </button>
+            </div>
+
+            <div
+              class="flex items-center gap-1 pb-4"
+              role="progressbar"
+              aria-valuemin="0"
+              aria-valuemax={@total_count}
+              aria-valuenow={@done_count}
+            >
+              {#for {pip_step, idx} <- Enum.with_index(@steps)}
+                <span class={[
+                  "h-1 flex-1 rounded-full transition-colors duration-300",
+                  "bg-primary": pip_step.done?,
+                  "bg-primary/40": idx == @viewing_index and not pip_step.done?,
+                  "bg-base-content/15": idx != @viewing_index and not pip_step.done?
+                ]} />
+              {/for}
+            </div>
+
+            <div class="flex items-start gap-2">
+              <h3 class="text-sm font-medium text-base-content leading-snug flex-1">{step.title}</h3>
+              <#Icon
+                :if={step.done?}
+                iconify="ph:check-circle-fill"
+                class="w-4 h-4 text-primary shrink-0 mt-0.5"
+                aria-label={l("Done")}
+              />
+            </div>
+            <p class="text-sm text-base-content/60 pt-1 leading-snug">{step.rationale}</p>
+
+            <div class="pt-4 flex flex-col gap-2">
+              {#case step[:cta_kind] || :link}
+                {#match :composer}
+                  <button
+                    type="button"
+                    data-id="widget_getting_started_cta"
+                    phx-target="#smart_input"
+                    phx-click={Bonfire.UI.Common.SmartInput.LiveHandler.open(%JS{})}
+                    class={[
+                      "btn btn-sm w-full",
+                      "btn-primary": not step.done?,
+                      "btn-ghost border border-base-content/20": step.done?
+                    ]}
+                  >
+                    {if step.done?, do: l("Open again"), else: step.cta_label}
+                  </button>
+                {#match _}
+                  <LinkLive
+                    to={step.cta_path}
+                    data-id="widget_getting_started_cta"
+                    class={[
+                      "btn btn-sm w-full",
+                      "btn-primary": not step.done?,
+                      "btn-ghost border border-base-content/20": step.done?
+                    ]}
+                  >
+                    {if step.done?, do: l("Open again"), else: step.cta_label}
+                  </LinkLive>
+              {/case}
+
+              <div :if={not step.done?} class="flex items-center justify-end text-xs text-base-content/50 pt-1">
+                <button
+                  type="button"
+                  data-id="widget_getting_started_mark_done"
+                  phx-click={JS.push("mark_done", value: %{key: to_string(step.key)}, target: @myself)}
+                  class="hover:text-base-content transition-colors"
+                >
+                  {l("Mark done")}
+                </button>
+              </div>
+            </div>
+          </section>
+      {/case}
+  {/case}
+</div>
