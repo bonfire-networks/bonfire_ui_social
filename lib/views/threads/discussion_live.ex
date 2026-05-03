@@ -46,7 +46,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
      )}
   end
 
-  def handle_params(%{"id" => "comment_" <> comment_id} = params, _url, socket)
+  def handle_params(%{"id" => "comment_" <> comment_id} = _params, _url, socket)
       when is_binary(comment_id) do
     debug(comment_id, "comment_id that needs redirection")
 

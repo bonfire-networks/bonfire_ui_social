@@ -28,7 +28,7 @@ defmodule Bonfire.UI.Social.ImportLive do
     {:noreply, socket}
   end
 
-  def handle_event("import", %{"type" => type} = params, socket) do
+  def handle_event("import", %{"type" => type} = _params, socket) do
     current_user = current_user_required!(socket)
     #  TODO check permission
     scope = e(assigns(socket), :scope, nil) || id(current_user)

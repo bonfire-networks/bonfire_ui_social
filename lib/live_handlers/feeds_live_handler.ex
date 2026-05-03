@@ -53,7 +53,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     )
   end
 
-  def handle_event("preload_more", %{"context" => feed_id} = attrs, %{assigns: assigns} = socket)
+  def handle_event("preload_more", %{"context" => feed_id} = attrs, %{assigns: _assigns} = socket)
       when is_binary(feed_id) do
     paginate_feed(feed_id, attrs, socket, hide_activities: "infinite_scroll")
   end
@@ -399,7 +399,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
               is_list(feed_ids) do
     debug(feed_ids, "Sending feed updates to multiple feeds")
 
-    component_ids =
+    _component_ids =
       Enum.each(feed_ids, fn feed_id when is_binary(feed_id) ->
         # Format the feed_id to match the expected component ID pattern
         # TODO: clean this up with more consistent component IDs
@@ -482,7 +482,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     preloads = e(opts, :activity_preloads, {[], []})
 
-    opts =
+    _opts =
       opts
       |> Keyword.merge(
         prepare_time_limit(
@@ -642,7 +642,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     |> insert_feed(feed_edges, opts)
   end
 
-  def insert_feed(socket, %Phoenix.LiveView.Socket{} = socket, opts) do
+  def insert_feed(socket, %Phoenix.LiveView.Socket{} = socket, _opts) do
     debug("got a socket instead")
     socket
   end
@@ -813,7 +813,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #   ]
   # end
 
-  def feed_default_assigns(:none, socket), do: []
+  def feed_default_assigns(:none, _socket), do: []
 
   def feed_default_assigns(:my = feed_name, socket) do
     feed_id =
@@ -1285,7 +1285,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp feed_id_only({feed_id, _feed_ids}), do: feed_id
   defp feed_id_only(feed_id), do: feed_id
 
-  defp feed_filters_only({feed_id, %{} = filters}), do: filters
+  defp feed_filters_only({_feed_id, %{} = filters}), do: filters
   defp feed_filters_only(_), do: %{}
 
   @decorate time()
@@ -1850,12 +1850,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   @decorate time()
   defp preload_extras(list_of_components, _list_of_ids, current_user) do
     # TODO: optimise the following so we don't iterate over all component assigns X times
-    showing_within =
+    _showing_within =
       list_of_components
       |> uniq_assign(:showing_within)
       |> debug("preloadwithin")
 
-    thread_mode =
+    _thread_mode =
       list_of_components
       |> uniq_assign(:thread_mode)
       |> debug("thread_mode")
@@ -2057,7 +2057,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   #   end
   # end
 
-  def object_preloads(preload \\ []) do
+  def object_preloads(_preload \\ []) do
     # TODO: collect these from the code/config on startup, same as how we pick what preview component to use
     [
       # {Bonfire.Data.Social.Post, Bonfire.UI.Social.Activity.NoteLive.preloads()}, # only needed if we no longer preload the post_content by default
@@ -2524,7 +2524,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  def handle_event("preset_nav_toggle", %{"id" => id, "exclude" => exclude} = params, socket) do
+  def handle_event("preset_nav_toggle", %{"id" => id, "exclude" => exclude} = _params, socket) do
     debug(exclude, "preset_nav_toggle params")
 
     with {:ok, settings} <-

@@ -45,3 +45,8 @@ deps.path
 /forks
 
 .\#*
+
+# extension-cleanup skill artifacts
+.cleanup-report.md
+.cleanup-state.md
+mix.lock

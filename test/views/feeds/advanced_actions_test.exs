@@ -165,6 +165,27 @@ defmodule Bonfire.UI.Social.AdvancedActions.Test do
       |> visit("/feed/local")
       |> assert_has("[data-role=label]", text: "Copy link")
     end
+
+    test "Copy link button wires up the clipboard hook with the post URL", %{conn: conn, me: me} do
+      {:ok, post} =
+        Posts.publish(
+          current_user: me,
+          post_attrs: %{post_content: %{html_body: "feed post for copy link wiring"}},
+          boundary: "public"
+        )
+
+      permalink = Bonfire.Common.URIs.canonical_url(post, preload_if_needed: false)
+
+      conn
+      |> visit("/feed/local")
+      # The Copy JS hook needs to attach to a non-navigating element with
+      # the URL exposed via data-clipboard-text. If this renders as a plain
+      # <a href=...> the click just navigates away (issue #1951).
+      |> assert_has(
+        ~s(button[phx-hook="Copy"][data-clipboard-text="#{permalink}"]),
+        text: "Copy link"
+      )
+    end
   end
 
   describe "danger zone section" do

@@ -5,9 +5,6 @@ defmodule Bonfire.UI.Social.FeedView do
 
   alias Bonfire.Common.Config
   alias Bonfire.Common.Text
-  alias Bonfire.Me.Users
-  alias Bonfire.Files.IconUploader
-  alias Bonfire.Social.Objects
 
   def pub_date(%DateTime{} = date) do
     DateTime.to_iso8601(date)

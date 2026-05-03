@@ -135,7 +135,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
           other
       end
 
-    assigns =
+    _assigns =
       assigns
       |> assign(:autoplay, autoplay)
       |> assign(:media, media)

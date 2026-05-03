@@ -308,7 +308,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   # end
 
   defp do_update(
-         %{feed: nil, feed_count: feed_count} = assigns,
+         %{feed: nil, feed_count: feed_count} = _assigns,
          %{assigns: %{feed_count: feed_count}} = socket
        )
        when not is_nil(feed_count) do
@@ -317,7 +317,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     ok_socket(socket)
   end
 
-  defp do_update(%{feed: nil, feed_count: feed_count} = assigns, socket)
+  defp do_update(%{feed: nil, feed_count: feed_count} = _assigns, socket)
        when not is_nil(feed_count) do
     debug("a feed was NOT provided, but feed_count was passed")
 
@@ -761,7 +761,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def handle_event(
         "set_filter",
-        %{"subject_circles" => circle_id} = params,
+        %{"subject_circles" => circle_id} = _params,
         socket
       )
       when not is_nil(circle_id) do
@@ -886,7 +886,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   def set_filters(
         attrs,
         socket,
-        replace_lists \\ false
+        _replace_lists \\ false
       ) do
     # debug(attrs, "set_filter")
 

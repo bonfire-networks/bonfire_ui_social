@@ -10,7 +10,7 @@
   <title><%= Text.text_only activity_title(@object) %></title>
 
 <%= if e(@activity, :local, false) do %>
-  <%# <link type="application/atom+xml" href='<%= e(@activity, :id, nil) %>' rel="self"/> %>
+  <%!-- <link type="application/atom+xml" href='<%= e(@activity, :id, nil) %>' rel="self"/> --%>
   <link type="text/html" href='<%= URIs.canonical_url(@object) %>' rel="alternate"/>
 <% else %>
   <link type="text/html" href='<%= URIs.canonical_url(@object) %>' rel="alternate"/>

@@ -10,9 +10,4 @@ defmodule Bonfire.UI.Social.Activity.ArriveActivityStreamsLive do
 
   prop showing_within, :any, default: nil
   prop parent_id, :any, default: nil
-
-  defp object_field(json, field) do
-    e(json, "object", "arrive", field, nil) || e(json, "object", field, nil) ||
-      e(json, field, nil)
-  end
 end

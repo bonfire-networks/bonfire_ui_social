@@ -35,7 +35,6 @@
         <p class="text-sm font-medium text-base-content">{l("You're all set. Welcome to Bonfire.")}</p>
         <p class="text-sm text-base-content/60 pt-1">{l("Click the X above to tuck this away.")}</p>
       </section>
-
     {#match :step}
       {#case Bonfire.UI.Social.WidgetGettingStartedLive.viewing_step(assigns)}
         {#match nil}
@@ -58,7 +57,10 @@
                 >
                   <#Icon iconify="ph:caret-left" class="w-3.5 h-3.5" />
                 </button>
-                <span class="text-xs font-medium uppercase tracking-wide text-base-content/60 px-1" data-id="widget_getting_started_progress">
+                <span
+                  class="text-xs font-medium uppercase tracking-wide text-base-content/60 px-1"
+                  data-id="widget_getting_started_progress"
+                >
                   {l("Step %{n} of %{total}", n: @viewing_index + 1, total: @total_count)}
                 </span>
                 <button

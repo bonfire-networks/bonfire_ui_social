@@ -8,7 +8,6 @@ defmodule Bonfire.UI.Social.TrendingMediaActionsLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
   alias Bonfire.Common.URIs
-  alias Bonfire.UI.Social.Activity.MediaLive
 
   prop media, :map, required: true
 

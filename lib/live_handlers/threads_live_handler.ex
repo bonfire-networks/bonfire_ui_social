@@ -36,7 +36,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   #   end
   # end
 
-  def handle_params(attrs, uri, socket) do
+  def handle_params(_attrs, _uri, socket) do
     {:noreply, socket}
   end
 
@@ -73,7 +73,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       preload: preloads
     ]
 
-    %{edges: replies, page_info: page_info} = Bonfire.Social.Threads.list_nested_replies(id, opts)
+    %{edges: replies, page_info: _page_info} = Bonfire.Social.Threads.list_nested_replies(id, opts)
 
     # TODO: do something with page_info? to support branch pagination
 

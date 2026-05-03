@@ -1,7 +1,6 @@
 defmodule Bonfire.UI.Social.Activity.RemoteMediaLive do
   use Bonfire.UI.Common.Web, :stateful_component
   alias Bonfire.UI.Social.Activity.MediaLive
-  alias Bonfire.UI.Common.MediaPlayerLive
 
   prop media, :map, default: nil
   prop parent_id, :any, default: nil

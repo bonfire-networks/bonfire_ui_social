@@ -203,7 +203,10 @@
               {#match label}
                 <div x-show={"currentIndex === #{counter}"} x-cloak>
                   <p :if={label not in [nil, ""]} class="text-white/90 text-sm leading-relaxed">{label}</p>
-                  <p :if={Bonfire.Files.Media.description(m.metadata) not in [nil, ""]} class="text-white/60 text-xs mt-1">
+                  <p
+                    :if={Bonfire.Files.Media.description(m.metadata) not in [nil, ""]}
+                    class="text-white/60 text-xs mt-1"
+                  >
                     {Bonfire.Files.Media.description(m.metadata)}
                   </p>
                 </div>

@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.PostHistoryLive do
 
   on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.LoadCurrentUser]}
 
-  def mount(params, _session, socket) do
+  def mount(_params, _session, socket) do
     # is_guest? = is_nil(current_user_id(socket))
 
     {:ok,
@@ -20,7 +20,7 @@ defmodule Bonfire.UI.Social.PostHistoryLive do
      )}
   end
 
-  def handle_params(%{"id" => id} = params, _url, socket) when is_binary(id) do
+  def handle_params(%{"id" => id} = _params, _url, socket) when is_binary(id) do
     debug(id, "object_id")
 
     socket =

@@ -1,7 +1,6 @@
 defmodule Bonfire.UI.Social.Activity.ArticleLive do
   use Bonfire.UI.Common.Web, :stateless_component
   alias Bonfire.Common.Text
-  import Phoenix.LiveView.JS
 
   prop object, :any
   # prop profile, :any, default: nil

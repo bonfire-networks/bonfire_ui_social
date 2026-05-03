@@ -5,14 +5,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
   alias Bonfire.Social.Activities
   # alias Bonfire.Data.Social.Activity
   alias Bonfire.Social.Feeds.LiveHandler
-  import Phoenix.LiveView.JS
 
   # TODO: autogenerate with Verbs genserver?
   @reply_verbs Application.compile_env(:bonfire, [:verb_families, :reply]) || ["Respond"]
   @create_verbs Application.compile_env(:bonfire, [:verb_families, :create]) || ["Write", "Send"]
   @react_verbs (Application.compile_env(:bonfire, [:verb_families, :react]) || []) ++ ["React"]
   @simple_verbs Application.compile_env(:bonfire, [:verb_families, :simple_action]) || []
-  @react_or_request_verbs @react_verbs
   @react_or_simple_verbs @react_verbs ++ @simple_verbs
   # @react_or_reply_verbs @react_verbs ++ @reply_verbs
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
@@ -464,11 +462,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   defp prepare_verb(activity, fallback \\ nil)
 
-  defp prepare_verb(%{emoji: %{media_type: "emoji"}}, fallback) do
+  defp prepare_verb(%{emoji: %{media_type: "emoji"}}, _fallback) do
     "React"
   end
 
-  defp prepare_verb(%{emoji: %{summary: _}}, fallback) do
+  defp prepare_verb(%{emoji: %{summary: _}}, _fallback) do
     "React"
   end
 
@@ -1541,7 +1539,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       ),
       do: component_maybe_creator(subject)
 
-  def component_maybe_creator(%{created: %{creator: %{} = creator}} = object) do
+  def component_maybe_creator(%{created: %{creator: %{} = creator}} = _object) do
     debug("component_maybe_creator: found created.creator")
     debug(creator, "creator details")
 
@@ -2506,7 +2504,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     object_components = component_object(pointer_object, object_type, %{})
 
     # Wrap each component with preview styling and add a header
-    preview_header = [
+    _preview_header = [
       {:html, "<h4 class=\"text-sm font-medium text-base-content/70 mb-2\">#{field_name}:</h4>"}
     ]
 

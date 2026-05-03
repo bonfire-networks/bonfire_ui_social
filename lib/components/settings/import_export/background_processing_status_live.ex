@@ -158,42 +158,12 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
     |> Map.put(:queue, type_group_queues(type_group))
   end
 
-  defp fetch_import_jobs(current_user, filters \\ %{}, page \\ 1, per_page \\ 20) do
-    user_id = id(current_user)
-    offset = (page - 1) * per_page
-
-    # Bonfire.Common.ObanHelpers.list_jobs_queue_for_user(repo(), "import",
-    jobs =
-      Bonfire.Common.ObanHelpers.list_jobs_for_user(
-        repo(),
-        user_id,
-        e(current_user, :character, :username, nil),
-        # Fetch one extra to check if there are more
-        limit: per_page + 1,
-        offset: offset,
-        filters: filters
-      )
-
-    # Take only the requested amount (the extra one is just for pagination check)
-    Enum.take(jobs, per_page)
-  end
-
   defp identifier(%{"identifier" => identifier}), do: identifier
   defp identifier(%{"id" => identifier}), do: identifier
   defp identifier(%{"activity_id" => identifier}), do: identifier
   defp identifier(%{"activity" => %{"id" => identifier}}), do: identifier
   defp identifier(%{"params" => %{"id" => identifier}}), do: identifier
   defp identifier(_), do: nil
-
-  defp normalize_status("completed"), do: "successful"
-  defp normalize_status("pre_existing"), do: "successful"
-
-  defp normalize_status(status)
-       when status in ["executing", "available", "scheduled", "retryable"],
-       do: "active"
-
-  defp normalize_status(status) when status in ["discarded", "cancelled"], do: "failed"
-  defp normalize_status(_), do: "other"
 
   defp fetch_users_by_identifiers(identifiers) when identifiers != [] do
     # Try to fetch users by username first, but only for string identifiers
@@ -296,7 +266,7 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
         |> debug("actual_job_states_in_db")
 
       # Debug: show actual states that exist
-      actual_states = jobs |> Enum.map(& &1.state) |> Enum.uniq() |> debug("unique_states_found")
+      _actual_states = jobs |> Enum.map(& &1.state) |> Enum.uniq() |> debug("unique_states_found")
 
       # Compute enhanced statistics
       compute_enhanced_stats(basic_stats, jobs)
@@ -355,7 +325,7 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
     # all_operations = all_operation_types()
 
     # Count actual jobs by operation type
-    actual_counts =
+    _actual_counts =
       jobs
       |> Enum.group_by(fn job -> get_in(job.args, ["op"]) end)
       |> Enum.map(fn {op_code, job_list} ->
@@ -468,21 +438,7 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
 
   # defp type_group_op_codes(_), do: []
 
-  @doc """
-  Returns the list of Oban queue names for a given type group.
-
-  ## Examples
-
-      iex> type_group_queues("federation")
-      ["federator_incoming_mentions", "federator_incoming", "federator_incoming_follows", "federator_incoming_unverified", "federator_outgoing", "remote_fetcher"]
-
-      iex> type_group_queues("import")
-      ["import", "deletion", "video_transcode", "fetch_open_science"]
-
-      iex> type_group_queues("other")
-      []
-
-  """
+  # Returns the list of Oban queue names for a given type group.
   defp type_group_queues("federation"),
     do: [
       "federator_incoming_mentions",

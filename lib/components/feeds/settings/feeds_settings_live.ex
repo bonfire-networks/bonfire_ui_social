@@ -39,12 +39,12 @@ defmodule Bonfire.UI.Social.FeedsSettingsLive do
     end
   end
 
-  def handle_event("edit_preset", %{"id" => preset_id}, socket) do
+  def handle_event("edit_preset", %{"id" => _preset_id}, socket) do
     # TODO: Implement edit preset functionality
     {:noreply, socket}
   end
 
-  def handle_event("delete_preset", %{"id" => preset_id}, socket) do
+  def handle_event("delete_preset", %{"id" => _preset_id}, socket) do
     # TODO: Implement delete preset functionality
     {:noreply, socket}
   end

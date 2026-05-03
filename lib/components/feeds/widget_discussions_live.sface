@@ -1,5 +1,5 @@
 {#case feed(@feed_name)}
-  {#match {[], feed_assigns}}
+  {#match {[], _feed_assigns}}
   {#match {feed, feed_assigns}}
     <Bonfire.UI.Common.WidgetBlockLive class="shadow rounded-xl bg-base-100">
       <StatelessComponent

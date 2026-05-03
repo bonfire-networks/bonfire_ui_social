@@ -7,11 +7,8 @@ defmodule Bonfire.UI.Social.WidgetUpcomingEventsLive do
   """
   use Bonfire.UI.Common.Web, :stateless_component
 
-  alias Bonfire.Common.DatesTimes
   alias Bonfire.Social.FeedActivities
   alias Bonfire.Data.Social.APActivity
-
-  import Untangle
 
   prop limit, :integer, default: 5
   prop widget_title, :string, default: nil

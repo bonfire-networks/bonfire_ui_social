@@ -589,7 +589,7 @@ defmodule Bonfire.UI.Social.ExportController do
     |> maybe_chunk(conn, ...)
   end
 
-  defp csv_content(conn, type, opts) do
+  defp csv_content(conn, type, _opts) do
     error(type, "CSV export type not implemented")
     conn
   end

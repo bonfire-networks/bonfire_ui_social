@@ -4,7 +4,6 @@ defmodule Bonfire.UI.Social.FeedsLive do
   alias Bonfire.Social.Feeds.LiveHandler
   alias Bonfire.UI.Social.FeedLive
   alias Bonfire.UI.Social.FeedController
-  alias Bonfire.UI.Common.SmartInput.LiveHandler, as: SmartInputLiveHandler
 
   declare_extension("Social UI",
     icon: "ph:rss-simple-duotone",

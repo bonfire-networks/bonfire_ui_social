@@ -1,7 +1,5 @@
 defmodule Bonfire.UI.Social.Activity.VideoLinkLive do
   use Bonfire.UI.Common.Web, :stateless_component
-  alias Bonfire.UI.Social.Activity.MediaLive
-  alias Bonfire.Common.Media
 
   prop media, :map, default: nil
   prop metadata, :any, default: nil

@@ -7,7 +7,6 @@ defmodule Bonfire.UI.Social.TopLevelMediaLive do
   """
   use Bonfire.UI.Common.Web, :stateless_component
 
-  alias Bonfire.Common.URIs
   alias Bonfire.UI.Social.Activity.MediaLive
 
   prop link, :map, required: true

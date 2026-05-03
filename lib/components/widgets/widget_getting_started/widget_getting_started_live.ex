@@ -22,9 +22,6 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedLive do
   @default_actions [:profile, :first_post, :first_follow]
   @settings_path [:ui, :getting_started]
 
-  prop widget_title, :string, default: nil
-
-  data initialized?, :boolean, default: false
   data dismissed?, :boolean, default: false
   data celebrating?, :boolean, default: false
   data steps, :list, default: []
@@ -42,8 +39,7 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedLive do
     %{
       profile: %{
         title: l("Add a profile picture and bio"),
-        rationale:
-          l("Letting people see who you are makes following you a real choice."),
+        rationale: l("Letting people see who you are makes following you a real choice."),
         cta_label: l("Edit your profile"),
         cta_path: "/settings/",
         done?: &profile_complete?/1
@@ -58,8 +54,7 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedLive do
       },
       first_follow: %{
         title: l("Follow someone"),
-        rationale:
-          l("Your feed comes alive once you follow a few people. Start with one."),
+        rationale: l("Your feed comes alive once you follow a few people. Start with one."),
         cta_label: l("Find people"),
         cta_path: "/users",
         done?: &has_followed?/1
@@ -109,9 +104,10 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedLive do
     {:noreply, assign(socket, viewing_index: next_index)}
   end
 
-  defp load_state(nil), do: {true, []}
+  @doc false
+  def load_state(nil), do: {true, []}
 
-  defp load_state(user) do
+  def load_state(user) do
     dismissed? = !!Settings.get(@settings_path ++ [:dismissed], false, current_user: user)
 
     manual =
@@ -144,11 +140,9 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedLive do
     all_done? = total > 0 and is_nil(current)
 
     # Celebrate only when this LV process witnesses the transition from
-    # "had work left" to "all done". On the first compute we have no
-    # prior state to compare to, so already-complete users stay hidden.
-    was_initialized? = socket.assigns[:initialized?] == true
-    prior_had_work? = was_initialized? and not is_nil(socket.assigns[:current])
-    fresh_completion? = all_done? and prior_had_work?
+    # "had work left" to "all done". On the first compute `current` is nil
+    # by default, so users who were already complete stay hidden.
+    fresh_completion? = all_done? and not is_nil(socket.assigns[:current])
 
     viewing_index =
       case Enum.find_index(steps, &(!&1.done?)) do
@@ -158,7 +152,6 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedLive do
 
     socket
     |> assign(
-      initialized?: true,
       manual_done: manual_done,
       dismissed?: dismissed?,
       steps: steps,

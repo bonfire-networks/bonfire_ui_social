@@ -273,7 +273,7 @@ defmodule Bonfire.UI.Social.Benchmark do
     user_conn = conn(conn, user: user)
 
     Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
-    feed = Bonfire.Social.FeedActivities.feed(:local)
+    _feed = Bonfire.Social.FeedActivities.feed(:local)
     Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
 
     Utils.maybe_apply(

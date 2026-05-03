@@ -59,7 +59,7 @@ defmodule Bonfire.UI.Social.WriteLive do
      )}
   end
 
-  def handle_params(%{"text" => "http" <> _ = url, "share_name" => name} = params, _url, socket) do
+  def handle_params(%{"text" => "http" <> _ = url, "share_name" => name} = _params, _url, socket) do
     # special case for no url but text that starts with http
     {:noreply,
      socket
@@ -69,7 +69,7 @@ defmodule Bonfire.UI.Social.WriteLive do
      )}
   end
 
-  def handle_params(%{"text" => text} = params, _url, socket) do
+  def handle_params(%{"text" => text} = _params, _url, socket) do
     {:noreply,
      socket
      |> update(

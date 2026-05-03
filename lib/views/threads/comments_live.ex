@@ -171,7 +171,7 @@ defmodule Bonfire.UI.Social.CommentsLive do
     end
   end
 
-  def handle_params(params, _url, socket) do
+  def handle_params(params, _url, _socket) do
     error(params, "Need an ID or media URI")
   end
 end

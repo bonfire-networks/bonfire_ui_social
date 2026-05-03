@@ -4,7 +4,6 @@ defmodule Bonfire.UI.Social.FeedController do
 
   alias Bonfire.Social.Feeds
   alias Bonfire.Social.FeedLoader
-  alias Bonfire.Social.Objects
   alias Bonfire.Me.Users
   alias Bonfire.UI.Social.FeedView
   alias Bonfire.Common.Config
