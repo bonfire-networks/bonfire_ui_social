@@ -33,15 +33,21 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   def update(%{insert_stream: {:threaded_replies, entries, at}} = assigns, socket) do
     debug("branch is being poured into")
 
-    {
-      :ok,
+    socket =
       socket
       |> assign(Map.drop(assigns, [:insert_stream]))
       |> assign(
         :threaded_replies_count,
         e(assigns(socket), :threaded_replies_count, 0) + length(entries || [])
       )
-      |> assign_show_thread_lines(assigns)
+
+    {
+      :ok,
+      socket
+      # Use socket assigns: PubSub updates only pass `insert_stream`, so the
+      # incoming `assigns` map lacks `thread_level`/`thread_mode`/`showing_within`
+      # and would otherwise reset the visual indentation to defaults.
+      |> assign_show_thread_lines(assigns(socket))
       |> LiveHandler.insert_comments(
         {:threaded_replies, entries ++ e(assigns(socket), :threaded_replies, []), at}
       )

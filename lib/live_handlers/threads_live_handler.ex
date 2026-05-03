@@ -73,7 +73,8 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       preload: preloads
     ]
 
-    %{edges: replies, page_info: _page_info} = Bonfire.Social.Threads.list_nested_replies(id, opts)
+    %{edges: replies, page_info: _page_info} =
+      Bonfire.Social.Threads.list_nested_replies(id, opts)
 
     # TODO: do something with page_info? to support branch pagination
 
@@ -895,6 +896,10 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       |> insert_comments(socket, {..., replies}, opts)
     end
   end
+
+  @doc "Deterministic DOM id for thread reply components. Shared by stream configs and `send_update` targets so PubSub updates reach branches at any depth."
+  def component_id({entry, _children}, prefix), do: component_id(entry, prefix)
+  def component_id(entry, prefix), do: "#{prefix}_#{id(entry)}"
 
   def maybe_subscribe(socket, thread_id) do
     if thread_id && !e(assigns(socket), :pubsub_subscribed, nil) do

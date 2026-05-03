@@ -142,7 +142,7 @@
                   />
                   <StatefulComponent
                     module={maybe_component(Bonfire.UI.Social.ThreadBranchLive, @__context__)}
-                    id={deterministic_dom_id("nested_branch", id(subreply), @id, index)}
+                    id={LiveHandler.component_id(id(subreply), "nested")}
                     total_replies_in_thread={@threaded_replies_count}
                     index={index}
                     comment={subreply}

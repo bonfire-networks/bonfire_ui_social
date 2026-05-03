@@ -49,24 +49,34 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
   prop activity_preloads, :tuple, default: {nil, nil}
 
+  data has_replies, :boolean, default: false
+
   def mount(socket) do
     {
       :ok,
       socket
-      |> stream_configure(:replies, dom_id: &component_id(&1, "flat"))
+      |> stream_configure(:replies, dom_id: &LiveHandler.component_id(&1, "flat"))
       |> stream(:replies, [])
-      |> stream_configure(:threaded_replies, dom_id: &component_id(&1, "nested"))
+      |> stream_configure(:threaded_replies, dom_id: &LiveHandler.component_id(&1, "nested"))
       |> stream(:threaded_replies, [])
     }
   end
 
-  defp component_id({entry, _children}, prefix) do
-    "#{prefix}_#{id(entry)}"
+  defp bump_reply_count(socket) do
+    socket
+    |> assign(has_replies: true)
+    |> update(:reply_count, fn count -> (count || 0) + 1 end)
   end
 
-  defp component_id(entry, prefix) do
-    "#{prefix}_#{id(entry)}"
-  end
+  defp mark_has_replies(socket, count) when is_integer(count) and count > 0,
+    do: assign(socket, has_replies: true)
+
+  defp mark_has_replies(socket, _), do: socket
+
+  defp insert_stream_count({:replies, items}) when is_list(items), do: length(items)
+  defp insert_stream_count({:threaded_replies, items}) when is_list(items), do: length(items)
+  defp insert_stream_count({:threaded_replies, items, _at}) when is_list(items), do: length(items)
+  defp insert_stream_count(_), do: 0
 
   def update(%{insert_stream: entries} = assigns, socket) do
     debug("comments stream is being poured into")
@@ -75,6 +85,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
      socket
      |> assign(Map.drop(assigns, [:insert_stream]))
      |> assign(replies: [])
+     |> mark_has_replies(insert_stream_count(entries))
      |> LiveHandler.insert_comments(entries, reset: assigns[:reset_stream])}
   end
 
@@ -87,7 +98,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
     {:ok,
      socket
-     |> assign(assigns)}
+     |> assign(assigns)
+     |> mark_has_replies(length(replies))}
   end
 
   def update(%{replies: replies, page_info: page_info} = assigns, socket)
@@ -98,6 +110,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
      socket
      |> assign(assigns)
      |> assign_new(:reply_count, fn -> length(replies) end)
+     |> mark_has_replies(length(replies))
      |> LiveHandler.thread_init()}
   end
 
@@ -136,7 +149,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
         {:ok,
          socket
-         |> LiveHandler.insert_comments({:replies, [new_reply]}, at: 0)}
+         |> LiveHandler.insert_comments({:replies, [new_reply]}, at: 0)
+         |> bump_reply_count()}
       else
         debug("nested thread")
 
@@ -147,19 +161,20 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
           {:ok,
            socket
-           |> LiveHandler.insert_comments(insert)}
+           |> LiveHandler.insert_comments(insert)
+           |> bump_reply_count()}
         else
           debug(reply_to_id, "send to branch")
 
           LiveHandler.send_thread_updates(
             self(),
-            component_id(reply_to_id, "nested"),
+            LiveHandler.component_id(reply_to_id, "nested"),
             [insert_stream: insert],
             ThreadBranchLive,
             current_user: current_user(socket)
           )
 
-          {:ok, socket}
+          {:ok, bump_reply_count(socket)}
         end
 
         # FIXME: we should inject the reply rather than reloading

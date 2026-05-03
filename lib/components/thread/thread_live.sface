@@ -40,8 +40,11 @@
           context={@thread_id}
         />
 
-        {#if @loading != true and @reply_count == 0}
-          <StatelessComponent module={maybe_component(Bonfire.UI.Social.ThreadEmptyLive, @__context__)} />
+        {#if @loading != true and not @has_replies}
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Social.ThreadEmptyLive, @__context__)}
+            showing_within={@showing_within}
+          />
         {/if}
 
         {!-- flat mode simple list (use for manually set assigns, like the clicked comment while the thread is loading) --}
@@ -64,7 +67,7 @@
               >
                 {#for {reply, child_replies} <- @threaded_replies}
                   <ThreadBranchLive
-                    id={component_id(id(reply), "flat")}
+                    id={LiveHandler.component_id(id(reply), "flat")}
                     comment={reply}
                     index={0}
                     threaded_replies={child_replies}
