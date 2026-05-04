@@ -345,47 +345,42 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
   def load_object_assigns(%{post_id: id} = assigns, socket) when is_binary(id) do
     current_user = current_user(assigns) || current_user(socket)
+    read_opts = [current_user: current_user, preload: default_preloads()]
 
-    preloads = default_preloads()
-
-    # debug(params, "PARAMS")
-    # debug(url, "post url")
     with id when is_binary(id) <- uid(id),
-         {:ok, object} <-
-           Utils.maybe_apply(
-             Bonfire.Posts,
-             :read,
-             [id, [current_user: current_user, preload: preloads]],
-             fallback_fun: fn ->
-               Bonfire.Social.Objects.read(id,
-                 current_user: current_user,
-                 preload: preloads
-               )
-             end
-           ) do
+         {:ok, object} <- read_post_or_object(id, read_opts) do
       init_object_assigns(object, socket)
     else
-      _e ->
+      _ ->
         not_found_fallback(id, e(assigns, :params, nil), socket)
     end
   end
 
   def load_object_assigns(%{object_id: id} = assigns, socket) when is_binary(id) do
     current_user = current_user(assigns) || current_user(socket)
-    # debug(params, "PARAMS")
+
     with id when is_binary(id) <- uid(id),
          {:ok, object} <-
            Bonfire.Social.Objects.read(id,
              current_user: current_user,
              preload: default_preloads()
            ) do
-      init_object_assigns(
-        object,
-        socket
-      )
+      init_object_assigns(object, socket)
     else
-      _e ->
+      _ ->
         not_found_fallback(id, e(assigns, :params, nil), socket)
+    end
+  end
+
+  # `Posts.read` covers Post-shaped articles; `Objects.read` covers Media-shaped
+  # articles (and any other Object). Originally written via
+  # `maybe_apply(..., fallback_fun: ...)`, but that fallback only fires when the
+  # function is unavailable, not on `{:error, _}` — so a `Posts.read` not_found
+  # never fell through to `Objects.read`.
+  defp read_post_or_object(id, opts) do
+    case Bonfire.Posts.read(id, opts) do
+      {:ok, _} = ok -> ok
+      _ -> Bonfire.Social.Objects.read(id, opts)
     end
   end
 
@@ -405,16 +400,27 @@ defmodule Bonfire.Social.Objects.LiveHandler do
         debug(url, "remote object - redirect to canonical")
 
         socket
-        |> redirect_to(url, type: :maybe_external)
+        |> maybe_deferred_redirect(url, type: :maybe_external)
 
       _ ->
+        # TODO: this branch mixes URL canonicalization with error handling.
+        # When load fails AND `current_url != canonical_path`, we redirect to
+        # canonical_path. That works as a salvage path for wrong-URL-form cases,
+        # but: (a) it duplicates browser history when current_url is a sub-path
+        # of canonical_path (e.g. `/discussion/abc/reply/4/xyz` → `/discussion/abc`),
+        # and (b) it can mask real load failures by silently bouncing the URL.
+        # Cleaner architecture: do canonicalization explicitly in the route's
+        # `handle_params` before attempting load, and keep this function purely
+        # for error responses. Removed once and reverted because some callers
+        # depend on the silent-canonicalize behavior — revisit when those are
+        # audited.
         canonical_path =
           path(id)
           |> debug("canonical_path")
 
         if canonical_path && current_url && canonical_path != current_url do
           socket
-          |> redirect_to(canonical_path)
+          |> maybe_deferred_redirect(canonical_path)
         else
           case Bonfire.Common.Types.object_type(
                  maybe_to_atom(e(params, "type", nil) |> debug) |> debug || id
@@ -422,17 +428,13 @@ defmodule Bonfire.Social.Objects.LiveHandler do
                |> debug("object_type") do
             Bonfire.Data.Identity.User ->
               socket
-              |> redirect_to("/user/#{id}")
+              |> maybe_deferred_redirect("/user/#{id}")
 
             type when is_binary(type) or (is_atom(type) and not is_nil(type)) ->
-              # It should be noted that this leaks the existence of an object, as well as its type, which may be a privacy issue for some threat models
-
+              # Note: this leaks the existence and type of the object, a privacy
+              # concern for some threat models.
               thing = Bonfire.Common.Types.object_type_display(type) || l("post")
-
-              msg =
-                l("Sorry, you can't view this %{thing}",
-                  thing: thing
-                )
+              msg = l("Sorry, you can't view this %{thing}", thing: thing)
 
               if current_user_id(socket) do
                 {:error, msg}
@@ -447,9 +449,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
                 socket
                 |> assign_error(msg)
-                # |> set_go_after()
-                # |> redirect_to(path(:login))
-                |> redirect_to(url)
+                |> maybe_deferred_redirect(url)
               end
 
             _ ->
@@ -458,4 +458,19 @@ defmodule Bonfire.Social.Objects.LiveHandler do
         end
     end
   end
+
+  # Phoenix LiveView forbids redirecting from a LiveComponent's `update/2`. When
+  # `load_object_assigns` is invoked from a component update (as ObjectThreadLive
+  # does), defer the redirect through `redirect_self/1` so it's processed in the
+  # parent LV's `handle_info` instead.
+  defp maybe_deferred_redirect(socket, url, opts \\ []) do
+    if in_component?(socket) do
+      redirect_self(url)
+      socket
+    else
+      redirect_to(socket, url, opts)
+    end
+  end
+
+  defp in_component?(socket), do: !is_nil(e(assigns(socket), :myself, nil))
 end
