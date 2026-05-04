@@ -215,8 +215,7 @@ defmodule Bonfire.UI.Social.LoadObjectTest do
 
     test "renders a deep-reply preview for a Media-rooted thread (the bug fix)", %{user: user} do
       Tesla.Mock.mock_global(fn _env ->
-        {:ok,
-         %Tesla.Env{status: 200, body: "<html><head><title>Article</title></head></html>"}}
+        {:ok, %Tesla.Env{status: 200, body: "<html><head><title>Article</title></head></html>"}}
       end)
 
       {:ok, media} =

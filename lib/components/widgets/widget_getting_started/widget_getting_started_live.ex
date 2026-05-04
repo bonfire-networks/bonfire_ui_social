@@ -7,11 +7,40 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedLive do
       config :bonfire_ui_social, Bonfire.UI.Social.WidgetGettingStartedLive,
         actions: [:profile, :first_post, :first_follow]
 
-  Available action keys are defined in `actions_registry/0`. Completion is
-  auto-detected from the data layer; the user can also mark a step done
-  manually. Both the manual marks and the dismissal flag are stored as
-  per-user settings under `[:ui, :getting_started, ...]`, so they follow
-  the user across browsers and devices.
+  Entries can be either built-in keys from `actions_registry/0`, or full
+  custom specs supplied as maps so flavours can define their own actions
+  without code changes:
+
+      config :bonfire_ui_social, Bonfire.UI.Social.WidgetGettingStartedLive,
+        actions: [
+          :profile,
+          :first_post,
+          %{
+            key: :explore_topics,
+            title: "Explore topics",
+            rationale: "Find conversations beyond your follows.",
+            cta_label: "Browse topics",
+            cta_path: "/topics"
+          },
+          %{
+            key: :write_intro,
+            title: "Introduce yourself",
+            cta_label: "Write your intro",
+            cta_kind: :composer
+          }
+        ]
+
+  Custom maps must include `:key` (atom, used to persist manual completion),
+  `:title`, and `:cta_label`. Optional fields: `:rationale`, `:cta_kind`
+  (`:link` default, `:composer`, or `:button`), `:cta_path` (for `:link`),
+  `:cta_event` and `:cta_target` (for `:button`), and `:done?` — a 1-arity
+  function that receives the current user and returns whether the step is
+  auto-complete (defaults to manual-only completion).
+
+  Completion is auto-detected from the data layer; the user can also mark a
+  step done manually. Both the manual marks and the dismissal flag are
+  stored as per-user settings under `[:ui, :getting_started, ...]`, so they
+  follow the user across browsers and devices.
   """
   use Bonfire.UI.Common.Web, :stateful_component
 
@@ -62,17 +91,50 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedLive do
     }
   end
 
-  @doc "Action keys configured for this instance, falling back to the default seed."
-  def configured_action_keys do
+  @doc """
+  Action specs configured for this instance, falling back to the default
+  seed. Atom keys are looked up in `actions_registry/0`; custom maps are
+  taken as-is after validation, with defaults filled in for `:rationale`,
+  `:cta_kind` (`:link`), `:cta_path` (`nil`), and `:done?` (manual-only).
+  Invalid or unknown entries are silently dropped.
+  """
+  def configured_actions do
     Config.get([__MODULE__, :actions], @default_actions, :bonfire_ui_social)
     |> List.wrap()
-    |> Enum.filter(&Map.has_key?(actions_registry(), &1))
+    |> Enum.flat_map(&normalize_action/1)
   end
+
+  defp normalize_action(key) when is_atom(key) do
+    case Map.fetch(actions_registry(), key) do
+      {:ok, spec} -> [Map.put(spec, :key, key)]
+      :error -> []
+    end
+  end
+
+  defp normalize_action(%{key: key, title: title, cta_label: cta_label} = spec)
+       when is_atom(key) and is_binary(title) and is_binary(cta_label) do
+    [
+      spec
+      |> Map.put_new(:rationale, nil)
+      |> Map.put_new(:cta_kind, :link)
+      |> Map.put_new(:cta_path, nil)
+      |> Map.put_new(:done?, fn _user -> false end)
+    ]
+  end
+
+  defp normalize_action(_), do: []
 
   def update(assigns, socket) do
     socket = assign(socket, assigns)
     {dismissed?, manual} = load_state(current_user(socket))
-    {:ok, recompute(socket, dismissed?, manual)}
+
+    # Skip per-step `done?` detectors (which hit the DB) when the widget
+    # would render hidden anyway.
+    if dismissed? do
+      {:ok, assign(socket, dismissed?: true, manual_done: manual)}
+    else
+      {:ok, recompute(socket, dismissed?, manual)}
+    end
   end
 
   def handle_event("mark_done", %{"key" => key}, socket) do
@@ -120,18 +182,13 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedLive do
 
   defp recompute(socket, dismissed?, manual_done) do
     user = current_user(socket)
-    keys = configured_action_keys()
-    registry = actions_registry()
+    actions = configured_actions()
 
     steps =
-      Enum.map(keys, fn key ->
-        spec = Map.fetch!(registry, key)
-        manual? = to_string(key) in manual_done
+      Enum.map(actions, fn spec ->
+        manual? = to_string(spec.key) in manual_done
         done? = manual? || run_done(spec, user)
-
-        spec
-        |> Map.put(:key, key)
-        |> Map.put(:done?, done?)
+        Map.put(spec, :done?, done?)
       end)
 
     total = length(steps)

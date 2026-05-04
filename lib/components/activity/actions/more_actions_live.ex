@@ -4,7 +4,6 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   # alias Bonfire.UI.Common.OpenModalLive
   # alias Bonfire.UI.Social.Integration
 
-
   prop activity, :any, default: nil
   prop subject_user, :any, default: nil
   prop creator, :any, default: nil

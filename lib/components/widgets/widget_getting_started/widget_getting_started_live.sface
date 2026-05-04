@@ -129,6 +129,20 @@
                   >
                     {if step.done?, do: l("Open again"), else: step.cta_label}
                   </button>
+                {#match :button}
+                  <button
+                    type="button"
+                    data-id="widget_getting_started_cta"
+                    phx-target={step[:cta_target]}
+                    phx-click={step[:cta_event]}
+                    class={[
+                      "btn btn-sm w-full",
+                      "btn-primary": not step.done?,
+                      "btn-ghost border border-base-content/20": step.done?
+                    ]}
+                  >
+                    {if step.done?, do: l("Open again"), else: step.cta_label}
+                  </button>
                 {#match _}
                   <LinkLive
                     to={step.cta_path}

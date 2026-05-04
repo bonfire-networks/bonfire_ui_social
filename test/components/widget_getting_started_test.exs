@@ -40,11 +40,11 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedTest do
     end
   end
 
-  describe "configured_action_keys/0" do
+  describe "configured_actions/0" do
     test "falls back to the default seed when no flavour overrides" do
       Application.delete_env(:bonfire_ui_social, WidgetGettingStartedLive)
 
-      assert WidgetGettingStartedLive.configured_action_keys() ==
+      assert Enum.map(WidgetGettingStartedLive.configured_actions(), & &1.key) ==
                [:profile, :first_post, :first_follow]
     end
 
@@ -55,7 +55,50 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedTest do
 
       on_exit(fn -> Application.delete_env(:bonfire_ui_social, WidgetGettingStartedLive) end)
 
-      assert WidgetGettingStartedLive.configured_action_keys() == [:first_post, :profile]
+      assert Enum.map(WidgetGettingStartedLive.configured_actions(), & &1.key) ==
+               [:first_post, :profile]
+    end
+
+    test "accepts custom map specs from flavour config and normalizes them" do
+      Application.put_env(:bonfire_ui_social, WidgetGettingStartedLive,
+        actions: [
+          :profile,
+          %{
+            key: :explore_topics,
+            title: "Explore topics",
+            rationale: "Find conversations beyond your follows.",
+            cta_label: "Browse topics",
+            cta_path: "/topics"
+          }
+        ]
+      )
+
+      on_exit(fn -> Application.delete_env(:bonfire_ui_social, WidgetGettingStartedLive) end)
+
+      assert [profile, custom] = WidgetGettingStartedLive.configured_actions()
+      assert profile.key == :profile
+      assert custom.key == :explore_topics
+      assert custom.title == "Explore topics"
+      assert custom.cta_label == "Browse topics"
+      assert custom.cta_path == "/topics"
+      assert custom.cta_kind == :link
+      assert is_function(custom.done?, 1)
+      refute custom.done?.(nil)
+    end
+
+    test "drops malformed custom maps that lack required fields" do
+      Application.put_env(:bonfire_ui_social, WidgetGettingStartedLive,
+        actions: [
+          :profile,
+          %{key: :missing_fields},
+          %{title: "no key", cta_label: "x"},
+          "not a map or atom"
+        ]
+      )
+
+      on_exit(fn -> Application.delete_env(:bonfire_ui_social, WidgetGettingStartedLive) end)
+
+      assert Enum.map(WidgetGettingStartedLive.configured_actions(), & &1.key) == [:profile]
     end
   end
 
@@ -100,13 +143,18 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedTest do
           scope: :user
         )
 
+      # Reload between the two puts so the second one merges over the first
+      # rather than overwriting it (Settings.put with a user that has stale
+      # settings doesn't see the prior write).
+      me = reload_with_settings(me)
+
       _ =
         Settings.put([:ui, :getting_started, :manual_done], ["profile", "first_post"],
           current_user: me,
           scope: :user
         )
 
-      assert {true, manual} = WidgetGettingStartedLive.load_state(me)
+      assert {true, manual} = WidgetGettingStartedLive.load_state(reload_with_settings(me))
       assert Enum.sort(manual) == ["first_post", "profile"]
     end
   end
@@ -162,7 +210,7 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedTest do
 
       {:noreply, _} = WidgetGettingStartedLive.handle_event("dismiss", %{}, socket)
 
-      assert {true, _} = WidgetGettingStartedLive.load_state(me)
+      assert {true, _} = WidgetGettingStartedLive.load_state(reload_with_settings(me))
     end
   end
 
@@ -179,7 +227,7 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedTest do
       {:noreply, _} =
         WidgetGettingStartedLive.handle_event("mark_done", %{"key" => "profile"}, socket)
 
-      assert {_, manual} = WidgetGettingStartedLive.load_state(me)
+      assert {_, manual} = WidgetGettingStartedLive.load_state(reload_with_settings(me))
       assert "profile" in manual
     end
 
@@ -202,7 +250,7 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedTest do
           build_socket(me, %{manual_done: ["profile"]})
         )
 
-      assert {_, manual} = WidgetGettingStartedLive.load_state(me)
+      assert {_, manual} = WidgetGettingStartedLive.load_state(reload_with_settings(me))
       assert Enum.sort(manual) == ["first_post", "profile"]
     end
   end
@@ -246,7 +294,7 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedTest do
         )
 
       assert {:ok, socket} =
-               WidgetGettingStartedLive.update(%{}, build_socket(me))
+               WidgetGettingStartedLive.update(%{}, build_socket(reload_with_settings(me)))
 
       assert socket.assigns.current == nil
       assert socket.assigns.done_count == 1
@@ -293,7 +341,7 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedTest do
         )
 
       assert {:ok, socket} =
-               WidgetGettingStartedLive.update(%{}, build_socket(me))
+               WidgetGettingStartedLive.update(%{}, build_socket(reload_with_settings(me)))
 
       assert socket.assigns.current == nil
       refute socket.assigns.celebrating?
@@ -339,6 +387,11 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedTest do
       assert WidgetGettingStartedLive.has_followed?(me)
     end
   end
+
+  # Settings.get only reads back DB-persisted values when the passed user has
+  # `:settings` preloaded. fake_user!/1 doesn't preload it, so we refetch
+  # before any assertion that goes through load_state/Settings.get.
+  defp reload_with_settings(user), do: repo().maybe_preload(user, :settings, force: true)
 
   defp build_socket(user, extra_assigns \\ %{}) do
     base = %{
