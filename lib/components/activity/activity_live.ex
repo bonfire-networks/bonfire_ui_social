@@ -712,7 +712,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         else:
           if(
             !@viewing_main_object and
-              is_nil(@activity_inception) and
+              (is_nil(@activity_inception) or @showing_within == :quote_preview) and
               @showing_within not in [:thread, :smart_input, :widget],
             do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"
           )}
@@ -731,7 +731,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "activity-padding-compact":
           @showing_within in [:thread, :thread_embed] && !@viewing_main_object,
         "hover:bg-primary hover:bg-opacity-5":
-          @showing_within not in [:thread, :thread_embed, :smart_input, :widget] && !@activity_inception,
+          @showing_within not in [:thread, :thread_embed, :smart_input, :widget] &&
+            (!@activity_inception || @showing_within == :quote_preview),
         "replied !p-0 mb-8":
           @activity_inception &&
             @showing_within not in [:smart_input, :thread, :quote_preview, :quote_post, :nested_preview],
@@ -747,7 +748,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
            both the default activity content and any `@custom_preview`, so that
            clicking the article opens the PreviewContentLive modal in either case. --}
       {#if @hide_activity != "all" and not is_nil(current_user_id(@__context__)) and
-          is_nil(@activity_inception) and @showing_within not in [:smart_input, :thread, :widget]}
+          (is_nil(@activity_inception) or @showing_within == :quote_preview) and
+          @showing_within not in [:smart_input, :thread, :widget]}
         {#case is_nil(@thread_id) or @thread_id == (@object_id || @activity_id)}
           {#match top_of_thread?}
             {#case not is_nil(@thread_id) and @thread_id == e(@reply_to, :object, :id, nil)}
