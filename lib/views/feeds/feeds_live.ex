@@ -265,6 +265,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     socket =
       socket
       |> assign(feed_assigns |> debug("feed_default_assigns"))
+      |> maybe_clear_badge_on_visit()
 
     widgets =
       time_section :lv_maybe_widgets do
@@ -272,6 +273,19 @@ defmodule Bonfire.UI.Social.FeedsLive do
       end
 
     assign(socket, widgets)
+  end
+
+  defp maybe_clear_badge_on_visit(socket) do
+    if e(assigns(socket), :feed_name, nil) == :notifications do
+      LiveHandler.mark_feed_seen_on_visit(:notifications, socket)
+    else
+      # Reset the guard so coming back to an auto-clear feed re-fires
+      # (otherwise navigating away and back would stale-skip and miss
+      # any unread that arrived in the gap).
+      if e(assigns(socket), :badge_cleared_for_feed, nil),
+        do: assign(socket, :badge_cleared_for_feed, nil),
+        else: socket
+    end
   end
 
   defp maybe_rss_or_atom(session) do

@@ -765,6 +765,11 @@ defmodule Bonfire.Social.Threads.LiveHandler do
            #  include_path_ids: nil,
            depth_loaded: max_depth,
            reply_count: reply_count,
+           has_replies: reply_count > 0,
+           thread_boost_count:
+             Bonfire.Social.Boosts.count([in_thread: thread_id],
+               current_user: current_user(assigns)
+             ),
            activity_preloads: {preloads, nil}
          ]
          |> debug("extra assigns")}

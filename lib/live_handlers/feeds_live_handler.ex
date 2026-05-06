@@ -6,6 +6,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   alias Bonfire.UI.Social.ActivityLive
   alias Bonfire.Social.FeedActivities
   alias Bonfire.Social.FeedLoader
+  alias Bonfire.Common.PubSub
 
   @spec handle_params(any(), any(), any()) :: {:noreply, any()}
   def handle_params(
@@ -272,16 +273,70 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     {:noreply, socket}
   end
 
+  @doc """
+  Used from a LiveView's `mount` / `handle_params` so visiting a page
+  (e.g. `/messages`, `/notifications`) clears its badge — same effect
+  as clicking the "Mark all as read" button.
+
+  No-op on dead views to avoid double-writing on the initial HTTP
+  render. Idempotent within a connection: tracks `:badge_cleared_for_feed`
+  in assigns so pagination / tab changes don't re-fire the work.
+  """
+  def mark_feed_seen_on_visit(feed_id, socket) do
+    if socket_connected?(socket) do
+      current_user = current_user(socket)
+      feed_uid = current_user && Bonfire.Social.Feeds.user_named_or_feed_id(feed_id, socket)
+      already_cleared? = e(assigns(socket), :badge_cleared_for_feed, nil) == feed_uid
+
+      if is_binary(feed_uid) and not already_cleared?,
+        do: do_mark_feed_seen_on_visit(socket, feed_uid, current_user),
+        else: socket
+    else
+      socket
+    end
+  end
+
+  defp do_mark_feed_seen_on_visit(socket, feed_uid, current_user) do
+    apply_task(
+      :start_async,
+      fn -> FeedActivities.mark_all_seen(feed_uid, current_user: current_user) end,
+      socket: socket,
+      id: "mark_feed_seen_on_visit-#{feed_uid}"
+    )
+
+    # Broadcast (rather than calling `maybe_send_update` directly) so that
+    # `BadgeCounterLive` instances mounted in OTHER processes also reset —
+    # most importantly the navbar badge, which lives in `PersistentLive`.
+    PubSub.broadcast(
+      "unseen_count:#{feed_uid}",
+      {{Bonfire.Social.Feeds, :count_reset}, %{feed_id: feed_uid}}
+    )
+
+    Bonfire.UI.Common.Presence.process_put(
+      current_user_id(socket),
+      {:badge_count, feed_uid},
+      0
+    )
+
+    assign(socket, :badge_cleared_for_feed, feed_uid)
+  end
+
   def handle_info({:count_increment, %{feed_id: feed_id}}, socket) do
     debug(feed_id, "count_increment")
-
-    if socket_connected?(socket) != false,
-      do:
-        maybe_send_update(Bonfire.UI.Common.BadgeCounterLive, "unseen_count_#{feed_id}",
-          count_increment: 1
-        )
-
+    forward_to_badge_counter(socket, feed_id, count_increment: 1)
     {:noreply, socket}
+  end
+
+  def handle_info({:count_reset, %{feed_id: feed_id}}, socket) do
+    debug(feed_id, "count_reset")
+    forward_to_badge_counter(socket, feed_id, count_loaded: true, count: 0, feed_id: feed_id)
+    {:noreply, socket}
+  end
+
+  defp forward_to_badge_counter(socket, feed_id, assigns) do
+    if socket_connected?(socket),
+      do:
+        maybe_send_update(Bonfire.UI.Common.BadgeCounterLive, "unseen_count_#{feed_id}", assigns)
   end
 
   def handle_info({:new_activity, data}, socket) do

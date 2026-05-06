@@ -17,6 +17,9 @@
     x-on:keydown.ctrl.enter.prevent="document.getElementById('submit_btn')?.click()"
     class="with_editor flex-1 flex flex-col min-h-0"
   >
+    {!-- Carries the URL of a quoted post (Mastodon-style quote widget); the
+         post handler passes it to `prepare_post_attrs` as `:append_url`. --}
+    <input :if={@quoted_url not in [nil, ""]} type="hidden" name="quoted_url" value={@quoted_url}>
     {#if e(@smart_input_opts, :create_object_type, nil) in [:message, "message"] ||
         e(@smart_input_opts, :recipients_editable, nil)}
       <Bonfire.UI.Common.SelectRecipientsLive

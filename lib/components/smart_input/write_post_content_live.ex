@@ -41,6 +41,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop preview_boundary_verbs, :list, default: []
 
   prop custom_emojis, :any, default: []
+  prop quoted_url, :string, default: nil
   # Classes to customize the smart input appearance
   prop textarea_container_class, :css_class
   prop textarea_container_class_alpine, :string
