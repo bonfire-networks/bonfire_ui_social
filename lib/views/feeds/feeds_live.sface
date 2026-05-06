@@ -25,6 +25,7 @@
     feed_title={@feed_title}
     page_info={@page_info}
     loading={@loading}
+    hide_filters={@hide_filters}
     tab_path_prefix="/feed/"
     tab_path_suffix={@tab_path_suffix}
     feed_filters={Map.merge(
