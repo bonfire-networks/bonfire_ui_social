@@ -1,0 +1,30 @@
+{#case load(current_user(@__context__), @limit)}
+  {#match []}
+  {#match discussions}
+    <Bonfire.UI.Common.WidgetBlockLive widget_title={@widget_title || l("Top discussions")}>
+      <:action>
+        <LinkLive
+          to={~p"/feed/trending_discussions"}
+          class="text-xs font-medium text-base-content/70 hover:text-primary"
+          aria-label={l("View all top discussions")}
+        >
+          {l("View all")}
+        </LinkLive>
+      </:action>
+
+      <ul class="flex flex-col divide-y divide-base-content/10 mt-3 pl-[56px]" role="list">
+        {#for fp <- discussions}
+          <li class="py-3 first:pt-0 last:pb-0">
+            <Bonfire.UI.Social.Activity.DiscussionPreviewLive
+              activity={fp.activity}
+              object={fp.activity.object}
+              reply_count={e(fp, :activity, :replied, :total_replies_count, 0)}
+              date_ago={Bonfire.Common.DatesTimes.date_from_now(fp.activity)}
+              permalink={path(fp.activity.object)}
+              activity_component_id={deterministic_dom_id("trending_discussion", id(fp.activity) || id(fp.activity.object))}
+            />
+          </li>
+        {/for}
+      </ul>
+    </Bonfire.UI.Common.WidgetBlockLive>
+{/case}
