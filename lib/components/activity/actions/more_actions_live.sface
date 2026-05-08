@@ -41,7 +41,8 @@
         type="button"
         phx-hook="Copy"
         id={deterministic_dom_id(__MODULE__, id(@activity), "more_action_copy_url", @parent_id)}
-        data-clipboard-text={@permalink || URIs.canonical_url(@object, preload_if_needed: false)}
+        data-clipboard-text={URIs.canonical_url(@permalink, preload_if_needed: false) ||
+          URIs.canonical_url(@object, preload_if_needed: false)}
         class="flex items-center justify-between gap-2 text-sm text-base-content w-full"
       >
         <span class="flex-1 text-sm font-medium text-left" data-role="label">{l("Copy link")}</span>
@@ -177,11 +178,13 @@
                 data-id="unfollow"
                 :on-click="Bonfire.Social.Graph.Follows:unfollow"
                 phx-value-id={subject_id}
-                class="!flex items-center gap-2 justify-between"
+                class="flex items-center justify-between gap-2 text-sm text-base-content w-full"
               >
-                <!-- <#Icon solid="UserRemove" class="w-4 h-4 shrink-0" /> -->
-                <span class="truncate max-w-[230px] ellipsis">
-                  {l("Unfollow")} {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}</span>
+                <span
+                  class="flex-1 text-sm font-medium text-left truncate ellipsis"
+                  data-role="label"
+                >{l("Unfollow")} {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}</span>
+                <#Icon iconify="ph:user-minus-duotone" class="w-5 h-5 shrink-0" />
               </a>
             </li>
         {/case}

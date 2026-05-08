@@ -1,8 +1,6 @@
 <div data-role="reply_action" class="relative z-dropdown flex items-center">
-  {#case (current_user(@__context__) == nil or @object_type == Bonfire.Data.Social.Message or
-       @object_boundary == :skip_boundary_preload or
-       (@object_boundary && Bonfire.Boundaries.can?(@__context__, :reply, @object_boundary))) ||
-      !@object_boundary}
+  {#case @object_type == Bonfire.Data.Social.Message or
+      Bonfire.Boundaries.can_or_unloaded?(@__context__, :reply, @object_boundary)}
     {#match true}
       <.icon_button
         icon="ph:chat-circle-duotone"

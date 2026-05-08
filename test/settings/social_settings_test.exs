@@ -130,59 +130,6 @@ defmodule Bonfire.UI.Social.SettingsTest do
         |> assert_has("[data-id=feed] article", text: "boosted")
     end
 
-    # seems default_feed setting is commented
-    @tag :todo
-    test "default feed" do
-      # create alice user
-      account = fake_account!()
-      alice = fake_user!(account)
-      # create bob user
-      bob = fake_user!(account)
-
-      # create post by alice
-      attrs = %{
-        post_content: %{html_body: "alice post"}
-      }
-
-      assert {:ok, post} =
-               Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
-
-      # create a post by bob
-      attrs = %{
-        post_content: %{html_body: "bob post"}
-      }
-
-      assert {:ok, p} = Posts.publish(current_user: bob, post_attrs: attrs, boundary: "public")
-
-      # Connect as Alice
-      conn = conn(user: alice, account: account)
-
-      # Check feed initially shows alice's post first
-      conn =
-        visit(conn, "/feed")
-        # |> PhoenixTest.open_browser()
-        |> assert_has("article", text: "alice post")
-
-      # Change default feed to local
-      conn = visit(conn, "/settings/user/preferences/behaviours")
-
-      conn =
-        within(conn, "form[data-scope=set_default_feed]", fn c ->
-          # Select "Local" from dropdown - use the actual select element id
-          c = PhoenixTest.select(c, "Set default feed", option: "Local")
-          # No need to click submit as the form has phx-change event
-          c
-        end)
-
-      # |> PhoenixTest.open_browser()
-
-      # Visit feed and check bob's post is shown first
-      conn =
-        visit(conn, "/feed")
-        # |> PhoenixTest.open_browser()
-        |> assert_has("article", text: "bob post")
-    end
-
     test "feed default sort" do
       # create 2 users
       account = fake_account!()

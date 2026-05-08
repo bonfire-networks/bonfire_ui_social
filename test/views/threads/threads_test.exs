@@ -23,7 +23,13 @@ defmodule Bonfire.Social.Threads.ThreadsTest do
 
     conn = conn(user: me, account: account)
 
-    {:ok, conn: conn, me: me, other_user: other_user, post: post, other_account: other_account}
+    {:ok,
+     conn: conn,
+     me: me,
+     account: account,
+     other_user: other_user,
+     post: post,
+     other_account: other_account}
   end
 
   # test "when opening a post from another user profile, the main post subject is shown", %{
@@ -132,7 +138,7 @@ defmodule Bonfire.Social.Threads.ThreadsTest do
       reply_to_id: post.id
     }
 
-    {:ok, reply} =
+    {:ok, _reply} =
       Posts.publish(current_user: other_user, post_attrs: attrs_reply, boundary: "public")
 
     # Visit the thread and verify preloads
@@ -145,49 +151,106 @@ defmodule Bonfire.Social.Threads.ThreadsTest do
     |> assert_has("[data-id=subject_avatar]")
     # Verify post content is preloaded
     |> assert_has("[data-id=activity_note]", text: "Reply in flat mode")
-    |> PhoenixTest.open_browser()
 
     # Verify the link to creator profile works
     # |> assert_has("[data-id=subject_avatar][href='/@#{other_user.character.username}']")
   end
 
-  @tag :skip
-  # FIXME: LiveView process crashes during thread reload after switching to flat mode via UI event
-  test "switching to flat mode via UI maintains proper preloads", %{
-    conn: conn,
-    post: post,
-    other_user: other_user
-  } do
-    # Create a reply with content
-    attrs_reply = %{
-      post_content: %{html_body: "Reply to test mode switching"},
-      reply_to_id: post.id
-    }
+  describe "thread_mode setting (Bonfire.UI.Social.ThreadLive[thread_mode])" do
+    test "when set to :flat via the persisted setting, the discussion renders in flat mode", %{
+      me: me,
+      account: account,
+      post: post,
+      other_user: other_user
+    } do
+      attrs_reply = %{
+        post_content: %{html_body: "A reply"},
+        reply_to_id: post.id
+      }
 
-    {:ok, reply} =
-      Posts.publish(current_user: other_user, post_attrs: attrs_reply, boundary: "public")
+      {:ok, _reply} =
+        Posts.publish(current_user: other_user, post_attrs: attrs_reply, boundary: "public")
 
-    # Visit the thread (defaults to nested/threaded mode)
-    conn
-    |> visit("/discussion/#{post.id}")
-    # Verify we start in threaded mode
-    |> assert_has("[data-id='comment']")
-    |> click_link("li[phx-value-thread_mode='flat']", "Linear replies")
-    # |> click_button("Flat list")  # or find the actual button/link text
-    # Click the flat mode option in the dropdown
-    # |> unwrap(fn view ->
-    #   view
-    #   |> element("li[phx-value-thread_mode='flat']")
-    #   |> render_click()
-    # end)
-    # Verify we switched to flat mode
-    |> assert_has("[data-role='comment-flat']")
-    # Verify creator/subject is still preloaded after switching
-    |> assert_has("[data-role=subject]")
-    |> assert_has("[data-id=subject_name]", text: other_user.profile.name)
-    |> assert_has("[data-id=subject_avatar]")
-    # Verify post content is still accessible
-    |> assert_has("[data-id=activity_note]", text: "Reply to test mode switching")
+      # Persist the setting on the current user (no Process.put fallback)
+      {:ok, _settings} =
+        Bonfire.Common.Settings.put(
+          [Bonfire.UI.Social.ThreadLive, :thread_mode],
+          :flat,
+          current_user: me
+        )
+
+      # Re-mount via a fresh conn so the LV reloads the user with new settings
+      conn(user: me, account: account)
+      |> visit("/discussion/#{post.id}")
+      |> assert_has("[data-role='comment-flat']")
+    end
+
+    test "switching the persisted setting between visits is reflected on each visit", %{
+      me: me,
+      account: account,
+      post: post,
+      other_user: other_user
+    } do
+      attrs_reply = %{
+        post_content: %{html_body: "A reply"},
+        reply_to_id: post.id
+      }
+
+      {:ok, _reply} =
+        Posts.publish(current_user: other_user, post_attrs: attrs_reply, boundary: "public")
+
+      # First: set to :flat, visit — should be flat
+      {:ok, _} =
+        Bonfire.Common.Settings.put(
+          [Bonfire.UI.Social.ThreadLive, :thread_mode],
+          :flat,
+          current_user: me
+        )
+
+      conn(user: me, account: account)
+      |> visit("/discussion/#{post.id}")
+      |> assert_has("[data-role='comment-flat']")
+
+      # Now: set back to :nested, visit again — should be nested (no comment-flat)
+      {:ok, _} =
+        Bonfire.Common.Settings.put(
+          [Bonfire.UI.Social.ThreadLive, :thread_mode],
+          :nested,
+          current_user: me
+        )
+
+      conn(user: me, account: account)
+      |> visit("/discussion/#{post.id}")
+      |> refute_has("[data-role='comment-flat']")
+      |> assert_has("[data-id=branch]")
+    end
+
+    test "switching mode via the in-thread dropdown does not crash and updates the rendered mode",
+         %{conn: conn, post: post, other_user: other_user} do
+      attrs_reply = %{
+        post_content: %{html_body: "Reply to test mode switching"},
+        reply_to_id: post.id
+      }
+
+      {:ok, _reply} =
+        Posts.publish(current_user: other_user, post_attrs: attrs_reply, boundary: "public")
+
+      # Default mode is :nested — assert we start there
+      session =
+        conn
+        |> visit("/discussion/#{post.id}")
+        |> assert_has("[data-id=branch]")
+
+      # Click the "Linear replies" option in the layout dropdown.
+      # The phx-click is on the <a>, so target it directly.
+      session
+      |> unwrap(fn view ->
+        view
+        |> Phoenix.LiveViewTest.element("a[phx-value-thread_mode='flat']", "Linear replies")
+        |> Phoenix.LiveViewTest.render_click()
+      end)
+      |> assert_has("[data-role='comment-flat']")
+    end
   end
 
   test "LiveHandler.reply/3 only includes participants from reply_to rather than the whole thread",

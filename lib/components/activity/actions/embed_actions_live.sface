@@ -71,7 +71,8 @@
             type="button"
             phx-hook="Copy"
             id={deterministic_dom_id(__MODULE__, id(@activity), "embed_copy_url", @parent_id)}
-            data-clipboard-text={@permalink || URIs.canonical_url(@object, preload_if_needed: false)}
+            data-clipboard-text={URIs.canonical_url(@permalink, preload_if_needed: false) ||
+              URIs.canonical_url(@object, preload_if_needed: false)}
             class="flex items-center justify-between gap-2 text-sm text-base-content w-full"
           >
             <span class="flex-1 text-sm font-medium text-left" data-role="label">{l("Copy link")}</span>

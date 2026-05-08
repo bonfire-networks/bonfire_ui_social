@@ -40,400 +40,114 @@
       <div />
     {#match :notifications}
       <div
-        data-role="notifications_subject"
-        class={
-          "flex items-center justify-between w-full",
-          "mb-1": @verb not in ["Reply", "Respond", "Flag"]
-        }
+        data-role="notification_subject"
+        data-verb={@verb}
+        class="flex items-center gap-2 w-full -ml-[60px] mb-1"
       >
-        {#if @verb == "Request to Follow"}
-          <div class="flex items-center w-full justify-between">
-            <div class="flex items-center flex-1 gap-3 -ml-[60px]">
-              <#Icon iconify="ph:user-plus-duotone" class="flex-shrink-0 w-5 h-5 text-info" />
-              <div class="flex gap-2">
-                {!-- <Bonfire.UI.Common.AvatarLive
-                  parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_follow_avatar", @parent_id)}
-                  user_id={@profile_id}
-                  src={@profile_media}
-                  title={@profile_name}
-                  class="h-7 w-7 rounded-full"
-                /> --}
-                <LinkLive
-                  to={@path}
-                  opts={"data-id": "subject_name"}
-                  parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-                  class="flex link link-hover items-center gap-5 justify-start"
-                >
-                  <div class="font-medium text-sm text-base-content/70">
-                    {@profile_name || @character_username}
+        {!-- Custom emoji on a Like/React takes precedence over the verb's default icon. --}
+        <div class="flex-shrink-0 w-5 flex items-center justify-center pt-0.5">
+          {#case @emoji}
+            {#match %{media_type: "emoji"} = emoji}
+              <LazyImage
+                parent_id={deterministic_dom_id(__MODULE__, id(emoji), "emoji", @parent_id)}
+                class="w-5 h-5"
+                media={emoji}
+                alt={e(emoji, :metadata, "shortcode", nil) <> " " <> e(emoji, :metadata, "label", nil)}
+              />
+            {#match %{summary: emoji}}
+              <span class="text-warning text-base leading-none" aria-hidden="true">{emoji}</span>
+            {#match _}
+              <Iconify.iconify
+                icon={notification_icon(@verb) || Bonfire.Boundaries.Verbs.get(@verb)[:icon]}
+                class={"w-5 h-5 flex-shrink-0", notification_icon_color(@verb)}
+              />
+          {/case}
+        </div>
 
-                    {raw(@verb_display)}
+        <div class="flex-1 min-w-0 text-sm text-base-content/70">
+          <LinkLive
+            to={@path}
+            opts={"data-id": "subject_name"}
+            parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
+            class="link link-hover font-semibold text-base-content"
+          >
+            {@profile_name || @character_username}
+          </LinkLive>
 
-                    <span :if={@object_id == current_user_id(@__context__)}>
-                      {!-- special case when current_user is the one being followed --}
-                      {l("you")}
-                    </span>
-                  </div>
-                </LinkLive>
-              </div>
-            </div>
-            <button
-              :on-click="Bonfire.Social.Graph.Follows:accept"
-              phx-value-id={id(@activity_id)}
-              type="button"
-              class="normal-case border !border-primary/30 btn btn-sm btn-primary"
-            >
-              {l("Accept")}
-            </button>
-          </div>
-        {#elseif @verb == "Request to Quote"}
-          <div class="flex items-center w-full gap-3">
-            <#Icon iconify="ph:quotes-duotone" class="flex-shrink-0 w-5 h-5 text-info" />
-            <div class="font-medium text-sm text-base-content/70">
-              <LinkLive
-                to={@path}
-                opts={"data-id": "subject_name"}
-                parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-                class="link link-hover font-bold text-base-content"
-              >
-                {@profile_name || @character_username}
-              </LinkLive>
-              {" "}
-              {l("wants to quote your post")}
-            </div>
-          </div>
-        {#elseif @verb in ["Like", "React"]}
-          <div data-role="liked_by" style="margin-left: -40px" class="w-full">
-            <div class="flex items-center gap-3 justify-start">
-              <div class="flex flex-1 items-start gap-4">
-                {#case @emoji}
-                  {#match %{media_type: "emoji"} = emoji}
-                    <LazyImage
-                      parent_id={deterministic_dom_id(__MODULE__, id(emoji), "emoji", @parent_id)}
-                      class="w-5 h-5"
-                      media={emoji}
-                      alt={e(emoji, :metadata, "shortcode", nil) <> " " <> e(emoji, :metadata, "label", nil)}
-                    />
-                    <div class="flex-1 flex gap-2">
-                      <div class="font-medium text-sm text-base-content/70">
-                        <LinkLive
-                          class="link link-hover font-semibold"
-                          to={@path}
-                          opts={"data-id": "subject_name"}
-                          parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-                        >
-                          {#if @object_id == current_user_id(@__context__)}
-                            {l("You")}
-                          {#else}
-                            {@profile_name || @character_username}
-                          {/if}
-                        </LinkLive>
-                        {if @verb == "React", do: l("reacted to your activity"), else: l("liked your activity")}
-                      </div>
-                    </div>
-                  {#match %{summary: emoji}}
-                    <span class="text-yellow-500 text-[20px]">{emoji}</span>
-                    <div class="flex-1 flex gap-2">
-                      <div class="font-medium text-sm text-base-content/70">
-                        <LinkLive
-                          class="link link-hover font-semibold"
-                          to={@path}
-                          opts={"data-id": "subject_name"}
-                          parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-                        >
-                          {#if @object_id == current_user_id(@__context__)}
-                            {l("You")}
-                          {#else}
-                            {@profile_name || @character_username}
-                          {/if}
-                        </LinkLive>
-                        {if @verb == "React", do: l("reacted to your activity"), else: l("liked your activity")}
-                      </div>
-                    </div>
-                  {#match _}
-                    <#Icon iconify="ph:fire-fill" class="w-6 h-6 text-yellow-500 flex-shrink-0" />
-                    <div class="flex flex-col gap-2">
-                      <div class="flex items-center gap-1">
-                        <LinkLive
-                          to={"/users/" <> @character_username}
-                          opts={"data-id": "subject_name"}
-                          parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-                          class="link link-hover font-bold"
-                        >
-                          <Bonfire.UI.Common.AvatarLive
-                            parent_id={deterministic_dom_id(__MODULE__, nil, "sm-main", @parent_id)}
-                            user_id={@profile_id}
-                            src={@profile_media}
-                            title={@profile_name || @character_username}
-                            class="h-7 w-7 rounded-full"
-                            wrapper_class="flex-shrink-0"
-                          />
-                        </LinkLive>
-                        {#if @subjects_more != []}
-                          {#for {subject, idx} <- Enum.with_index(@subjects_more)}
-                            {#if idx < 2}
-                              <LinkLive
-                                to={"/users/" <> e(subject, :character, :username, "")}
-                                opts={"data-id": "subject_name"}
-                                parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-                                class="link link-hover font-bold"
-                              >
-                                <Bonfire.UI.Common.AvatarLive
-                                  parent_id={deterministic_dom_id(__MODULE__, idx, "sm", @parent_id)}
-                                  user_id={id(subject)}
-                                  src={nil}
-                                  title={e(subject, :profile, :name, nil)}
-                                  class="h-7 w-7 rounded-full"
-                                  wrapper_class="flex-shrink-0"
-                                />
-                              </LinkLive>
-                            {/if}
-                          {/for}
-                        {/if}
-                      </div>
-                      <div class="text-sm w-full text-base-content/70">
-                        <LinkLive
-                          to={@path}
-                          opts={"data-id": "subject_name"}
-                          parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-                          class="link link-hover font-bold"
-                        >
-                          {#if @object_id == current_user_id(@__context__)}
-                            {l("you")}
-                          {#else}
-                            {@profile_name || @character_username}
-                          {/if}
-                        </LinkLive>
-                        {#if @subjects_more != []}
-                          <Bonfire.UI.Social.Activity.SubjectListModalLive
-                            id={deterministic_dom_id(__MODULE__, @activity_id || @subject_id, "subject_list_modal", @parent_id)}
-                            verb={@verb}
-                            main_profile_id={@profile_id}
-                            main_profile_name={@profile_name}
-                            main_character_username={@character_username}
-                            main_profile_media={@profile_media}
-                            subjects_more={@subjects_more}
-                            trigger_text={lp("and %{number} other", "and %{number} others", length(@subjects_more),
-                              number: length(@subjects_more)
-                            )}
-                            parent_id={@parent_id}
-                          />
-                        {/if}
-                        {if @verb == "React", do: l("reacted to your activity"), else: l("liked your activity")}
-                      </div>
-                    </div>
-                {/case}
-              </div>
-            </div>
-          </div>
-        {#elseif @verb == "Follow"}
-          {!-- FOLLOW --}
-          <div class="flex items-center gap-3 justify-start">
-            <div class="flex items-center flex-1 gap-3 -ml-[60px]">
-              <#Icon iconify="ph:user-plus-duotone" class="flex-shrink-0 w-4 h-4 text-primary" />
-              <div class="text-sm text-base-content/70">
-                <LinkLive
-                  to={@path}
-                  opts={"data-id": "subject_name"}
-                  parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-                  class="flex link link-hover items-center gap-5 justify-start"
-                >
-                  <div class="font-bold link link-hover text-sm text-base-content/70">
-                    {@profile_name || @character_username}
+          {#if notification_aggregate?(@verb) and @subjects_more != []}
+            <Bonfire.UI.Social.Activity.SubjectListModalLive
+              id={deterministic_dom_id(__MODULE__, @activity_id || @subject_id, "subject_list_modal", @parent_id)}
+              verb={@verb}
+              main_profile_id={@profile_id}
+              main_profile_name={@profile_name}
+              main_character_username={@character_username}
+              main_profile_media={@profile_media}
+              subjects_more={@subjects_more}
+              trigger_text={lp("and %{number} other", "and %{number} others", length(@subjects_more),
+                number: length(@subjects_more)
+              )}
+              parent_id={@parent_id}
+            />
+          {/if}
 
-                    {if @object_id == current_user_id(@__context__), do: l("followed you"), else: "followed"}
-                  </div>
-                </LinkLive>
-              </div>
-            </div>
-          </div>
-        {#elseif @published_in}
-          {!-- 
-        NOTE: shown in ActivityLive instead
-        <Bonfire.UI.Social.Activity.PublishedInLive
-          context={@published_in}
-          showing_within={@showing_within}
-        /> --}
-        {#elseif @verb == "Boost"}
-          <div data-role="boosted_by" style="margin-left: -40px" class="w-full">
-            <div class="flex items-center gap-3 justify-start">
-              <div class="flex items-start gap-4">
-                <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="w-6 h-6 text-primary flex-shrink-0" />
+          {#if @verb in ["Reply", "Respond", "Annotate"]}
+            {l("replied to you")}
+          {#elseif @verb in ["Create", "Write"]}
+            {l("mentioned you")}
+          {#elseif @verb == "React"}
+            {l("reacted to your activity")}
+          {#elseif @verb == "Like"}
+            {l("liked your activity")}
+          {#elseif @verb == "Boost"}
+            {l("boosted your activity")}
+          {#elseif @verb == "Follow"}
+            {if @object_id == current_user_id(@__context__),
+              do: l("followed you"),
+              else: l("followed")}
+          {#elseif @verb == "Request to Follow"}
+            {if @object_id == current_user_id(@__context__),
+              do: l("requested to follow you"),
+              else: l("requested to follow")}
+          {#elseif @verb == "Request to Quote"}
+            {l("wants to quote your post")}
+          {#elseif @verb == "Pin"}
+            {l("pinned")}
+          {#elseif @verb == "Schedule" and e(@object, :due, nil)}
+            {l("scheduled for %{date}", date: DatesTimes.date_from_now(e(@object, :due, nil)))}
+          {#elseif @verb == "Label" and e(@object, :finished, nil) == true}
+            {l("completed")}
+          {#elseif @verb == "Label" and e(@object, :finished, nil) == false}
+            {l("re-opened")}
+          {#elseif @verb in ["Assign", "Appoint"] and e(@object, :provider, nil)}
+            {l("assigned to %{name}",
+              name:
+                e(@object, :provider, :profile, :name, nil) ||
+                  e(@object, :provider, :character, :username, nil)
+            )}
+          {#else}
+            {raw(@verb_display)}
+          {/if}
+        </div>
 
-                <div class="flex flex-col gap-2">
-                  <div class="flex items-center gap-1">
-                    <LinkLive
-                      to={"/users/" <> @character_username}
-                      opts={"data-id": "subject_name"}
-                      parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-                      class="link link-hover font-bold"
-                    >
-                      <Bonfire.UI.Common.AvatarLive
-                        parent_id={deterministic_dom_id(__MODULE__, nil, "smb-main", @parent_id)}
-                        user_id={@profile_id}
-                        src={@profile_media}
-                        title={@profile_name || @character_username}
-                        class="h-7 w-7 rounded-full"
-                        wrapper_class="flex-shrink-0"
-                      />
-                    </LinkLive>
-                    {#if @subjects_more != []}
-                      {#for {subject, idx} <- Enum.with_index(@subjects_more)}
-                        {#if idx < 2}
-                          <LinkLive
-                            to={"/users/" <> e(subject, :character, :username, "")}
-                            opts={"data-id": "subject_name"}
-                            parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-                            class="link link-hover font-bold"
-                          >
-                            <Bonfire.UI.Common.AvatarLive
-                              parent_id={deterministic_dom_id(__MODULE__, idx, "smb", @parent_id)}
-                              user_id={id(subject)}
-                              src={nil}
-                              title={e(subject, :profile, :name, nil)}
-                              class="h-7 w-7 rounded-full"
-                              wrapper_class="flex-shrink-0"
-                            />
-                          </LinkLive>
-                        {/if}
-                      {/for}
-                    {/if}
-                  </div>
+        <button
+          :if={@verb == "Request to Follow"}
+          :on-click="Bonfire.Social.Graph.Follows:accept"
+          phx-value-id={id(@activity_id)}
+          type="button"
+          class="flex-shrink-0 normal-case border !border-primary/30 btn btn-sm btn-primary"
+        >
+          {l("Accept")}
+        </button>
+      </div>
 
-                  <div class="text-sm text-base-content/70">
-                    <LinkLive
-                      to={@path}
-                      opts={"data-id": "subject_name"}
-                      parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-                      class="link link-hover font-bold"
-                    >
-                      {#if @object_id == current_user_id(@__context__)}
-                        {l("you")}
-                      {#else}
-                        {@profile_name || @character_username}
-                      {/if}
-                    </LinkLive>
-                    {#if @subjects_more != []}
-                      <Bonfire.UI.Social.Activity.SubjectListModalLive
-                        id={deterministic_dom_id(__MODULE__, @activity_id || @subject_id, "subject_list_modal", @parent_id)}
-                        verb={@verb}
-                        main_profile_id={@profile_id}
-                        main_profile_name={@profile_name}
-                        main_character_username={@character_username}
-                        main_profile_media={@profile_media}
-                        subjects_more={@subjects_more}
-                        trigger_text={lp("and %{number} other", "and %{number} others", length(@subjects_more),
-                          number: length(@subjects_more)
-                        )}
-                        parent_id={@parent_id}
-                      />
-                    {/if}
-                    {raw(@verb_display)} {l(" your activity")}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        {#elseif @verb == "Pin"}
-          <div data-role="pinned_by" class="flex items-center gap-3 -ml-[60px]">
-            <#Icon iconify="ph:push-pin-duotone" class="w-5 h-5 text-primary flex-shrink-0" />
-            <div class="text-sm font-medium text-base-content/70">
-              <LinkLive
-                to={@path}
-                opts={"data-id": "subject_name"}
-                parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-                class="link link-hover font-semibold"
-              >
-                {#if @object_id == current_user_id(@__context__)}
-                  {l("You")}
-                {#else}
-                  {@profile_name || @character_username}
-                {/if}
-              </LinkLive>
-              {l("pinned")}
-            </div>
-          </div>
-        {#elseif @verb in ["Reply", "Respond"]}
-          <!--  <Bonfire.UI.Social.Activity.SubjectLive
-            activity_id={@activity_id}
-            activity_component_id={@activity_component_id}
-            object_id={@object_id}
-            subject_peered={@subject_peered}
-            peered={@peered}
-            reply_to_id={@reply_to_id}
-            profile={@profile}
-            character={@character}
-            date_ago={@date_ago}
-            permalink={@permalink}
-            showing_within={:notifications}
-            object_type={@object_type}
-            object_boundary={@object_boundary}
-            viewing_main_object={false}
-            thread_id={@thread_id}
-            thread_title={@thread_title}
-            cw={@cw}
-            show_minimal_subject_and_note={@show_minimal_subject_and_note}
-            published_in={@published_in}
-            subject_id={@subject_id}
-            subject_user={@subject_user}
-          /> -->
-        {#elseif @verb == "Flag"}
-          {!-- FLAG --}
-          <div data-role="flagged_by" class="w-full">
-            <div class="flex items-start gap-3 justify-start mb-2 -ml-[60px]">
-              <#Icon solid="Flag" class="w-6 h-6 text-error" />
-              <div class="flex-1">
-                <div class="text-sm font-medium text-base-content/70">
-                  <LinkLive
-                    class="font-medium link link-hover"
-                    to={@path}
-                    opts={"data-id": "subject_name"}
-                    parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-                  >
-                    {@profile_name || @character_username}
-                  </LinkLive>
-                  {raw(@verb_display)}
-                </div>
-              </div>
-            </div>
-            <div :if={@thread_title} class="-ml-[60px]">
-              <div class="relative w-full flex-1 text-sm text-base-content/90 flex items-baseline gap-1 alert alert-warning alert-soft alert-sm pl-8 mb-3">
-                <#Icon
-                  iconify="mingcute:quote-left-fill"
-                  class="w-8 h-8 absolute top-[-12px] left-[-4px] text-warning/70"
-                />
-                {@thread_title}
-              </div>
-            </div>
-          </div>
-        {#else}
-          <!-- fallback for unimplemented verbs -->
-          <div class="flex items-center justify-start">
-            <Iconify.iconify icon={Bonfire.Boundaries.Verbs.get(@verb)[:icon]} class="w-4 h-4 text-error" />
-            <div class="flex-1 ml-3">
-              <div class="text-sm font-medium text-base-content/70">
-                <LinkLive class="font-medium link link-hover" to={@path} opts={"data-id": "subject_name"}>
-                  {@profile_name || @character_username}
-                </LinkLive>
-                {#if @verb == "Schedule" and e(@object, :due, nil)}
-                  {l("scheduled for %{date}", date: DatesTimes.date_from_now(e(@object, :due, nil)))}
-                {#elseif @verb == "Label" and e(@object, :finished, nil) == true}
-                  {l("completed")}
-                {#elseif @verb == "Label" and e(@object, :finished, nil) == false}
-                  {l("re-opened")}
-                {#elseif @verb in ["Assign", "Appoint"] and e(@object, :provider, nil)}
-                  {l("assigned to %{name}",
-                    name:
-                      e(@object, :provider, :profile, :name, nil) ||
-                        e(@object, :provider, :character, :username, nil)
-                  )}
-                {#else}
-                  {raw(@verb_display)}
-                {/if}
-              </div>
-            </div>
-          </div>
-        {/if}
+      <div :if={@verb == "Flag" and @thread_title} class="-ml-[60px] mt-2">
+        <div class="relative w-full flex-1 text-sm text-base-content/90 flex items-baseline gap-1 alert alert-warning alert-soft alert-sm pl-8 mb-3">
+          <#Icon
+            iconify="mingcute:quote-left-fill"
+            class="w-8 h-8 absolute top-[-12px] left-[-4px] text-warning/70"
+          />
+          {@thread_title}
+        </div>
       </div>
     {#match _}
       {#if @verb == "Request to Follow"}

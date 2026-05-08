@@ -46,7 +46,7 @@ defmodule Bonfire.UI.Social.CommentsLive do
              [Bonfire.UI.Social.ThreadLive, :thread_mode],
              nil,
              assigns(socket)[:__context__]
-           ) || :nested,
+           ),
        loading: false
      )
      |> assign_global(:go, e(params, "embed_parent", nil))}

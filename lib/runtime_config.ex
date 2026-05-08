@@ -13,6 +13,8 @@ defmodule Bonfire.UI.Social.RuntimeConfig do
     # config :bonfire_ui_social,
     #   modularity: :disabled
 
+    config :bonfire_ui_social, Bonfire.UI.Social.ThreadLive, thread_mode: :nested
+
     config :bonfire, :ui,
       explore: [
         sections: [

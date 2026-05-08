@@ -37,7 +37,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
               [Bonfire.UI.Social.ThreadLive, :thread_mode],
               nil,
               assigns(socket)[:__context__]
-            ) || :nested)
+            ))
          |> debug("thread mode"),
        #  url: nil,
        search_placeholder: nil,

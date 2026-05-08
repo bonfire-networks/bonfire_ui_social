@@ -1842,15 +1842,27 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def activity_preloads_tuple_from_filters(filters, opts \\ []) do
     # TODO: should we first pass the feed_name through the preset fetcher?
-    preload = opts[:preload] || FeedLoader.contextual_preloads_from_filters(filters, :query)
+    has_user? = not is_nil(current_user_id(opts))
+
+    preload =
+      opts[:preload] ||
+        if has_user? do
+          FeedLoader.contextual_preloads_from_filters(filters, :query)
+        else
+          # Guests have no async component preloading; load everything inline.
+          FeedLoader.preloads_from_filters(filters)
+        end
 
     postload =
       opts[:postload] ||
-        FeedLoader.contextual_preloads_from_filters(filters, :post)
-        |> FeedLoader.filter_already_preloaded(preload)
+        if has_user? do
+          FeedLoader.contextual_preloads_from_filters(filters, :post)
+          |> FeedLoader.filter_already_preloaded(preload)
+        else
+          []
+        end
 
     {preload, postload}
-    # |> debug()
   end
 
   def feed_extra_preloads_list(showing_within, thread_mode \\ nil) do

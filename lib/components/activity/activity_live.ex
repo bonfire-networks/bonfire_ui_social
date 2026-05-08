@@ -712,8 +712,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         else:
           if(
             !@viewing_main_object and
-              (is_nil(@activity_inception) or @showing_within == :quote_preview) and
-              @showing_within not in [:thread, :smart_input, :widget],
+              @showing_within not in [:thread, :smart_input, :widget, :nested_preview],
             do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"
           )}
       role="article"
@@ -730,7 +729,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "activity relative flex flex-col gap-1 touch-pan-y p-5 activity-padding #{@class}",
         "activity-padding-compact":
           @showing_within in [:thread, :thread_embed] && !@viewing_main_object,
-        "hover:bg-primary hover:bg-opacity-5":
+        "hover:bg-primary/5":
           @showing_within not in [:thread, :thread_embed, :smart_input, :widget] &&
             (!@activity_inception || @showing_within == :quote_preview),
         "replied !p-0 mb-8":
@@ -748,8 +747,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
            both the default activity content and any `@custom_preview`, so that
            clicking the article opens the PreviewContentLive modal in either case. --}
       {#if @hide_activity != "all" and not is_nil(current_user_id(@__context__)) and
-          (is_nil(@activity_inception) or @showing_within == :quote_preview) and
-          @showing_within not in [:smart_input, :thread, :widget]}
+          @showing_within not in [:smart_input, :thread, :widget, :nested_preview]}
         {#case is_nil(@thread_id) or @thread_id == (@object_id || @activity_id)}
           {#match top_of_thread?}
             {#case not is_nil(@thread_id) and @thread_id == e(@reply_to, :object, :id, nil)}
@@ -1168,7 +1166,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 <StatelessComponent
                   :if={@hide_activity != "dynamic"}
                   module={component}
-                  activity_component_id={id(component_assigns)}
+                  activity_component_id={id(component_assigns) || @activity_component_id}
                   activity_prepared={:defer_to_render}
                   activity_inception={maybe_get(component_assigns, :activity_inception, @activity_inception)}
                   myself={nil}
@@ -1357,6 +1355,26 @@ defmodule Bonfire.UI.Social.ActivityLive do
     |> debug("MATCHED react case for verb: #{verb} in component_activity_subject")
   end
 
+  # replies and mentions (when shown in notifications): prepend a minimal
+  # "X replied/mentioned you" header above the standard subject line
+  def component_activity_subject(verb, activity, _, _, :notifications, _, _)
+      when verb in @create_or_reply_verbs do
+    profile = e(activity, :subject, :profile, nil)
+    character = e(activity, :subject, :character, nil)
+
+    [
+      {Bonfire.UI.Social.Activity.SubjectMinimalLive,
+       %{
+         verb: verb,
+         subject_id: e(activity, :subject_id, nil),
+         subjects_more: e(activity, :subjects_more, []),
+         profile: profile,
+         character: character
+       }},
+      {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}
+    ]
+  end
+
   # create (or reply) activities
   def component_activity_subject(
         verb,
@@ -1369,11 +1387,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
       when verb in @create_or_reply_verbs,
       do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
-
-  # replies (when shown in notifications)
-  def component_activity_subject(verb, _activity, _, _, :notifications, _, _)
-      when verb in @reply_verbs,
-      do: []
 
   def component_activity_subject(verb, %{subject: %{profile: %{id: _} = profile}}, _, _, _, _, _)
       when verb in @create_or_reply_verbs,
@@ -1941,6 +1954,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
       # cases where we do not show reply_to
       when is_nil(reply_to) or
+             showing_within == :notifications or
              (not is_nil(activity_inception) or
                 (viewing_main_object != true and
                    showing_within in [:thread, :thread_embed, :smart_input] and
@@ -1972,7 +1986,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         _,
         _,
         _,
-        _thread_id,
+        thread_id,
         thread_title,
         activity_component_id
       ) do
@@ -1989,6 +2003,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
          # FIXME: not showing reply_to post content
          show_minimal_subject_and_note: true,
          viewing_main_object: false,
+         # share thread context with parent so the nested article computes a
+         # /discussion/{thread_id}/... permalink (matching the reply) instead
+         # of falling back to path(object) which yields /discuss/{id}
+         thread_id: thread_id,
          thread_title: thread_title,
          object: reply_to_object,
          object_type: Types.object_type(reply_to_object),

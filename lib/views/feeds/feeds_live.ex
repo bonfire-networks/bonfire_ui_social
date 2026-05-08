@@ -119,11 +119,11 @@ defmodule Bonfire.UI.Social.FeedsLive do
          feedback_message:
            l("You can start by following some people, or writing a new post yourself."),
          page_header_aside: [
-           {Bonfire.UI.Common.SmartInputButtonLive,
-            [
-              prompt: l("Compose"),
-              class: "btn-sm hidden md:inline-flex btn btn-primary"
-            ]}
+           #  {Bonfire.UI.Common.SmartInputButtonLive,
+           #   [
+           #     prompt: l("Compose"),
+           #     class: "btn-sm hidden md:inline-flex btn btn-primary"
+           #   ]}
          ],
          sidebar_widgets: [
            users: [
