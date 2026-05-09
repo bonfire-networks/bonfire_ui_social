@@ -136,7 +136,15 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         %{"after" => _cursor} = attrs,
         %{assigns: %{thread_id: thread_id}} = socket
       ) do
-    live_more(thread_id, input_to_atoms(attrs), socket)
+    live_more_stream(thread_id, input_to_atoms(attrs), socket)
+  end
+
+  def handle_event(
+        "load_more",
+        %{"before" => _cursor} = attrs,
+        %{assigns: %{thread_id: thread_id}} = socket
+      ) do
+    live_more_stream(thread_id, input_to_atoms(attrs), socket)
   end
 
   def handle_event("reply", %{"id" => reply_to_id} = _params, socket) do
@@ -265,57 +273,34 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     {:noreply, socket}
   end
 
+  # Sets `replies`/`threaded_replies` as plain assigns — for callers whose consuming
+  # component reads them as props (no streams configured on the calling socket).
   def live_more(thread_id, paginate, socket) do
-    error(paginate, "paginate thread")
+    debug(paginate, "paginate thread (assign-based)")
 
     assigns = assigns(socket)
     showing_within = e(assigns, :showing_within, :thread)
-
     thread_mode = e(assigns, :thread_mode, nil)
-    #  || Settings.get(
-    #          [Bonfire.UI.Social.ThreadLive, :thread_mode],
-    #          nil,
-    #          assigns(socket)
-    #        ) || :nested)
-    #     |> debug("thread mode")
 
     preloads =
       Bonfire.Social.Feeds.LiveHandler.feed_extra_preloads_list(showing_within, thread_mode)
 
-    opts =
-      [
-        current_user: current_user(socket),
-        paginate: paginate,
-        thread_mode: thread_mode,
-        sort_by: e(assigns, :sort_by, nil),
-        max_depth: e(assigns, :max_depth, nil),
-        sort_order: e(assigns, :sort_order, nil),
-        preload: preloads
-      ]
-
-    # |> debug()
+    opts = [
+      current_user: current_user(socket),
+      paginate: paginate,
+      thread_mode: thread_mode,
+      sort_by: e(assigns, :sort_by, nil),
+      max_depth: e(assigns, :max_depth, nil),
+      sort_order: e(assigns, :sort_order, nil),
+      preload: preloads
+    ]
 
     with %{edges: replies, page_info: page_info} <-
-           Bonfire.Social.Threads.list_replies(
-             thread_id,
-             opts
-           ) do
-      replies =
-        (e(assigns, :replies, []) ++ replies)
-        |> Enum.uniq()
-
-      # |> debug("REPLIES")
-
+           Bonfire.Social.Threads.list_replies(thread_id, opts) do
       threaded_replies =
         if opts[:thread_mode] != :flat and is_list(replies) and replies != [],
-          do:
-            Threads.prepare_replies_tree(
-              replies,
-              opts
-            ),
+          do: Threads.prepare_replies_tree(replies, opts),
           else: []
-
-      # debug(threaded_replies, "REPLIES threaded")
 
       {:noreply,
        socket
@@ -325,6 +310,45 @@ defmodule Bonfire.Social.Threads.LiveHandler do
          threaded_replies: threaded_replies,
          page_info: page_info
        )}
+    end
+  end
+
+  # Pushes new replies into the existing `:replies` / `:threaded_replies` stream so
+  # they accumulate with what is already rendered, rather than appearing as a separate
+  # block of plain assigns.
+  def live_more_stream(thread_id, paginate, socket) do
+    debug(paginate, "paginate thread (stream-based)")
+
+    assigns = assigns(socket)
+    showing_within = e(assigns, :showing_within, :thread)
+    thread_mode = e(assigns, :thread_mode, nil)
+
+    preloads =
+      Bonfire.Social.Feeds.LiveHandler.feed_extra_preloads_list(showing_within, thread_mode)
+
+    opts = [
+      current_user: current_user(socket),
+      paginate: paginate,
+      thread_mode: thread_mode,
+      sort_by: e(assigns, :sort_by, nil),
+      max_depth: e(assigns, :max_depth, nil),
+      sort_order: e(assigns, :sort_order, nil),
+      preload: preloads
+    ]
+
+    # `before:` paginates earlier items, so prepend to the stream instead of appending
+    insert_opts = if paginate[:before], do: [at: 0], else: []
+
+    with %{edges: replies, page_info: page_info} <-
+           Bonfire.Social.Threads.list_replies(thread_id, opts) do
+      socket = assign(socket, loading: false, page_info: page_info)
+
+      if opts[:thread_mode] != :flat and is_list(replies) and replies != [] do
+        threaded_replies = Threads.prepare_replies_tree(replies, opts) || []
+        {:noreply, insert_comments(socket, {:threaded_replies, threaded_replies}, insert_opts)}
+      else
+        {:noreply, insert_comments(socket, {:replies, replies}, insert_opts)}
+      end
     end
   end
 

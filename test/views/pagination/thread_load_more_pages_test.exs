@@ -127,6 +127,39 @@ defmodule Bonfire.UI.Social.Threads.LoadMoreTest do
       |> assert_has("[data-role='comment-flat']", count: total_posts)
     end
 
+    test "Load more inserts replies into the stream, not into a separate manually-assigned list (nested mode)",
+         %{conn: conn, op: op, total_posts: total_posts} do
+      limit = total_posts - 2
+      Process.put([:bonfire, :default_pagination_limit], limit)
+      Process.put([:bonfire, :pagination_hard_max_limit], limit)
+
+      conn
+      |> visit("/discussion/#{op.id}")
+      |> refute_has("[data-role=threaded_replies_assigned] [data-id=comment]")
+      |> assert_has("[data-id=comment]", count: limit)
+      |> click_button("[data-id=load_more]", "Load more")
+      |> assert_has("[data-id=comment]", count: total_posts)
+      |> refute_has("[data-role=threaded_replies_assigned] [data-id=comment]")
+      |> assert_has("[phx-update=stream] [data-id=comment]", count: total_posts)
+    end
+
+    test "Load more inserts replies into the stream, not into a separate manually-assigned list (flat mode)",
+         %{conn: conn, op: op, total_posts: total_posts} do
+      limit = total_posts - 2
+      Process.put([:bonfire, :default_pagination_limit], limit)
+      Process.put([:bonfire, :pagination_hard_max_limit], limit)
+      Process.put([:bonfire_ui_social, Bonfire.UI.Social.ThreadLive, :thread_mode], :flat)
+
+      conn
+      |> visit("/discussion/#{op.id}")
+      |> refute_has("[data-role=replies_assigned] [data-role='comment-flat']")
+      |> assert_has("[data-role='comment-flat']", count: limit)
+      |> click_button("[data-id=load_more]", "Load more")
+      |> assert_has("[data-role='comment-flat']", count: total_posts)
+      |> refute_has("[data-role=replies_assigned] [data-role='comment-flat']")
+      |> assert_has("[phx-update=stream] [data-role='comment-flat']", count: total_posts)
+    end
+
     test "As a user when I click on load more I want to see next replies even without JavaScript (using HTTP)",
          %{alice: alice, op: op, reply_attrs: attrs, total_posts: total_posts} do
       limit = total_posts - 2
@@ -166,6 +199,210 @@ defmodule Bonfire.UI.Social.Threads.LoadMoreTest do
         |> click_link("a[data-id=previous_page]", "Previous page")
         # |> PhoenixTest.open_browser()
         |> assert_has("[data-role='comment-flat']", count: limit)
+    end
+  end
+
+  describe "Load More in Threads at scale" do
+    @total_posts 30
+    @page_size 5
+
+    # Trailing `_END` ensures no marker is a substring of another, so PhoenixTest's
+    # substring text-match can verify each reply is present exactly once.
+    defp marker_for(n), do: "REPLY_#{n}_END"
+
+    setup do
+      account = fake_account!()
+      alice = fake_user!(account)
+
+      account2 = fake_account!()
+      bob = fake_user!(account2)
+
+      Follows.follow(bob, alice)
+
+      attrs = %{
+        post_content: %{
+          summary: "summary",
+          html_body: "<p>epic html message</p>"
+        }
+      }
+
+      {:ok, op} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+      reply_attrs = Map.merge(attrs, %{reply_to_id: op.id})
+
+      for n <- 1..@total_posts do
+        named_attrs =
+          Map.merge(reply_attrs, %{
+            post_content: %{name: marker_for(n), html_body: "<p>body</p>"}
+          })
+
+        assert {:ok, _post} =
+                 Posts.publish(
+                   current_user: alice,
+                   post_attrs: named_attrs,
+                   boundary: "public"
+                 )
+      end
+
+      conn = conn(user: bob, account: account2)
+
+      Process.put([:bonfire, :default_pagination_limit], @page_size)
+      Process.put([:bonfire, :pagination_hard_max_limit], @page_size)
+
+      on_exit(fn ->
+        Process.put([:bonfire, :default_pagination_limit], nil)
+        Process.put([:bonfire, :pagination_hard_max_limit], nil)
+      end)
+
+      {:ok, conn: conn, op: op}
+    end
+
+    test "walking through #{@total_posts} replies via repeated Load more clicks accumulates without loss or duplication (nested mode)",
+         %{conn: conn, op: op} do
+      total_pages = div(@total_posts, @page_size)
+
+      # Initial: page 1
+      session =
+        conn
+        |> visit("/discussion/#{op.id}")
+        |> assert_has("[phx-update=stream] [data-id=comment]", count: @page_size)
+
+      # Click "Load more" page-by-page until all replies are visible.
+      session =
+        Enum.reduce(2..total_pages, session, fn page, s ->
+          s
+          |> click_button("button[data-id=load_more]", "Load more")
+          |> assert_has("[phx-update=stream] [data-id=comment]", count: page * @page_size)
+        end)
+
+      # All #{@total_posts} unique post titles must be present exactly once.
+      Enum.each(1..@total_posts, fn n ->
+        assert_has(session, "[phx-update=stream] [data-id=comment]",
+          text: marker_for(n),
+          count: 1
+        )
+      end)
+
+      # No comment leaked into the manually-assigned (non-stream) block.
+      refute_has(session, "[data-role=threaded_replies_assigned] [data-id=comment]")
+    end
+
+    test "walking through #{@total_posts} replies via repeated Load more clicks accumulates without loss or duplication (flat mode)",
+         %{conn: conn, op: op} do
+      Process.put([:bonfire_ui_social, Bonfire.UI.Social.ThreadLive, :thread_mode], :flat)
+      total_pages = div(@total_posts, @page_size)
+
+      session =
+        conn
+        |> visit("/discussion/#{op.id}")
+        |> assert_has("[phx-update=stream] [data-role='comment-flat']", count: @page_size)
+
+      session =
+        Enum.reduce(2..total_pages, session, fn page, s ->
+          s
+          |> click_button("button[data-id=load_more]", "Load more")
+          |> assert_has("[phx-update=stream] [data-role='comment-flat']",
+            count: page * @page_size
+          )
+        end)
+
+      Enum.each(1..@total_posts, fn n ->
+        assert_has(session, "[phx-update=stream] [data-role='comment-flat']",
+          text: marker_for(n),
+          count: 1
+        )
+      end)
+
+      refute_has(session, "[data-role=replies_assigned] [data-role='comment-flat']")
+    end
+
+    test "after walking the entire thread the Load more button is gone (nested mode)",
+         %{conn: conn, op: op} do
+      total_pages = div(@total_posts, @page_size)
+
+      session =
+        conn
+        |> visit("/discussion/#{op.id}")
+        |> assert_has("button[data-id=load_more]")
+
+      session =
+        Enum.reduce(2..total_pages, session, fn _page, s ->
+          click_button(s, "button[data-id=load_more]", "Load more")
+        end)
+
+      session
+      |> assert_has("[phx-update=stream] [data-id=comment]", count: @total_posts)
+      |> refute_has("button[data-id=load_more]")
+    end
+  end
+
+  describe "Load previous (LoadPreviousLive) at top of thread" do
+    setup do
+      account = fake_account!()
+      alice = fake_user!(account)
+      account2 = fake_account!()
+      bob = fake_user!(account2)
+      Follows.follow(bob, alice)
+
+      attrs = %{
+        post_content: %{summary: "summary", html_body: "<p>epic html message</p>"}
+      }
+
+      {:ok, op} = Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+      reply_attrs = Map.merge(attrs, %{reply_to_id: op.id})
+
+      total_posts = 4
+
+      for n <- 1..total_posts do
+        assert {:ok, _post} =
+                 Posts.publish(
+                   current_user: alice,
+                   post_attrs: post_attrs(n, reply_attrs),
+                   boundary: "public"
+                 )
+      end
+
+      conn = conn(user: bob, account: account2)
+
+      on_exit(fn ->
+        Process.put([:bonfire, :default_pagination_limit], nil)
+        Process.put([:bonfire, :pagination_hard_max_limit], nil)
+      end)
+
+      {:ok, conn: conn, op: op, total_posts: total_posts}
+    end
+
+    test "is hidden on a fresh thread visit", %{conn: conn, op: op, total_posts: total_posts} do
+      limit = total_posts - 2
+      Process.put([:bonfire, :default_pagination_limit], limit)
+      Process.put([:bonfire, :pagination_hard_max_limit], limit)
+
+      conn
+      |> visit("/discussion/#{op.id}")
+      |> assert_has("button[data-id=load_more]")
+      |> refute_has("[phx-value-before]")
+    end
+
+    test "appears after a forward Load more click; clicking it does not duplicate or lose replies",
+         %{conn: conn, op: op, total_posts: total_posts} do
+      limit = total_posts - 2
+      Process.put([:bonfire, :default_pagination_limit], limit)
+      Process.put([:bonfire, :pagination_hard_max_limit], limit)
+
+      session =
+        conn
+        |> visit("/discussion/#{op.id}")
+        |> click_button("button[data-id=load_more]", "Load more")
+        |> assert_has("[phx-update=stream] [data-id=comment]", count: total_posts)
+        |> assert_has("[phx-value-before]")
+
+      session
+      |> unwrap(fn view ->
+        view
+        |> Phoenix.LiveViewTest.element("[phx-value-before]")
+        |> Phoenix.LiveViewTest.render_click()
+      end)
+      |> assert_has("[phx-update=stream] [data-id=comment]", count: total_posts)
+      |> refute_has("[data-role=threaded_replies_assigned] [data-id=comment]")
     end
   end
 end

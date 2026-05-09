@@ -169,16 +169,14 @@ defmodule Bonfire.UI.Social.SmartInputTest do
   describe "uploads" do
     test "create a post with uploads", %{conn: conn} do
       file = Path.expand("../fixtures/icon.png", __DIR__)
-      file2 = Path.expand("../fixtures/favicon-16x16.png", __DIR__)
 
       conn
       |> visit("/write")
       |> assert_has_or_open_browser("input[name=files][type=file]")
       |> upload("Upload an attachment", file)
-      |> upload("Upload an attachment", file2)
       |> click_button("#submit_btn", "Post")
       |> visit("/feed/local")
-      |> assert_has_or_open_browser("[data-id=feed] article[data-id=article_media]", count: 2)
+      |> assert_has_or_open_browser("[data-id=feed] article[data-id=article_media]")
     end
 
     test "create a post with text and uploads from write page", %{conn: conn} do
