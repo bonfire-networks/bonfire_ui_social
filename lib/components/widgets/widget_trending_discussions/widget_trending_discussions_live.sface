@@ -1,7 +1,10 @@
 {#case load(current_user(@__context__), @limit)}
   {#match []}
   {#match discussions}
-    <Bonfire.UI.Common.WidgetBlockLive class="w-full p-4 flex-auto mx-auto bonfire-wrapper overflow-hidden" widget_title={@widget_title || l("Top discussions")}>
+    <Bonfire.UI.Common.WidgetBlockLive
+      class="w-full p-4 flex-auto mx-auto bonfire-wrapper overflow-hidden"
+      widget_title={@widget_title || l("Top discussions")}
+    >
       <:action>
         <LinkLive
           to={~p"/feed/trending_discussions"}
