@@ -753,7 +753,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             {#case not is_nil(@thread_id) and @thread_id == e(@reply_to, :object, :id, nil)}
               {#match reply_to_top_of_thread?}
                 {!-- TODO: make the list of preview paths/components/views configurable/hookable, and derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") --}
-                {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/"])}
+                {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/", "/discuss/"])}
                   <Bonfire.UI.Common.OpenPreviewLive
                     href={@permalink}
                     parent_id={@activity_component_id}
@@ -1704,8 +1704,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     %{
       activity_id: activity_id,
-      object: reply_to_post_content,
-      # object_type: Bonfire.Data.Social.Post,
+      object: reply_to,
       subject_id: creator_id,
       activity: reply_to
     }
@@ -1808,7 +1807,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       }) do
     %{
       activity_id: activity_id,
-      object: thread_post_content,
+      object: thread,
       subject_id: creator_id,
       activity: thread
     }
