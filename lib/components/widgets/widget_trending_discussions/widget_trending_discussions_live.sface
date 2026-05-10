@@ -2,7 +2,8 @@
   {#match []}
   {#match discussions}
     <Bonfire.UI.Common.WidgetBlockLive
-      class="w-full p-4 flex-auto mx-auto bonfire-wrapper overflow-hidden"
+      class="w-full pt-4 flex-auto mx-auto bonfire-wrapper overflow-hidden"
+      title_class="pb-2 text-xs px-4 font-medium uppercase tracking-wide text-base-content/60"
       widget_title={@widget_title || l("Top discussions")}
     >
       <:action>
@@ -17,7 +18,7 @@
 
       <ul class="flex flex-col divide-y divide-base-content/10" role="list">
         {#for fp <- discussions}
-          <li class="py-3 first:pt-0 last:pb-0">
+          <li class="">
             <Bonfire.UI.Social.ActivityLive
               id={Bonfire.UI.Social.ActivityLive.component_id(
                 id(fp.activity) || id(fp.activity.object),
