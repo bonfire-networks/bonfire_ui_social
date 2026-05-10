@@ -144,7 +144,13 @@ defmodule Bonfire.UI.Social.ThreadLive do
       #  |> LiveHandler.insert_comments(new_reply)
       # }
 
-      if e(assigns(socket), :thread_mode, nil) == :flat do
+      # Resolve via socket OR Settings: a stateful component's `thread_mode`
+      # assign can lag the user's chosen mode (parent re-render dropping the
+      # prop, async load race), and the nested branch silently no-ops because
+      # ThreadBranchLive isn't rendered in flat mode.
+      {thread_mode, socket} = ensure_thread_mode(socket)
+
+      if thread_mode == :flat do
         debug("flat thread")
 
         {:ok,
@@ -237,9 +243,10 @@ defmodule Bonfire.UI.Social.ThreadLive do
       when new_thread_mode != thread_mode do
     debug("(re)load comments because changing thread mode")
 
-    socket
-    |> assign(assigns)
-    |> LiveHandler.load_thread_maybe_async(false, true)
+    {:ok,
+     socket
+     |> assign(assigns)
+     |> LiveHandler.load_thread_maybe_async(false, true)}
   end
 
   def update(%{thread_id: thread_id} = assigns, %{assigns: %{loaded_async: thread_id}} = socket) do
@@ -264,23 +271,29 @@ defmodule Bonfire.UI.Social.ThreadLive do
     |> load_comments()
   end
 
+  defp ensure_thread_mode(socket) do
+    case e(assigns(socket), :thread_mode, nil) do
+      nil ->
+        resolved =
+          Settings.get(
+            [Bonfire.UI.Social.ThreadLive, :thread_mode],
+            nil,
+            assigns(socket)[:__context__]
+          )
+
+        {resolved, assign(socket, thread_mode: resolved)}
+
+      mode ->
+        {mode, socket}
+    end
+  end
+
   def load_comments(socket, show_loading? \\ true) do
     debug("Loading comments")
+    {_thread_mode, socket} = ensure_thread_mode(socket)
 
     {:ok,
      socket
-     |> update(:thread_mode, fn
-       nil ->
-         Settings.get(
-           [Bonfire.UI.Social.ThreadLive, :thread_mode],
-           nil,
-           assigns(socket)[:__context__]
-         )
-         |> debug("thread mode")
-
-       manual ->
-         manual
-     end)
      |> update(:sort_by, fn
        nil ->
          Settings.get(

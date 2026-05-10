@@ -191,6 +191,12 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedLive do
         Map.put(spec, :done?, done?)
       end)
 
+    # Persist newly auto-detected completions so subsequent renders
+    # short-circuit on the `manual? || ...` guard above and skip the
+    # per-step DB hit. One write per transition; zero writes once a
+    # user is fully complete.
+    manual_done = persist_newly_done(steps, manual_done, user)
+
     total = length(steps)
     done_count = Enum.count(steps, & &1.done?)
     current = Enum.find(steps, &(!&1.done?))
@@ -229,6 +235,27 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedLive do
   end
 
   defp run_done(_, _), do: false
+
+  defp persist_newly_done(_steps, manual_done, nil), do: manual_done
+
+  defp persist_newly_done(steps, manual_done, user) do
+    newly_done =
+      for step <- steps,
+          step.done?,
+          key = to_string(step.key),
+          key not in manual_done,
+          do: key
+
+    case newly_done do
+      [] ->
+        manual_done
+
+      _ ->
+        updated = manual_done ++ newly_done
+        _ = Settings.put(@settings_path ++ [:manual_done], updated, current_user: user)
+        updated
+    end
+  end
 
   # --- detection signals ---
 

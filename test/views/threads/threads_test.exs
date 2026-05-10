@@ -95,6 +95,44 @@ defmodule Bonfire.Social.Threads.ThreadsTest do
     |> assert_has("article", text: "Second reply")
   end
 
+  test "in flat mode, a reply-to-a-reply appears instantly with full content (no ghost placeholder)",
+       %{
+         conn: conn,
+         post: post,
+         other_user: other_user
+       } do
+    Process.put([:bonfire_ui_social, Bonfire.UI.Social.ThreadLive, :thread_mode], :flat)
+
+    {:ok, first_reply} =
+      Posts.publish(
+        current_user: other_user,
+        post_attrs: %{
+          post_content: %{html_body: "First reply"},
+          reply_to_id: post.id
+        },
+        boundary: "public"
+      )
+
+    post_view =
+      conn
+      |> visit("/post/#{post.id}")
+      |> assert_has("[data-role='comment-flat']", text: "First reply")
+
+    {:ok, _nested_reply} =
+      Posts.publish(
+        current_user: other_user,
+        post_attrs: %{
+          post_content: %{html_body: "Reply to the reply"},
+          reply_to_id: first_reply.id
+        },
+        boundary: "public"
+      )
+
+    post_view
+    |> assert_has("[data-role='comment-flat']", text: "Reply to the reply")
+    |> refute_has("[data-role='comment-flat']", text: "This content is not available")
+  end
+
   test "activities within thread comments have proper preloads in default mode", %{
     conn: conn,
     post: post,
