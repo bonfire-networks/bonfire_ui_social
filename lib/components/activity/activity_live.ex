@@ -205,7 +205,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           existing -> existing
         end,
       published_in:
-        if(@showing_within != :smart_input,
+        if(showing_within != :smart_input,
           do: maybe_published_in(flood(activity, "accct"), verb) |> flood("maybppp")
         ),
       labelled: maybe_labelled(activity, verb),
