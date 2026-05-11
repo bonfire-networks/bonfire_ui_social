@@ -116,7 +116,11 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
     end
 
     @tag :skip
-    # FIXME: time filter pagination count mismatch
+    # FIXME: after "Show older activities" drops `time_limit`, subsequent
+    # "Load more" clicks don't persist the override, so the page stops
+    # paginating after 1 + limit. Tracked separately from the show_older
+    # context→feed_id misrouting (fixed: load_more no longer pulls from
+    # other feeds).
     test "As a logged-in user, when I click the load_all_time button with date sorting, it should remove time limit and load more activities",
          %{alice: alice, account: account, total_posts: total_posts, limit: limit} do
       conn = conn(user: alice, account: account)
