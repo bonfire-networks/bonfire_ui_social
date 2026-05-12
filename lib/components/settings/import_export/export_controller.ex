@@ -264,7 +264,7 @@ defmodule Bonfire.UI.Social.ExportController do
         paginate: false,
         preload: [],
         query_with_deferred_join: false,
-        # select_only_activity_id: true,
+        # select_only: :id,
         exclude_activity_types: [],
         exclude_object_types: [],
         exclude_verb_ids: [],
@@ -292,7 +292,7 @@ defmodule Bonfire.UI.Social.ExportController do
               |> Keyword.merge(
                 current_user: current_user,
                 preload: [],
-                select_only_activity_id: true,
+                select_only: :id,
                 paginate: false,
                 limit: limit,
                 max_depth: limit,
