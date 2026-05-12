@@ -11,7 +11,7 @@
       >
         {#for %{} = m <- @multimedia_list}
           {#if @showing_within != :smart_input}
-            {#case Bonfire.Files.Media.media_label(m)}
+            {#case Bonfire.Files.Media.media_label_and_alt(m)}
               {#match media_label}
                 <article class="m-entry relative h-full w-full row-span-4 object-cover">
                   <div
@@ -129,7 +129,7 @@
             style="scrollbar-width: none; -ms-overflow-style: none;"
           >
             {#for {%{} = m, visual_index} <- Enum.with_index(@visual_list)}
-              {#case Bonfire.Files.Media.media_label(m) || l("Sorry, no caption provided by author")}
+              {#case Bonfire.Files.Media.media_label_and_alt(m) || l("Sorry, no caption provided by author")}
                 {#match media_label}
                   <div
                     data-carousel-slide
@@ -207,7 +207,11 @@
                                 />
                               </div>
                             {#else}
-                              <img src={Media.media_url(m)} class="gif-image w-full h-full object-cover" alt={media_label}>
+                              <img
+                                src={Media.media_url(m)}
+                                class="gif-image w-full h-full object-cover"
+                                alt={Bonfire.Files.Media.media_alt(m)}
+                              />
                             {/if}
                             <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
                               GIF
@@ -240,7 +244,7 @@
                                         grayscale: @showing_within == :flags
                                       ]}
                                       media={m}
-                                      alt={media_label}
+                                      alt={Bonfire.Files.Media.media_alt(m)}
                                       src={maybe_preview_img}
                                       disable_lazy={@disable_lazy}
                                     />
@@ -248,7 +252,7 @@
                                 <figcaption class="sr-only">{media_label}</figcaption>
                               </div>
                             </button>
-                            {#if Bonfire.Files.Media.media_label(m)}
+                            {#if media_label}
                               <div
                                 class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top"
                                 onclick="event.stopPropagation()"
@@ -272,9 +276,13 @@
                                 />
                               </div>
                             {#else}
-                              <img src={Media.media_url(m)} class="gif-image w-full h-full object-cover" alt={media_label}>
+                              <img
+                                src={Media.media_url(m)}
+                                class="gif-image w-full h-full object-cover"
+                                alt={Bonfire.Files.Media.media_alt(m)}
+                              />
                             {/if}
-                            {#if Bonfire.Files.Media.media_label(m)}
+                            {#if media_label}
                               <div
                                 class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top"
                                 onclick="event.stopPropagation()"
@@ -315,7 +323,7 @@
                                       parent_id={deterministic_dom_id(__MODULE__, id(m), "media", @parent_id)}
                                       class="!object-cover w-full h-full cursor-pointer"
                                       media={m}
-                                      alt={media_label}
+                                      alt={Bonfire.Files.Media.media_alt(m)}
                                       src={maybe_preview_img}
                                       disable_lazy={@disable_lazy}
                                     />

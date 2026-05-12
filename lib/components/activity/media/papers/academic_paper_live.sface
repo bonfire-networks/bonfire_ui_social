@@ -27,7 +27,7 @@
                 </div>
 
                 <div class="font-semibold">
-                  {e(@metadata, "citation_title", nil) || Bonfire.Files.Media.media_label(@media)}
+                  {e(@metadata, "citation_title", nil) || Bonfire.Files.Media.media_label_and_alt(@media)}
                 </div>
 
                 <div class="flex flex-wrap mt-3 gap-2 text-sm text-base-content/80">

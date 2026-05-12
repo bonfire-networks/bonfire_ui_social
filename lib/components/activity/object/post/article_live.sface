@@ -15,9 +15,12 @@
       {#case Media.media_url(@primary_image)}
         {#match url when is_binary(url)}
           <div
+            role="img"
+            aria-label={Bonfire.Files.Media.media_alt(@primary_image)}
             class="relative w-full aspect-[4/3] rounded-xl bg-center bg-cover bg-no-repeat overflow-hidden"
             style={["background-image": "url('#{URI.encode(url)}')"]}
           >
+            <span class="sr-only">{Bonfire.Files.Media.media_alt(@primary_image)}</span>
             {!-- Gradient overlay --}
             <div
               class="absolute inset-0"
@@ -146,33 +149,39 @@
     >
       {#case Media.media_url(@primary_image)}
         {#match url when is_binary(url)}
-          <LinkLive
-            :if={@showing_within != :smart_input}
-            to={path(@object)}
-            class={
-              "block",
-              "mb-6": @showing_within == :thread and @viewing_main_object
-            }
-          >
-            <div
-              data-id="article_cover"
-              class={
-                "relative h-[180px] lg:h-[240px] bg-center bg-no-repeat bg-cover overflow-hidden",
-                "!rounded-none": @showing_within == :thread and @viewing_main_object
-              }
-              style={["background-image": "url('#{URI.encode(url)}')"]}
-            >
-              {!-- Gradient overlay for better text contrast --}
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-              <span
-                data-role="article_badge"
-                style="top: 16px"
-                class="absolute left-4 inline-flex items-center gap-2 px-3 py-1 text-xs font-medium tracking-wide uppercase glass text-base-content rounded-full"
+          <figure class={
+            "m-0",
+            "mb-6": @showing_within == :thread and @viewing_main_object
+          }>
+            <LinkLive :if={@showing_within != :smart_input} to={path(@object)} class="block">
+              <div
+                role="img"
+                aria-label={Bonfire.Files.Media.media_alt(@primary_image)}
+                data-id="article_cover"
+                class={
+                  "relative h-[180px] lg:h-[240px] bg-center bg-no-repeat bg-cover overflow-hidden",
+                  "!rounded-none": @showing_within == :thread and @viewing_main_object
+                }
+                style={["background-image": "url('#{URI.encode(url)}')"]}
               >
-                <span class="text-primary">⁂</span> {l("Article")}
-              </span>
-            </div>
-          </LinkLive>
+                <span class="sr-only">{Bonfire.Files.Media.media_alt(@primary_image)}</span>
+                {!-- Gradient overlay for better text contrast --}
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                <span
+                  data-role="article_badge"
+                  style="top: 16px"
+                  class="absolute left-4 inline-flex items-center gap-2 px-3 py-1 text-xs font-medium tracking-wide uppercase glass text-base-content rounded-full"
+                >
+                  <span class="text-primary">⁂</span> {l("Article")}
+                </span>
+              </div>
+            </LinkLive>
+            {#case Bonfire.Files.Media.media_label(@primary_image)}
+              {#match nil}
+              {#match caption}
+                <figcaption class="px-4 pt-1.5 text-xs text-base-content/50 italic">{rich(caption)}</figcaption>
+            {/case}
+          </figure>
         {#match _}
           <span
             data-role="article_badge"

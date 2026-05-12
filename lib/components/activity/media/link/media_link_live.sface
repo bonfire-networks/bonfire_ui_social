@@ -64,7 +64,7 @@
         {/if}
       {/if}
       <div class="p-2 flex flex-col w-full gap-1 flex-1">
-        {#case Bonfire.Files.Media.media_label(@media)}
+        {#case Bonfire.Files.Media.media_label_and_alt(@media)}
           {#match media_label}
             {#case MediaLive.provider(@media)}
               {#match provider when is_binary(provider) and provider != media_label}

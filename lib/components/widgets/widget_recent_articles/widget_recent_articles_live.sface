@@ -54,6 +54,7 @@
                                 class="w-[82px] h-[82px] rounded-lg object-cover transition-all"
                                 fallback_class="w-4 h-4 text-base-content/50"
                                 src={url}
+                                alt={Bonfire.Files.Media.media_alt(primary_image)}
                                 fallback_icon="ion:newspaper-outline"
                               />
                             </LinkLive>

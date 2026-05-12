@@ -11,7 +11,7 @@
           <#Icon iconify="bxs:file-pdf" class="w-8 h-8 text-base-content/70" />
         </div>
         <div class={"text font-semibold", "line-clamp-2": @showing_within in [:feed, :profile]}>
-          {Bonfire.Files.Media.media_label(@media) || l("View")} ({e(@media, :label, nil) || l("PDF")})
+          {Bonfire.Files.Media.media_label_and_alt(@media) || l("View")} ({e(@media, :label, nil) || l("PDF")})
         </div>
       </div>
     {#match preview_img}
@@ -23,7 +23,7 @@
         fallback_icon="bxs:file-pdf"
       />
       <div class="btn btn-sm w-full mt-2">
-        {Bonfire.Files.Media.media_label(@media) || l("View")} ({e(@media, :label, nil) || l("PDF")})
+        {Bonfire.Files.Media.media_label_and_alt(@media) || l("View")} ({e(@media, :label, nil) || l("PDF")})
       </div>
   {/case}
 </a>
