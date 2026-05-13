@@ -4,7 +4,13 @@
     {#case load(current_user, @limit)}
       {#match [articles: []]}
       {#match [articles: articles]}
-        <Bonfire.UI.Common.WidgetBlockLive widget_title={@widget_title || l("Recent Articles")}>
+        <Bonfire.UI.Common.WidgetBlockLive
+          widget_title={@widget_title || l("Recent Articles")}
+          class={
+            "w-full p-4 flex-auto mx-auto rounded-box border border-base-content/20",
+            "bonfire-wrapper overflow-hidden": @image_position == :bottom
+          }
+        >
           <div class="flex flex-col divide-y divide-base-content/10">
             {#for fp <- articles}
               {#case {e(fp, :activity, nil), e(fp, :activity, :object, nil) || e(fp, :object, nil),
@@ -15,7 +21,11 @@
                         e(object, :media, nil)
                     )}
                     {#match {primary_image, _files}}
-                      <article class="group flex gap-4 py-4 first:pt-0 last:pb-0">
+                      <article class={
+                        "group py-4 first:pt-0 last:pb-0",
+                        "flex gap-4": @image_position == :side,
+                        "flex flex-col gap-2": @image_position == :bottom
+                      }>
                         {!-- Content --}
                         <div class="flex flex-col gap-1 flex-1 min-w-0">
                           {!-- Author badge --}
@@ -48,10 +58,21 @@
                         {!-- Thumbnail --}
                         {#case Media.media_url(primary_image)}
                           {#match url when is_binary(url)}
-                            <LinkLive to={path(object)} class="block shrink-0 w-[82px] h-[82px] overflow-hidden rounded-lg">
+                            <LinkLive
+                              to={path(object)}
+                              class={
+                                "block overflow-hidden rounded-lg",
+                                "shrink-0 w-[82px] h-[82px]": @image_position == :side,
+                                "w-full aspect-video": @image_position == :bottom
+                              }
+                            >
                               <LazyImage
                                 parent_id={deterministic_dom_id("article_widget_thumb", id(activity) || id(object))}
-                                class="w-[82px] h-[82px] rounded-lg object-cover transition-all"
+                                class={
+                                  "rounded-lg object-cover transition-all",
+                                  "w-[82px] h-[82px]": @image_position == :side,
+                                  "w-full h-full": @image_position == :bottom
+                                }
                                 fallback_class="w-4 h-4 text-base-content/50"
                                 src={url}
                                 fallback_icon="ion:newspaper-outline"

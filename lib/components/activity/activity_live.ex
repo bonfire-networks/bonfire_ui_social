@@ -371,6 +371,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
     a_id = id(activity) || object_id
     o_id = object_id || a_id
 
+    # Guard against using the page-level thread context when the activity actually
+    # belongs to a different thread (e.g. quoted/embedded references) — that would
+    # build /post/<wrong_thread>/reply/N/<this_object> which navigates to an unrelated OP.
+    activity_thread_id =
+      e(replied, :thread_id, nil) || id(e(replied, :thread, nil))
+
     current_url =
       (assigns[:current_url] || current_url(assigns[:__context__]))
       |> debug("activity_current_url")
@@ -378,7 +384,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # permalink = path(object, [], preload_if_needed: false)
     permalink =
       cond do
-        thread_url && thread_id != o_id ->
+        thread_url && thread_id != o_id &&
+            (is_nil(activity_thread_id) || activity_thread_id == thread_id) ->
           if thread_level != 0 do
             "#{thread_url}/reply/#{thread_level}/#{o_id}"
           else

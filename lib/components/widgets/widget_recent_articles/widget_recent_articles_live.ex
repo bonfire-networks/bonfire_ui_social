@@ -9,6 +9,7 @@ defmodule Bonfire.UI.Social.WidgetRecentArticlesLive do
 
   prop limit, :integer, default: 5
   prop widget_title, :string, default: nil
+  prop image_position, :atom, default: :side, values: [:side, :bottom]
 
   def load(current_user, limit \\ 5) do
     # Directly query articles using FeedActivities (simpler than feed_assigns_non_live)

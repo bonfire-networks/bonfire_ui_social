@@ -365,11 +365,34 @@ defmodule Bonfire.Social.Objects.LiveHandler do
              current_user: current_user,
              preload: default_preloads()
            ) do
-      init_object_assigns(object, socket)
+      object
+      |> apply_object_extension_preloads(current_user)
+      |> init_object_assigns(socket)
     else
       _ ->
         not_found_fallback(id, e(assigns, :params, nil), socket)
     end
+  end
+
+  # For object types whose preview component declares extra preloads
+  # (e.g. `Bonfire.Poll.Question` → `:choices`), apply them after the core
+  # read so the preview renders fully. The feed already does this through
+  # `preload_activity_and_object_assocs/3` using the same registry. We
+  # preload directly on the merged object (preserving the `.activity`
+  # injected by `Activities.activity_under_object/1`) rather than going
+  # through `maybe_preloads_per_schema/3`, which would `Needles.follow!/1`
+  # and discard the merged activity.
+  defp apply_object_extension_preloads(object, current_user) do
+    object_type = Bonfire.Common.Types.object_type(object)
+
+    Bonfire.Social.Feeds.LiveHandler.object_preloads()
+    |> Enum.find_value(object, fn
+      {^object_type, preloads} when not is_nil(preloads) and preloads != [] ->
+        Bonfire.Common.Repo.maybe_preload(object, preloads, current_user: current_user)
+
+      _ ->
+        nil
+    end)
   end
 
   # `Posts.read` covers Post-shaped articles; `Objects.read` covers Media-shaped
