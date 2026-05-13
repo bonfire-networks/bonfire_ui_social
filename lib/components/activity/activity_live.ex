@@ -800,7 +800,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         "activity relative flex flex-col gap-1 touch-pan-y p-5 activity-padding #{@class}",
         "activity-padding-compact":
           @showing_within in [:thread, :thread_embed] && !@viewing_main_object,
-        "hover:bg-primary/5":
+        "hover:bg-base-200/5":
           @showing_within not in [:thread, :thread_embed, :smart_input, :widget] &&
             (!@activity_inception || @showing_within == :quote_preview),
         "replied !p-0 mb-8":
