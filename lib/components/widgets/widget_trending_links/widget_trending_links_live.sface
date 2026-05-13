@@ -22,7 +22,7 @@
                   target="_blank"
                   class="text-lg font-semibold link link-hover line-clamp-2 leading-snug transition-colors"
                 >
-                  {Bonfire.Files.Media.media_label(media)}
+                  {Bonfire.Files.Media.media_label_and_alt(media)}
                 </LinkLive>
               </Bonfire.UI.Common.OpenExternalLinkLive>
 

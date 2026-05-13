@@ -202,13 +202,19 @@
             {#case Bonfire.Files.Media.media_label(m)}
               {#match label}
                 <div x-show={"currentIndex === #{counter}"} x-cloak>
-                  <p :if={label not in [nil, ""]} class="text-white/90 text-sm leading-relaxed">{label}</p>
-                  <p
-                    :if={Bonfire.Files.Media.description(m.metadata) not in [nil, ""]}
-                    class="text-white/60 text-xs mt-1"
-                  >
-                    {Bonfire.Files.Media.description(m.metadata)}
-                  </p>
+                  <p :if={label not in [nil, ""]} class="text-white/90 text-sm leading-relaxed">{rich(label)}</p>
+                  {#case Bonfire.Files.Media.media_alt(m.metadata)}
+                    {#match media_alt}
+                      <p :if={media_alt not in [nil, ""]} class="text-white/75 text-xs mt-1">
+                        {media_alt}
+                      </p>
+                  {/case}
+                  {#case Bonfire.Files.Media.description(m.metadata)}
+                    {#match description}
+                      <p :if={description not in [nil, ""]} class="text-white/60 text-xs mt-1">
+                        {description}
+                      </p>
+                  {/case}
                 </div>
             {/case}
           {/for}

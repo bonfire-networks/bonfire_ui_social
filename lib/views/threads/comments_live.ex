@@ -111,7 +111,6 @@ defmodule Bonfire.UI.Social.CommentsLive do
 
   defp handle_ghost_params(slug_or_id, params, _url, socket) do
     socket = assign_global(socket, :go, e(params, "embed_parent", nil))
-    current_user = current_user(socket) || params["creator"]
     url = e(params, "media_uri", nil) || e(params, "embed_parent", nil)
 
     with {:ok, %{id: id}} <-
@@ -119,7 +118,7 @@ defmodule Bonfire.UI.Social.CommentsLive do
              slug_or_id,
              url,
              [
-               current_user: current_user,
+               current_user: params["creator"] || current_user(socket),
                boundary: params["boundary"],
                group_id: params["group_id"],
                require_topic: params["require_topic"] == "true"

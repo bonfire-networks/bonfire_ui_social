@@ -41,7 +41,7 @@
           target="_blank"
           class="text-lg font-bold link link-hover line-clamp-2 leading-snug text-balance"
         >
-          {Bonfire.Files.Media.media_label(@link)}
+          {Bonfire.Files.Media.media_label_and_alt(@link)}
         </LinkLive>
       </Bonfire.UI.Common.OpenExternalLinkLive>
 
@@ -79,7 +79,7 @@
           target="_blank"
           class="text-base font-semibold link link-hover line-clamp-2 leading-tight"
         >
-          {Bonfire.Files.Media.media_label(@link)}
+          {Bonfire.Files.Media.media_label_and_alt(@link)}
         </LinkLive>
       </Bonfire.UI.Common.OpenExternalLinkLive>
 

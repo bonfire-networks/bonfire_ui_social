@@ -3,6 +3,7 @@ defmodule Bonfire.UI.Social.SmartInputTest do
   use Bonfire.Common.Utils
   import Bonfire.Files.Simulation
 
+  import Tesla.Mock
   alias Bonfire.Social.Fake
   alias Bonfire.Posts
 
@@ -12,6 +13,15 @@ defmodule Bonfire.UI.Social.SmartInputTest do
     account = fake_account!()
     me = fake_user!(account)
     conn = conn(user: me, account: account)
+
+    mock_global(fn
+      %{method: :get, url: "https://example.com/some/page"} ->
+        %Tesla.Env{status: 200, body: "<title>Web Title Test</title>"}
+
+      env ->
+        ActivityPub.Test.HttpRequestMock.request(env)
+    end)
+
     {:ok, conn: conn, account: account, me: me}
   end
 
@@ -522,6 +532,40 @@ defmodule Bonfire.UI.Social.SmartInputTest do
     # NOTE: The "no boundary param" fallback to "mentions" in posts_live_handler.ex:98
     # is unreachable from normal UI usage because the form always includes
     # to_boundaries[] hidden inputs from BoundariesSelectionLive.
+  end
+
+  describe "link rendering in posts" do
+    test "external links in posts get rel=nofollow noopener", %{conn: conn} do
+      url = "https://example.com/some/page"
+
+      conn
+      |> visit("/feed/local")
+      |> submit_post("check out #{url}")
+      |> wait_async()
+      |> assert_has_or_open_browser("[data-id=feed] article a[rel~='nofollow'][href='#{url}']")
+    end
+
+    test "local links in posts get data-phx-link for LiveView navigation", %{conn: conn} do
+      other = fake_user!()
+
+      conn
+      |> visit("/feed/local")
+      |> submit_post("mention @#{other.character.username}")
+      |> wait_async()
+      |> assert_has_or_open_browser("[data-id=feed] article a[data-phx-link='redirect']")
+    end
+
+    # not needed?
+    # test "hashtag links keep rel=tag and also get LiveView navigation", %{conn: conn} do
+    #   conn
+    #   |> visit("/feed/local")
+    #   |> submit_post("post with #elixir tag")
+    #   |> wait_async()
+    #   |> assert_has_or_open_browser("[data-id=feed] article a.hashtag[rel~='tag']")
+    #   |> assert_has_or_open_browser(
+    #     "[data-id=feed] article a.hashtag[data-phx-link='redirect']"
+    #   )
+    # end
   end
 
   describe "boundary update via send_update" do
