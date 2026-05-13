@@ -82,6 +82,7 @@
               main_profile_name={@profile_name}
               main_character_username={@character_username}
               main_profile_media={@profile_media}
+              main_is_remote={!check_is_local?(@peered || @subject_id, preload_if_needed: false)}
               subjects_more={@subjects_more}
               trigger_text={lp("and %{number} other", "and %{number} others", length(@subjects_more),
                 number: length(@subjects_more)
@@ -235,13 +236,14 @@
                     {if @verb == "React", do: l("reacted to this activity"), else: l("liked this activity")}
                   </div>
                 {#match _}
-                  <!-- <div class="avatar-group -space-x-3">
+                  {!-- <div class="avatar-group -space-x-3">
                     <Bonfire.UI.Common.AvatarLive
                       parent_id={deterministic_dom_id(__MODULE__, nil, "sml-main", @parent_id)}
                       user_id={@profile_id}
                       src={@profile_media}
                       title={@profile_name || @character_username}
                       class="h-7 w-7 rounded-full"
+                      is_remote={!check_is_local?(@peered || @subject_id, preload_if_needed: false)}
                     />
                     {#if @subjects_more != []}
                       {#for {subject, idx} <- Enum.with_index(@subjects_more)}
@@ -252,11 +254,12 @@
                             src={nil}
                             title={e(subject, :profile, :name, nil)}
                             class="h-7 w-7 rounded-full"
+                            is_remote={!check_is_local?(subject, preload_if_needed: false)}
                           />
                         {/if}
                       {/for}
                     {/if}
-                  </div> -->
+                  </div> --}
                   <#Icon iconify="ph:fire-fill" class="w-5 h-5 text-yellow-500" />
                   <div class="text-sm text-base-content/70">
                     <LinkLive
