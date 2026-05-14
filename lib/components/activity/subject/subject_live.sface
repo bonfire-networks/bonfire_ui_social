@@ -30,7 +30,7 @@
       "!relative !ml-0 ": @viewing_main_object,
       "margin-compact":
         (@__context__[:ui_compact] && !@viewing_main_object) ||
-          @showing_within in [:smart_input, :quote_preview] ||
+          @showing_within in [:smart_input, :pinned, :quote_preview] ||
           (@showing_within in [:thread, :thread_embed] && !@viewing_main_object)
     ]}
     to={@path}
@@ -47,7 +47,7 @@
         "rounded-full w-12 h-12",
         "avatar-compact":
           @__context__[:ui_compact] ||
-            @showing_within in [:smart_input, :quote_preview] ||
+            @showing_within in [:smart_input, :pinned, :quote_preview] ||
             (@showing_within in [:thread, :thread_embed] && !@viewing_main_object)
       ]}
     />
@@ -112,12 +112,12 @@
       </LinkLive>
     </div>
     <span
-      :if={@showing_within not in [:smart_input]}
+      :if={@showing_within not in [:smart_input, :pinned]}
       data-id="subject_secondary"
       class="flex flex-1 items-center gap-1 -mt-[2px]"
     >
       <LinkLive
-        :if={@character_username && @showing_within != :smart_input}
+        :if={@character_username && @showing_within not in [:smart_input, :pinned]}
         opts={[
           "data-id": "subject_username",
           "data-subject-id": @subject_id,

@@ -2,7 +2,7 @@
   <div class="flex-1" />
 
   <Bonfire.UI.Social.Activity.LinkToActivityLive
-    :if={@showing_within not in [:smart_input]}
+    :if={@showing_within not in [:smart_input, :pinned]}
     permalink={@permalink}
   >
     <span

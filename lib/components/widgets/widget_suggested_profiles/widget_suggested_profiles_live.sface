@@ -1,12 +1,13 @@
 {#case list_suggested_profiles()}
-  {#match []}
-    <div />
   {#match suggested_profiles}
     <Bonfire.UI.Common.WidgetBlockLive
       :if={current_user_id(@__context__)}
       class="w-full p-4 flex-auto mx-auto bonfire-wrapper overflow-hidden"
       title_class="flex items-center justify-between pb-2 text-xs font-medium uppercase tracking-wide text-base-content/90 relative"
       widget_title={e(@widget_title, l("Who to follow"))}
+      empty={suggested_profiles == []}
+      empty_icon="ph:user-plus-duotone"
+      empty_message={l("No suggestions yet")}
     >
       <:action>
         <div style="top: 100px;" class="flex absolute w-full gap-1">

@@ -205,7 +205,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           existing -> existing
         end,
       published_in:
-        if(showing_within != :smart_input,
+        if(showing_within not in [:smart_input, :pinned],
           do: maybe_published_in(debug(activity, "accct"), verb) |> debug("maybppp")
         ),
       labelled: maybe_labelled(activity, verb),
@@ -805,13 +805,20 @@ defmodule Bonfire.UI.Social.ActivityLive do
             (!@activity_inception || @showing_within == :quote_preview),
         "replied !p-0 mb-8":
           @activity_inception &&
-            @showing_within not in [:smart_input, :thread, :quote_preview, :quote_post, :nested_preview],
+            @showing_within not in [
+              :smart_input,
+              :pinned,
+              :thread,
+              :quote_preview,
+              :quote_post,
+              :nested_preview
+            ],
         "unread-activity":
           is_nil(e(@activity, :seen, nil)) and @showing_within == :notifications and
             is_nil(@activity_inception),
         "active-activity":
           @highlight_activity_id == @activity_id and
-            @showing_within != :smart_input and @viewing_main_object == false
+            @showing_within not in [:smart_input, :pinned] and @viewing_main_object == false
       ]}
     >
       {!-- Preview click trigger (hidden `.open_preview_link`) — rendered alongside
@@ -1976,7 +1983,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
              showing_within == :notifications or
              (not is_nil(activity_inception) or
                 (viewing_main_object != true and
-                   showing_within in [:thread, :thread_embed, :smart_input] and
+                   showing_within in [:thread, :thread_embed, :smart_input, :pinned] and
                    thread_mode != :flat)),
       do: []
 
@@ -2377,7 +2384,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       do: []
 
   def component_actions(_, _, _, showing_within, _, _)
-      when showing_within == :smart_input,
+      when showing_within in [:smart_input, :pinned],
       do: []
 
   # Quote request notifications show a custom footer with quote preview + accept/decline buttons

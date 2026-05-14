@@ -36,6 +36,8 @@
       </div>
     {#match :smart_input}
       <div />
+    {#match :pinned}
+      <div />
     {#match :search}
       <div />
     {#match :notifications}

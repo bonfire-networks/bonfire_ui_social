@@ -153,7 +153,7 @@
             "m-0",
             "mb-6": @showing_within == :thread and @viewing_main_object
           }>
-            <LinkLive :if={@showing_within != :smart_input} to={path(@object)} class="block">
+            <LinkLive :if={@showing_within not in [:smart_input, :pinned]} to={path(@object)} class="block">
               <div
                 role="img"
                 aria-label={Bonfire.Files.Media.media_alt(@primary_image)}

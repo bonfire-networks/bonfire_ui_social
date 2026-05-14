@@ -10,7 +10,7 @@
         class="flex flex-col gap-2 my-2"
       >
         {#for %{} = m <- @multimedia_list}
-          {#if @showing_within != :smart_input}
+          {#if @showing_within not in [:smart_input, :pinned]}
             {#case Bonfire.Files.Media.media_label_and_alt(m)}
               {#match media_label}
                 <article class="m-entry relative h-full w-full row-span-4 object-cover">
@@ -62,7 +62,7 @@
   {#case @visual_count}
     {#match 0}
     {#match num_medias}
-      {#if @showing_within != :smart_input}
+      {#if @showing_within not in [:smart_input, :pinned]}
         {#if current_user_id(@__context__)}
           <Bonfire.UI.Common.OpenModalLive
             id={deterministic_dom_id("media_carousel_modal", @parent_id)}
@@ -365,7 +365,7 @@
   data-id="media_list"
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
-  :if={@link_list != [] && @showing_within != :smart_input}
+  :if={@link_list != [] && @showing_within not in [:smart_input, :pinned]}
   class={["flex flex-col gap-2 my-2", hidden: @cw]}
 >
   {#for m <- if @showing_within == :feed, do: Enum.take(@link_list, 1), else: @link_list}

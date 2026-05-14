@@ -21,7 +21,7 @@
   />
 
   <Bonfire.UI.Social.Activity.ReadMoreLive
-    :if={@showing_within != :smart_input}
+    :if={@showing_within not in [:smart_input, :pinned]}
     activity={@activity}
     object={@object}
     parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}

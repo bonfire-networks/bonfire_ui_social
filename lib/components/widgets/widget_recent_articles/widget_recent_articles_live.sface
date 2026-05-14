@@ -2,7 +2,6 @@
   {#match nil}
   {#match current_user}
     {#case load(current_user, @limit)}
-      {#match [articles: []]}
       {#match [articles: articles]}
         <Bonfire.UI.Common.WidgetBlockLive
           widget_title={@widget_title || l("Recent Articles")}
@@ -10,6 +9,9 @@
             "w-full p-4 flex-auto mx-auto rounded-box border border-base-content/20",
             "bonfire-wrapper overflow-hidden": @image_position == :bottom
           }
+          empty={articles == []}
+          empty_icon="ion:newspaper-outline"
+          empty_message={l("No articles to read yet. Federated long-form posts will show up here as soon as they arrive.")}
         >
           <div class="flex flex-col divide-y divide-base-content/10">
             {#for fp <- articles}

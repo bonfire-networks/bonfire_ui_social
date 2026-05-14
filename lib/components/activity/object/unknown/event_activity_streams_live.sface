@@ -1,4 +1,4 @@
-{#if @showing_within == :smart_input}
+{#if @showing_within in [:smart_input, :pinned]}
   <div class="">
     <div class="flex badge badge-neutral items-center gap-2 font-semibold">
       <#Icon iconify="ph:calendar-blank-bold" class="w-4 h-4" />

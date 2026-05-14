@@ -15,7 +15,7 @@
     "object_body prose-bonfire translatable prose break-normal max-w-none text-base-content prose-hr:!my-2 prose-br:hidden",
     previewable_truncate:
       !@viewing_main_object &&
-        @showing_within not in [:smart_input],
+        @showing_within not in [:smart_input, :pinned],
     "!text-sm !text-base-content/70": e(@object_type, nil) == :article && @showing_within != :thread
   }
 >

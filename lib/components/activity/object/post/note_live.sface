@@ -31,7 +31,7 @@
       {#match nil}
       {#match name}
         <div
-          :if={name != @thread_title and @showing_within != :smart_input}
+          :if={name != @thread_title and @showing_within not in [:smart_input, :pinned]}
           data-role="name"
           class="translatable text-sm my-1 mt-2"
         >
