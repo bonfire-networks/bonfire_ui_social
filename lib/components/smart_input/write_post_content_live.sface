@@ -1,4 +1,7 @@
-<div class="write_post_content flex flex-col flex-1 min-h-0">
+<div id="smart_input_post_content" class="write_post_content flex flex-col flex-1 min-h-0">
+  {!-- Distinct id (paired with `smart_input_poll_content`) lets morphdom
+       swap the whole subtree atomically when the composer type changes,
+       avoiding a mid-patch flash. --}
   {!-- NOTE: if using Surface's Form component here it would cause it to override our @__context__ (containing current_user, etc) with the form metadata, causing issues in any component below this one --}
   <!-- for={%{}} -->
   {!-- DM RECIPIENTS --}

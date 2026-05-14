@@ -1,8 +1,6 @@
 defmodule Bonfire.UI.Social.WritePostContentLive do
   use Bonfire.UI.Common.Web, :stateless_component
   use Bonfire.Common.Utils
-  # alias Surface.Components.Form.TextArea
-  # alias Surface.Components.Form.HiddenInput
   alias Bonfire.UI.Common.WriteEditorLive
 
   @behaviour Bonfire.UI.Common.SmartInputModule
