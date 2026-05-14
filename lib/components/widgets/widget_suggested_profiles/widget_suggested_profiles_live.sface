@@ -43,7 +43,7 @@
                 user={user}
                 href={"/@#{e(user, :character, :username, "")}"}
                 with_banner
-                parent_id="widget_suggested_profiles"
+                parent_id={deterministic_dom_id(__MODULE__, id(user), "widget_suggested", nil)}
               >
                 <:actions>
                   <div class="px-3 pb-3">

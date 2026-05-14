@@ -11,6 +11,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectListModalLive do
   prop main_profile_name, :string, default: nil
   prop main_character_username, :string, default: nil
   prop main_profile_media, :any, default: nil
+  prop main_is_remote, :boolean, default: true
   prop subjects_more, :list, default: []
   prop trigger_text, :string, required: true
   prop trigger_class, :css_class, default: "link link-hover font-bold"
