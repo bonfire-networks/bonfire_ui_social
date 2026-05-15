@@ -6,7 +6,7 @@
       widget_title={@widget_title || l("Top discussions")}
       empty={discussions == []}
       empty_icon="ph:chats-circle-duotone"
-      empty_message={l("No popular discussions yet. Start one — your post could be tomorrow's top thread.")}
+      empty_message={l("No popular discussions yet. Why not start one? Your post could be tomorrow's top thread.")}
     >
       <:action>
         <LinkLive
