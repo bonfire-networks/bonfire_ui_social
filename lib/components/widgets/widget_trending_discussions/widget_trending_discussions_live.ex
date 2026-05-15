@@ -5,7 +5,7 @@ defmodule Bonfire.UI.Social.WidgetTrendingDiscussionsLive do
   """
   use Bonfire.UI.Common.Web, :stateless_component
 
-  prop limit, :integer, default: 5
+  prop limit, :integer, default: 3
   prop widget_title, :string, default: nil
 
   def load(current_user, limit) do
