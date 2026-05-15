@@ -359,4 +359,82 @@ defmodule Bonfire.Social.Threads.ThreadsTest do
     # Assert only the tagged user is included
     assert actual_participants == expected_participants
   end
+
+  # `:replied` mirrors what ActivityLive preloads in production, so the
+  # handler can resolve the thread_id off the activity.
+  defp prepared_reply_participant_ids(current_user, reply_to) do
+    reply_to = Bonfire.Common.Repo.maybe_preload(reply_to, activity: [:replied])
+
+    socket = %Phoenix.LiveView.Socket{
+      assigns: %{
+        current_user: current_user,
+        activity: reply_to.activity,
+        object: reply_to,
+        published_in: nil,
+        object_boundary: nil,
+        object_type: nil
+      }
+    }
+
+    Bonfire.Social.Threads.LiveHandler.prepare_reply_assigns(
+      reply_to,
+      reply_to.activity,
+      nil,
+      socket
+    )
+    |> Keyword.get(:participants, [])
+    |> Enums.ids()
+  end
+
+  describe "preserving the audience on DM replies" do
+    test "DM reply addresses every thread participant — not just the parent's tags", %{
+      me: alice
+    } do
+      bob = fake_user!()
+      carol = fake_user!()
+
+      {:ok, op} =
+        Bonfire.Messages.send(alice, %{post_content: %{html_body: "kickoff"}}, [bob, carol])
+
+      {:ok, bob_reply} =
+        Bonfire.Messages.send(
+          bob,
+          %{post_content: %{html_body: "ack"}, reply_to_id: op.id},
+          [alice]
+        )
+
+      participant_ids = prepared_reply_participant_ids(alice, bob_reply)
+
+      assert bob.id in participant_ids
+      assert carol.id in participant_ids, "Carol (other DM recipient) must stay in the loop"
+      refute alice.id in participant_ids, "current user must not be re-addressed"
+    end
+
+    test "public post reply still does NOT expand to the whole thread audience",
+         %{me: alice, post: post} do
+      bob = fake_user!()
+      carol = fake_user!()
+
+      {:ok, bob_reply} =
+        Posts.publish(
+          current_user: bob,
+          post_attrs: %{post_content: %{html_body: "Reply from Bob"}, reply_to_id: post.id},
+          boundary: "public"
+        )
+
+      {:ok, _carol_reply} =
+        Posts.publish(
+          current_user: carol,
+          post_attrs: %{post_content: %{html_body: "Reply from Carol"}, reply_to_id: post.id},
+          boundary: "public"
+        )
+
+      participant_ids = prepared_reply_participant_ids(alice, bob_reply)
+
+      assert bob.id in participant_ids
+
+      refute carol.id in participant_ids,
+             "Carol posted elsewhere in the thread — must not be auto-added on a public reply"
+    end
+  end
 end

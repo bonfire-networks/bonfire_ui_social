@@ -388,13 +388,34 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
       create_object_type = if(object_type == Bonfire.Data.Social.Message, do: :message)
 
-      # TODO: don't re-load participants here as we already have the list (at least when we're in a thread)
-      # TODO: include thread_id in list_participants/3 call
+      thread_id =
+        e(activity, :replied, :thread_id, nil) ||
+          e(reply_to, :replied, :thread_id, nil)
+
+      # DMs re-address the whole thread audience so the original recipients
+      # stay in the loop on every reply. TODO: extend to "mentions"-boundary
+      # posts once `object_boundary` is reliably preloaded for non-preset ACLs.
+      preserve_thread_audience? = create_object_type == :message
+
+      # TODO: skip this lookup when assigns already has the full thread participants
       participants =
-        (e(assigns(socket), :participants, nil) ||
-           Bonfire.Social.Threads.list_participants(Map.put(activity, :object, reply_to), :skip,
-             current_user: current_user
-           ) || [])
+        e(assigns(socket), :participants, nil) ||
+          Bonfire.Social.Threads.list_participants(
+            Map.put(activity, :object, reply_to),
+            if(preserve_thread_audience?, do: thread_id || :skip, else: :skip),
+            current_user: current_user
+          ) ||
+          []
+
+      # `list_participants/3` doesn't read tags off the thread root, so DM
+      # recipients drop out when an intermediate reply tags only a subset.
+      participants =
+        if preserve_thread_audience? && thread_id && thread_id != reply_to_id do
+          (participants ++ thread_root_audience(thread_id, current_user))
+          |> Enum.uniq_by(&(e(&1, :character, :id, nil) || Enums.id(&1)))
+        else
+          participants
+        end
         |> Enum.reject(&(e(&1, :character, :id, nil) in [id(current_user), published_in_id]))
 
       to_circles =
@@ -407,10 +428,6 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           do: Enum.map_join(participants, " ", &("@" <> e(&1, :character, :username, ""))) <> " "
 
       # workaround for mobilizon not supported mentions
-
-      thread_id =
-        e(activity, :replied, :thread_id, nil) ||
-          e(reply_to_id, :replied, :thread_id, nil)
 
       [
         # reset_smart_input: false, # avoid double-reset
@@ -450,6 +467,23 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         activity: activity,
         object: reply_to
       ]
+    end
+  end
+
+  defp thread_root_audience(thread_id, current_user) do
+    case Bonfire.Common.Needles.get(thread_id,
+           current_user: current_user,
+           skip_boundary_check: true
+         ) do
+      {:ok, root} ->
+        root = repo().maybe_preload(root, created: [creator: [:character]])
+        creator = e(root, :created, :creator, nil)
+        user_tags = Bonfire.Social.Tags.list_tags_mentions(root, current_user)
+
+        [creator | user_tags] |> Enum.reject(&is_nil/1)
+
+      _ ->
+        []
     end
   end
 
