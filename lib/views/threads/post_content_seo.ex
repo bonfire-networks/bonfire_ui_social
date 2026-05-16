@@ -5,10 +5,8 @@ defimpl SEO.Site.Build, for: Bonfire.Data.Social.PostContent do
     debug(post_content)
 
     SEO.Site.build(
-      title:
-        e(post_content, :title, nil) ||
-          e(post_content, :activity, :replied, :thread, :named, :name, nil),
-      description: e(post_content, :summary, nil)
+      title: Bonfire.UI.Social.PostContentSEO.title(post_content),
+      description: Bonfire.UI.Social.PostContentSEO.description(post_content)
     )
   end
 
@@ -31,19 +29,11 @@ defimpl SEO.OpenGraph.Build, for: Bonfire.Data.Social.PostContent do
   use Bonfire.UI.Common
 
   def build(post_content, _conn) do
-    # IO.inspect(post_content, label: "post_contentsss")
-    creator =
-      e(post_content, :pointer, :created, :creator, nil) ||
-        e(post_content, :activity, :subject, nil) ||
-        e(post_content, :pointer, :created, :creator_id, nil) ||
-        e(post_content, :activity, :subject_id, nil)
+    creator = Bonfire.UI.Social.PostContentSEO.creator(post_content)
+    author = Bonfire.UI.Social.PostContentSEO.author(post_content, creator)
 
-    author =
-      Bonfire.Me.Characters.display_username(creator, true) || e(creator, :profile, :name, nil)
-
-    title =
-      e(post_content, :title, nil) ||
-        e(post_content, :activity, :replied, :thread, :named, :name, nil)
+    title = Bonfire.UI.Social.PostContentSEO.title(post_content, author)
+    description = Bonfire.UI.Social.PostContentSEO.description(post_content)
 
     first_media = List.first(e(post_content, :activity, :media, []))
 
@@ -59,17 +49,19 @@ defimpl SEO.OpenGraph.Build, for: Bonfire.Data.Social.PostContent do
         ),
       #  TODO: do not generate image for non-public posts
       image:
-        Bonfire.UI.Common.SEOImage.generate_path(
-          Enums.id(post_content),
-          Enums.id(creator),
-          title,
-          e(post_content, :summary, nil) || e(post_content, :html_body, nil),
-          author,
-          Path.absname(
-            String.trim_leading(
-              from_ok(Media.thumbnail_url(first_media)) ||
-                from_ok(Media.media_url(first_media)) || "",
-              "/"
+        Bonfire.UI.Common.SEOImage.absolute_url(
+          Bonfire.UI.Common.SEOImage.generate_path(
+            Enums.id(post_content),
+            Enums.id(creator),
+            title,
+            description || e(post_content, :html_body, nil),
+            author,
+            Path.absname(
+              String.trim_leading(
+                from_ok(Media.thumbnail_url(first_media)) ||
+                  from_ok(Media.media_url(first_media)) || "",
+                "/"
+              )
             )
           )
         ),
@@ -77,7 +69,19 @@ defimpl SEO.OpenGraph.Build, for: Bonfire.Data.Social.PostContent do
       # url: Pages.page_path(post_content),
       # locale: "en_US",
       type: :article,
-      description: e(post_content, :summary, nil)
+      description: description
+    )
+  end
+end
+
+defimpl SEO.Twitter.Build, for: Bonfire.Data.Social.PostContent do
+  use Bonfire.UI.Common
+
+  def build(post_content, _conn) do
+    SEO.Twitter.build(
+      title: Bonfire.UI.Social.PostContentSEO.title(post_content),
+      description: Bonfire.UI.Social.PostContentSEO.description(post_content),
+      card: :summary_large_image
     )
   end
 end
