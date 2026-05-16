@@ -302,9 +302,8 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   defp maybe_seo_assign(socket, object, activity) do
-    if !socket_connected?(socket),
-      do: SEO.assign(socket, Map.put(object, :activity, activity)),
-      else: socket
+    socket
+    |> Bonfire.UI.Common.SEO.maybe_assign_seo(Map.put(object, :activity, activity))
   end
 
   # TODO: put in Social config like the rest
