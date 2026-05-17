@@ -228,7 +228,7 @@
               [
                 "flag",
                 l("this %{object}", object: @object_type_readable || l("object")),
-                @permalink || URIs.canonical_url(@object),
+                @permalink || URIs.canonical_url(@object, preload_if_needed: false),
                 @__context__
               ],
               fallback_return: "/login"

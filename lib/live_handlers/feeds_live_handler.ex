@@ -644,7 +644,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        previous_page_info: e(opts, :page_info, nil),
        page_info: e(feed, :page_info, []),
        loading: true,
-       #  feed_filters: filters,
+       feed_filters: filters,
        activity_preloads: preloads
      )
      |> insert_feed(e(feed, :edges, []), opts)}

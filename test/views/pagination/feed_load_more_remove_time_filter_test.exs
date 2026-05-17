@@ -1,17 +1,20 @@
 defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
   use Bonfire.UI.Social.ConnCase, async: false
   @moduletag :ui
-  import Bonfire.Common.Simulation
   use Bonfire.Common.Config
-  alias Bonfire.Social.Fake
-  alias Bonfire.Social.Boosts
-  alias Bonfire.Social.Likes
-  alias Bonfire.Social.Graph.Follows
-  alias Bonfire.Posts
   import Bonfire.Posts.Fake, except: [fake_remote_user!: 0]
   use Mneme
-  import Untangle
   alias Bonfire.Common.DatesTimes
+
+  defp dated_post!(user, summary, body, date) do
+    fake_post!(user, "public", %{
+      post_content: %{
+        summary: summary,
+        html_body: "<p>#{body}</p>"
+      },
+      id: DatesTimes.generate_ulid(date)
+    })
+  end
 
   describe "Load All Time Buttons in Feeds" do
     setup do
@@ -21,13 +24,15 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       # Set the test configuration (disabling deferred joins because they affect pagination)
       Config.put([Bonfire.Social.Feeds, :query_with_deferred_join], false)
       # Process.put([:bonfire, :default_pagination_limit], limit)
-
-      # Make sure we start with a blank slate
-      repo().delete_all(Bonfire.Data.Social.FeedPublish)
+      Bonfire.Common.Cache.remove_all()
 
       # Create test users
       account = fake_account!()
       alice = fake_user!(account)
+      author = fake_user!()
+
+      # Make sure user/account setup activities do not affect feed counts.
+      repo().delete_all(Bonfire.Data.Social.FeedPublish)
 
       # Create posts with specific dates
       limit = Bonfire.Common.Config.get(:default_pagination_limit, 2)
@@ -35,68 +40,27 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
 
       ## Create posts with systematically varied dates for all tests
 
-      # Today's post
       today_post =
-        fake_post!(alice, "public", %{
-          post_content: %{
-            summary: "today's post",
-            html_body: "<p>Today's post content</p>"
-          },
-          id: DatesTimes.now() |> DatesTimes.generate_ulid()
-        })
+        dated_post!(author, "today's post", "Today's post content", DatesTimes.past(1, :hour))
 
-      # Yesterday's post
       two_days_ago_post =
-        fake_post!(alice, "public", %{
-          post_content: %{
-            summary: "2 days ago post",
-            html_body: "<p>Yesterday's content</p>"
-          },
-          id: DatesTimes.past(2, :day) |> DatesTimes.generate_ulid()
-        })
+        dated_post!(author, "2 days ago post", "Yesterday's content", DatesTimes.past(2, :day))
 
-      # Three days ago post
       three_days_ago_post =
-        fake_post!(alice, "public", %{
-          post_content: %{
-            summary: "3 days ago post",
-            html_body: "<p>Three days ago content</p>"
-          },
-          id: DatesTimes.past(3, :day) |> DatesTimes.generate_ulid()
-        })
+        dated_post!(author, "3 days ago post", "Three days ago content", DatesTimes.past(3, :day))
 
-      # Week old post
       week_old_post =
-        fake_post!(alice, "public", %{
-          post_content: %{
-            summary: "Week old post",
-            html_body: "<p>Week-old content</p>"
-          },
-          id: DatesTimes.past(7, :day) |> DatesTimes.generate_ulid()
-        })
+        dated_post!(author, "Week old post", "Week-old content", DatesTimes.past(7, :day))
 
-      # Month old post
       month_old_post =
-        fake_post!(alice, "public", %{
-          post_content: %{
-            summary: "Month old post",
-            html_body: "<p>Month-old content</p>"
-          },
-          id: DatesTimes.past(30, :day) |> DatesTimes.generate_ulid()
-        })
+        dated_post!(author, "Month old post", "Month-old content", DatesTimes.past(30, :day))
 
-      # Old post (60 days ago)
       old_post =
-        fake_post!(alice, "public", %{
-          post_content: %{
-            summary: "Old post",
-            html_body: "<p>Post from 60 days ago</p>"
-          },
-          id: DatesTimes.past(60, :day) |> DatesTimes.generate_ulid()
-        })
+        dated_post!(author, "Old post", "Post from 60 days ago", DatesTimes.past(60, :day))
 
       # Return the original config to be used in on_exit
       on_exit(fn ->
+        Bonfire.Common.Cache.remove_all()
         Config.put([Bonfire.Social.Feeds, :query_with_deferred_join], original_config)
       end)
 
@@ -115,19 +79,42 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       }
     end
 
-    @tag :skip
-    # FIXME: after "Show older activities" drops `time_limit`, subsequent
-    # "Load more" clicks don't persist the override, so the page stops
-    # paginating after 1 + limit. Tracked separately from the show_older
-    # context→feed_id misrouting (fixed: load_more no longer pulls from
-    # other feeds).
+    @tag :pagination_time_limit
+    test "cached local feed pages do not reuse a different time limit", %{
+      alice: alice,
+      account: account,
+      total_posts: total_posts
+    } do
+      opts = [
+        current_user: alice,
+        current_account: account,
+        cache: true,
+        limit: total_posts,
+        preload: false,
+        query_with_deferred_join: false,
+        show_objects_only_once: false
+      ]
+
+      limited_feed = Bonfire.Social.FeedLoader.feed(:local, %{time_limit: 1}, opts)
+      all_time_feed = Bonfire.Social.FeedLoader.feed(:local, %{time_limit: 0}, opts)
+
+      assert length(limited_feed.edges) == 1
+      assert length(all_time_feed.edges) == total_posts
+    end
+
+    @tag :pagination_time_limit
     test "As a logged-in user, when I click the load_all_time button with date sorting, it should remove time limit and load more activities",
-         %{alice: alice, account: account, total_posts: total_posts, limit: limit} do
+         %{
+           alice: alice,
+           account: account,
+           total_posts: total_posts,
+           limit: limit
+         } do
       conn = conn(user: alice, account: account)
 
-      # Visit feed with time_limit=1 via URL param (the time range control is now inside the Filters modal, so URL param is a more stable way to set it in tests)
+      # Fake posts do not exercise the production cache invalidation path, so bypass feed cache.
       conn
-      |> visit("/feed/local?time_limit=1")
+      |> visit("/feed/local?cache=skip&time_limit=1")
       |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]")
       # Check that we only see posts from today (count should be less than total)
       # Today's post
@@ -159,17 +146,15 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       )
     end
 
+    @tag :pagination_time_limit
     test "As a logged-in user, when I click the load_all_time button with non-date sorting, it should reload the feed with no time limit",
          %{alice: alice, account: account, total_posts: total_posts, limit: limit} do
       conn = conn(user: alice, account: account)
 
-      # Visit feed with time_limit=1 via URL param (the time range control is now inside the Filters modal, so URL param is a more stable way to set it in tests)
+      # Fake posts do not exercise the production cache invalidation path, so bypass feed cache.
       conn
-      |> visit("/feed/local?time_limit=1")
+      |> visit("/feed/local?cache=skip&time_limit=1&sort_by=like_count&sort_order=desc")
       |> assert_has_or_open_browser("[data-id=feed] article")
-      # Set sort to likes via the inline sort dropdown (still rendered on the page)
-      |> click_button("#order_dropdown_feed button[phx-value-sort_by='like_count']", "Most liked")
-      |> wait_async()
       # Check that we only see posts from today (count should be less than total)
       # Today's post
       |> assert_has("[data-id=feed] article [data-id=object_body]", count: 1)
@@ -193,14 +178,15 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       |> assert_has("[data-id=feed] article [data-id=object_body]", count: total_posts)
     end
 
+    @tag :pagination_time_limit
     test "As a guest user with no socket, I can use the load_all_time link to remove time limits",
-         %{total_posts: total_posts, limit: limit} do
+         %{limit: limit} do
       # Use a guest connection (no user)
       conn = conn()
 
       # Visit feed with a time_limit of 1 day
       conn
-      |> visit("/feed/?time_limit=1")
+      |> visit("/feed/?cache=skip&time_limit=1")
       # Check that we only see posts from today
       |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]", count: 1)
       # Cannot use "seconds ago" in test as depends on the time of the test run can change to "now", but this is not meaningful for the test.
