@@ -1,12 +1,9 @@
 defmodule Bonfire.UI.Social.Feeds.DeferredJoinPaginationTest do
   use Bonfire.UI.Social.ConnCase, async: false
   @moduletag :ui
-  import Bonfire.Common.Simulation
   use Bonfire.Common.Config
-  alias Bonfire.Social.Fake
   alias Bonfire.Posts
   use Mneme
-  import Untangle
 
   describe "Feed Pagination with Deferred Join" do
     setup do
@@ -61,9 +58,9 @@ defmodule Bonfire.UI.Social.Feeds.DeferredJoinPaginationTest do
                  )
       end
 
-      # Create (more recent) posts that would appear in the first window but won't be included by boundaries
-      # These should NOT appear in our feed due to boundary restrictions
-      for i <- 1..(limit * 8) do
+      # Create enough newer private posts to hide multiple deferred-join windows.
+      # The second load-more must still recover the older public posts without showing hidden content.
+      for i <- 1..(limit * 20) do
         Posts.publish(
           current_user: other_user,
           boundary: "mentions",
