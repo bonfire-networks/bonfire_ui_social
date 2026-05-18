@@ -34,146 +34,252 @@ defmodule Bonfire.UI.Social.Benchmark do
     )
   end
 
+  defp catching(fun) do
+    fn ->
+      try do
+        fun.()
+      rescue
+        e -> error(e, "Benchmark query failed")
+      end
+    end
+  end
+
   defp some_feed_queries do
     user = fake_user!()
 
-    %{
-      "query 1 activity" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, limit: 1)
-      end,
-      "query 10 activities" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, limit: 10)
-      end,
-      "query 20 activities" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, limit: 20)
-      end,
-      "query 1 activity, signed in" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, limit: 1, current_user: user)
-      end,
-      "query 10 activities, signed in" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, limit: 10, current_user: user)
-      end,
-      "query 20 activities, signed in" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, limit: 20, current_user: user)
-      end,
-      "query 1, ignoring boundaries" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, limit: 1, skip_boundary_check: true)
-      end,
-      "query 10, ignoring boundaries" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, limit: 10, skip_boundary_check: true)
-      end,
-      "query 20, ignoring boundaries" => fn ->
-        Bonfire.Social.FeedActivities.feed(:local, limit: 20, skip_boundary_check: true)
-      end,
-      "query 1 with 1 year time limit" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
-        Bonfire.Social.FeedActivities.feed(:local, limit: 1)
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end,
-      "query 10 with 1 year time limit" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
-        Bonfire.Social.FeedActivities.feed(:local, limit: 10)
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end,
-      "query 20 with 1 year time limit" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
-        Bonfire.Social.FeedActivities.feed(:local, limit: 20)
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end,
-      "query 1 with 1 year time limit, without boundaries" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
-        Bonfire.Social.FeedActivities.feed(:local, limit: 1, skip_boundary_check: true)
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end,
-      "query 10 with 1 year time limit, without boundaries" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
-        Bonfire.Social.FeedActivities.feed(:local, limit: 10, skip_boundary_check: true)
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end,
-      "query 20 with 1 year time limit, without boundaries" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
-        Bonfire.Social.FeedActivities.feed(:local, limit: 20, skip_boundary_check: true)
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end,
-      "query 1 with no time limit" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
-        Bonfire.Social.FeedActivities.feed(:local, limit: 1, query_with_deferred_join: false)
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end,
-      "query 10 with no time limit" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
-        Bonfire.Social.FeedActivities.feed(:local, limit: 10, query_with_deferred_join: false)
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end,
-      "query 20 with no time limit" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
-        Bonfire.Social.FeedActivities.feed(:local, limit: 20, query_with_deferred_join: false)
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end,
-      "query 1 with no time limit, with boundaries view" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+    Map.new(
+      %{
+        "query 1 activity" => fn ->
+          Bonfire.Social.FeedActivities.feed(:local, limit: 1, query_with_deferred_join: true)
+        end,
+        "query 10 activities" => fn ->
+          Bonfire.Social.FeedActivities.feed(:local, limit: 10, query_with_deferred_join: true)
+        end,
+        "query 20 activities" => fn ->
+          Bonfire.Social.FeedActivities.feed(:local, limit: 20, query_with_deferred_join: true)
+        end,
+        "query 1 activity, signed in" => fn ->
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 1,
+            current_user: user,
+            query_with_deferred_join: true
+          )
+        end,
+        "query 10 activities, signed in" => fn ->
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 10,
+            current_user: user,
+            query_with_deferred_join: true
+          )
+        end,
+        "query 20 activities, signed in" => fn ->
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 20,
+            current_user: user,
+            query_with_deferred_join: true
+          )
+        end,
+        "query 1 activity, signed in, with no time limit" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
 
-        Bonfire.Social.FeedActivities.feed(:local,
-          limit: 1,
-          query_with_deferred_join: false,
-          boundarise_with_view: true
-        )
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 1,
+            current_user: user,
+            query_with_deferred_join: true
+          )
 
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end,
-      "query 10 with no time limit, with boundaries view" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 10 activities, signed in, with no time limit" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
 
-        Bonfire.Social.FeedActivities.feed(:local,
-          limit: 10,
-          query_with_deferred_join: false,
-          boundarise_with_view: true
-        )
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 10,
+            current_user: user,
+            query_with_deferred_join: true
+          )
 
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end,
-      "query 20 with no time limit, with boundaries view" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 20 activities, signed in, with no time limit" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
 
-        Bonfire.Social.FeedActivities.feed(:local,
-          limit: 20,
-          query_with_deferred_join: false,
-          boundarise_with_view: true
-        )
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 20,
+            current_user: user,
+            query_with_deferred_join: true
+          )
 
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end,
-      "query 1 with no time limit, with deferred join" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
-        Bonfire.Social.FeedActivities.feed(:local, limit: 1, query_with_deferred_join: true)
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end,
-      "query 10 with no time limit, with deferred join" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
-        Bonfire.Social.FeedActivities.feed(:local, limit: 10, query_with_deferred_join: true)
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end,
-      "query 20 with no time limit, with deferred join" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
-        Bonfire.Social.FeedActivities.feed(:local, limit: 20, query_with_deferred_join: true)
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end,
-      "query 1 with no time limit, ignoring boundaries" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
-        Bonfire.Social.FeedActivities.feed(:local, limit: 1, skip_boundary_check: true)
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end,
-      "query 10 with no time limit, ignoring boundaries" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
-        Bonfire.Social.FeedActivities.feed(:local, limit: 10, skip_boundary_check: true)
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end,
-      "query 20 with no time limit, ignoring boundaries" => fn ->
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
-        Bonfire.Social.FeedActivities.feed(:local, limit: 20, skip_boundary_check: true)
-        Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-      end
-    }
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 1, ignoring boundaries" => fn ->
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 1,
+            skip_boundary_check: true,
+            query_with_deferred_join: true
+          )
+        end,
+        "query 10, ignoring boundaries" => fn ->
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 10,
+            skip_boundary_check: true,
+            query_with_deferred_join: true
+          )
+        end,
+        "query 20, ignoring boundaries" => fn ->
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 20,
+            skip_boundary_check: true,
+            query_with_deferred_join: true
+          )
+        end,
+        "query 1 with 1 year time limit" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
+          Bonfire.Social.FeedActivities.feed(:local, limit: 1, query_with_deferred_join: true)
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 10 with 1 year time limit" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
+          Bonfire.Social.FeedActivities.feed(:local, limit: 10, query_with_deferred_join: true)
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 20 with 1 year time limit" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
+          Bonfire.Social.FeedActivities.feed(:local, limit: 20, query_with_deferred_join: true)
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 1 with 1 year time limit, without boundaries" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
+
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 1,
+            skip_boundary_check: true,
+            query_with_deferred_join: true
+          )
+
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 10 with 1 year time limit, without boundaries" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
+
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 10,
+            skip_boundary_check: true,
+            query_with_deferred_join: true
+          )
+
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 20 with 1 year time limit, without boundaries" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 365)
+
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 20,
+            skip_boundary_check: true,
+            query_with_deferred_join: true
+          )
+
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 1 with no time limit, without deferred join" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+          Bonfire.Social.FeedActivities.feed(:local, limit: 1, query_with_deferred_join: false)
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 10 with no time limit, without deferred join" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+          Bonfire.Social.FeedActivities.feed(:local, limit: 10, query_with_deferred_join: false)
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 20 with no time limit, without deferred join" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+          Bonfire.Social.FeedActivities.feed(:local, limit: 20, query_with_deferred_join: false)
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 1 with no time limit, with boundaries view, without deferred join" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 1,
+            query_with_deferred_join: false,
+            boundarise_with_view: true
+          )
+
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 10 with no time limit, with boundaries view, without deferred join" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 10,
+            query_with_deferred_join: false,
+            boundarise_with_view: true
+          )
+
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 20 with no time limit, with boundaries view, without deferred join" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 20,
+            query_with_deferred_join: false,
+            boundarise_with_view: true
+          )
+
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 1 with no time limit, with deferred join" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+          Bonfire.Social.FeedActivities.feed(:local, limit: 1, query_with_deferred_join: true)
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 10 with no time limit, with deferred join" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+          Bonfire.Social.FeedActivities.feed(:local, limit: 10, query_with_deferred_join: true)
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 20 with no time limit, with deferred join" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+          Bonfire.Social.FeedActivities.feed(:local, limit: 20, query_with_deferred_join: true)
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 1 with no time limit, ignoring boundaries" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 1,
+            skip_boundary_check: true,
+            query_with_deferred_join: true
+          )
+
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 10 with no time limit, ignoring boundaries" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 10,
+            skip_boundary_check: true,
+            query_with_deferred_join: true
+          )
+
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end,
+        "query 20 with no time limit, ignoring boundaries" => fn ->
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+
+          Bonfire.Social.FeedActivities.feed(:local,
+            limit: 20,
+            skip_boundary_check: true,
+            query_with_deferred_join: true
+          )
+
+          Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+        end
+      },
+      fn {name, fun} -> {name, catching(fun)} end
+    )
   end
 
   def feed_full_backend do
