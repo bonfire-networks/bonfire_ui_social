@@ -12,9 +12,10 @@
         :if={!current_user_id(@__context__)}
         module={maybe_component(Bonfire.UI.Common.SmartInputInlineLive, @__context__)}
         id={Bonfire.UI.Common.SmartInputInlineLive.embed_reply_dom_id()}
-        reply_to_id={@thread_id}
+        reply_to_id={@reply_to_id || @thread_id}
         context_id={@thread_id}
         showing_within={:thread_embed}
+        auth_mode={@auth_mode}
       />
     </div>
 

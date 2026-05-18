@@ -1149,7 +1149,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       hide_actions={@hide_actions}
                       subject_user={@subject_user}
                       creator={e(@object, :created, :creator, nil) || e(@activity, :created, :creator, nil) ||
-                        e(@activity, :subject, nil)}
+                        e(@object, :creator, nil) || e(@activity, :subject, nil)}
                       participants={@participants}
                       quotes={@quotes}
                     />
@@ -1180,6 +1180,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       subject_user={@subject_user}
                       creator={e(maybe_get(component_assigns, :object, @object), :created, :creator, nil) ||
                         e(maybe_get(component_assigns, :activity, @activity), :created, :creator, nil) ||
+                        e(maybe_get(component_assigns, :object, @object), :creator, nil) ||
                         e(maybe_get(component_assigns, :activity, @activity), :subject, nil)}
                     />
                   {/if}
@@ -1768,6 +1769,38 @@ defmodule Bonfire.UI.Social.ActivityLive do
     }
   end
 
+  def prepare_reply_to(%{id: activity_id, reply_to: reply_to})
+      when is_struct(reply_to, Bonfire.Files.Media) do
+    debug("we have a media-only reply_to, preloading its direct creator")
+
+    reply_to =
+      repo().maybe_preload(reply_to, [creator: [profile: [:icon], character: []]], force: true)
+
+    case reply_to do
+      %{
+        creator: %{
+          id: creator_user_id,
+          character: %{id: _} = character,
+          profile: %{id: _} = profile
+        }
+      }
+      when is_binary(creator_user_id) ->
+        %{
+          activity_id: activity_id,
+          object: reply_to,
+          subject_id: creator_user_id,
+          activity: %{
+            subject_id: creator_user_id,
+            subject: %{id: creator_user_id, profile: profile, character: character}
+          }
+        }
+
+      _ ->
+        # creator unresolvable — generic shape (renders without an author)
+        %{activity_id: activity_id, object: reply_to, subject_id: true, activity: %{subject: nil}}
+    end
+  end
+
   def prepare_reply_to(%{
         id: activity_id,
         reply_to:
@@ -2345,6 +2378,21 @@ defmodule Bonfire.UI.Social.ActivityLive do
      else
        [{Bonfire.UI.Social.Activity.MediaLive, %{media: files}}]
      end}
+  end
+
+  # when the object IS itself a media (link/article/image/audio/video/Media),
+  # it is already rendered by its own object component — don't also emit a
+  # (never-resolving) attachment skeleton from the cached media counts
+  def do_primary_image_and_component_maybe_attachments(_id, _other, object_type)
+      when object_type in [
+             Bonfire.Files.Media,
+             :link,
+             :article,
+             :image,
+             :audio,
+             :video
+           ] do
+    {nil, []}
   end
 
   def do_primary_image_and_component_maybe_attachments(id, other, _object_type) do

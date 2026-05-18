@@ -1,4 +1,45 @@
 defmodule Bonfire.UI.Social.CommentsLive do
+  @moduledoc """
+  Embeddable comments thread, rendered inside an iframe on third-party sites.
+
+  This view is driven by the embed loader script
+  (`bonfire_ui_common/assets/static/js/comments_embed.js`), which reads
+  `data-*` attributes off its own `<script>` tag and forwards them to this
+  LiveView as query params.
+
+  ## Embed `data-*` attributes
+
+  All attributes are optional. Put them on the embed `<script>` tag:
+
+      <script
+        src="https://your-instance.example/js/comments_embed.js"
+        data-media-uri="https://example.com/my-article"
+        data-boundary="public"
+        data-sort-by="latest_reply"
+        data-theme="dark"
+        async
+      ></script>
+
+  | Attribute | Default | Purpose |
+  |---|---|---|
+  | `data-post-id` | — | Explicit Bonfire post/thread ID. When set, skips the `media-uri` lookup and renders this thread directly. |
+  | `data-media-uri` | current page URL | URL to find or create the thread for. The canonical URI is used as the dedup key. |
+  | `data-canonical-slug` | — | Ghost post slug to find/create a thread for. |
+  | `data-canonical-id` | — | Ghost post ID (alternative to slug; prefixed `id:` server-side). |
+  | `data-boundary` | `"public"` | Visibility of the created thread (e.g. `public`, `local`, `nonfederated`, `discoverable`, `nonfederated:preview`). |
+  | `data-group-id` | — | Bonfire group/topic the thread should be posted under. |
+  | `data-require-topic` | — | When `"true"`, only create the thread if the canonical category or primary tag matches a Bonfire topic. |
+  | `data-creator` | script default | User ID to attribute thread creation to. |
+  | `data-auth-mode` | `local` | How logged-out visitors authenticate: `local` shows Login/Register for this instance; `remote` shows a single button to the remote-interaction page so they can reply from any fediverse server (that page also offers local log in / sign up). |
+  | `data-sort-by` | thread default | Initial comment sort: `latest_reply`, `reply_count`, `boost_count`, `like_count`, `popularity_score`, `newest`. |
+  | `data-theme` | — | DaisyUI theme to apply inside the iframe (e.g. `dark`, `light`). |
+  | `data-token-max-age` | `720` (hours ≈ 30 days) | JS-only: hours before the stored auth token is treated as stale and re-auth is prompted. The server still enforces a hard cap of 1 year. |
+
+  Ghost-specific usage (`data-canonical-slug`, `data-canonical-id`,
+  `data-group-id`, `data-require-topic`) is also documented in
+  `bonfire_ghost/README.md`.
+  """
+
   use Bonfire.UI.Common.Web, {:surface_live_view, layout: {Bonfire.UI.Common.LayoutView, :iframe}}
 
   on_mount {LivePlugs,
@@ -28,6 +69,10 @@ defmodule Bonfire.UI.Social.CommentsLive do
        no_mobile_header: true,
        hide_thread_stats: true,
        embed_theme: embed_theme,
+       # "local" (default: Login/Register for this instance) or "remote"
+       # (a single button to the remote-interaction page, so guests can reply
+       # from any fediverse server). Set via the `data-auth-mode` embed attr.
+       auth_mode: e(params, "auth_mode", nil),
        participants: nil,
        sort_by: maybe_to_atom(e(params, "sort_by", nil)),
        sort_order: maybe_to_atom(e(params, "sort_order", nil)),

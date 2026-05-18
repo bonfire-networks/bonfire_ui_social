@@ -28,6 +28,17 @@
           </div>
       {/case}
 
+      {!-- quoted object with no post_content (e.g. a link/article Media):
+           show the media card so the quote preview isn't empty --}
+      <StatelessComponent
+        :if={is_nil(e(@object, :post_content, nil)) and
+          (is_struct(@object, Bonfire.Files.Media) || e(@object, :media_type, nil) ||
+             e(@object, :url, nil))}
+        module={maybe_component(Bonfire.UI.Social.Activity.MediaLive, @__context__)}
+        media={@object}
+        showing_within={:quote_preview}
+      />
+
       <div class="flex items-center text-sm text-base-content/70 mt-1 gap-4">
         <div class="flex items-center gap-2">
           <#Icon iconify="ph:chat-circle-duotone" class="w-5 h-5 text-base-content/50" />

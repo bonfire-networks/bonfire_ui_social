@@ -493,21 +493,24 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         object_boundary,
         %{assigns: %{showing_within: :thread_embed}} = socket
       ) do
-    with assigns when is_list(assigns) <-
-           prepare_reply_assigns(reply_to, activity, object_boundary, socket) do
-      # Components share the LiveView process — send a message so CommentsLive
-      # updates reply_to_id and re-targets the portal
-      send_self(reply_to_id: assigns[:reply_to_id])
+    if current_user_id(socket) do
+      with assigns when is_list(assigns) <-
+             prepare_reply_assigns(reply_to, activity, object_boundary, socket) do
+        # Components share the LiveView process — send a message so CommentsLive
+        # updates reply_to_id and re-targets the portal
+        send_self(reply_to_id: assigns[:reply_to_id])
 
-      {:noreply,
-       socket
-       |> maybe_push_event("mention_suggestions", %{text: assigns[:mention_text] || ""})
-       |> Phoenix.LiveView.push_event("inline_composer:expand", %{
-         dom_id: to_string(Bonfire.UI.Common.SmartInputInlineLive.embed_reply_dom_id())
-       })}
+        {:noreply,
+         socket
+         |> maybe_push_event("mention_suggestions", %{text: assigns[:mention_text] || ""})
+         |> expand_inline_composer()}
+      else
+        false -> {:noreply, assign_error(socket, l("Sorry, you cannot reply to this"))}
+        _ -> {:noreply, socket}
+      end
     else
-      false -> {:noreply, assign_error(socket, l("Sorry, you cannot reply to this"))}
-      _ -> {:noreply, socket}
+      send_self(reply_to_id: Enums.id(reply_to) || reply_to)
+      {:noreply, expand_inline_composer(socket)}
     end
   end
 
@@ -535,6 +538,12 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         # for remote interaction redirect
         other
     end
+  end
+
+  defp expand_inline_composer(socket) do
+    Phoenix.LiveView.push_event(socket, "inline_composer:expand", %{
+      dom_id: to_string(Bonfire.UI.Common.SmartInputInlineLive.embed_reply_dom_id())
+    })
   end
 
   def thread_init(socket) do
@@ -733,7 +742,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   end
 
   def max_depth(ui_compact \\ nil, opts),
-    # if using compact layout or not logged in, use *double* the instance/default max depth 
+    # if using compact layout or not logged in, use *double* the instance/default max depth
     do:
       (Settings.get(:thread_default_max_depth, 3, opts) *
          if(ui_compact || !current_user_id(opts),

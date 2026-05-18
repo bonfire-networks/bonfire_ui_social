@@ -107,6 +107,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      )}
   end
 
+  # Embed Reply button sends the object id as phx-value-id, but the event
+  # reaches the LiveView (no phx-target) whose assigns lack object/activity —
+  # reuse the Threads "reply" handler which already resolves id-or-assigns.
+  def handle_event("reply_to_activity", %{"id" => id} = params, socket)
+      when is_binary(id) and id != "" do
+    Bonfire.Social.Threads.LiveHandler.handle_event("reply", params, socket)
+  end
+
   def handle_event("reply_to_activity", _params, socket) do
     activity = e(assigns(socket), :activity, %{})
     object_boundary = e(assigns(socket), :object_boundary, nil)
