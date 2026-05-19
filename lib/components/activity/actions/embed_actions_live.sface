@@ -41,14 +41,14 @@
       {l("Reply")}
     </button>
 
-    <div
+    <!-- <div
       data-id="embed_more_menu"
       phx-hook="Tooltip"
       data-position="bottom-end"
       id={deterministic_dom_id(__MODULE__, id(@activity), "embed_more_menu", @parent_id)}
       aria-haspopup="true"
       class="feed_activity relative"
-    >
+      >
       <button
         tabindex="0"
         class="tooltip-button btn btn-ghost group hover:bg-primary/10 btn-circle btn-sm"
@@ -125,6 +125,6 @@
           </li>
         {/if}
       </ul>
-    </div>
+    </div> -->
   </div>
 </div>

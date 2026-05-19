@@ -212,10 +212,15 @@ defmodule Bonfire.UI.Social.CommentsLive do
              update_existing: false
            ) do
       handle_params(%{"id" => id}, nil, socket)
+    else
+      other ->
+        error(other, "Could not resolve media_uri to a thread")
+        {:noreply, assign_error(socket, l("No comments available here."))}
     end
   end
 
-  def handle_params(params, _url, _socket) do
+  def handle_params(params, _url, socket) do
     error(params, "Need an ID or media URI")
+    {:noreply, assign_error(socket, l("No comments available here."))}
   end
 end
