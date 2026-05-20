@@ -238,9 +238,6 @@ defmodule Bonfire.UI.Social.FeedsLive do
   end
 
   def prepare_feed_socket(feed \\ nil, attrs, socket) do
-    debug(feed, "feed")
-    debug(attrs, "attrs")
-
     import Bonfire.UI.Common.Timing
 
     filters = input_to_atoms(attrs)
@@ -265,7 +262,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
     socket =
       socket
-      |> assign(feed_assigns |> debug("feed_default_assigns"))
+      |> assign(feed_assigns)
       |> maybe_clear_badge_on_visit()
 
     widgets =
