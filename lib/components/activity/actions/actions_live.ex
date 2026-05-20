@@ -58,6 +58,11 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
     e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0)
   end
 
+  def stateless_actions?(context) do
+    is_nil(current_user_id(context)) ||
+      LiveHandler.feed_live_update_many_preload_mode() in [:async_actions, :inline]
+  end
+
   def the_activity(activity, object) do
     activity || e(object, :activity, nil) || object
   end
