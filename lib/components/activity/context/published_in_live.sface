@@ -1,4 +1,3 @@
-{debug({@showing_within, @context}, "pubbbbl") && ""}
 {!-- Something published in a Category / Topic --}
 <div style="margin-left: -32px; margin-bottom: 4px" data-role="published_in" class={@class}>
   {!-- and Types.object_type(@context) != @showing_within --}

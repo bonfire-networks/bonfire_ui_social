@@ -2109,7 +2109,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(%{} = object, object_type, assigns) do
     case object_type || Types.object_type(object) do
       type when is_atom(type) and not is_nil(type) ->
-        debug(type, "component object_type recognised")
         component_for_object_type(type, object, assigns)
 
       _ ->
@@ -2144,10 +2143,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_for_object_type(Bonfire.Data.Social.PostContent, _, assigns),
     do: [{Bonfire.UI.Social.Activity.NoteLive, assigns}]
 
-  def component_for_object_type(Bonfire.Data.Social.Post, _object, _) do
-    debug("post with no text content (eg. only with attachments)")
-    []
-  end
+  def component_for_object_type(Bonfire.Data.Social.Post, _object, _), do: []
 
   def component_for_object_type(Bonfire.Data.Social.Message, _, assigns),
     do: [{Bonfire.UI.Social.Activity.NoteLive, assigns}]
@@ -2174,9 +2170,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #   do: [Bonfire.UI.ValueFlows.Preview.IntentTaskLive]
 
   def component_for_object_type(Bonfire.Data.Social.APActivity, object, assigns) do
-    json =
-      e(object, :json, nil)
-      |> debug("APActivity json")
+    json = e(object, :json, nil)
 
     types =
       List.wrap(e(json, "object", "type", nil) || e(json, "type", nil) || "Remote Activity")
@@ -2247,7 +2241,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         error(other, "Unrecognised object_preview config")
         if is_function(fallback), do: fallback.(type, object), else: [fallback]
     end
-    |> debug("component from config")
   end
 
   defp component_object_fallback(_object_type, %{profile: %{id: _}}),
@@ -2582,7 +2575,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             {Bonfire.UI.Social.ActivityLive,
              %{
                id: id,
-               activity: quoted_object |> debug("quoted_object"),
+               activity: quoted_object,
                object: quoted_object,
                activity_inception: id,
                showing_within: :quote_preview,
