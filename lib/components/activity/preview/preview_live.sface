@@ -49,7 +49,6 @@
         <StatelessComponent
           module={maybe_component(Bonfire.UI.Social.Activity.DateAgoLive)}
           date_ago={@date_ago}
-          date_time_format={@date_time_format}
           activity_id={id(@activity)}
           object_id={id(@object)}
         />

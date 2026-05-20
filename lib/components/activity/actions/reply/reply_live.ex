@@ -10,7 +10,6 @@ defmodule Bonfire.UI.Social.Activity.ReplyLive do
   prop object_boundary, :any, default: nil
   prop activity_component_id, :string, default: nil
   prop event_target, :any, default: nil
-  prop show_activity_counts, :any, default: nil
 
   prop class, :css_class,
     default:
@@ -21,9 +20,4 @@ defmodule Bonfire.UI.Social.Activity.ReplyLive do
 
   slot default
   slot cannot_reply
-
-  def show_activity_counts?(nil, context),
-    do: Bonfire.Common.Settings.get([:ui, :show_activity_counts], false, context)
-
-  def show_activity_counts?(value, _context), do: value
 end

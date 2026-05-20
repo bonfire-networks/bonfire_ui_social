@@ -6,7 +6,6 @@ defmodule Bonfire.UI.Social.Activity.PreviewLive do
   prop permalink, :string
   prop activity_component_id, :string
   prop date_ago, :string
-  prop date_time_format, :any, default: nil
   prop reply_count, :any
   prop is_remote, :any, default: nil
 

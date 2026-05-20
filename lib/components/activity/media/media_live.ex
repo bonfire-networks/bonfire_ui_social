@@ -14,7 +14,6 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop cw, :any, default: nil
   prop muted, :boolean, default: false
   prop autoplay, :any, default: nil
-  prop hide_media, :any, default: nil
 
   prop css_borders, :css_class, default: "border border-base-content/10 rounded-md"
   prop small_icon, :boolean, default: false
@@ -208,11 +207,6 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   end
 
   def has_video_page_metadata?(_), do: false
-
-  def hidden_by_setting?(nil, context),
-    do: Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, context)
-
-  def hidden_by_setting?(value, _context), do: value
 
   @doc """
   Extract the embed URL from oEmbed HTML iframe src attribute.

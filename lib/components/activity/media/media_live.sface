@@ -16,7 +16,7 @@
                 <article class="m-entry relative h-full w-full row-span-4 object-cover">
                   <div
                     class="absolute inset-0 backdrop-blur-sm bg-black/50 z-50 rounded-box"
-                    :if={@cw || hidden_by_setting?(@hide_media, @__context__)}
+                    :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                   />
                   <figure class="h-full">
                     {#if String.starts_with?(m.media_type || "", "video")}
@@ -145,7 +145,7 @@
                       <figure style="width: 100%; height: 100%; position: relative;">
                         {#if current_user_id(@__context__)}
                           {#if @cw || @showing_within == :flags ||
-                              hidden_by_setting?(@hide_media, @__context__)}
+                              Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                             <div
                               id={deterministic_dom_id("sensitive-content-overlay", id(m), "media", @parent_id)}
                               class="w-full h-full"
@@ -309,7 +309,7 @@
                           {#else}
                             <a href={Media.media_url(m)} target="_blank" class="w-full h-full block">
                               {#if @cw || @showing_within == :flags ||
-                                  hidden_by_setting?(@hide_media, @__context__)}
+                                  Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                                 <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
                                   <button class="btn btn-sm  normal-case btn-outline border-base-content/10 btn-active">{l("Media Hidden")}</button>
                                 </div>

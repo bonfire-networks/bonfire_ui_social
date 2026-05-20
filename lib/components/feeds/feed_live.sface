@@ -130,21 +130,12 @@
                     custom_preview={e(@custom_preview, nil)}
                     showing_within={@showing_within}
                     hide_actions={@hide_actions}
-                    hide_actions_precomputed={@hide_actions_precomputed}
                     verb_default={@verb_default}
                     feed_name={@feed_name}
                     feed_id={@feed_id || @feed_ids}
                     class={@activity_class}
                     is_remote={@feed_name in [:remote]}
                     hide_activity={@hide_activities}
-                    hide_avatars={@hide_avatars}
-                    hide_media={@hide_media}
-                    preview_autoplay={@preview_autoplay}
-                    reply_context_mode={@reply_context_mode}
-                    show_activity_counts={@show_activity_counts}
-                    feed_preload_mode={@feed_preload_mode}
-                    action_component_mode={@action_component_mode}
-                    date_time_format={@date_time_format}
                     subject_user={@subject_user}
                     activity_preloads={@activity_preloads}
                   />

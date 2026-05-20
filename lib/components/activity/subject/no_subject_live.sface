@@ -11,7 +11,6 @@
     >
       <Bonfire.UI.Social.Activity.DateAgoLive
         date_ago={@date_ago}
-        date_time_format={@date_time_format}
         activity_id={@activity_id}
         object_id={@object_id}
         parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}

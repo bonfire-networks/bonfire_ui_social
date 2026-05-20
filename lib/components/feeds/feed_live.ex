@@ -24,14 +24,6 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop cache_strategy, :any, default: nil
   prop hide_activities, :any, default: nil
   prop hide_actions, :any, default: false
-  prop hide_avatars, :any, default: nil
-  prop hide_media, :any, default: nil
-  prop preview_autoplay, :any, default: nil
-  prop reply_context_mode, :any, default: nil
-  prop show_activity_counts, :any, default: nil
-  prop feed_preload_mode, :any, default: nil
-  prop action_component_mode, :any, default: nil
-  prop date_time_format, :any, default: nil
 
   prop feedback_title, :string, default: nil
   prop feedback_message, :string, default: nil
@@ -389,94 +381,27 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     {:ok,
      socket
-     |> assign(feed_render_assigns(socket))}
+     |> assign(
+       feed_component_id: assigns(socket)[:id],
+       hide_actions:
+         assigns(socket)[:hide_actions] ||
+           (Settings.get(
+              [
+                Bonfire.UI.Social.Activity.ActionsLive,
+                :feed,
+                :hide_until_hovered
+              ],
+              nil,
+              current_user: current_user(socket),
+              name: l("Hide Activity Actions"),
+              description:
+                l("Hide actions (such a like or boost) in feeds until users hover over them.")
+            ) && "until_hovered"),
+       hide_activities:
+         assigns(socket)[:hide_activities] ||
+           assigns(socket)[:__context__][:current_params]["hide_activities"]
+     )}
   end
-
-  defp feed_render_assigns(socket) do
-    socket_assigns = assigns(socket)
-    context = socket_assigns[:__context__] || socket_assigns
-
-    feed_preload_mode =
-      assigned_or(socket_assigns[:feed_preload_mode], fn ->
-        LiveHandler.feed_live_update_many_preload_mode()
-      end)
-
-    action_component_mode =
-      assigned_or(socket_assigns[:action_component_mode], fn ->
-        if is_nil(current_user_id(context)) or feed_preload_mode in [:async_actions, :inline] do
-          :stateless
-        else
-          :stateful
-        end
-      end)
-
-    [
-      feed_component_id: socket_assigns[:id],
-      hide_actions: feed_hide_actions(socket),
-      hide_actions_precomputed: true,
-      hide_activities:
-        socket_assigns[:hide_activities] ||
-          e(socket_assigns, :__context__, :current_params, "hide_activities", nil),
-      hide_avatars:
-        assigned_or(socket_assigns[:hide_avatars], fn ->
-          Media.hide_avatars?(context, socket_assigns[:showing_within])
-        end),
-      hide_media:
-        assigned_or(socket_assigns[:hide_media], fn ->
-          Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, context)
-        end),
-      preview_autoplay:
-        assigned_or(socket_assigns[:preview_autoplay], fn ->
-          Settings.get([Bonfire.UI.Social.Activity.MediaLive, :autoplay], nil, context) != false
-        end),
-      reply_context_mode:
-        assigned_or(socket_assigns[:reply_context_mode], fn ->
-          Settings.get([Bonfire.UI.Social.ActivityLive, :reply_context_mode], :reply_to, context)
-        end),
-      show_activity_counts:
-        assigned_or(socket_assigns[:show_activity_counts], fn ->
-          Settings.get([:ui, :show_activity_counts], false, context)
-        end),
-      feed_preload_mode: feed_preload_mode,
-      action_component_mode: action_component_mode,
-      date_time_format:
-        assigned_or(socket_assigns[:date_time_format], fn ->
-          Settings.get([:ui, :date_time_format], :relative,
-            context: context,
-            name: l("Date format"),
-            description: l("How to display the date/time of activities"),
-            type: :select,
-            options: Keyword.merge([relative: l("Relative")], DatesTimes.available_formats())
-          )
-        end)
-    ]
-  end
-
-  defp feed_hide_actions(socket) do
-    case assigns(socket)[:hide_actions] do
-      value when value not in [nil, false] ->
-        value
-
-      _ ->
-        if Settings.get(
-             [
-               Bonfire.UI.Social.Activity.ActionsLive,
-               :feed,
-               :hide_until_hovered
-             ],
-             nil,
-             current_user: current_user(socket),
-             name: l("Hide Activity Actions"),
-             description:
-               l("Hide actions (such a like or boost) in feeds until users hover over them.")
-           ),
-           do: "until_hovered",
-           else: false
-    end
-  end
-
-  defp assigned_or(nil, fun), do: fun.()
-  defp assigned_or(value, _fun), do: value
 
   def maybe_subscribe(socket) do
     case e(assigns(socket), :feed_ids, nil) |> Enums.filter_empty(nil) ||

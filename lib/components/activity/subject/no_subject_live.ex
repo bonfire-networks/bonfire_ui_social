@@ -9,7 +9,6 @@ defmodule Bonfire.UI.Social.Activity.NoSubjectLive do
   # prop verb, :string, default: nil
   # prop verb_display, :string, default: nil
   prop permalink, :string, default: nil
-  prop date_time_format, :any, default: nil
   prop showing_within, :atom, default: nil
   prop object_type, :any, default: nil
   prop object_boundary, :any, default: nil

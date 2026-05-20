@@ -21,7 +21,7 @@
       />
       <span
         data-role="reply_count"
-        :if={show_activity_counts?(@show_activity_counts, @__context__) &&
+        :if={Bonfire.Common.Settings.get([:ui, :show_activity_counts], false, @__context__) &&
           e(@reply_count, 0) > 0}
         class="sr-only"
       >
@@ -39,7 +39,7 @@
           data-id="action_reply"
         />
         <span
-          :if={show_activity_counts?(@show_activity_counts, @__context__) &&
+          :if={Bonfire.Common.Settings.get([:ui, :show_activity_counts], false, @__context__) &&
             e(@reply_count, 0) > 0}
           class="sr-only"
         >
