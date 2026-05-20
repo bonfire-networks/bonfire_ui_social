@@ -143,6 +143,7 @@
                     reply_context_mode={@reply_context_mode}
                     show_activity_counts={@show_activity_counts}
                     feed_preload_mode={@feed_preload_mode}
+                    action_component_mode={@action_component_mode}
                     date_time_format={@date_time_format}
                     subject_user={@subject_user}
                     activity_preloads={@activity_preloads}

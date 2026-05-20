@@ -71,6 +71,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop show_activity_counts, :any, default: nil
   prop hide_actions_precomputed, :boolean, default: false
   prop feed_preload_mode, :any, default: nil
+  prop action_component_mode, :any, default: nil
   prop date_time_format, :any, default: nil
   prop activity_preloads, :tuple, default: {nil, nil}
   prop custom_preview, :any, default: nil
@@ -1145,6 +1146,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       hide_actions={@hide_actions}
                       show_activity_counts={@show_activity_counts}
                       feed_preload_mode={@feed_preload_mode}
+                      action_component_mode={@action_component_mode}
                       subject_user={@subject_user}
                       creator={e(@object, :created, :creator, nil) || e(@activity, :created, :creator, nil) ||
                         e(@object, :creator, nil) || e(@activity, :subject, nil)}
@@ -1177,6 +1179,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       hide_actions={@hide_actions}
                       show_activity_counts={@show_activity_counts}
                       feed_preload_mode={@feed_preload_mode}
+                      action_component_mode={@action_component_mode}
                       subject_user={@subject_user}
                       creator={e(maybe_get(component_assigns, :object, @object), :created, :creator, nil) ||
                         e(maybe_get(component_assigns, :activity, @activity), :created, :creator, nil) ||
@@ -1233,6 +1236,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   show_activity_counts={@show_activity_counts}
                   hide_actions_precomputed={@hide_actions_precomputed}
                   feed_preload_mode={@feed_preload_mode}
+                  action_component_mode={@action_component_mode}
                   date_time_format={@date_time_format}
                   is_thread_start={maybe_get(component_assigns, :is_thread_start, false)}
                 />

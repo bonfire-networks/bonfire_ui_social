@@ -32,6 +32,7 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop hide_actions, :any, default: false
   prop show_activity_counts, :any, default: nil
   prop feed_preload_mode, :any, default: nil
+  prop action_component_mode, :any, default: nil
   prop is_answer, :boolean, default: false
   prop participants, :any, default: nil
   prop quotes, :list, default: []
@@ -62,6 +63,18 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
 
   def feed_preload_mode(nil), do: LiveHandler.feed_live_update_many_preload_mode()
   def feed_preload_mode(value), do: value
+
+  def reaction_component_mode(:stateless, _context, _feed_preload_mode), do: :stateless
+  def reaction_component_mode(:stateful, _context, _feed_preload_mode), do: :stateful
+
+  def reaction_component_mode(_mode, context, feed_preload_mode) do
+    if is_nil(current_user_id(context)) or
+         feed_preload_mode(feed_preload_mode) in [:async_actions, :inline] do
+      :stateless
+    else
+      :stateful
+    end
+  end
 
   def the_activity(activity, object) do
     activity || e(object, :activity, nil) || object

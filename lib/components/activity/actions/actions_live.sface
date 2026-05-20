@@ -118,7 +118,7 @@ data-show-plain-actions={!Settings.get(
           class="!flex btn lg:tooltip lg:tooltip-bottom btn-sm btn-ghost btn-circle group hover:bg-primary/10 transition-transform duration-150 ease-out hover:scale-105 active:scale-95 hover:-translate-y-0.5"
         />
 
-        {#if feed_preload_mode(@feed_preload_mode) in [:async_actions, :inline]}
+        {#if reaction_component_mode(@action_component_mode, @__context__, @feed_preload_mode) == :stateless}
           <!-- LOAD ALL AS IF THEY WERE STATELESS COMPONENTS, since we preload data in this component -->
           <StatelessComponent
             :if={@showing_within != :messages}

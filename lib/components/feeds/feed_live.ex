@@ -30,6 +30,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop reply_context_mode, :any, default: nil
   prop show_activity_counts, :any, default: nil
   prop feed_preload_mode, :any, default: nil
+  prop action_component_mode, :any, default: nil
   prop date_time_format, :any, default: nil
 
   prop feedback_title, :string, default: nil
@@ -395,6 +396,20 @@ defmodule Bonfire.UI.Social.FeedLive do
     socket_assigns = assigns(socket)
     context = socket_assigns[:__context__] || socket_assigns
 
+    feed_preload_mode =
+      assigned_or(socket_assigns[:feed_preload_mode], fn ->
+        LiveHandler.feed_live_update_many_preload_mode()
+      end)
+
+    action_component_mode =
+      assigned_or(socket_assigns[:action_component_mode], fn ->
+        if is_nil(current_user_id(context)) or feed_preload_mode in [:async_actions, :inline] do
+          :stateless
+        else
+          :stateful
+        end
+      end)
+
     [
       feed_component_id: socket_assigns[:id],
       hide_actions: feed_hide_actions(socket),
@@ -422,10 +437,8 @@ defmodule Bonfire.UI.Social.FeedLive do
         assigned_or(socket_assigns[:show_activity_counts], fn ->
           Settings.get([:ui, :show_activity_counts], false, context)
         end),
-      feed_preload_mode:
-        assigned_or(socket_assigns[:feed_preload_mode], fn ->
-          LiveHandler.feed_live_update_many_preload_mode()
-        end),
+      feed_preload_mode: feed_preload_mode,
+      action_component_mode: action_component_mode,
       date_time_format:
         assigned_or(socket_assigns[:date_time_format], fn ->
           Settings.get([:ui, :date_time_format], :relative,
