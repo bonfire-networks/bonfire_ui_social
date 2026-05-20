@@ -34,6 +34,8 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop enable_marker, :boolean, default: false
   # 48 hours in ms
   prop markers_ttl, :integer, default: 172_800_000
+  prop query_with_deferred_join, :boolean, default: true
+  prop infinite_scroll, :any, default: :preload
 
   prop verb_default, :string, default: nil
 
@@ -426,7 +428,19 @@ defmodule Bonfire.UI.Social.FeedLive do
             ) && "until_hovered"),
        hide_activities:
          assigns(socket)[:hide_activities] ||
-           assigns(socket)[:__context__][:current_params]["hide_activities"]
+           assigns(socket)[:__context__][:current_params]["hide_activities"],
+       query_with_deferred_join:
+         Config.get([Bonfire.Social.Feeds, :query_with_deferred_join], true,
+           name: l("Use Deferred Joins"),
+           description: l("Technical setting for query performance optimization.")
+         ),
+       infinite_scroll:
+         Settings.get([:ui, :infinite_scroll], :preload,
+           context: assigns(socket)[:__context__],
+           name: l("Infinite Scrolling"),
+           description:
+             l("Enable infinite scrolling in feeds, or choose a hybrid approach.")
+         )
      )}
   end
 
