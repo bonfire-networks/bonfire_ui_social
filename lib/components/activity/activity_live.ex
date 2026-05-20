@@ -2043,8 +2043,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #   end
   # end
 
-  def component_maybe_in_reply_to(a, _, _, _, _, _, _, _) do
-    debug(a, "cannot determine if there's a reply_to")
+  def component_maybe_in_reply_to(_a, _, _, _, _, _, _, _) do
     []
   end
 
@@ -2121,10 +2120,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     end
   end
 
-  def component_object(_, _, _) do
-    debug("activity has no object")
-    []
-  end
+  def component_object(_, _, _), do: []
 
   def component_for_object_type(:article, _, assigns) do
     [{Bonfire.UI.Social.Activity.ArticleLive, assigns}]
@@ -2317,7 +2313,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     {nil, []}
   end
 
-  def do_primary_image_and_component_maybe_attachments(id, other, _object_type) do
+  def do_primary_image_and_component_maybe_attachments(id, _other, _object_type) do
     # use cached amounts of images to display from MediaLive in case media is preloaded async
     case Bonfire.Common.Cache.get("num_media:#{id}") do
       {:ok, [multimedia_count, image_count, gif_count, link_count]} ->
@@ -2333,7 +2329,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
          ]}
 
       _ ->
-        debug(other, "no files")
         {nil, []}
     end
   end
@@ -2413,8 +2408,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     component_def_for(:object_actions, type, activity, Bonfire.UI.Social.Activity.ActionsLive)
   end
 
-  def actions_for_object_type(_activity, type) do
-    debug(type, "No specific actions defined fot this type")
+  def actions_for_object_type(_activity, _type) do
     [Bonfire.UI.Social.Activity.ActionsLive]
     # [Bonfire.UI.Social.Activity.NoActionsLive]
   end
