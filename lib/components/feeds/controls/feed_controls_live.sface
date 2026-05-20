@@ -50,7 +50,7 @@
         </div>
       </div>
 
-      {#if active_filters != []}
+      <!-- {#if active_filters != []}
         <div
           class="flex gap-1.5 px-2 pb-2 overflow-x-auto scrollbar-none"
           aria-live="polite"
@@ -69,6 +69,6 @@
             </span>
           {/for}
         </div>
-      {/if}
+      {/if} -->
   {/case}
 </div>

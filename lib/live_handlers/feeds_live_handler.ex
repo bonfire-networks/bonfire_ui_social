@@ -305,16 +305,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp do_mark_feed_seen_on_visit(socket, feed_uid, current_user) do
-    apply_task(
-      :start_async,
-      fn -> FeedActivities.mark_all_seen(feed_uid, current_user: current_user) end,
-      socket: socket,
-      id: "mark_feed_seen_on_visit-#{feed_uid}"
-    )
-
-    # Broadcast (rather than calling `maybe_send_update` directly) so that
-    # `BadgeCounterLive` instances mounted in OTHER processes also reset —
-    # most importantly the navbar badge, which lives in `PersistentLive`.
+    FeedActivities.mark_all_seen(feed_uid, current_user: current_user)
     PubSub.broadcast(
       "unseen_count:#{feed_uid}",
       {{Bonfire.Social.Feeds, :count_reset}, %{feed_id: feed_uid}}
