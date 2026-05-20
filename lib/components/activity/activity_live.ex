@@ -64,6 +64,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop subject_user, :any, default: nil
   prop peered, :any, default: nil
   prop hide_actions, :any, default: false
+  prop hide_avatars, :any, default: nil
+  prop hide_media, :any, default: nil
+  prop preview_autoplay, :any, default: nil
+  prop reply_context_mode, :any, default: nil
+  prop show_activity_counts, :any, default: nil
+  prop hide_actions_precomputed, :boolean, default: false
+  prop feed_preload_mode, :any, default: nil
+  prop date_time_format, :any, default: nil
   prop activity_preloads, :tuple, default: {nil, nil}
   prop custom_preview, :any, default: nil
   prop quotes, :list, default: []
@@ -202,27 +210,42 @@ defmodule Bonfire.UI.Social.ActivityLive do
           e(activity, :replied, :thread, :named, :name, nil) ||
           e(activity, :named, :name, nil) ||
           e(object, :named, :name, nil),
-      hide_actions:
-        case e(assigns, :hide_actions, nil) || e(socket_assigns, :hide_actions, nil) do
-          nil ->
-            (!(e(assigns, :viewing_main_object, nil) ||
-                 e(socket_assigns, :viewing_main_object, nil)) and
-               Settings.get(
-                 [
-                   Bonfire.UI.Social.Activity.ActionsLive,
-                   showing_within,
-                   :hide_until_hovered
-                 ],
-                 nil,
-                 current_user(assigns) || current_user(socket_assigns)
-               )) && "until_hovered"
-
-          hide_actions ->
-            hide_actions
-        end
+      hide_actions: hide_actions(assigns, socket_assigns, showing_within)
     ]
 
     # |> debug("sooaa")
+  end
+
+  defp hide_actions(assigns, socket_assigns, showing_within) do
+    if assigned_value(assigns, socket_assigns, :hide_actions_precomputed, false) do
+      assigned_value(assigns, socket_assigns, :hide_actions, false)
+    else
+      case e(assigns, :hide_actions, nil) || e(socket_assigns, :hide_actions, nil) do
+        nil ->
+          (!(e(assigns, :viewing_main_object, nil) ||
+               e(socket_assigns, :viewing_main_object, nil)) and
+             Settings.get(
+               [
+                 Bonfire.UI.Social.Activity.ActionsLive,
+                 showing_within,
+                 :hide_until_hovered
+               ],
+               nil,
+               current_user(assigns) || current_user(socket_assigns)
+             )) && "until_hovered"
+
+        hide_actions ->
+          hide_actions
+      end
+    end
+  end
+
+  defp assigned_value(assigns, socket_assigns, key, default) do
+    if Map.has_key?(assigns, key) do
+      Map.get(assigns, key)
+    else
+      Map.get(socket_assigns, key, default)
+    end
   end
 
   # def assigns_from_activity(activity) do
@@ -727,6 +750,20 @@ defmodule Bonfire.UI.Social.ActivityLive do
     prepare_assigns(assigns)
   end
 
+  defp avatar_hidden?(nil, context, showing_within),
+    do: Media.hide_avatars?(context, showing_within)
+
+  defp avatar_hidden?(value, _context, _showing_within), do: value
+
+  defp preview_autoplay?(nil, context) do
+    Settings.get([Bonfire.UI.Social.Activity.MediaLive, :autoplay], nil, context) != false
+  end
+
+  defp preview_autoplay?(value, _context), do: value
+
+  defp feed_preload_mode(nil), do: LiveHandler.feed_live_update_many_preload_mode()
+  defp feed_preload_mode(value), do: value
+
   def render(%{activity: _} = assigns) do
     assigns =
       if assigns[:activity_prepared] == :defer_to_render,
@@ -751,7 +788,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       role="article"
       data-id="activity"
       data-rendered={@showing_within}
-      data-avatar-hidden={Media.hide_avatars?(@__context__, @showing_within)}
+      data-avatar-hidden={avatar_hidden?(@hide_avatars, @__context__, @showing_within)}
       data-hidden={@hide_activity}
       data-compact={@__context__[:ui_compact]}
       data-answer={not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil))}
@@ -816,8 +853,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 cw: false,
                 autoplay:
                   @autoplay ||
-                    Settings.get([Bonfire.UI.Social.Activity.MediaLive, :autoplay], nil, @__context__) !=
-                      false
+                    preview_autoplay?(@preview_autoplay, @__context__)
               ]}
             root_assigns={[
               page_title: l("Discussion")
@@ -874,6 +910,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           permalink={@permalink}
           reply_count={@reply_count}
           date_ago={@date_ago}
+          date_time_format={@date_time_format}
           object={@object}
           activity={@activity}
           activity_component_id={@activity_component_id}
@@ -921,6 +958,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 @quotes,
                 thread_start: @thread_start,
                 current_user_context: @__context__,
+                reply_context_mode: @reply_context_mode,
                 cw: @cw,
                 hashtags: @hashtags
               ) || []}
@@ -968,6 +1006,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   object_boundary={@object_boundary}
                   object_type={maybe_get(component_assigns, :object_type, @object_type)}
                   date_ago={maybe_get(component_assigns, :date_ago, @date_ago)}
+                  date_time_format={@date_time_format}
                   permalink={maybe_get(component_assigns, :permalink, @permalink)}
                   viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
                   activity_component_id={maybe_get(component_assigns, :activity_component_id, @activity_component_id)}
@@ -1068,6 +1107,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   media={maybe_get(component_assigns, :media, [])}
                   cw={@cw}
                   autoplay={@autoplay}
+                  hide_media={@hide_media}
                 />
               {#match _
                 when component in [
@@ -1076,7 +1116,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                      ]}
                 {#if @hide_activity != "actions" and @hide_actions != true}
                   {#if user_socket_connected?(@__context__) &&
-                      LiveHandler.feed_live_update_many_preload_mode() in [:async_actions, :inline]}
+                      feed_preload_mode(@feed_preload_mode) in [:async_actions, :inline]}
                     <StatefulComponent
                       id={"#{@activity_component_id}_actions"}
                       module={component}
@@ -1103,6 +1143,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       is_remote={@is_remote}
                       is_answer={not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil))}
                       hide_actions={@hide_actions}
+                      show_activity_counts={@show_activity_counts}
+                      feed_preload_mode={@feed_preload_mode}
                       subject_user={@subject_user}
                       creator={e(@object, :created, :creator, nil) || e(@activity, :created, :creator, nil) ||
                         e(@object, :creator, nil) || e(@activity, :subject, nil)}
@@ -1133,6 +1175,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       reply_count={maybe_get(component_assigns, :reply_count, @reply_count)}
                       is_remote={maybe_get(component_assigns, :is_remote, @is_remote)}
                       hide_actions={@hide_actions}
+                      show_activity_counts={@show_activity_counts}
+                      feed_preload_mode={@feed_preload_mode}
                       subject_user={@subject_user}
                       creator={e(maybe_get(component_assigns, :object, @object), :created, :creator, nil) ||
                         e(maybe_get(component_assigns, :activity, @activity), :created, :creator, nil) ||
@@ -1182,6 +1226,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   to={maybe_get(component_assigns, :to, nil)}
                   is_remote={maybe_get(component_assigns, :is_remote, @is_remote)}
                   hide_actions={maybe_get(component_assigns, :hide_actions, @hide_actions)}
+                  hide_avatars={@hide_avatars}
+                  hide_media={@hide_media}
+                  preview_autoplay={@preview_autoplay}
+                  reply_context_mode={@reply_context_mode}
+                  show_activity_counts={@show_activity_counts}
+                  hide_actions_precomputed={@hide_actions_precomputed}
+                  feed_preload_mode={@feed_preload_mode}
+                  date_time_format={@date_time_format}
                   is_thread_start={maybe_get(component_assigns, :is_thread_start, false)}
                 />
             {/case}
@@ -1859,33 +1911,38 @@ defmodule Bonfire.UI.Social.ActivityLive do
     thread_start = Keyword.get(opts, :thread_start)
     current_user_context = Keyword.get(opts, :current_user_context)
 
-    reply_context_mode =
-      Settings.get(
-        [Bonfire.UI.Social.ActivityLive, :reply_context_mode],
-        :reply_to,
-        current_user_context
-      )
+    if is_nil(reply_to) and is_nil(thread_start) do
+      []
+    else
+      reply_context_mode =
+        Keyword.get(opts, :reply_context_mode) ||
+          Settings.get(
+            [Bonfire.UI.Social.ActivityLive, :reply_context_mode],
+            :reply_to,
+            current_user_context
+          )
 
-    case reply_context_mode do
-      :thread_start
-      when showing_within == :feed and is_nil(activity_inception) and not is_nil(thread_start) ->
-        component_thread_start(thread_start, thread_title, activity_component_id)
+      case reply_context_mode do
+        :thread_start
+        when showing_within == :feed and is_nil(activity_inception) and not is_nil(thread_start) ->
+          component_thread_start(thread_start, thread_title, activity_component_id)
 
-      :minimal
-      when showing_within == :feed and is_nil(activity_inception) and not is_nil(reply_to) ->
-        [{Bonfire.UI.Social.Activity.RepliedInThreadIndicatorLive, %{}}]
+        :minimal
+        when showing_within == :feed and is_nil(activity_inception) and not is_nil(reply_to) ->
+          [{Bonfire.UI.Social.Activity.RepliedInThreadIndicatorLive, %{}}]
 
-      _ ->
-        component_maybe_in_reply_to(
-          reply_to,
-          showing_within,
-          activity_inception,
-          viewing_main_object,
-          thread_mode,
-          thread_id,
-          thread_title,
-          activity_component_id
-        )
+        _ ->
+          component_maybe_in_reply_to(
+            reply_to,
+            showing_within,
+            activity_inception,
+            viewing_main_object,
+            thread_mode,
+            thread_id,
+            thread_title,
+            activity_component_id
+          )
+      end
     end
   end
 

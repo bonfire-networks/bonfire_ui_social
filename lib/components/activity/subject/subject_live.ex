@@ -24,6 +24,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
 
   prop reply_to_id, :any, default: nil
   prop date_ago, :any, default: nil
+  prop date_time_format, :any, default: nil
   prop permalink, :string, default: nil
   prop showing_within, :atom, default: nil
   prop object_type, :any, default: nil

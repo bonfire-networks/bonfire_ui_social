@@ -30,6 +30,8 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop published_in, :any, default: nil
   prop labelled, :any, default: nil
   prop hide_actions, :any, default: false
+  prop show_activity_counts, :any, default: nil
+  prop feed_preload_mode, :any, default: nil
   prop is_answer, :boolean, default: false
   prop participants, :any, default: nil
   prop quotes, :list, default: []
@@ -57,6 +59,9 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
     # debug(replied)
     e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0)
   end
+
+  def feed_preload_mode(nil), do: LiveHandler.feed_live_update_many_preload_mode()
+  def feed_preload_mode(value), do: value
 
   def the_activity(activity, object) do
     activity || e(object, :activity, nil) || object
