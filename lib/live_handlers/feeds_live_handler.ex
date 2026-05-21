@@ -1623,7 +1623,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_live_update_many_preload_mode = feed_live_update_many_preload_mode()
 
     override_live_update_many_preload_mode =
-      case feed_live_update_many_preload_mode() do
+      case feed_live_update_many_preload_mode do
         # we also want to do other preloads inline
         :async_actions -> :inline
         other -> other
@@ -1705,7 +1705,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   @decorate time()
   def actions_update_many(assigns_sockets, opts) do
-    if feed_live_update_many_preload_mode() in [:async_actions, :inline] do
+    feed_live_update_many_preload_mode = feed_live_update_many_preload_mode()
+
+    if feed_live_update_many_preload_mode in [:async_actions, :inline] do
       {first_assigns, _} = List.first(assigns_sockets)
 
       opts =
@@ -1713,7 +1715,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           return_assigns_socket_tuple: true,
           preload_status_key: :preloaded_async_actions,
           live_update_many_preload_mode:
-            if(feed_live_update_many_preload_mode() == :inline,
+            if(feed_live_update_many_preload_mode == :inline,
               do: :inline,
               else: :user_async_or_skip
             ),

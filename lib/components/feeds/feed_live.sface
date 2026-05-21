@@ -138,6 +138,7 @@
                     hide_activity={@hide_activities}
                     subject_user={@subject_user}
                     activity_preloads={@activity_preloads}
+                    feed_live_update_many_preload_mode={@feed_live_update_many_preload_mode}
                   />
               {/case}
             </div>

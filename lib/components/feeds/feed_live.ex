@@ -75,6 +75,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feed_count, :any, default: nil
   prop resumed_from_marker, :any, default: nil
   data jumping_to_newest, :boolean, default: false
+  data feed_live_update_many_preload_mode, :atom, default: nil
   prop deferred_join_multiply_limit, :any, default: nil
   prop cute_gif, :any, default: nil
   prop custom_preview, :any, default: nil
@@ -426,7 +427,8 @@ defmodule Bonfire.UI.Social.FeedLive do
             ) && "until_hovered"),
        hide_activities:
          assigns(socket)[:hide_activities] ||
-           assigns(socket)[:__context__][:current_params]["hide_activities"]
+           assigns(socket)[:__context__][:current_params]["hide_activities"],
+       feed_live_update_many_preload_mode: LiveHandler.feed_live_update_many_preload_mode()
      )}
   end
 
