@@ -78,7 +78,6 @@
                           data-player-bundle={Bonfire.Common.URIs.static_path("/assets/vidstack_player.js")}
                           poster={MediaLive.preview_img(@media)}
                           title={Bonfire.Files.Media.media_alt(@media)}
-                          crossorigin="anonymous"
                           playsinline
                           autoplay={@autoplay}
                           muted={@autoplay || @muted}
@@ -157,7 +156,6 @@
                           data-vidstack
                           data-player-bundle={Bonfire.Common.URIs.static_path("/assets/vidstack_player.js")}
                           title={Bonfire.Files.Media.media_alt(@media)}
-                          crossorigin="anonymous"
                           autoplay={@autoplay}
                           muted={@autoplay}
                           class={@base_css}

@@ -8,6 +8,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   @react_verbs (Application.compile_env(:bonfire, [:verb_families, :react]) || []) ++ ["React"]
 
   prop activity_id, :any, default: nil
+  prop object, :any, default: nil
   prop object_id, :any, default: nil
   prop peered, :any, default: nil
   # prop reply_to_id, :any, default: nil
