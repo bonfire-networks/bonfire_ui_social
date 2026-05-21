@@ -1857,35 +1857,40 @@ defmodule Bonfire.UI.Social.ActivityLive do
         opts
       ) do
     thread_start = Keyword.get(opts, :thread_start)
-    current_user_context = Keyword.get(opts, :current_user_context)
 
-    reply_context_mode =
-      Settings.get(
-        [Bonfire.UI.Social.ActivityLive, :reply_context_mode],
-        :reply_to,
-        current_user_context
-      )
+    if is_nil(reply_to) and is_nil(thread_start) do
+      []
+    else
+      current_user_context = Keyword.get(opts, :current_user_context)
 
-    case reply_context_mode do
-      :thread_start
-      when showing_within == :feed and is_nil(activity_inception) and not is_nil(thread_start) ->
-        component_thread_start(thread_start, thread_title, activity_component_id)
-
-      :minimal
-      when showing_within == :feed and is_nil(activity_inception) and not is_nil(reply_to) ->
-        [{Bonfire.UI.Social.Activity.RepliedInThreadIndicatorLive, %{}}]
-
-      _ ->
-        component_maybe_in_reply_to(
-          reply_to,
-          showing_within,
-          activity_inception,
-          viewing_main_object,
-          thread_mode,
-          thread_id,
-          thread_title,
-          activity_component_id
+      reply_context_mode =
+        Settings.get(
+          [Bonfire.UI.Social.ActivityLive, :reply_context_mode],
+          :reply_to,
+          current_user_context
         )
+
+      case reply_context_mode do
+        :thread_start
+        when showing_within == :feed and is_nil(activity_inception) and not is_nil(thread_start) ->
+          component_thread_start(thread_start, thread_title, activity_component_id)
+
+        :minimal
+        when showing_within == :feed and is_nil(activity_inception) and not is_nil(reply_to) ->
+          [{Bonfire.UI.Social.Activity.RepliedInThreadIndicatorLive, %{}}]
+
+        _ ->
+          component_maybe_in_reply_to(
+            reply_to,
+            showing_within,
+            activity_inception,
+            viewing_main_object,
+            thread_mode,
+            thread_id,
+            thread_title,
+            activity_component_id
+          )
+      end
     end
   end
 
