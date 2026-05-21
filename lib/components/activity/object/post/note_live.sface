@@ -35,7 +35,7 @@
           data-role="name"
           class="translatable text-sm my-1 mt-2"
         >
-          {rich(name)}
+          {rich(name, cache: true)}
         </div>
     {/case}
 
@@ -51,7 +51,7 @@
               />
             {#elseif not is_nil(summary)}
               <div data-role="summary" class="translatable prose max-w-prose prose-p:pt-1">
-                {rich(summary)}
+                {rich(summary, cache: true)}
               </div>
             {/if}
 
