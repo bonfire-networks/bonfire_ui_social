@@ -23,7 +23,7 @@
                       <Bonfire.UI.Social.Activity.VideoLinkLive
                         media={m}
                         media_label={media_label}
-                        autoplay={@autoplay || (@viewing_main_object && !@cw && @showing_within != :flags)}
+                        autoplay={@autoplay}
                         muted={@muted || @cw || @showing_within == :flags}
                         parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
                       />
@@ -32,7 +32,7 @@
                         <Bonfire.UI.Social.Activity.AudioLive
                           media={m}
                           media_label={media_label}
-                          autoplay={@autoplay || (@viewing_main_object && !@cw && @showing_within != :flags)}
+                          autoplay={@autoplay}
                           muted={@muted}
                           parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
                           showing_within={@showing_within}
@@ -42,7 +42,7 @@
                           id={deterministic_dom_id(__MODULE__, id(m), nil, @parent_id)}
                           media={m}
                           muted={@muted}
-                          autoplay={@autoplay || (@viewing_main_object && !@cw && @showing_within != :flags)}
+                          autoplay={@autoplay}
                         />
                       {/if}
                     {/if}

@@ -1,63 +1,61 @@
-<div class="flex flex-col w-full border rounded-lg media_container border-base-content/10">
-  <div>
-    <div class="p-4 w-full flex-1 flex items-center gap-3 bg-base-300 rounded-t-lg relative">
-      {!-- Title button (shown initially) --}
-      <div data-id="media_img">
-        {#case MediaLive.preview_img(@media) || Media.media_url(@media)}
-          {#match maybe_preview_img}
-            {#if maybe_preview_img && MediaLive.is_image?(maybe_preview_img)}
-              <LazyImage
-                parent_id={deterministic_dom_id(__MODULE__, id(@media), "audio", @parent_id)}
-                class="w-full !object-cover m-image"
-                media={@media}
-                alt={@media_label}
-                src={maybe_preview_img}
-                fallback_icon="lucide:audio-lines"
-              />
-            {#else}
-              <#Icon iconify="lucide:audio-lines" class="w-5 h-5 text-accent" />
-            {/if}
-        {/case}
-      </div>
-
-      <div class="font-medium text-lg line-clamp-2 text-balance">
-        {@media_label}
-      </div>
-
-      <a
-        href={Media.media_url(@media)}
-        class="btn btn-ghost btn-sm absolute right-0 top-0 btn-square btn-soft"
-        title={l("Open in new tab")}
-        aria-label={l("Open in new tab")}
-        target="_blank"
-      >
-        <#Icon iconify="heroicons-outline:external-link" class="w-4 h-4" />
-      </a>
-    </div>
-    <div class="text-sm">
-      {e(@media, :metadata, "oembed", "author_name", nil)}
-
-      {#case e(@media, :metadata, "oembed", "published", "date-parts", nil)}
-        {#match nil}
-        {#match []}
-        {#match published}
-          <span class="text-base-content/70">{published |> DatesTimes.format(format: "MMMM d, Y")}</span>
-      {/case}
-
-      {#case MediaLive.provider(@media)}
-        {#match nil}
-        {#match provider}
-          <span class="text-base-content/70">{provider}</span>
+<div class="w-full rounded-box border border-base-content/10 bg-base-200 media_container">
+  <div class="flex items-center gap-3 p-3">
+    {!-- artwork, or an audio glyph when there's no cover image --}
+    <div
+      data-id="media_img"
+      class="grid flex-shrink-0 w-11 h-11 overflow-hidden rounded-md place-items-center bg-base-300 text-primary"
+    >
+      {#case MediaLive.preview_img(@media)}
+        {#match img when is_binary(img) and img != ""}
+          {#if MediaLive.is_image?(img)}
+            <LazyImage
+              parent_id={deterministic_dom_id(__MODULE__, id(@media), "audio", @parent_id)}
+              class="object-cover w-full h-full"
+              media={@media}
+              alt={@media_label}
+              src={img}
+              fallback_icon="lucide:audio-lines"
+            />
+          {#else}
+            <#Icon iconify="lucide:audio-lines" class="w-5 h-5" />
+          {/if}
+        {#match _}
+          <#Icon iconify="lucide:audio-lines" class="w-5 h-5" />
       {/case}
     </div>
+
+    {!-- title + (optional) author/provider line --}
+    <div class="flex-1 min-w-0 text-left">
+      <div class="font-medium truncate text-base-content">{@media_label || l("Audio")}</div>
+      {#case [e(@media, :metadata, "oembed", "author_name", nil), MediaLive.provider(@media)]
+          |> Enum.reject(&(is_nil(&1) || &1 == ""))
+          |> Enum.join(" · ")}
+        {#match ""}
+        {#match meta}
+          <div class="text-sm truncate text-base-content/60">{meta}</div>
+      {/case}
+    </div>
+
+    <a
+      href={Media.media_url(@media)}
+      class="flex-shrink-0 btn btn-ghost btn-sm btn-square"
+      title={l("Open in new tab")}
+      aria-label={l("Open in new tab")}
+      target="_blank"
+    >
+      <#Icon iconify="heroicons:arrow-top-right-on-square" class="w-4 h-4" />
+    </a>
   </div>
+
   {#if MediaLive.is_playable_multimedia_format?(@media.path, @media.media_type)}
-    <Bonfire.UI.Social.Activity.RemoteMediaLive
-      id={deterministic_dom_id(__MODULE__, id(@media), nil, @parent_id)}
-      base_css="relative p-2 w-full bg-base-300 rounded-b-lg"
-      media={@media}
-      muted={@muted}
-      autoplay={false}
-    />
+    <div class="px-3 pb-3">
+      <Bonfire.UI.Social.Activity.RemoteMediaLive
+        id={deterministic_dom_id(__MODULE__, id(@media), nil, @parent_id)}
+        base_css="w-full"
+        media={@media}
+        muted={@muted}
+        autoplay={false}
+      />
+    </div>
   {/if}
 </div>

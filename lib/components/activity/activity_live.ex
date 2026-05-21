@@ -854,8 +854,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 cw: false,
                 autoplay:
                   @autoplay ||
-                    Settings.get([Bonfire.UI.Social.Activity.MediaLive, :autoplay], nil, @__context__) !=
-                      false
+                    Settings.get([Bonfire.UI.Social.Activity.MediaLive, :autoplay], nil, @__context__) ==
+                      true
               ]}
             root_assigns={[
               page_title: l("Discussion")

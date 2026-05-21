@@ -505,8 +505,12 @@ defmodule Bonfire.Social.Threads.LiveHandler do
          |> maybe_push_event("mention_suggestions", %{text: assigns[:mention_text] || ""})
          |> expand_inline_composer()}
       else
-        false -> {:noreply, assign_error(socket, l("Sorry, you cannot reply to this"))}
-        _ -> {:noreply, socket}
+        false ->
+          {:noreply,
+           assign_flash(socket, :warning, l("The author has limited who can reply to this post."))}
+
+        _ ->
+          {:noreply, socket}
       end
     else
       send_self(reply_to_id: Enums.id(reply_to) || reply_to)
@@ -532,7 +536,8 @@ defmodule Bonfire.Social.Threads.LiveHandler do
        |> maybe_push_event("mention_suggestions", %{text: assigns[:mention_text] || ""})}
     else
       false ->
-        error(l("Sorry, you cannot reply to this"))
+        {:noreply,
+         assign_flash(socket, :warning, l("The author has limited who can reply to this post."))}
 
       other ->
         # for remote interaction redirect

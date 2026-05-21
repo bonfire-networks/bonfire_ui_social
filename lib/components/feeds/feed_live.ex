@@ -506,17 +506,17 @@ defmodule Bonfire.UI.Social.FeedLive do
       feed_name in [:curated] ->
         curated_widgets()
 
-      feed_name in [:notifications] ->
-        [
-          page_header_aside: [
-            {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive,
-             [
-               feed_id: e(assigns[:current_user], :character, :notifications_id, nil),
-               feed_name: "notifications"
-             ]}
-            # {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: "notifications"]}
-          ]
-        ]
+      # feed_name in [:notifications] ->
+      #   [
+      #     # page_header_aside: [
+      #     #   {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive,
+      #     #    [
+      #     #      feed_id: e(assigns[:current_user], :character, :notifications_id, nil),
+      #     #      feed_name: "notifications"
+      #     #    ]}
+      #     #   # {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: "notifications"]}
+      #     # ]
+      #   ]
 
       match?({:ok, _}, Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, assigns)) ->
         widgets(assigns)

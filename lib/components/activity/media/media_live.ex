@@ -75,9 +75,8 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
           has_video_page_metadata?(m) ->
             {image_list, video_list, gif_list, [m | audio_embed_list], link_list}
 
-          # Direct video files go to video_list (for carousel with images)
-          String.starts_with?(m.media_type || "", @video_types) or
-              Files.has_extension?(m.path || "", @video_exts) ->
+          # Direct video files + HLS streams go to video_list (for carousel with images)
+          is_video?(m.path, m.media_type) ->
             {image_list, [m | video_list], gif_list, audio_embed_list, link_list}
 
           # Audio files
@@ -225,7 +224,18 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   def is_video?(url), do: Files.has_extension?(url || "", @video_exts)
 
   def is_video?(url, media_type),
-    do: is_video?(url) or String.starts_with?(media_type || "", @video_types)
+    do:
+      is_video?(url) or String.starts_with?(media_type || "", @video_types) or
+        is_hls?(url, media_type)
+
+  @doc "Whether the URL/media_type is an HLS stream (m3u8), which needs an HLS-capable player."
+  def is_hls?(url, media_type) do
+    String.ends_with?(String.downcase(url || ""), ".m3u8") or
+      String.downcase(media_type || "") in [
+        "application/x-mpegurl",
+        "application/vnd.apple.mpegurl"
+      ]
+  end
 
   def is_supported_video_format?(url, media_type),
     do: is_video?(url, media_type) and String.ends_with?(media_type || "", @video_formats)
@@ -266,21 +276,8 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   end
 
   defp is_likely_converted_gif?(url, media_type, media) do
-    if String.starts_with?(media_type || "", "video/") do
-      metadata = media.metadata || %{}
-
-      # Priority order: explicit indicators > size rules > conservative fallback
-      cond do
-        # 1. Explicit mentions (highest confidence)
-        gif_explicitly_mentioned?(media, url) -> true
-        # 2. Size-based (standard conversion: GIFs ≤ 1MP converted to MP4)
-        within_gif_conversion_limits?(metadata) -> true
-        # 3. Conservative fallback
-        true -> false
-      end
-    else
-      false
-    end
+    # Only treat a video as a (converted) GIF when it is *explicitly* marked as one
+    String.starts_with?(media_type || "", "video/") and gif_explicitly_mentioned?(media, url)
   end
 
   # Check if GIF is explicitly mentioned in metadata or filename
@@ -311,25 +308,6 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   end
 
   defp gif_in_filename?(_), do: false
-
-  # Check if dimensions are within common GIF conversion limits
-  defp within_gif_conversion_limits?(metadata) do
-    width = get_in(metadata, ["width"])
-    height = get_in(metadata, ["height"])
-
-    # Use standard conversion rules:
-    # - GIFs up to 1MP (1280x720 = 921,600 pixels) are typically converted to MP4
-    # - Dimensions must be ≤ 1280x720
-    case {width, height} do
-      {w, h} when is_integer(w) and is_integer(h) ->
-        # 1MP limit
-        w <= 1280 and h <= 720 and w * h <= 921_600
-
-      _ ->
-        # No dimensions = can't determine, be conservative
-        false
-    end
-  end
 
   def provider(%{} = media) do
     (e(media.metadata, "facebook", "site_name", nil) ||

@@ -6,7 +6,7 @@ defmodule Bonfire.UI.Social.Activity.AudioLive do
   prop media_label, :string, default: nil
 
   prop muted, :boolean, default: false
-  prop autoplay, :boolean, default: true
+  prop autoplay, :boolean, default: false
 
   prop parent_id, :any, default: nil
   prop showing_within, :atom, default: nil

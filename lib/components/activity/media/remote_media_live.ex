@@ -6,7 +6,7 @@ defmodule Bonfire.UI.Social.Activity.RemoteMediaLive do
   prop parent_id, :any, default: nil
 
   prop muted, :boolean, default: false
-  prop autoplay, :any, default: true
+  prop autoplay, :any, default: false
 
   prop show_embed, :boolean, default: nil
 
