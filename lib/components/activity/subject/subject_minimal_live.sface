@@ -104,11 +104,11 @@
           {#elseif @verb == "Boost"}
             {l("boosted your activity")}
           {#elseif @verb == "Follow"}
-            {if @object_id == current_user_id(@__context__),
+            {if @object_id == @current_user_id,
               do: l("followed you"),
               else: l("followed")}
           {#elseif @verb == "Request to Follow"}
-            {if @object_id == current_user_id(@__context__),
+            {if @object_id == @current_user_id,
               do: l("requested to follow you"),
               else: l("requested to follow")}
           {#elseif @verb == "Request to Quote"}
@@ -168,7 +168,7 @@
                 {@profile_name || @character_username}
               </LinkLive>
 
-              {if @object_id == current_user_id(@__context__),
+              {if @object_id == @current_user_id,
                 do: l("requested to follow you"),
                 else: "requested to follow"}
             </div>
@@ -184,7 +184,7 @@
               opts={"data-id": "subject_name"}
               parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
             >
-              {#if @object_id == current_user_id(@__context__)}
+              {#if @object_id == @current_user_id}
                 {l("You")}
               {#else}
                 {@profile_name || @character_username}
@@ -207,7 +207,7 @@
                       opts={"data-id": "subject_name"}
                       parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                     >
-                      {#if @object_id == current_user_id(@__context__) || @subject_id == current_user_id(@__context__)}
+                      {#if @object_id == @current_user_id || @subject_id == @current_user_id}
                         {l("You")}
                       {#else}
                         {@profile_name || @character_username}
@@ -229,7 +229,7 @@
                       opts={"data-id": "subject_name"}
                       parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                     >
-                      {#if @object_id == current_user_id(@__context__) || @subject_id == current_user_id(@__context__)}
+                      {#if @object_id == @current_user_id || @subject_id == @current_user_id}
                         {l("You")}
                       {#else}
                         {@profile_name || @character_username}
@@ -270,7 +270,7 @@
                       parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                       class="link link-hover font-bold"
                     >
-                      {#if @object_id == current_user_id(@__context__)}
+                      {#if @object_id == @current_user_id}
                         {l("you")}
                       {#else}
                         {@profile_name || @character_username}
@@ -314,7 +314,7 @@
 
               {raw(@verb_display)}
 
-              <span :if={@object_id == current_user_id(@__context__)}>
+              <span :if={@object_id == @current_user_id}>
                 {!-- special case when current_user is the one being followed --}
                 {l("you")}
               </span>
@@ -363,7 +363,7 @@
                   parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
                   class="link link-hover font-bold"
                 >
-                  {#if @object_id == current_user_id(@__context__)}
+                  {#if @object_id == @current_user_id}
                     {l("you")}
                   {#else}
                     {@profile_name || @character_username}

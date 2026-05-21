@@ -23,6 +23,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   prop thread_title, :any, default: nil
   prop published_in, :any, default: nil
   prop subject_id, :any, default: nil
+  prop current_user_id, :any, default: nil
   # prop subject_user, :any, default: nil
   prop subjects_more, :list, default: []
   prop profile_name, :string, default: nil
