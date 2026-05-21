@@ -284,7 +284,7 @@
 
     {!-- Block the author, etc --}
     <StatelessComponent
-      :if={@creator_id && current_user_id(@__context__) != @creator_id}
+      :if={current_user_id(@__context__) && @creator_id && current_user_id(@__context__) != @creator_id}
       module={maybe_component(Bonfire.UI.Boundaries.BlockMenuButtonsLive, @__context__)}
       parent_id={@activity_component_id || id(@activity)}
       object={@creator || @creator_id}
@@ -297,7 +297,7 @@
 
     {!-- Advanced actions (boundary-dependent: edit, delete, lock, boundary details, etc.) --}
     <StatefulComponent
-      :if={@object_type != Bonfire.Data.Social.Message}
+      :if={current_user_id(@__context__) && @object_type != Bonfire.Data.Social.Message}
       module={maybe_component(Bonfire.UI.Social.Activity.AdvancedActionsLive, @__context__)}
       id={deterministic_dom_id(__MODULE__, id(@activity || @object), "advanced_actions", @parent_id)}
       activity={@activity}
