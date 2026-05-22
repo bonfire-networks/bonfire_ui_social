@@ -43,7 +43,7 @@
                     oEmbed "video page" media (YouTube/Vimeo/etc., media_type "video"
                     with no playable file) — those belong to the iframe/preview path below. --}
                   {#if (MediaLive.is_video?(media_url, e(@media, :media_type, nil)) or
-                      MediaLive.is_hls?(media_url, e(@media, :media_type, nil))) and
+                       MediaLive.is_hls?(media_url, e(@media, :media_type, nil))) and
                       not MediaLive.has_video_page_metadata?(@media)}
                     {#if MediaLive.is_gif?(@media.path, e(@media, :media_type, nil), @media)}
                       {!-- GIF-labeled MP4 (converted GIF): autoplay/loop, no controls --}
