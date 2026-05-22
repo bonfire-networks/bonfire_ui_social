@@ -61,7 +61,8 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
       |> click_button("[data-role=open_modal]", "Filters")
       |> click_button("Oldest first")
       |> click_button("Apply filters")
-      |> assert_has("[data-id=feed_controls] .badge", text: "Oldest first")
+      |> click_button("[data-role=open_modal]", "Filters")
+      |> assert_has("button[aria-label='Remove filter: Oldest first']")
     end
 
     @tag :todo

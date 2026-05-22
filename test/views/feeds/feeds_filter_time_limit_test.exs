@@ -121,7 +121,9 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
     |> assert_has_or_open_browser("[data-id=feed] article")
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
     |> refute_has_or_open_browser("[data-id=feed] article", text: "Post from 60 days ago")
-    |> assert_has("[data-id=feed_controls] .badge", text: "Last Day")
+    |> click_button("[data-role=open_modal]", "Filters")
+    |> assert_has("button[aria-label='Remove filter: Last Day']")
+    |> click_button("Apply filters")
 
     # Set to "Last Month"
     |> click_button("[data-role=open_modal]", "Filters")
@@ -131,7 +133,9 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
     |> assert_has_or_open_browser("[data-id=feed] article")
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
     |> refute_has_or_open_browser("[data-id=feed] article", text: "Post from 60 days ago")
-    |> assert_has("[data-id=feed_controls] .badge", text: "Last Month")
+    |> click_button("[data-role=open_modal]", "Filters")
+    |> assert_has("button[aria-label='Remove filter: Last Month']")
+    |> click_button("Apply filters")
 
     # Set to "All time"
     |> click_button("[data-role=open_modal]", "Filters")

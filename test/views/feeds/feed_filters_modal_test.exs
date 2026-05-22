@@ -94,13 +94,14 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> assert_has("[data-id=feed] article", text: "posted long ago")
     end
 
-    test "time filter shows as chip after applying", %{conn: conn} do
+    test "time filter remains selected after applying", %{conn: conn} do
       conn
       |> visit("/feed/local")
       |> open_filters_modal()
       |> click_button("Last Week")
       |> apply_filters()
-      |> assert_has("[data-id=feed_controls] .badge", text: "Last Week")
+      |> open_filters_modal()
+      |> assert_has("button[aria-label='Remove filter: Last Week']")
     end
   end
 
@@ -123,8 +124,9 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> open_filters_modal()
       |> click_button("Oldest first")
       |> apply_filters()
-      |> assert_has("[data-id=feed] article")
-      |> assert_has("[data-id=feed_controls] .badge", text: "Oldest first")
+      |> assert_has("[data-id=feed] article:first-child", text: "first post")
+      |> open_filters_modal()
+      |> assert_has("button[aria-label='Remove filter: Oldest first']")
     end
   end
 
@@ -180,22 +182,34 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> assert_has("[data-id=feed_controls] .badge.badge-primary")
     end
 
-    test "filter chips appear below controls bar", %{conn: conn} do
+    test "active time filter is available in the modal after applying", %{conn: conn} do
       conn
       |> visit("/feed/local")
       |> open_filters_modal()
       |> click_button("Last Month")
       |> apply_filters()
-      |> assert_has("[data-id=feed_controls] [role=status] .badge", text: "Last Month")
+      |> open_filters_modal()
+      |> assert_has("button[aria-label='Remove filter: Last Month']")
     end
 
-    test "exclude filter chips show eye-slash icon", %{conn: conn} do
+    test "exclude boost filter hides boost activities", %{conn: conn, user: user, other_user: other_user} do
+      original_post =
+        fake_post!(other_user, "public", %{
+          post_content: %{html_body: "boost filter original post"}
+        })
+
+      assert {:ok, _boost} = Boosts.boost(user, original_post)
+
       conn
       |> visit("/feed/local")
+      |> assert_has("[data-id=feed] [data-role=boosted_by]")
       |> open_filters_modal()
       |> click_button("[data-toggle='boost'] button", "Hide")
       |> apply_filters()
-      |> assert_has("[data-id=feed_controls] [role=status] .badge", text: "Boost")
+      |> refute_has("[data-id=feed] [data-role=boosted_by]")
+      |> assert_has("[data-id=feed] article", text: "boost filter original post")
+      |> open_filters_modal()
+      |> assert_has("button[aria-label='Remove filter: Boost']")
     end
   end
 

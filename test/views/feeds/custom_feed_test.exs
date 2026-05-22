@@ -111,9 +111,11 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
 
     # Check that the time limit is preserved in the custom feed
     |> visit("/feed/#{preset_name}")
-    |> assert_has("[data-id=feed_controls] .badge", text: "Last Day")
+    |> click_button("[data-role=open_modal]", "Filters")
+    |> assert_has("button[aria-label='Remove filter: Last Day']")
     # Verify the time limit reverts to default on other feeds
     |> visit("/feed/local")
-    |> refute_has("[data-id=feed_controls] .badge", text: "Last Day")
+    |> click_button("[data-role=open_modal]", "Filters")
+    |> refute_has("button[aria-label='Remove filter: Last Day']")
   end
 end
