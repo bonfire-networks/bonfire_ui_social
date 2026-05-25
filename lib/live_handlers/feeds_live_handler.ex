@@ -306,6 +306,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   defp do_mark_feed_seen_on_visit(socket, feed_uid, current_user) do
     FeedActivities.mark_all_seen(feed_uid, current_user: current_user)
+
     PubSub.broadcast(
       "unseen_count:#{feed_uid}",
       {{Bonfire.Social.Feeds, :count_reset}, %{feed_id: feed_uid}}
