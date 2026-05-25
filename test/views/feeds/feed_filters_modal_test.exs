@@ -192,7 +192,11 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> assert_has("button[aria-label='Remove filter: Last Month']")
     end
 
-    test "exclude boost filter hides boost activities", %{conn: conn, user: user, other_user: other_user} do
+    test "exclude boost filter hides boost activities", %{
+      conn: conn,
+      user: user,
+      other_user: other_user
+    } do
       original_post =
         fake_post!(other_user, "public", %{
           post_content: %{html_body: "boost filter original post"}

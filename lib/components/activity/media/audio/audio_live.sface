@@ -28,8 +28,8 @@
     <div class="flex-1 min-w-0 text-left">
       <div class="font-medium truncate text-base-content">{@media_label || l("Audio")}</div>
       {#case [e(@media, :metadata, "oembed", "author_name", nil), MediaLive.provider(@media)]
-          |> Enum.reject(&(is_nil(&1) || &1 == ""))
-          |> Enum.join(" · ")}
+        |> Enum.reject(&(is_nil(&1) || &1 == ""))
+        |> Enum.join(" · ")}
         {#match ""}
         {#match meta}
           <div class="text-sm truncate text-base-content/60">{meta}</div>
