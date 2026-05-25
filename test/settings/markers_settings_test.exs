@@ -49,23 +49,9 @@ defmodule Bonfire.UI.Social.MarkersSettingsTest do
     end
   end
 
-  describe "Reading position duration select" do
-    test "duration select is visible in feed settings", %{conn: conn} do
-      conn
-      |> visit("/settings/user/feeds")
-      |> assert_has("#markers_ttl")
-    end
-
-    test "user can change reading position TTL", %{conn: conn} do
-      conn
-      |> visit("/settings/user/feeds")
-      |> within("form[data-scope=markers_ttl]", fn session ->
-        session
-        |> PhoenixTest.select("Reading position duration", option: "4 hours")
-      end)
-      # Revisit to confirm the select persisted
-      |> visit("/settings/user/feeds")
-      |> assert_has("#markers_ttl option[selected][value='14400000']")
-    end
+  test "reading position duration select is not shown for server-side markers", %{conn: conn} do
+    conn
+    |> visit("/settings/user/feeds")
+    |> refute_has("#markers_ttl")
   end
 end

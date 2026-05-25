@@ -32,8 +32,6 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   prop hide_load_more, :boolean, default: false
   prop enable_marker, :boolean, default: false
-  # 48 hours in ms
-  prop markers_ttl, :integer, default: 172_800_000
 
   prop verb_default, :string, default: nil
 
@@ -197,21 +195,22 @@ defmodule Bonfire.UI.Social.FeedLive do
           context: socket.assigns[:__context__]
         )
 
-    markers_ttl =
-      if markers_enabled do
-        Bonfire.Common.Settings.get([Bonfire.Social.Markers, :ttl], 172_800_000,
-          context: socket.assigns[:__context__]
-        )
-      end
-
     socket
     |> assign(Map.drop(assigns, [:insert_stream]))
     |> assign(enable_marker: markers_enabled)
-    |> assign(markers_ttl: markers_ttl)
-    |> assign(resumed_from_marker: if(markers_enabled, do: assigns[:resumed_from_marker]))
+    |> assign(
+      resumed_from_marker:
+        if(markers_enabled,
+          do: assign_or_existing(assigns, socket, :resumed_from_marker)
+        )
+    )
     |> assign(jumping_to_newest: false)
     |> LiveHandler.insert_feed(entries, reset: assigns[:reset_stream])
     |> ok_socket()
+  end
+
+  defp assign_or_existing(assigns, socket, key) do
+    if Map.has_key?(assigns, key), do: assigns[key], else: socket.assigns[key]
   end
 
   # adding new feed item
@@ -1051,26 +1050,23 @@ defmodule Bonfire.UI.Social.FeedLive do
     {:noreply, assign(socket, fresh_ids: nil)}
   end
 
-  def handle_event("load_more_newer", %{"before" => cursor} = attrs, %{assigns: assigns} = socket) do
-    LiveHandler.paginate_feed(
-      e(assigns, :feed_name, nil) || e(assigns, :feed_id, nil),
-      Map.put(attrs, "before", cursor),
-      socket |> assign(:resumed_from_marker, nil),
-      hide_activities: false,
-      at: 0
-    )
+  def handle_event("Bonfire.Social.Feeds:reading_position_updated", attrs, socket) do
+    LiveHandler.handle_event("reading_position_updated", attrs, socket)
+  end
+
+  def handle_event("reading_position_updated", attrs, socket) do
+    LiveHandler.handle_event("reading_position_updated", attrs, socket)
   end
 
   def handle_event("jump_to_newest", %{"feed_name" => feed_name}, %{assigns: assigns} = socket) do
     feed_id = e(assigns, :feed_name, nil) || e(assigns, :feed_id, nil)
 
-    # Clear server-side reading position so it won't be restored from Presence/process dict
-    LiveHandler.clear_reading_position(current_user_id(socket), feed_name)
+    Bonfire.Social.Markers.clear_reading_position(current_user(socket), feed_name)
 
     socket =
       socket
       |> push_event("clear_reading_position", %{feed_name: feed_name})
-      |> assign(jumping_to_newest: true)
+      |> assign(jumping_to_newest: true, resumed_from_marker: nil)
 
     result =
       LiveHandler.feed_assigns_maybe_async(

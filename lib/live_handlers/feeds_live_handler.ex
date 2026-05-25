@@ -32,8 +32,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         %{"feed_name" => feed_name, "cursor" => cursor},
         socket
       ) do
-    if socket.assigns[:enable_marker] != false do
-      put_reading_position(current_user_id(socket), feed_name, cursor)
+    if reading_position_update_allowed?(socket, feed_name, cursor) do
+      Bonfire.Social.Markers.save_reading_position(current_user(socket), feed_name, cursor)
     end
 
     {:noreply, socket}
@@ -634,18 +634,21 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         |> Keyword.put(:preload, preloads |> elem(0))
       )
 
+    page_info = e(feed, :page_info, [])
+
     {:noreply,
      socket
      |> assign_generic(
-       hide_activities: opts[:hide_activities],
-       feed_count: e(opts, :page_info, :page_count, nil) || Enum.count(e(feed, :edges, [])),
-       time_limit: opts[:time_limit],
-       deferred_join_multiply_limit: opts[:deferred_join_multiply_limit],
-       previous_page_info: e(opts, :page_info, nil),
-       page_info: e(feed, :page_info, []),
-       loading: true,
-       #  feed_filters: filters,
-       activity_preloads: preloads
+       [
+         hide_activities: opts[:hide_activities],
+         feed_count: e(page_info, :page_count, nil) || Enum.count(e(feed, :edges, [])),
+         time_limit: opts[:time_limit],
+         deferred_join_multiply_limit: opts[:deferred_join_multiply_limit],
+         loading: true,
+         activity_preloads: preloads,
+         previous_page_info: e(opts, :page_info, nil),
+         page_info: page_info
+       ]
      )
      |> insert_feed(e(feed, :edges, []), opts)}
   end
@@ -1267,36 +1270,33 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       e(opts, :assigns, :__context__, :force_static, nil)
   end
 
-  # --- Reading position helpers ---
-  # Consistent storage using `{:reading_pos, feed_name}` tuple keys.
-  # Checks PersistentLive (via Presence) first, falls back to current process dict
-  # (seeded from connect_params before Presence is available).
-
-  @doc false
-  def get_reading_position(user_id, feed_name) when is_binary(feed_name) do
-    # Distinguish "explicitly cleared (nil)" from "PersistentLive not available (:not_found)"
-    case Bonfire.UI.Common.Presence.process_get(user_id, {:reading_pos, feed_name}, :not_found) do
-      :not_found -> Process.get({:reading_pos, feed_name})
-      value -> value
-    end
+  # Client-pushed cursors are untrusted.
+  defp reading_position_update_allowed?(socket, feed_name, cursor)
+       when is_binary(feed_name) and is_binary(cursor) do
+    current_user_id(socket) &&
+      Bonfire.Common.Types.is_uid?(cursor) &&
+      markers_enabled?(socket) &&
+      socket.assigns[:enable_marker] != false &&
+      to_string(socket.assigns[:feed_name]) == feed_name &&
+      chronological_desc_feed?(socket.assigns[:feed_filters])
   end
 
-  @doc false
-  def put_reading_position(user_id, feed_name, cursor) when is_binary(feed_name) do
-    # Store in PersistentLive's process dict (survives live navigations)
-    Bonfire.UI.Common.Presence.process_put(user_id, {:reading_pos, feed_name}, cursor)
-    # Also store in current process dict (local fallback)
-    Process.put({:reading_pos, feed_name}, cursor)
+  defp reading_position_update_allowed?(_socket, _feed_name, _cursor), do: false
+
+  defp markers_enabled?(context) do
+    Bonfire.Common.Settings.get([Bonfire.Social.Markers, :enabled], true,
+      current_user: current_user(context)
+    )
   end
 
-  @doc false
-  def clear_reading_position(user_id, feed_name) when is_binary(feed_name) do
-    Bonfire.UI.Common.Presence.process_put(user_id, {:reading_pos, feed_name}, nil)
-    Process.delete({:reading_pos, feed_name})
+  defp chronological_desc_feed?(filters) do
+    sort_by = e(filters, :sort_by, nil)
+    sort_order = e(filters, :sort_order, nil)
+
+    sort_by in [nil, :date_created, "date_created"] and sort_order in [nil, :desc, "desc"]
   end
 
-  # Look up a reading position cursor and apply it as an inclusive cursor.
-  # Skipped when reset_stream is true or when already paginating.
+  # Resume at the saved item without applying the usual feed time limit.
   defp maybe_apply_reading_position(feed_name_id_or_tuple, opts, reset_stream) do
     feed_atom = feed_name_atom(feed_name_id_or_tuple)
 
@@ -1313,19 +1313,20 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         {opts, nil}
 
       is_atom(feed_atom) and not is_nil(feed_atom) ->
-        case get_reading_position(current_user_id(opts), to_string(feed_atom)) do
-          cursor when is_binary(cursor) and cursor != "" ->
-            debug(cursor, "reading_pos: restoring for :#{feed_atom}")
+        feed_name = to_string(feed_atom)
+        cursor = Bonfire.Social.Markers.get_reading_position(current_user(opts), feed_name)
 
-            opts =
-              opts
-              |> Keyword.put(:paginate, after: cursor, cursor_inclusive: true)
-              |> Keyword.put(:time_limit, 0)
+        if is_binary(cursor) and cursor != "" do
+          debug(cursor, "reading_pos: restoring for :#{feed_atom}")
 
-            {opts, cursor}
+          opts =
+            opts
+            |> Keyword.put(:paginate, after: cursor, cursor_inclusive: true)
+            |> Keyword.put(:time_limit, 0)
 
-          _ ->
-            {opts, nil}
+          {opts, cursor}
+        else
+          {opts, nil}
         end
 
       true ->

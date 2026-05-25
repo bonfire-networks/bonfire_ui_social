@@ -58,32 +58,24 @@
       </div>
 
       <div
-        :if={e(@page_info, :before, nil) || @resumed_from_marker}
+        :if={@resumed_from_marker}
         id={"feed_resumed_banner_#{@feed_name || @feed_id || @id}"}
-        class="flex items-center w-full gap-3 px-4 py-3"
+        data-feed-resume-actions
+        class="pointer-events-none sticky top-0 z-40 -mb-14 h-14 w-full bg-gradient-to-b from-base-100 via-base-100/90 to-base-100/0 [overflow-anchor:none]"
       >
-        <div class="flex-1 h-px bg-primary/25" />
-        <div class="flex items-center gap-2">
+        <div class="absolute inset-x-0 top-0 flex justify-center pt-2">
           <button
-            id={"load_more_newer_btn_#{@feed_name || @feed_id || @id}"}
-            class="flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-base-content/50 hover:text-primary bg-base-content/5 hover:bg-primary/10 rounded-full border border-base-content/10 whitespace-nowrap transition-colors cursor-pointer"
-            :on-click="load_more_newer"
-            phx-value-before={e(@page_info, :before, nil) || @resumed_from_marker}
-          >
-            {l("See previous activities")}
-          </button>
-          <button
-            id={"jump_to_newest_btn_#{@feed_name || @feed_id || @id}"}
-            class="flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-base-content/50 hover:text-primary bg-base-content/5 hover:bg-primary/10 rounded-full border border-base-content/10 whitespace-nowrap transition-colors cursor-pointer"
+            id={"jump_to_top_btn_#{@feed_name || @feed_id || @id}"}
+            class="pointer-events-auto flex min-h-8 items-center gap-1.5 rounded-full border border-base-content/10 bg-base-100/95 px-3 py-1 text-xs font-medium text-base-content/70 shadow-sm shadow-base-content/5 backdrop-blur transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
             :on-click="jump_to_newest"
             phx-value-feed_name={@feed_name}
             disabled={@jumping_to_newest}
           >
             <span :if={@jumping_to_newest} class="loading loading-spinner loading-xs" />
-            {l("Jump to newest")}
+            <#Icon :if={!@jumping_to_newest} iconify="mdi:arrow-up" class="w-4 h-4" />
+            {l("Jump to top")}
           </button>
         </div>
-        <div class="flex-1 h-px bg-primary/25" />
       </div>
 
       {#if is_map(@streams) and is_struct(@streams.feed)}
@@ -91,9 +83,8 @@
           id={"feed_#{@feed_name || @feed_id || @id}"}
           data-id="feed_activity_list"
           data-feed-name={@feed_name}
-          data-save-position={@enable_marker and e(@feed_filters, :sort_by, nil) in [:date_created, nil] and
-            e(@feed_filters, :sort_order, nil) in [:desc, nil]}
-          data-position-ttl={@markers_ttl}
+          data-save-position={to_string(@enable_marker and e(@feed_filters, :sort_by, nil) in [:date_created, nil] and
+            e(@feed_filters, :sort_order, nil) in [:desc, nil])}
           :hook="FeedScrollTracker"
           phx-target={@myself}
           role="feed"
