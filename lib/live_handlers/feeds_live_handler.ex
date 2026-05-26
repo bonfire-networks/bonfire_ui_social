@@ -1296,8 +1296,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     sort_by in [nil, :date_created, "date_created"] and sort_order in [nil, :desc, "desc"]
   end
 
-  # Resume at the saved item without applying the usual feed time limit.
-  defp maybe_apply_reading_position(feed_name_id_or_tuple, opts, reset_stream) do
+  @doc """
+  Applies a saved reading position to feed options when resuming a chronological feed.
+
+  Client-provided cursors are treated as untrusted and are only used when they
+  are valid Bonfire IDs. Server-side markers remain the fallback.
+  """
+  @spec maybe_apply_reading_position(term(), Keyword.t(), boolean()) :: {Keyword.t(), binary() | nil}
+  def maybe_apply_reading_position(feed_name_id_or_tuple, opts, reset_stream) do
     feed_atom = feed_name_atom(feed_name_id_or_tuple)
 
     markers_enabled =
@@ -1314,7 +1320,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
       is_atom(feed_atom) and not is_nil(feed_atom) ->
         feed_name = to_string(feed_atom)
-        cursor = Bonfire.Social.Markers.get_reading_position(current_user(opts), feed_name)
+        cursor =
+          client_reading_position(opts, feed_name) ||
+            Bonfire.Social.Markers.get_reading_position(current_user(opts), feed_name)
 
         if is_binary(cursor) and cursor != "" do
           debug(cursor, "reading_pos: restoring for :#{feed_atom}")
@@ -1333,6 +1341,23 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         {opts, nil}
     end
   end
+
+  defp client_reading_position(opts, feed_name) when is_binary(feed_name) do
+    positions =
+      e(opts, :client_reading_positions, nil) ||
+        e(opts, :__context__, :client_reading_positions, nil)
+
+    with %{} <- positions,
+         cursor when is_binary(cursor) <-
+           Map.get(positions, feed_name),
+         true <- Bonfire.Common.Types.is_uid?(cursor) do
+      cursor
+    else
+      _ -> nil
+    end
+  end
+
+  defp client_reading_position(_opts, _feed_name), do: nil
 
   defp feed_name_atom({name, _}) when is_atom(name), do: name
   defp feed_name_atom(name) when is_atom(name), do: name
