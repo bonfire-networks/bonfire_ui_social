@@ -48,8 +48,11 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   prop event_target, :any, default: nil
 
   def handler(create_object_type) do
-    if create_object_type == "message",
-      do: "Bonfire.Messages:send",
-      else: "Bonfire.Posts:post"
+    cond do
+      # TODO: config or behavior driven mapping
+      create_object_type in ["message", :message] -> "Bonfire.Messages:send"
+      create_object_type in ["announcement", :announcement] -> "Bonfire.Notify:announce"
+      true -> "Bonfire.Posts:post"
+    end
   end
 end
