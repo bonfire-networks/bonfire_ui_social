@@ -1385,7 +1385,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # replies and mentions (when shown in notifications): prepend a minimal
   # "X replied/mentioned you" header above the standard subject line
-  def component_activity_subject(verb, activity, _, _, :notifications, _, _)
+  def component_activity_subject(verb, activity, object, _, :notifications, _, _)
       when verb in @create_or_reply_verbs do
     profile = e(activity, :subject, :profile, nil)
     character = e(activity, :subject, :character, nil)
@@ -1394,6 +1394,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       {Bonfire.UI.Social.Activity.SubjectMinimalLive,
        %{
          verb: verb,
+         tagged: e(object, :tagged, nil),
          subject_id: e(activity, :subject_id, nil),
          subjects_more: e(activity, :subjects_more, []),
          profile: profile,

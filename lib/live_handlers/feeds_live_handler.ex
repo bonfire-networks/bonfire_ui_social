@@ -639,16 +639,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     {:noreply,
      socket
      |> assign_generic(
-       [
-         hide_activities: opts[:hide_activities],
-         feed_count: e(page_info, :page_count, nil) || Enum.count(e(feed, :edges, [])),
-         time_limit: opts[:time_limit],
-         deferred_join_multiply_limit: opts[:deferred_join_multiply_limit],
-         loading: true,
-         activity_preloads: preloads,
-         previous_page_info: e(opts, :page_info, nil),
-         page_info: page_info
-       ]
+       hide_activities: opts[:hide_activities],
+       feed_count: e(page_info, :page_count, nil) || Enum.count(e(feed, :edges, [])),
+       time_limit: opts[:time_limit],
+       deferred_join_multiply_limit: opts[:deferred_join_multiply_limit],
+       loading: true,
+       activity_preloads: preloads,
+       previous_page_info: e(opts, :page_info, nil),
+       page_info: page_info
      )
      |> insert_feed(e(feed, :edges, []), opts)}
   end
@@ -1302,7 +1300,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   Client-provided cursors are treated as untrusted and are only used when they
   are valid Bonfire IDs. Server-side markers remain the fallback.
   """
-  @spec maybe_apply_reading_position(term(), Keyword.t(), boolean()) :: {Keyword.t(), binary() | nil}
+  @spec maybe_apply_reading_position(term(), Keyword.t(), boolean()) ::
+          {Keyword.t(), binary() | nil}
   def maybe_apply_reading_position(feed_name_id_or_tuple, opts, reset_stream) do
     feed_atom = feed_name_atom(feed_name_id_or_tuple)
 
@@ -1320,6 +1319,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
       is_atom(feed_atom) and not is_nil(feed_atom) ->
         feed_name = to_string(feed_atom)
+
         cursor =
           client_reading_position(opts, feed_name) ||
             Bonfire.Social.Markers.get_reading_position(current_user(opts), feed_name)

@@ -95,7 +95,7 @@
 
           {#if @verb in ["Reply", "Respond", "Annotate"]}
             {l("replied to you")}
-          {#elseif @verb in ["Create", "Write"]}
+          {#elseif @verb in ["Create", "Write"] and @tagged not in [nil, []]}
             {l("mentioned you")}
           {#elseif @verb == "React"}
             {l("reacted to your activity")}

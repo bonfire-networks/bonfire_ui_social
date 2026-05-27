@@ -32,7 +32,10 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
       assert Markers.get_reading_position(me, "my") == cursor
     end
 
-    test "does not store when marker tracking is disabled in settings", %{account: account, me: me} do
+    test "does not store when marker tracking is disabled in settings", %{
+      account: account,
+      me: me
+    } do
       {:ok, %{__context__: %{current_user: me}}} =
         Settings.put([Bonfire.Social.Markers, :enabled], false,
           current_user: me,
@@ -52,7 +55,10 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
       refute Markers.get_reading_position(me, "my")
     end
 
-    test "does not store when marker tracking is disabled on the feed", %{account: account, me: me} do
+    test "does not store when marker tracking is disabled on the feed", %{
+      account: account,
+      me: me
+    } do
       cursor = cursor_id()
       socket = socket(account, me, feed_name: :my, feed_filters: %{}, enable_marker: false)
 
@@ -129,7 +135,10 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
       refute Markers.get_reading_position(me, "my")
     end
 
-    test "component event delegates browser saves to the live handler", %{account: account, me: me} do
+    test "component event delegates browser saves to the live handler", %{
+      account: account,
+      me: me
+    } do
       cursor = cursor_id()
       socket = socket(account, me, feed_name: :my, feed_filters: %{})
 

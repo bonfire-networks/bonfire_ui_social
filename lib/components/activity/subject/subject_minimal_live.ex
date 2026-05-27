@@ -32,6 +32,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   prop profile_media, :string, default: nil
   prop profile_id, :string, default: nil
   prop parent_id, :any, default: nil
+  prop tagged, :any, default: nil
   prop emoji, :any, default: nil
 
   # def render(assigns),
