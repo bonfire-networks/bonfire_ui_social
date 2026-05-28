@@ -38,8 +38,16 @@ defmodule Bonfire.UI.Social.Routes do
       scope "/", Bonfire.UI.Social do
         pipe_through([:browser_or_cacheable, :cacheable_comments_public, :iframe_embeddable])
 
-        live("/comments/embed/:id", CommentsLive, as: :comments_embed)
-        live("/comments/embed", CommentsLive, as: :comments_embed)
+        live("/comments/embed/interactive/:id", EmbedCommentsLive,
+          as: :comments_embed_interactive
+        )
+
+        live("/comments/embed/interactive", EmbedCommentsLive,
+          as: :comments_embed_interactive_index
+        )
+
+        get("/comments/embed/:id", EmbedCommentsController, :show)
+        get("/comments/embed", EmbedCommentsController, :index)
       end
 
       # pages you need to view as a user

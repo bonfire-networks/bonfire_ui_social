@@ -496,7 +496,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     if current_user_id(socket) do
       with assigns when is_list(assigns) <-
              prepare_reply_assigns(reply_to, activity, object_boundary, socket) do
-        # Components share the LiveView process — send a message so CommentsLive
+        # Components share the LiveView process — send a message so EmbedCommentsLive
         # updates reply_to_id and re-targets the portal
         send_self(reply_to_id: assigns[:reply_to_id])
 

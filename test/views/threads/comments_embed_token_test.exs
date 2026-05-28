@@ -22,7 +22,7 @@ defmodule Bonfire.UI.Social.CommentsEmbedTokenTest do
     {:ok, account: account, user: user}
   end
 
-  describe "CommentsLive with media_uri sets go meta tag" do
+  describe "EmbedCommentsLive with media_uri sets go meta tag" do
     test "renders session-param-go so guests are redirected back after login",
          %{user: user} do
       # Stub HTTP so the media fetch returns a minimal HTML page for the external URL
@@ -42,7 +42,7 @@ defmodule Bonfire.UI.Social.CommentsEmbedTokenTest do
     end
   end
 
-  describe "CommentsLive authenticates from bonfire_embed_token param" do
+  describe "EmbedCommentsLive authenticates from bonfire_embed_token param" do
     test "visiting /comments/embed/:id with a valid token renders the reply composer", %{
       user: user
     } do

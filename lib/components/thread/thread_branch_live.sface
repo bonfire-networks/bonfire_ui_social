@@ -75,14 +75,14 @@
       />
     </div>
 
-    {!-- Reply slot for portal teleport (used by CommentsLive embed) --}
+    {!-- Reply slot for portal teleport (used by EmbedCommentsLive embed) --}
     <div
       :if={@showing_within == :thread_embed}
       id={"reply-slot-#{id(@comment)}"}
       class="px-4 relative z-50"
     />
 
-    {!-- Inline action slot for portal teleport (used by CommentsLive embed for report/block) --}
+    {!-- Inline action slot for portal teleport (used by EmbedCommentsLive embed for report/block) --}
     <div
       :if={@showing_within == :thread_embed}
       id={"action-slot-#{id(@comment)}"}

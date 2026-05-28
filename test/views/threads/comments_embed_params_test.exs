@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.CommentsEmbedParamsTest do
   @moduledoc """
   Closes the documented-but-untested gap: the embed loader
   (`comments_embed.js`) maps `data-*` attributes onto query params, and
-  `CommentsLive.mount/3` turns those into socket assigns. These tests assert
+  `EmbedCommentsLive.mount/3` turns those into socket assigns. These tests assert
   that param → assign mapping for the deterministic, mount-level options.
   """
   use Bonfire.UI.Social.ConnCase, async: false

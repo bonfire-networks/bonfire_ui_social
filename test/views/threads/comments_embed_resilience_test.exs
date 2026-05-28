@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.CommentsEmbedResilienceTest do
   @moduledoc """
-  Regression tests for the two latent `CommentsLive.handle_params/3` crashes:
+  Regression tests for the two latent `EmbedCommentsLive.handle_params/3` crashes:
 
     * the fallback clause used to return the raw `error/2` term instead of
       `{:noreply, socket}`, crashing the LiveView on any unrecognized params;

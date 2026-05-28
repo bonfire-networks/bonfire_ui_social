@@ -156,7 +156,7 @@ defmodule Bonfire.UI.Social.CommentsEmbedGuestReplyTest do
 
       # This is the event the embed Reply button pushes when
       # `@activity_component_id` is set (the real-app path). The LiveView
-      # (CommentsLive) has no `object`/`activity` assigns, so the handler
+      # (EmbedCommentsLive) has no `object`/`activity` assigns, so the handler
       # must use the pushed `id` — otherwise reply_to is nil → no canonical
       # URL → the remote-interaction guard sends the guest to /login.
       render_hook(view, "Bonfire.Social.Feeds:reply_to_activity", %{"id" => reply.id})
