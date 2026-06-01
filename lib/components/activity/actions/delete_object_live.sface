@@ -23,7 +23,7 @@ TODO: use preloaded boundaries for can? when available
       <input
         name="password"
         type="password"
-        placeholder="Type here"
+        placeholder={l("Type here")}
         class="input input-bordered w-full"
       />
     </div>

@@ -152,7 +152,7 @@
             <div class="mt-4 w-full">
               <fieldset class="fieldset">
                 <legend class="fieldset-legend text-sm">{l("Name of your old account")}</legend>
-                <input name="actor" type="text" placeholder="Type here" class="input w-full">
+                <input name="actor" type="text" placeholder={l("Type here")} class="input w-full">
                 <p class="label text-sm">{markdown(l("Specify the *@username@domain.com* of the account you want to move from"))}</p>
               </fieldset>
               <button disabled={federating? == false || federating? == nil} class="w-full btn btn-primary mt-4">
