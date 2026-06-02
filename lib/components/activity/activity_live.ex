@@ -778,7 +778,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       data-object_id={@object_id}
       data-href={@permalink}
       data-url={@current_url}
-      phx-hook={if @highlight_activity_id == @activity_id,
+      phx-hook={if @highlight_activity_id == @activity_id and @showing_within != :smart_input,
         do: "ScrollTo",
         else:
           if(
