@@ -2,25 +2,28 @@
   {#match suggested_profiles}
     <Bonfire.UI.Common.WidgetBlockLive
       :if={current_user_id(@__context__)}
-      class="w-full p-4 flex-auto mx-auto bonfire-wrapper overflow-hidden"
-      title_class="flex items-center justify-between pb-2 text-xs font-medium uppercase tracking-wide text-base-content/90 relative"
+      class="w-full p-3 lg:p-4 relative overflow-hidden lg:rounded-box bg-gradient-to-br from-secondary/25 via-secondary/10 to-transparent"
+      title_class="pb-3 px-1 text-sm font-bold uppercase tracking-widest text-secondary"
       widget_title={e(@widget_title, l("Who to follow"))}
       empty={suggested_profiles == []}
       empty_icon="ph:user-plus-duotone"
       empty_message={l("No suggestions yet")}
     >
-      <:action>
-        <div style="top: 100px;" class="flex absolute w-full gap-1">
+      {!-- Carousel navigation arrows, shown in the header to the right of the title --}
+      <:action :if={length(suggested_profiles) > 1}>
+        <div class="flex items-center gap-1.5">
           <button
             type="button"
-            class="btn btn-circle btn-sm bg-black/50 hover:bg-black/70 border-none text-white transition-opacity absolute left-0 z-50"
+            aria-label={l("Scroll left")}
+            class="btn btn-circle btn-sm bg-secondary/15 hover:bg-secondary/30 border-none text-secondary"
             phx-click={JS.dispatch("scroll-left", to: "#suggested-profiles-carousel")}
           >
             <#Icon iconify="ph:caret-left" class="w-4 h-4" />
           </button>
           <button
             type="button"
-            class="btn btn-circle btn-sm bg-black/50 hover:bg-black/70 border-none text-white transition-opacity absolute right-0 z-50"
+            aria-label={l("Scroll right")}
+            class="btn btn-circle btn-sm bg-secondary/15 hover:bg-secondary/30 border-none text-secondary"
             phx-click={JS.dispatch("scroll-right", to: "#suggested-profiles-carousel")}
           >
             <#Icon iconify="ph:caret-right" class="w-4 h-4" />

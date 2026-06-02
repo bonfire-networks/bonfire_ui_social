@@ -1,7 +1,11 @@
 <div>
-  <div class="flex items-start flex-col px-4 lg:px-0 gap-3 pt-3 pb-2">
+  <div
+    class="flex items-start flex-col px-4 lg:px-0 gap-3 lg:pt-3 pb-2 border-b border-base-content/10 lg:border-b-0 lg:border-transparent"
+    role="region"
+    aria-label={l("Thread stats and actions")}
+  >
     {!-- Left: thread stats --}
-    <div class="flex items-center gap-3" role="group" aria-label={l("Thread stats")}>
+    <!-- <div class="flex items-center gap-3" role="group" aria-label={l("Thread stats")}>
       <div class="flex items-center gap-1.5" aria-label={l("Replies")} title={l("Replies")}>
         <#Icon iconify="ph:chat-circle-duotone" class="size-4 text-base-content/70" aria-hidden="true" />
         <span class="sr-only">{l("Replies:")}</span>
@@ -29,35 +33,58 @@
         <span class="sr-only">{l("Boosts:")}</span>
         <span class="text-sm tabular-nums font-semibold text-base-content">{@thread_boost_count}</span>
       </div>
-    </div>
+    </div> -->
 
-    {!-- Right: controls slot + remote actions --}
-    <div :if={socket_connected?(@__context__)} class="flex items-center gap-2">
+    {!-- Right: thread controls + remote actions, unified into one segmented toolbar --}
+    <div
+      :if={socket_connected?(@__context__) and
+        (current_user_id(@__context__) || e(@object, :peered, :canonical_uri, nil) || @is_remote)}
+      class="inline-flex items-center gap-1 rounded-xl border border-base-content/10 lg:p-1"
+      role="group"
+      aria-label={l("Thread controls")}
+    >
       <#slot />
 
       {#case e(@object, :peered, :canonical_uri, nil) || @is_remote}
         {#match nil}
         {#match false}
         {#match canonical_uri}
+          {!-- Divider separating view controls from remote actions --}
+          <div
+            :if={current_user_id(@__context__)}
+            class="w-px h-6 bg-base-content/10 mx-0.5"
+            aria-hidden="true"
+          />
+
           <button
             type="button"
             phx-click="Bonfire.Social.Feeds:fetch_thread"
             phx-target={@event_target}
             phx-value-id={id(@object) || id(@activity)}
-            class="btn btn-outline border-base-content/30 btn-sm min-h-11 lg:min-h-0"
+            class="tooltip tooltip-bottom btn btn-ghost btn-sm btn-square rounded-lg min-h-11 min-w-11 lg:min-h-8 lg:min-w-8 lg:h-8 lg:w-8 text-base-content/70 hover:text-base-content"
+            data-tip={l("Get latest replies")}
+            aria-label={l("Get latest replies")}
           >
-            <span class="text-sm font-medium">{l("Get latest replies")}</span>
+            <#Icon
+              iconify="ph:arrows-clockwise"
+              class="size-5 shrink-0 phx-click-loading:hidden"
+              aria-hidden="true"
+            />
+            <span
+              class="loading loading-spinner loading-sm hidden phx-click-loading:inline"
+              aria-hidden="true"
+            />
           </button>
 
           <a
             href={canonical_uri}
             target="_blank"
             rel="noopener noreferrer"
-            class="btn btn-outline btn-circle border-base-content/30 btn-sm min-h-11 min-w-11 lg:min-h-0 lg:min-w-0"
+            class="tooltip tooltip-bottom btn btn-ghost btn-sm btn-square rounded-lg min-h-11 min-w-11 lg:min-h-8 lg:min-w-8 lg:h-8 lg:w-8 text-base-content/70 hover:text-base-content"
+            data-tip={l("View remotely")}
             aria-label={l("View remotely")}
-            title={l("View remotely")}
           >
-            <#Icon iconify="ph:arrow-square-out-duotone" class="size-5 shrink-0" aria-hidden="true" />
+            <#Icon iconify="ph:arrow-square-out" class="size-5 shrink-0" aria-hidden="true" />
           </a>
       {/case}
     </div>

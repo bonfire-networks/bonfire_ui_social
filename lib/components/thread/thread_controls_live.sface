@@ -1,10 +1,10 @@
-<div :if={current_user_id(@__context__)} class="flex gap-2">
+<div :if={current_user_id(@__context__)} class="contents">
   {!-- Layout mode dropdown --}
   <div data-position="bottom" phx-hook="Tooltip" id="layout-dropdown">
     <button
       type="button"
       tabindex="0"
-      class="tooltip-button btn btn-sm min-h-11 lg:min-h-0"
+      class="tooltip-button btn btn-ghost btn-sm rounded-lg gap-1.5 px-2.5 min-h-11 lg:min-h-0 font-medium text-base-content/70 hover:text-base-content"
       aria-haspopup="menu"
       aria-label={l("Thread layout")}
     >
@@ -15,6 +15,7 @@
         <#Icon iconify="bi:list-nested" class="w-4 h-4" aria-hidden="true" />
         <span class="hidden lg:block">{l("Threaded")}</span>
       {/if}
+      <#Icon iconify="mdi:chevron-down" class="w-4 h-4 opacity-60" aria-hidden="true" />
     </button>
     <ul
       tabindex="0"
@@ -74,7 +75,7 @@
     <button
       type="button"
       tabindex="0"
-      class="tooltip-button btn btn-sm min-h-11 lg:min-h-0"
+      class="tooltip-button btn btn-ghost btn-sm rounded-lg gap-1.5 px-2.5 min-h-11 lg:min-h-0 font-medium text-base-content/70 hover:text-base-content"
       aria-haspopup="menu"
       aria-label={l("Sort order")}
     >
@@ -136,7 +137,7 @@
             <span class="hidden lg:block">{if @thread_mode != :flat, do: l("Thread order"), else: l("Oldest first")}</span>
           </span>
       {/case}
-      <#Icon iconify="mdi:chevron-down" class="w-4 h-4" aria-hidden="true" />
+      <#Icon iconify="mdi:chevron-down" class="w-4 h-4 opacity-60" aria-hidden="true" />
     </button>
     <ul
       tabindex="0"
