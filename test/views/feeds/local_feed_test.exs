@@ -91,7 +91,9 @@ defmodule Bonfire.Social.Feeds.LocalFeed.Test do
         }
       }
 
-      assert {:ok, post} = Posts.publish(current_user: user, post_attrs: attrs)
+      assert {:ok, post} =
+               Posts.publish(boundary: "mentions", current_user: user, post_attrs: attrs)
+
       assert post.post_content.html_body =~ "epic html message"
 
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
