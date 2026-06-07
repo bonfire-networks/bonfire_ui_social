@@ -59,40 +59,29 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedTest do
                [:first_post, :profile]
     end
 
-    test "accepts custom map specs from flavour config and normalizes them" do
+    test "resolves the manual-only registry steps (read_coc, wishes)" do
       Application.put_env(:bonfire_ui_social, WidgetGettingStartedLive,
-        actions: [
-          :profile,
-          %{
-            key: :explore_topics,
-            title: "Explore topics",
-            rationale: "Find conversations beyond your follows.",
-            cta_label: "Browse topics",
-            cta_path: "/topics"
-          }
-        ]
+        actions: [:read_coc, :wishes]
       )
 
       on_exit(fn -> Application.delete_env(:bonfire_ui_social, WidgetGettingStartedLive) end)
 
-      assert [profile, custom] = WidgetGettingStartedLive.configured_actions()
-      assert profile.key == :profile
-      assert custom.key == :explore_topics
-      assert custom.title == "Explore topics"
-      assert custom.cta_label == "Browse topics"
-      assert custom.cta_path == "/topics"
-      assert custom.cta_kind == :link
-      assert is_function(custom.done?, 1)
-      refute custom.done?.(nil)
+      assert [coc, wishes] = WidgetGettingStartedLive.configured_actions()
+      assert coc.key == :read_coc
+      assert coc.cta_path == "/conduct"
+      assert wishes.key == :wishes
+      # manual-only steps carry no auto-detector
+      refute Map.has_key?(coc, :done?)
+      refute Map.has_key?(wishes, :done?)
     end
 
-    test "drops malformed custom maps that lack required fields" do
+    test "drops anything that is not a known registry key" do
       Application.put_env(:bonfire_ui_social, WidgetGettingStartedLive,
         actions: [
           :profile,
-          %{key: :missing_fields},
-          %{title: "no key", cta_label: "x"},
-          "not a map or atom"
+          :unknown_key,
+          %{key: :no_longer_supported},
+          "not an atom"
         ]
       )
 

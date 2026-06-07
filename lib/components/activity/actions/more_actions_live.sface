@@ -180,7 +180,7 @@
                 phx-value-id={subject_id}
                 class="flex items-center justify-between gap-2 text-sm text-base-content w-full"
               >
-                <span class="flex-1 text-sm font-medium text-left truncate ellipsis" data-role="label">{l("Unfollow")} {e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil)}</span>
+                <span class="flex-1 text-sm font-medium text-left truncate ellipsis" data-role="label">{l("Unfollow %{name}", name: e(@activity, :subject, :profile, :name, nil) || e(@activity, :subject, :character, :username, nil))}</span>
                 <#Icon iconify="ph:user-minus-duotone" class="w-5 h-5 shrink-0" />
               </a>
             </li>

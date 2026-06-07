@@ -2,45 +2,23 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedLive do
   @moduledoc """
   Sidebar widget that walks a new user through a small set of starter actions.
 
-  Each flavour configures its own action list in `config/config.exs`:
+  All available steps live in `actions_registry/0`, with every user-facing
+  string wrapped in `l/1` so they translate per request. Each flavour
+  selects and orders the steps it wants by listing their keys in config:
 
       config :bonfire_ui_social, Bonfire.UI.Social.WidgetGettingStartedLive,
-        actions: [:profile, :first_post, :first_follow]
+        actions: [:profile, :first_post, :first_follow, :read_coc, :wishes]
 
-  Entries can be either built-in keys from `actions_registry/0`, or full
-  custom specs supplied as maps so flavours can define their own actions
-  without code changes:
+  To add a step, add an entry to `actions_registry/0` (in code, not config),
+  so its copy stays translatable and its completion detector stays in code.
+  Instance-specific URLs (e.g. the Code of Conduct path) are read from
+  config so flavours can override them without duplicating any copy.
 
-      config :bonfire_ui_social, Bonfire.UI.Social.WidgetGettingStartedLive,
-        actions: [
-          :profile,
-          :first_post,
-          %{
-            key: :explore_topics,
-            title: "Explore topics",
-            rationale: "Find conversations beyond your follows.",
-            cta_label: "Browse topics",
-            cta_path: "/topics"
-          },
-          %{
-            key: :write_intro,
-            title: "Introduce yourself",
-            cta_label: "Write your intro",
-            cta_kind: :composer
-          }
-        ]
-
-  Custom maps must include `:key` (atom, used to persist manual completion),
-  `:title`, and `:cta_label`. Optional fields: `:rationale`, `:cta_kind`
-  (`:link` default, `:composer`, or `:button`), `:cta_path` (for `:link`),
-  `:cta_event` and `:cta_target` (for `:button`), and `:done?` — a 1-arity
-  function that receives the current user and returns whether the step is
-  auto-complete (defaults to manual-only completion).
-
-  Completion is auto-detected from the data layer; the user can also mark a
-  step done manually. Both the manual marks and the dismissal flag are
-  stored as per-user settings under `[:ui, :getting_started, ...]`, so they
-  follow the user across browsers and devices.
+  Completion is auto-detected from the data layer via each step's optional
+  `:done?` detector; the user can also mark a step done manually. Both the
+  manual marks and the dismissal flag are stored as per-user settings under
+  `[:ui, :getting_started, ...]`, so they follow the user across browsers
+  and devices.
   """
   use Bonfire.UI.Common.Web, :stateful_component
 
@@ -63,6 +41,10 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedLive do
   @doc """
   Closed registry of supported actions. Flavours pick keys from here in
   their config; they cannot invent new keys without code, by design.
+
+  All copy is wrapped in `l/1` so it translates per request. Steps without
+  a `:done?` detector (e.g. reading the Code of Conduct) complete manually.
+  Instance-specific URLs are read from config with sensible defaults.
   """
   def actions_registry do
     %{
@@ -87,16 +69,26 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedLive do
         cta_label: l("Find people"),
         cta_path: "/users",
         done?: &has_followed?/1
+      },
+      read_coc: %{
+        title: l("Read the Code of Conduct"),
+        rationale: l("A short read so you know what to expect from the community."),
+        cta_label: l("Open the Code of Conduct"),
+        cta_path: Config.get([__MODULE__, :code_of_conduct_path], "/conduct", :bonfire_ui_social)
+      },
+      wishes: %{
+        title: l("Tell us about your wishes"),
+        rationale: l("Help us shape what comes next — your input drives the roadmap."),
+        cta_label: l("Share your wishes"),
+        cta_path: Config.get([__MODULE__, :wishes_url], nil, :bonfire_ui_social)
       }
     }
   end
 
   @doc """
   Action specs configured for this instance, falling back to the default
-  seed. Atom keys are looked up in `actions_registry/0`; custom maps are
-  taken as-is after validation, with defaults filled in for `:rationale`,
-  `:cta_kind` (`:link`), `:cta_path` (`nil`), and `:done?` (manual-only).
-  Invalid or unknown entries are silently dropped.
+  seed. Each configured key is looked up in `actions_registry/0`; unknown
+  keys are silently dropped.
   """
   def configured_actions do
     Config.get([__MODULE__, :actions], @default_actions, :bonfire_ui_social)
@@ -109,17 +101,6 @@ defmodule Bonfire.UI.Social.WidgetGettingStartedLive do
       {:ok, spec} -> [Map.put(spec, :key, key)]
       :error -> []
     end
-  end
-
-  defp normalize_action(%{key: key, title: title, cta_label: cta_label} = spec)
-       when is_atom(key) and is_binary(title) and is_binary(cta_label) do
-    [
-      spec
-      |> Map.put_new(:rationale, nil)
-      |> Map.put_new(:cta_kind, :link)
-      |> Map.put_new(:cta_path, nil)
-      |> Map.put_new(:done?, fn _user -> false end)
-    ]
   end
 
   defp normalize_action(_), do: []
