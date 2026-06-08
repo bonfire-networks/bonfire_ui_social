@@ -2283,9 +2283,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
            Bonfire.UI.Social.Activity.UnknownActivityStreamsLive}
       end
 
+    # Events are self-contained cards (location shown in-card), so skip nested previews
+    # that would otherwise duplicate the location as an empty box below.
+    nested = if "Event" in types, do: [], else: nested_object_components(json)
+
     [
       {component, Enum.into(%{json: json, object_type_readable: type}, assigns)}
-    ] ++ nested_object_components(json)
+    ] ++ nested
   end
 
   # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.ValueFlows.Preview.ProcessListLive.activity_component(object)]

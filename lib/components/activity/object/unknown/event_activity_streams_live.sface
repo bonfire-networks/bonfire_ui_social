@@ -1,43 +1,79 @@
 {#if @showing_within in [:smart_input, :pinned]}
-  <div class="">
+  <div>
     <div class="flex badge badge-neutral items-center gap-2 font-semibold">
       <#Icon iconify="ph:calendar-blank-bold" class="w-4 h-4" />
       {l("Event")}
     </div>
     <h2 class="mt-2 font-semibold text-base-content">
-      {rich(object_field(debug(@json, "apjson"), "name") || l("Untitled event"))}
+      {rich(object_field(@json, "name") || l("Untitled event"))}
     </h2>
   </div>
 {#else}
-  <div class="rounded-box border border-base-content/10">
-    {#case object_field(@json, "attachment")}
-      {#match nil}
-      {#match attachments when is_list(attachments)}
-        {#case Enum.find(attachments, fn a ->
-            e(a, "type", nil) == "Document" and e(a, "mediaType", nil) |> String.starts_with?("image/")
-          end)}
-          {#match nil}
-          {#match attachment}
-            <div class="relative">
-              <img
-                src={e(attachment, "url", 0, "href", nil)}
-                alt={e(attachment, "name", "")}
-                class="w-full h-[320px] rounded-t-box object-cover"
-              />
-              <div class="top-3 right-3 absolute badge rounded h-[1.75rem]">
-                <span class="text-sm font-semibold">{l("Event")}</span>
-              </div>
-            </div>
-        {/case}
-    {/case}
+  <div class="rounded-box border border-base-content/10 bg-base-100 overflow-hidden">
+    {!-- Poster with calendar chip + Event badge --}
+    <div class="relative">
+      {#case poster_url(@json)}
+        {#match nil}
+          <div
+            class="flex items-center justify-center h-24 bg-base-200 border-b border-base-content/10"
+            aria-hidden="true"
+          >
+            <#Icon iconify="ph:calendar-blank-bold" class="w-10 h-10 text-base-content/10" />
+          </div>
+        {#match src}
+          <img
+            src={src}
+            alt={object_field(@json, "name") || l("Event poster")}
+            loading="lazy"
+            decoding="async"
+            class={
+              "w-full object-cover aspect-[16/9] bg-base-200",
+              "max-h-80": !@viewing_main_object,
+              "max-h-[28rem]": @viewing_main_object
+            }
+          />
+      {/case}
+
+      <div class="absolute top-3 right-3 badge badge-neutral gap-1.5 font-semibold shadow-sm">
+        <#Icon iconify="ph:calendar-blank-bold" class="w-3.5 h-3.5" />
+        {l("Event")}
+      </div>
+
+      {#case chip_parts(event_time(object_field(@json, "startTime")))}
+        {#match nil}
+        {#match c}
+          <div class="absolute bottom-3 left-3 flex flex-col items-center justify-center leading-none rounded-lg bg-base-100 ring-1 ring-base-content/10 shadow-md px-3 py-1.5 min-w-[3rem]">
+            <span class="text-[0.65rem] font-semibold uppercase tracking-wide text-primary">{c.weekday}</span>
+            <span class="text-2xl font-bold text-base-content">{c.day}</span>
+            <span class="text-[0.65rem] font-medium uppercase tracking-wide text-base-content/70">{c.month}</span>
+          </div>
+      {/case}
+    </div>
 
     <div class="p-4">
-      <a href={object_field(@json, "id")} target="_blank">
-        <h2 class="mb-2 font-semibold text-base-content">
-          {rich(object_field(debug(@json, "apjson"), "name") || l("Untitled event"))}
+      <a href={object_field(@json, "id")} target="_blank" rel="noopener noreferrer">
+        <h2 class={
+          "font-semibold text-base-content text-balance leading-snug hover:underline",
+          "text-xl": @viewing_main_object,
+          "text-lg": !@viewing_main_object
+        }>
+          {rich(object_field(@json, "name") || l("Untitled event"))}
         </h2>
       </a>
 
+      {!-- Date & time: concise range, full contrast, machine-readable, icon stays aligned when the line wraps --}
+      {#case event_time(object_field(@json, "startTime"))}
+        {#match nil}
+        {#match start}
+          <div class="flex items-start gap-2 mt-3">
+            <#Icon iconify="ph:calendar-blank-bold" class="w-4 h-4 mt-0.5 shrink-0 text-base-content/70" />
+            <time datetime={start.iso} class="text-sm text-base-content leading-snug">
+              {format_range(start, event_end_time(@json))}
+            </time>
+          </div>
+      {/case}
+
+      {!-- Location: full contrast, with a visible link affordance --}
       {#case object_field(@json, "location")}
         {#match nil}
         {#match location}
@@ -51,74 +87,59 @@
             |> Enum.join(" - ")}
             {#match ""}
             {#match location_text}
-              <div class="flex items-center gap-2">
-                <#Icon iconify="ph:map-pin-fill" class="w-4 h-4 text-base-content/70" />
-                <div class="text-base-content/70 text-sm">
-                  <a href={"https://www.openstreetmap.org/search?zoom=6&query=#{location_text}"} target="_blank">{location_text}</a>
-                </div>
+              <div class="flex items-start gap-2 mt-2">
+                <#Icon iconify="ph:map-pin-fill" class="w-4 h-4 mt-0.5 shrink-0 text-base-content/70" />
+                <a
+                  href={"https://www.openstreetmap.org/search?zoom=6&query=#{location_text}"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-sm text-base-content hover:text-primary hover:underline transition-colors"
+                >{location_text}</a>
               </div>
           {/case}
       {/case}
 
-      {#case object_field(@json, "startTime")}
+      {#case object_field(@json, "content")}
         {#match nil}
-        {#match start_date}
-          <div class="flex items-center mt-2 gap-2">
-            <#Icon iconify="ph:calendar-blank-bold" class="w-4 h-4 text-base-content/70" />
-            <div class="flex items-baseline text-base-content/70 text-sm">
-              {with {:ok, datetime, offset} <- DateTime.from_iso8601(start_date),
-                   # Convert back to original timezone to preserve local time
-                   local_datetime <- DateTime.add(datetime, -offset, :second) do
-                timezone_str =
-                  if offset >= 0,
-                    do:
-                      "+#{div(offset, 3600)}:#{rem(div(offset, 60), 60) |> Integer.to_string() |> String.pad_leading(2, "0")}",
-                    else:
-                      "#{div(offset, 3600)}:#{rem(div(abs(offset), 60), 60) |> Integer.to_string() |> String.pad_leading(2, "0")}"
-
-                case DatesTimes.format(local_datetime, format: "EEEE, MMMM d, y 'at' h:mm a") do
-                  {:ok, formatted} -> "#{formatted} (#{timezone_str})"
-                  formatted when is_binary(formatted) -> "#{formatted} (#{timezone_str})"
-                  _ -> start_date
-                end
-              else
-                _ -> start_date
-              end}
-
-              {#case object_field(@json, "displayEndTime") != "false" && object_field(@json, "endTime")}
-                {#match nil}
-                {#match false}
-                {#match end_date}
-                  {l("until")}
-                  {with {:ok, datetime, offset} <- DateTime.from_iso8601(end_date),
-                       # Convert back to original timezone to preserve local time
-                       local_datetime <- DateTime.add(datetime, -offset, :second) do
-                    timezone_str =
-                      if offset >= 0,
-                        do:
-                          "+#{div(offset, 3600)}:#{rem(div(offset, 60), 60) |> Integer.to_string() |> String.pad_leading(2, "0")}",
-                        else:
-                          "#{div(offset, 3600)}:#{rem(div(abs(offset), 60), 60) |> Integer.to_string() |> String.pad_leading(2, "0")}"
-
-                    case DatesTimes.format(local_datetime, format: "EEEE, MMMM d, y 'at' h:mm a") do
-                      {:ok, formatted} -> "#{formatted} (#{timezone_str})"
-                      formatted when is_binary(formatted) -> "#{formatted} (#{timezone_str})"
-                      _ -> end_date
-                    end
-                  else
-                    _ -> end_date
-                  end}
-              {/case}
-            </div>
-          </div>
+        {#match ""}
+        {#match content}
+          <article class={
+            "mt-4 text-base-content/80 prose max-w-prose",
+            "prose-sm line-clamp-2 !text-base-content/70": !@viewing_main_object
+          }>
+            {rich(content)}
+          </article>
       {/case}
 
-      <article class={
-        "mt-4 text-base-content prose max-w-prose ",
-        "text-base-content/70 prose-sm line-clamp-2": !@viewing_main_object
-      }>
-        {rich(object_field(@json, "content"))}
-      </article>
+      {#if @viewing_main_object}
+        {#case object_field(@json, "tag")}
+          {#match tags when is_list(tags)}
+            {#case Enum.filter(tags, &(e(&1, "type", nil) == "Hashtag"))}
+              {#match []}
+              {#match hashtags}
+                <div class="flex flex-wrap gap-1.5 mt-4">
+                  {#for tag <- hashtags}
+                    <span class="badge badge-ghost badge-sm">{e(tag, "name", "")}</span>
+                  {/for}
+                </div>
+            {/case}
+          {#match _}
+        {/case}
+      {/if}
+
+      {#case source_host(object_field(@json, "id"))}
+        {#match nil}
+        {#match host}
+          <a
+            href={object_field(@json, "id")}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 mt-4 text-sm font-medium text-primary hover:underline transition-colors"
+          >
+            {l("View on %{instance}", instance: host)}
+            <#Icon iconify="ph:arrow-square-out-bold" class="w-4 h-4" />
+          </a>
+      {/case}
     </div>
   </div>
 {/if}

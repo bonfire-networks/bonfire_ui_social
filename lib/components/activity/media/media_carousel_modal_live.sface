@@ -203,7 +203,7 @@
               {#match label}
                 <div x-show={"currentIndex === #{counter}"} x-cloak>
                   <p :if={label not in [nil, ""]} class="text-white/90 text-sm leading-relaxed">{rich(label)}</p>
-                  {#case Bonfire.Files.Media.media_alt(m.metadata)}
+                  {#case Bonfire.Files.Media.media_alt(m.metadata, false)}
                     {#match media_alt}
                       <p :if={media_alt not in [nil, ""]} class="text-white/75 text-xs mt-1">
                         {media_alt}
