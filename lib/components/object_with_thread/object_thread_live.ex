@@ -20,6 +20,9 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
   prop activity_inception, :any, default: nil
   prop hide_thread_stats, :boolean, default: false
 
+  prop root_boosters, :list, default: []
+  prop root_boost_count, :integer, default: 0
+
   prop loading, :any, default: nil
   prop replies, :any, default: nil
   prop threaded_replies, :any, default: nil

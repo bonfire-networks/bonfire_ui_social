@@ -37,6 +37,13 @@
           {/if}
         {/if}
       </div>
+      <StatelessComponent
+        :if={@thread_id}
+        module={maybe_component(Bonfire.UI.Social.Activity.FediverseReactionsLive, @__context__)}
+        object={@object}
+        boosters={@root_boosters}
+        boost_count={@root_boost_count}
+      />
       <div class="">
         <Bonfire.UI.Social.ThreadLive
           :if={@thread_id}

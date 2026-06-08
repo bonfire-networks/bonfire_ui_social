@@ -1,0 +1,31 @@
+<div
+  :if={(@boost_count || 0) > 0}
+  id={deterministic_dom_id(__MODULE__, id(@object), "fediverse_reactions", @parent_id)}
+  data-role="fediverse_reactions"
+  role="region"
+  aria-label={l("Fediverse reactions")}
+  class="flex flex-col gap-1.5 px-4 lg:px-0 pt-3 pb-1"
+>
+  <!-- <span class="text-sm font-semibold text-base-content/80">{l("Fediverse Reactions")}</span> -->
+
+  {!-- REPOSTS --}
+  <div data-role="reposts_summary" class="flex items-center gap-2.5">
+    <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="size-5 shrink-0 text-base-content/50" aria-hidden="true" />
+    <div class="flex -space-x-2" aria-hidden="true">
+      {#for booster <- Enum.take(@boosters, @max_avatars)}
+        <Bonfire.UI.Common.AvatarLive
+          parent_id={deterministic_dom_id(__MODULE__, id(booster), "reposter-av", @parent_id)}
+          class="w-6 h-6 rounded-full ring-2 ring-base-100"
+          wrapper_class="inline-flex"
+          user_id={id(booster)}
+          src={Media.avatar_url(booster)}
+          title={e(booster, :profile, :name, nil) || e(booster, :character, :username, "")}
+          is_remote={!check_is_local?(booster, preload_if_needed: false)}
+        />
+      {/for}
+    </div>
+    <span class="text-sm font-medium text-base-content/80">
+      {lp("%{count} repost", "%{count} reposts", @boost_count, count: @boost_count)}
+    </span>
+  </div>
+</div>

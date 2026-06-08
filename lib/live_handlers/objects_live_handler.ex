@@ -321,6 +321,45 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       :with_object_peered
     ]
 
+
+  def load_thread_reactions_assigns(%Phoenix.LiveView.Socket{} = socket) do
+    assigns = assigns(socket)
+    object = e(assigns, :object, nil)
+
+    if connected?(socket) and e(assigns, :showing_within, nil) != :messages and
+         is_struct(object) do
+      {boosters, boost_count} = list_thread_boosters(object, current_user(socket))
+      assign(socket, root_boosters: boosters, root_boost_count: boost_count)
+    else
+      socket
+    end
+  end
+
+  def load_thread_reactions_assigns(socket), do: socket
+
+  defp list_thread_boosters(object, current_user, limit \\ 6) do
+    boosters =
+      Bonfire.Social.Boosts.list_of(object,
+        current_user: current_user,
+        paginate?: true,
+        limit: limit
+      )
+      |> e(:edges, [])
+      |> Enum.map(&e(&1, :edge, :subject, nil))
+      |> Enum.reject(&is_nil/1)
+
+    count =
+      if length(boosters) < limit,
+        do: length(boosters),
+        else: Bonfire.Social.Boosts.count(object, [])
+
+    {boosters, count}
+  rescue
+    e ->
+      error(e, "Could not load thread boosters")
+      {[], 0}
+  end
+
   def load_object_assigns(%{assigns: assigns} = socket), do: load_object_assigns(assigns, socket)
   def load_object_assigns(%{} = assigns), do: load_object_assigns(assigns, assigns)
 

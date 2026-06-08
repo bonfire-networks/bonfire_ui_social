@@ -25,6 +25,8 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        post_id: nil,
        reply_id: nil,
        thread_id: nil,
+       root_boosters: [],
+       root_boost_count: 0,
        back: true,
        #  reply_id: nil,
        page_info: nil,
@@ -88,7 +90,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
 
     with %Phoenix.LiveView.Socket{} = socket <-
            Bonfire.Social.Objects.LiveHandler.load_object_assigns(socket) do
-      {:noreply, socket}
+      {:noreply, Bonfire.Social.Objects.LiveHandler.load_thread_reactions_assigns(socket)}
     else
       {:error, e} ->
         {:noreply, assign_error(socket, e)}

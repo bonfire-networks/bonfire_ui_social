@@ -71,7 +71,7 @@
             to={@path}
             opts={"data-id": "subject_name"}
             parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-            class="link link-hover font-semibold text-base-content"
+            class="inline link link-hover font-semibold text-base-content"
           >
             {@profile_name || @character_username}
           </LinkLive>
