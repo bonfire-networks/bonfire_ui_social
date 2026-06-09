@@ -10,7 +10,11 @@
 
   {!-- REPOSTS --}
   <div data-role="reposts_summary" class="flex items-center gap-2.5">
-    <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="size-5 shrink-0 text-base-content/50" aria-hidden="true" />
+    <#Icon
+      iconify="ph:arrows-counter-clockwise-duotone"
+      class="size-5 shrink-0 text-base-content/50"
+      aria-hidden="true"
+    />
     <div class="flex -space-x-2" aria-hidden="true">
       {#for booster <- Enum.take(@boosters, @max_avatars)}
         <Bonfire.UI.Common.AvatarLive

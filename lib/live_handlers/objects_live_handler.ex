@@ -321,7 +321,6 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       :with_object_peered
     ]
 
-
   def load_thread_reactions_assigns(%Phoenix.LiveView.Socket{} = socket) do
     assigns = assigns(socket)
     object = e(assigns, :object, nil)
