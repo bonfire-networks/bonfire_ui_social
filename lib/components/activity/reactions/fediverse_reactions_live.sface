@@ -8,8 +8,8 @@
 >
   <!-- <span class="text-sm font-semibold text-base-content/80">{l("Fediverse Reactions")}</span> -->
 
-  {!-- REPOSTS --}
-  <div data-role="reposts_summary" class="flex items-center gap-2.5">
+  {!-- BOOSTS --}
+  <div data-role="boosts_summary" class="flex items-center gap-2.5">
     <#Icon
       iconify="ph:arrows-counter-clockwise-duotone"
       class="size-5 shrink-0 text-base-content/50"
@@ -29,7 +29,7 @@
       {/for}
     </div>
     <span class="text-sm font-medium text-base-content/80">
-      {lp("%{count} repost", "%{count} reposts", @boost_count, count: @boost_count)}
+      {lp("%{count} boost", "%{count} boosts", @boost_count, count: @boost_count)}
     </span>
   </div>
 </div>

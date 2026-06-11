@@ -32,19 +32,19 @@ defmodule Bonfire.UI.Social.Threads.FediverseReactionsTest do
     conn
     |> visit("/discussion/#{post.id}")
     |> assert_has("[data-role=fediverse_reactions]")
-    |> assert_has("[data-role=reposts_summary]", text: "1 repost")
+    |> assert_has("[data-role=boosts_summary]", text: "1 boost")
   end
 
-  test "also shows reposts on the /post/:id thread view", %{conn: conn, bob: bob, post: post} do
+  test "also shows boosts on the /post/:id thread view", %{conn: conn, bob: bob, post: post} do
     assert {:ok, _} = Boosts.boost(bob, post)
 
     conn
     |> visit("/post/#{post.id}")
     |> assert_has("[data-role=fediverse_reactions]")
-    |> assert_has("[data-role=reposts_summary]", text: "1 repost")
+    |> assert_has("[data-role=boosts_summary]", text: "1 boost")
   end
 
-  test "hides the reactions section when there are no reposts", %{conn: conn, post: post} do
+  test "hides the reactions section when there are no boosts", %{conn: conn, post: post} do
     conn
     |> visit("/discussion/#{post.id}")
     |> refute_has("[data-role=fediverse_reactions]")
