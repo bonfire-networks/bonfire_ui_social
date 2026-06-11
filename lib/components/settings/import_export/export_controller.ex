@@ -650,11 +650,13 @@ defmodule Bonfire.UI.Social.ExportController do
   end
 
   defp preload_assocs(records, type) when type in ["following", "requests"] do
-    records |> repo().preload(edge: [object: [:character]])
+    # preload `character.peered` so `display_username(_, true)`'s `is_local?` classifies the
+    # followed actor's locality (to append `@domain`) without an on-demand (raising) preload
+    records |> repo().preload(edge: [object: [character: [:peered]]])
   end
 
   defp preload_assocs(records, type) when type in ["followers"] do
-    records |> repo().preload(edge: [subject: [:character]])
+    records |> repo().preload(edge: [subject: [character: [:peered]]])
   end
 
   defp preload_assocs(records, type) when type in ["messages"] do

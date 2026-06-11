@@ -26,7 +26,16 @@ defmodule Bonfire.UI.Social.PostContentSEO do
   def author(post_content), do: author(post_content, creator(post_content))
 
   def author(post_content, creator) do
-    Bonfire.Me.Characters.display_username(creator, true) ||
+    # derive locality from the post object (whose `:peered` is loaded on this read path) instead
+    # of the author character (whose `peered` isn't) — a local object has a local author, so we
+    # pass the known locality to `display_username` rather than make it re-check the character
+    object = e(post_content, :pointer, nil) || e(post_content, :activity, :object, nil)
+
+    Bonfire.Me.Characters.display_username(
+      creator,
+      true,
+      object && Bonfire.Social.is_local?(object)
+    ) ||
       e(creator, :profile, :name, nil) ||
       e(post_content, :activity, :subject, :profile, :name, nil)
   end
