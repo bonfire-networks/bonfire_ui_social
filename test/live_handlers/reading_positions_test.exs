@@ -10,10 +10,6 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
     account = fake_account!()
     me = fake_user!(account)
 
-    Markers.clear_reading_position(me, "my")
-    Markers.clear_reading_position(me, "local")
-    Markers.clear_reading_position(me, "notifications")
-
     {:ok, account: account, me: me}
   end
 
@@ -219,6 +215,63 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
     end
   end
 
+  describe "reading position resume (settings gate)" do
+    test "does not resume when marker tracking is disabled in settings", %{me: me} do
+      {:ok, %{__context__: %{current_user: me}}} =
+        Settings.put([Bonfire.Social.Markers, :enabled], false,
+          current_user: me,
+          scope: :user
+        )
+
+      cursor = cursor_id()
+
+      assert {_opts, nil} =
+               LiveHandler.maybe_apply_reading_position(
+                 :my,
+                 resume_opts(me, client_reading_positions: %{"my" => cursor}),
+                 false
+               )
+    end
+  end
+
+  describe "staleness window" do
+    test "does not resume from a marker older than the max age", %{me: me} do
+      cursor = cursor_id()
+
+      {:ok, _} = Markers.save_reading_position(me, "my", cursor)
+      backdate_markers(11)
+
+      assert {_opts, nil} =
+               LiveHandler.maybe_apply_reading_position(:my, resume_opts(me, []), false)
+
+      # the marker itself is kept (e.g. for Mastodon clients), only resume skips it
+      assert Markers.get_reading_position(me, "my") == cursor
+    end
+
+    test "resumes from a marker within the max age", %{me: me} do
+      cursor = cursor_id()
+
+      {:ok, _} = Markers.save_reading_position(me, "my", cursor)
+      backdate_markers(1)
+
+      assert {opts, ^cursor} =
+               LiveHandler.maybe_apply_reading_position(:my, resume_opts(me, []), false)
+
+      assert opts[:paginate][:after] == cursor
+    end
+
+    test "get_reading_position applies max_age_days only when given", %{me: me} do
+      cursor = cursor_id()
+
+      {:ok, _} = Markers.save_reading_position(me, "my", cursor)
+      backdate_markers(5)
+
+      refute Markers.get_reading_position(me, "my", max_age_days: 3)
+      assert Markers.get_reading_position(me, "my", max_age_days: 30) == cursor
+      assert Markers.get_reading_position(me, "my") == cursor
+    end
+  end
+
   defp socket(account, me, opts) do
     %Phoenix.LiveView.Socket{
       assigns: %{
@@ -250,4 +303,10 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
   end
 
   defp cursor_id, do: Needle.ULID.generate()
+
+  defp backdate_markers(days_ago) do
+    Bonfire.Common.Repo.update_all(Bonfire.Social.Marker,
+      set: [updated_at: Bonfire.Common.DatesTimes.past(days_ago, :day)]
+    )
+  end
 end

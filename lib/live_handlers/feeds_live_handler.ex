@@ -8,6 +8,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   alias Bonfire.Social.FeedLoader
   alias Bonfire.Common.PubSub
 
+  @resume_max_age_days_default 3
+
   @spec handle_params(any(), any(), any()) :: {:noreply, any()}
   def handle_params(
         %{"after" => _cursor_after} = attrs,
@@ -1268,23 +1270,29 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       e(opts, :assigns, :__context__, :force_static, nil)
   end
 
-  # Client-pushed cursors are untrusted.
+  # Client-pushed cursors are untrusted. Cheap assign checks run before the
+  # settings lookup, since this gate fires on every scroll-pause.
   defp reading_position_update_allowed?(socket, feed_name, cursor)
        when is_binary(feed_name) and is_binary(cursor) do
     current_user_id(socket) &&
-      Bonfire.Common.Types.is_uid?(cursor) &&
-      markers_enabled?(socket) &&
       socket.assigns[:enable_marker] != false &&
       to_string(socket.assigns[:feed_name]) == feed_name &&
-      chronological_desc_feed?(socket.assigns[:feed_filters])
+      chronological_desc_feed?(socket.assigns[:feed_filters]) &&
+      Bonfire.Common.Types.is_ulid?(cursor) &&
+      markers_enabled?(socket)
   end
 
   defp reading_position_update_allowed?(_socket, _feed_name, _cursor), do: false
 
   defp markers_enabled?(context) do
-    Bonfire.Common.Settings.get([Bonfire.Social.Markers, :enabled], true,
-      current_user: current_user(context)
-    )
+    e(marker_settings(current_user(context)), :enabled, true)
+  end
+
+  # Positions that haven't moved in this many days don't hijack the feed on
+  # open (the marker is kept, e.g. for Mastodon clients).
+  defp resume_max_age_days(marker_settings) do
+    e(marker_settings, :resume_max_age_days, @resume_max_age_days_default)
+    |> Types.maybe_to_integer(@resume_max_age_days_default)
   end
 
   defp chronological_desc_feed?(filters) do
@@ -1305,24 +1313,37 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def maybe_apply_reading_position(feed_name_id_or_tuple, opts, reset_stream) do
     feed_atom = feed_name_atom(feed_name_id_or_tuple)
 
-    markers_enabled =
-      Bonfire.Common.Settings.get([Bonfire.Social.Markers, :enabled], true,
-        current_user: current_user(opts)
-      )
-
     cond do
-      not markers_enabled ->
-        {opts, nil}
-
+      # cheap guards first: pagination/reset events shouldn't pay any settings lookup
       reset_stream == true or opts[:paginate] != nil ->
         {opts, nil}
 
       is_atom(feed_atom) and not is_nil(feed_atom) ->
         feed_name = to_string(feed_atom)
+        user = current_user(opts)
+        marker_settings = marker_settings(user)
+        max_age_days = resume_max_age_days(marker_settings)
+
+        # Saved cursors live in the chronological keyset space, so resume is
+        # gated on the same chronological-desc check as saving; expiry 0 means
+        # the user disabled resuming entirely (including same-browser cursors).
+        filters =
+          Map.merge(
+            e(opts, :feed_filters, nil) || %{},
+            feed_filters_only(feed_name_id_or_tuple)
+          )
 
         cursor =
-          client_reading_position(opts, feed_name) ||
-            Bonfire.Social.Markers.get_reading_position(current_user(opts), feed_name)
+          if e(marker_settings, :enabled, true) and max_age_days != 0 and
+               chronological_desc_feed?(filters) do
+            client_reading_position(opts, feed_name) ||
+              if(user,
+                do:
+                  Bonfire.Social.Markers.get_reading_position(user, feed_name,
+                    max_age_days: max_age_days
+                  )
+              )
+          end
 
         if is_binary(cursor) and cursor != "" do
           debug(cursor, "reading_pos: restoring for :#{feed_atom}")
@@ -1340,6 +1361,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       true ->
         {opts, nil}
     end
+  end
+
+  # Single read of the markers settings subtree, instead of one full
+  # config+account+user merge per key on every feed mount.
+  defp marker_settings(user) do
+    Bonfire.Common.Settings.get([Bonfire.Social.Markers], nil, current_user: user) || %{}
   end
 
   defp client_reading_position(opts, feed_name) when is_binary(feed_name) do

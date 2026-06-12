@@ -153,6 +153,16 @@
           scope={@scope}
         />
       </form>
+
+      <form class="p-4" data-scope="markers_resume_max_age" phx-change="Bonfire.Common.Settings:set">
+        <Bonfire.UI.Common.Settings.NumberLive
+          scope={@scope}
+          name={l("Reading position expiry")}
+          description={l("Positions older than this are not resumed from (feeds open at the top instead).")}
+          keys={[Bonfire.Social.Markers, :resume_max_age_days]}
+          unit={l("days")}
+        />
+      </form>
     </div>
   </div>
   {#if @scope == :instance or
