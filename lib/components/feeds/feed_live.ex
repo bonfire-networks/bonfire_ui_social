@@ -73,6 +73,22 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feed_count, :any, default: nil
   prop resumed_from_marker, :any, default: nil
   data jumping_to_newest, :boolean, default: false
+
+  data load_more, :map,
+    default: %{
+      cursor: nil,
+      infinite_scroll: nil,
+      current_url_with_time_limit: nil,
+      multiply_limit: nil,
+      time_limit: 0,
+      socket_connected: false,
+      show_older: false,
+      show_older_inline: false,
+      show_older_page_info: nil,
+      older_cursor: nil,
+      show_older_url: nil
+    }
+
   prop deferred_join_multiply_limit, :any, default: nil
   prop cute_gif, :any, default: nil
   prop custom_preview, :any, default: nil
@@ -141,6 +157,70 @@ defmodule Bonfire.UI.Social.FeedLive do
         e(entry, :object, :id, nil) || e(entry, :edge, :id, nil)
 
     entry_id && MapSet.member?(fresh_ids, entry_id)
+  end
+
+  defp load_more_state(assigns) do
+    page_info = e(assigns, :page_info, nil)
+    previous_page_info = e(assigns, :previous_page_info, nil)
+    context = e(assigns, :__context__, %{})
+    feed_filters = e(assigns, :feed_filters, nil)
+    deferred_join_multiply_limit = e(assigns, :deferred_join_multiply_limit, nil)
+    current_url = e(assigns, :current_url, nil) || e(context, :current_url, nil)
+
+    end_cursor = LoadMoreLive.end_cursor(page_info)
+
+    previous_end_cursor =
+      LoadMoreLive.end_cursor(previous_page_info) ||
+        e(context, :current_params, "Elixir.Bonfire.Social.Feeds", "after", nil) ||
+        e(context, :current_params, "after", nil)
+
+    final_end_cursor =
+      LoadMoreLive.final_cursor(page_info) || LoadMoreLive.final_cursor(previous_page_info)
+
+    query_with_deferred_join? =
+      (Config.get([Bonfire.Social.Feeds, :query_with_deferred_join], true,
+         name: l("Use Deferred Joins"),
+         description: l("Technical setting for query performance optimization.")
+       ) && is_nil(deferred_join_multiply_limit)) ||
+        (not is_nil(deferred_join_multiply_limit) && deferred_join_multiply_limit < 4)
+
+    infinite_scroll =
+      Settings.get([:ui, :infinite_scroll], :preload,
+        context: context,
+        name: l("Infinite Scrolling"),
+        description: l("Enable infinite scrolling in feeds, or choose a hybrid approach.")
+      )
+
+    time_limit = Types.maybe_to_integer(e(feed_filters, :time_limit, nil), 0)
+    sort_by = e(feed_filters, :sort_by, nil)
+    older_cursor = end_cursor || previous_end_cursor || final_end_cursor
+
+    %{
+      infinite_scroll: infinite_scroll,
+      time_limit: time_limit,
+      cursor:
+        end_cursor ||
+          if(query_with_deferred_join? && sort_by in [nil, :date_created],
+            do: final_end_cursor || previous_end_cursor
+          ),
+      current_url_with_time_limit:
+        if(current_url,
+          do:
+            append_params_uri(current_url, %{"#{Bonfire.Social.Feeds}[time_limit]" => time_limit})
+        ),
+      multiply_limit:
+        if(query_with_deferred_join?,
+          do: (deferred_join_multiply_limit || 2) * 2,
+          else: deferred_join_multiply_limit
+        ),
+      show_older: !e(assigns, :loading, nil) && time_limit != 0,
+      socket_connected: user_socket_connected?(context),
+      show_older_inline: (older_cursor && is_nil(sort_by)) || sort_by == :date_created,
+      show_older_page_info: page_info || previous_page_info,
+      older_cursor: older_cursor,
+      show_older_url:
+        if(current_url, do: append_params_uri(current_url, time_limit: 0, after: older_cursor))
+    }
   end
 
   def tabs(_page, context) do
@@ -405,28 +485,32 @@ defmodule Bonfire.UI.Social.FeedLive do
   defp ok_socket(socket) do
     # debug(assigns(socket)[:__context__][:current_params], "fsa")
 
+    socket =
+      socket
+      |> assign(
+        feed_component_id: assigns(socket)[:id],
+        hide_actions:
+          assigns(socket)[:hide_actions] ||
+            (Settings.get(
+               [
+                 Bonfire.UI.Social.Activity.ActionsLive,
+                 :feed,
+                 :hide_until_hovered
+               ],
+               nil,
+               current_user: current_user(socket),
+               name: l("Hide Activity Actions"),
+               description:
+                 l("Hide actions (such a like or boost) in feeds until users hover over them.")
+             ) && "until_hovered"),
+        hide_activities:
+          assigns(socket)[:hide_activities] ||
+            assigns(socket)[:__context__][:current_params]["hide_activities"]
+      )
+
     {:ok,
      socket
-     |> assign(
-       feed_component_id: assigns(socket)[:id],
-       hide_actions:
-         assigns(socket)[:hide_actions] ||
-           (Settings.get(
-              [
-                Bonfire.UI.Social.Activity.ActionsLive,
-                :feed,
-                :hide_until_hovered
-              ],
-              nil,
-              current_user: current_user(socket),
-              name: l("Hide Activity Actions"),
-              description:
-                l("Hide actions (such a like or boost) in feeds until users hover over them.")
-            ) && "until_hovered"),
-       hide_activities:
-         assigns(socket)[:hide_activities] ||
-           assigns(socket)[:__context__][:current_params]["hide_activities"]
-     )}
+     |> assign(:load_more, load_more_state(assigns(socket)))}
   end
 
   def maybe_subscribe(socket) do
