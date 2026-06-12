@@ -3,6 +3,7 @@ defmodule Bonfire.UI.Social.Activity.NoSubjectLive do
 
   prop activity_id, :any, default: nil
   prop object_id, :any, default: nil
+  prop current_user_id, :any, default: nil
   prop peered, :any, default: nil
   # prop profile, :any, default: nil
   # prop character, :any, default: nil
