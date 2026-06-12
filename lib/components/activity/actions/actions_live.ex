@@ -36,6 +36,7 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop my_boost, :any, default: nil
   prop my_like, :any, default: nil
   prop my_bookmark, :any, default: nil
+  prop feed_live_update_many_preload_mode, :atom, default: nil
 
   # @decorate time()
   def update_many(assigns_sockets) do
@@ -57,6 +58,11 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
     # debug(replied)
     e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0)
   end
+
+  def preloaded_actions?(nil),
+    do: LiveHandler.feed_live_update_many_preload_mode() in [:async_actions, :inline]
+
+  def preloaded_actions?(mode), do: mode in [:async_actions, :inline]
 
   def the_activity(activity, object) do
     activity || e(object, :activity, nil) || object
