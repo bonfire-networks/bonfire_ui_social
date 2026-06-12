@@ -788,13 +788,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     # |> debug()
 
-    debug(feed_name, "feed_name")
-    debug(filters_or_custom_query_or_feed_id_or_ids, "filters_or_custom_query_or_feed_id_or_ids")
-
     # ++ feed_filter_assigns(filters_or_custom_query_or_feed_id_or_ids)
     assigns =
       Keyword.merge(feed_default_assigns(feed_name, socket), loading: show_loader)
-      |> debug("start by setting feed_default_assigns + feed_filter_assigns")
 
     # Preserve caller-provided feed_ids when a preset name is also passed,
     # and alias the component under those feed_ids so `send_feed_updates`
@@ -847,7 +843,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     assigns =
       Keyword.merge(feed_default_assigns(feed_name, socket), loading: show_loader)
-      |> debug("start by setting feed_default_assigns")
 
     feed_assigns_maybe_async_load(
       {feed_name, assigns[:feed_ids] || assigns[:feed_id]},
@@ -874,13 +869,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def feed_default_assigns(:none, _socket), do: []
 
   def feed_default_assigns(:my = feed_name, socket) do
-    feed_id =
-      Bonfire.Social.Feeds.my_feed_id(:inbox, socket)
-      |> debug(feed_name)
+    feed_id = Bonfire.Social.Feeds.my_feed_id(:inbox, socket)
 
-    feed_ids =
-      Bonfire.Social.Feeds.my_home_feed_ids(socket)
-      |> debug("feed_ids")
+    feed_ids = Bonfire.Social.Feeds.my_home_feed_ids(socket)
 
     component_id = component_id([feed_id] ++ feed_ids, assigns(socket))
 
@@ -933,9 +924,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     feed_id =
       Bonfire.Social.Feeds.user_named_or_feed_id(
         feed_name,
-        debug(e(assigns(socket), :subject_user, nil) || current_user(socket), "agent")
+        e(assigns(socket), :subject_user, nil) || current_user(socket)
       )
-      |> debug(inspect(feed_name))
 
     Keyword.merge(
       [
@@ -1040,8 +1030,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def feed_default_assigns(other, socket) do
-    debug(other)
-
     [
       feed_component_id: component_id(other, assigns(socket)),
       feed_count: nil
@@ -1089,10 +1077,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        do: feed_component_id
 
   defp component_id(feed_id_or_tuple, _assigns),
-    do:
-      ComponentID.new(Bonfire.UI.Social.FeedLive, feed_id_or_tuple |> feed_id_only())
-      #  "feed_#{feed_id_or_tuple |> feed_id_only() || "unknown"}"
-      |> debug("the_feed_component_id")
+    do: ComponentID.new(Bonfire.UI.Social.FeedLive, feed_id_or_tuple |> feed_id_only())
+
+  #  "feed_#{feed_id_or_tuple |> feed_id_only() || "unknown"}"
 
   # @decorate time()
   defp feed_assigns_maybe_async_load(
@@ -1123,23 +1110,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # FIXME: should not depend on env
     if (user_connected || (current_user_id(opts) && !force_static?(opts))) &&
          Config.env() != :test do
-      debug("socket connected or logged in (and not in test env)")
-
       # Check for a reading position cursor before spawning async
       # (must run in the parent process where Process dict is available)
       {opts, saved_cursor} =
         maybe_apply_reading_position(feed_name_id_or_tuple, opts, reset_stream)
 
       if user_connected do
-        debug("load feed async")
         pid = self()
 
         apply_task(
           :start_async,
           fn ->
             try do
-              debug(feed_name_id_or_tuple, "Query activities asynchronously")
-
               with {entries, new_assigns} when is_list(new_assigns) <-
                      feed_assigns(feed_name_id_or_tuple, opts) do
                 new_assigns =
@@ -1210,15 +1192,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         )
 
         # end of async
-      else
-        debug("socket NOT connected, but logged in, so no need to load for SEO")
       end
 
       # return temporary assigns in the meantime
       assigns
     else
-      debug("socket not connected or not logged in, load feed synchronously")
-
       feed_assigns_non_live(
         feed_id_only(feed_name_id_or_tuple),
         assigns,
@@ -1252,7 +1230,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def feed_assigns_non_live(feed_id, assigns, feed_filters, socket_or_opts) do
     opts = to_options(socket_or_opts)
 
-    case debug(opts ++ [cache: e(opts, :cache_strategy, nil) == :guest_cache])
+    case (opts ++ [cache: e(opts, :cache_strategy, nil) == :guest_cache])
          |> feed_assigns({feed_id, feed_filters}, ...) do
       {:error, e} ->
         {:error, e}
@@ -1416,12 +1394,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   defp feed_assigns({:my, feed_id_or_ids}, opts) when is_list(feed_id_or_ids) do
     if Keyword.keyword?(feed_id_or_ids) do
-      debug("looks like filters passed as a keyword list")
       feed_assigns({:my, Map.new(feed_id_or_ids)}, opts)
     else
       # My Feed
-      debug("A. Starting feed_assigns for my feed")
-
       with {feed_filters, assigns, preloads, postloads} <-
              prepare_filters_assigns_preloads_posloads(
                :my,
@@ -1430,7 +1405,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
            opts = opts ++ [preload: preloads],
            %{} = feed <-
              feed_id_or_ids
-             |> debug("feed_id_or_ids")
              |> FeedLoader.my_feed(opts, ...) do
         merge_feed_assigns(
           feed,
@@ -1500,7 +1474,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
          opts = opts ++ [preload: preloads],
          %{} = feed <-
            feed_id
-           |> debug("feed_id")
            |> FeedLoader.feed(..., feed_filters, opts) do
       merge_feed_assigns(
         feed,
@@ -1592,9 +1565,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
            ),
          opts = opts ++ [preload: preloads],
          %{} = feed <-
-           custom_query
-           |> debug("custom_query")
-           |> FeedLoader.feed(feed_filters, opts) do
+           FeedLoader.feed(custom_query, feed_filters, opts) do
       merge_feed_assigns(
         feed,
         Keyword.merge(assigns,
@@ -1627,7 +1598,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
          opts = opts ++ [preload: preloads],
          %{} = feed <-
            FeedLoader.feed(
-             if(feed_id, do: {feed_name, feed_id}, else: feed_name) |> debug("fnid"),
+             if(feed_id, do: {feed_name, feed_id}, else: feed_name),
              feed_filters,
              opts
            ) do
@@ -1667,7 +1638,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         error(feed_id_or_name, "Unrecognised feed")
 
       feed_filters ->
-        debug(feed_filters, "use feed_filters")
         feed_assigns({feed_id_or_name, feed_filters}, opts)
     end
   end
@@ -1826,12 +1796,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def feed_live_update_many_preload_mode,
     do:
-      (ProcessTree.get(:feed_live_update_many_preload_mode) ||
-         Config.get(:feed_live_update_many_preload_mode, nil,
-           name: l("Feed Update Preload Mode"),
-           description: l("How to preload data when updating feeds (technical setting).")
-         ) || :async_actions)
-      |> debug()
+      ProcessTree.get(:feed_live_update_many_preload_mode) ||
+        Config.get(:feed_live_update_many_preload_mode, nil,
+          name: l("Feed Update Preload Mode"),
+          description: l("How to preload data when updating feeds (technical setting).")
+        ) || :async_actions
 
   defp assigns_to_params(assigns) do
     activity = activity_with_object_from_assigns(assigns)
@@ -1856,8 +1825,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   def activity_with_object_from_assigns(
         %{activity: %{} = activity, object: %{id: _} = object} = _assigns
       ) do
-    debug("Activity with both an activity and object")
-
     Map.put(
       activity,
       :object,
@@ -1866,14 +1833,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def activity_with_object_from_assigns(%{activity: %{} = activity} = assigns) do
-    debug("Activity without :object as assoc")
-
     Activities.object_under_activity(activity, assigns[:object])
   end
 
   def activity_with_object_from_assigns(%{object: %{} = _object} = assigns) do
-    debug("Activity with only an object")
-
     e(assigns[:object], :activity, nil) ||
       %Activity{
         subject:
@@ -1886,7 +1849,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def prepare_filters_assigns_preloads_posloads(filters, opts \\ []) do
     with {:ok, preset, filters} <-
-           FeedLoader.prepare_feed_preset_and_filters(debug(filters, "initial filters"), opts) do
+           FeedLoader.prepare_feed_preset_and_filters(filters, opts) do
       {preload, postload} = activity_preloads_tuple_from_filters(filters, opts)
 
       {filters, preset[:assigns] || [], preload, postload}
@@ -1960,7 +1923,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       _ ->
         [:quote_tags, :feed_by_subject, :feed_postload, :post_content]
     end
-    |> debug("whatpreloads")
   end
 
   # def feed_async_preloads_list(showing_within, thread_mode \\ nil) do
@@ -1973,12 +1935,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     _showing_within =
       list_of_components
       |> uniq_assign(:showing_within)
-      |> debug("preloadwithin")
 
     _thread_mode =
       list_of_components
       |> uniq_assign(:thread_mode)
-      |> debug("thread_mode")
 
     activity_preloads =
       list_of_components
@@ -1991,9 +1951,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     # |> debug("many_activity_postloads")
 
-    postloads =
-      (elem(activity_preloads, 1) || [])
-      |> debug("many_activity_postloads")
+    postloads = elem(activity_preloads, 1) || []
 
     do_preload_extras(
       list_of_components,
@@ -2013,7 +1971,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     activities =
       list_of_components
-      |> debug("list_of_components")
       #  FIXME: optimise by removing if not longer necessary
       |> Enum.map(fn
         %{activity: %{__struct__: _} = activity} ->
@@ -2218,7 +2175,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        )}
     ]
     |> Enums.filter_empty([])
-    |> debug("preload object data in feed")
   end
 
   defp merge_feed_assigns(feed, new_assigns, previous_page_info) do

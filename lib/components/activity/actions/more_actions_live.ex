@@ -36,16 +36,20 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
     # creator = creator_or_subject(assigns.activity, assigns.object) |> debug("crreator")
 
     creator = assigns[:creator]
+    current_user_id = current_user_id(assigns, true)
 
     assigns
     # |> prepare()
     |> assign(
       #   creator: creator,
+      current_user_id: current_user_id,
       creator_id: id(creator),
       # name(assigns.activity, assigns.object, creator)
       creator_name:
-        e(creator, :profile, :name, nil) || e(creator, :character, :username, nil) ||
-          l("the user")
+        if current_user_id do
+          e(creator, :profile, :name, nil) || e(creator, :character, :username, nil) ||
+            l("the user")
+        end
     )
     |> render_sface()
   end

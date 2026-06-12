@@ -27,6 +27,7 @@
     # remote content is stored in HTML, but local content may contain markdown and/or HTML
     skip_markdown: @is_remote,
     #  we want to sanitize rather than escape HTML in local content
-    sanitize: !@is_remote
+    sanitize: !@is_remote,
+    cache: true
   )}
 </div>
