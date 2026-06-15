@@ -4,9 +4,10 @@
       {#match reply_counts}
         {#case Enum.sum(Map.values(reply_counts))}
           {#match total}
-            <Bonfire.UI.Common.WidgetBlockLive widget_title={e(assigns, :widget_title, l("Participants"))}>
+            <Bonfire.UI.Common.WidgetBlockLive widget_title={e(assigns, :widget_title, l("Top participants"))}>
               <ul class="flex flex-col gap-3">
-                {#for participant <- Enum.sort_by(participants, &Map.get(reply_counts, id(&1), 0), :desc)}
+                {#for participant <-
+                    Enum.sort_by(participants, &Map.get(reply_counts, id(&1), 0), :desc) |> Enum.take(5)}
                   {#case Map.get(reply_counts, id(participant), 0)}
                     {#match count}
                       <li>

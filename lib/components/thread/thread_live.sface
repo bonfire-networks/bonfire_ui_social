@@ -33,12 +33,8 @@
   {#if @loading != true || @replies != []}
     <div class="flex bonfire-wrapper flex-col flex-1 pl-1">
       <div data-id="replies" class="flex flex-col flex-1">
-        <Bonfire.UI.Common.LoadPreviousLive
-          live_handler={Bonfire.Social.Threads}
-          page_info={@page_info}
-          target={@myself}
-          context={@thread_id}
-        />
+        {!-- A thread reads top-to-bottom from the root, so there is no "load previous":
+             replies only ever accumulate forward via infinite scroll on the LoadMoreLive below. --}
 
         {#if @loading != true and not @has_replies}
           <StatelessComponent
@@ -156,6 +152,7 @@
         <Bonfire.UI.Common.LoadMoreLive
           live_handler={Bonfire.Social.Threads}
           page_info={@page_info}
+          infinite_scroll
           target={@myself}
           context={@thread_id}
         >

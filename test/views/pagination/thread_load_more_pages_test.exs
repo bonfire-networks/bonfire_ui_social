@@ -170,20 +170,19 @@ defmodule Bonfire.UI.Social.Threads.LoadMoreTest do
       # browse as guest
       conn = conn()
 
-      # Visit the discussion page
+      # Visit the discussion page. No-JS guests get a forward-only "Next page" link
+      # (there is no "Previous page" in a thread).
       session =
         visit(conn, "/discussion/#{op.id}")
         |> assert_has("[data-id='comment']", count: limit)
         |> assert_has("[data-id=load_more]")
         |> refute_has("[data-role=loading]")
+        |> refute_has("a[data-id=previous_page]")
         # |> PhoenixTest.open_browser()
         |> click_link("a[data-id=next_page]", "Next page")
         |> refute_has("[data-role=loading]")
         # |> PhoenixTest.open_browser()
         |> assert_has("[data-id='comment']", count: 2)
-        |> click_link("a[data-id=previous_page]", "Previous page")
-        # |> PhoenixTest.open_browser()
-        |> assert_has("[data-id='comment']", count: limit)
 
       Process.put([:bonfire_ui_social, Bonfire.UI.Social.ThreadLive, :thread_mode], :flat)
 
@@ -193,12 +192,9 @@ defmodule Bonfire.UI.Social.Threads.LoadMoreTest do
         # |> PhoenixTest.open_browser()
         |> assert_has("[data-role='comment-flat']", count: limit)
         |> assert_has("[data-id=load_more]")
+        |> refute_has("a[data-id=previous_page]")
         |> click_link("a[data-id=next_page]", "Next page")
         |> assert_has("[data-role='comment-flat']", count: 2)
-        # |> PhoenixTest.open_browser()
-        |> click_link("a[data-id=previous_page]", "Previous page")
-        # |> PhoenixTest.open_browser()
-        |> assert_has("[data-role='comment-flat']", count: limit)
     end
   end
 
@@ -335,7 +331,7 @@ defmodule Bonfire.UI.Social.Threads.LoadMoreTest do
     end
   end
 
-  describe "Load previous (LoadPreviousLive) at top of thread" do
+  describe "Threads never show a 'load previous' control (infinite scroll, forward-only)" do
     setup do
       account = fake_account!()
       alice = fake_user!(account)
@@ -371,7 +367,20 @@ defmodule Bonfire.UI.Social.Threads.LoadMoreTest do
       {:ok, conn: conn, op: op, total_posts: total_posts}
     end
 
-    test "is hidden on a fresh thread visit", %{conn: conn, op: op, total_posts: total_posts} do
+    test "the load more control opts into infinite scrolling (LoadMore hook)",
+         %{conn: conn, op: op, total_posts: total_posts} do
+      limit = total_posts - 2
+      Process.put([:bonfire, :default_pagination_limit], limit)
+      Process.put([:bonfire, :pagination_hard_max_limit], limit)
+
+      conn
+      |> visit("/discussion/#{op.id}")
+      # the button carries the LoadMore JS hook so it auto-loads when scrolled into view
+      |> assert_has("button[data-id=load_more][phx-hook=LoadMore]")
+    end
+
+    test "no 'load previous' control on a fresh thread visit",
+         %{conn: conn, op: op, total_posts: total_posts} do
       limit = total_posts - 2
       Process.put([:bonfire, :default_pagination_limit], limit)
       Process.put([:bonfire, :pagination_hard_max_limit], limit)
@@ -379,30 +388,26 @@ defmodule Bonfire.UI.Social.Threads.LoadMoreTest do
       conn
       |> visit("/discussion/#{op.id}")
       |> assert_has("button[data-id=load_more]")
+      # `before` cursor = backwards pagination, which must never be rendered in a thread
       |> refute_has("[phx-value-before]")
+      |> refute_has("a[data-id=previous_page]")
     end
 
-    test "appears after a forward Load more click; clicking it does not duplicate or lose replies",
+    test "no 'load previous' control appears even after a forward Load more click (regression)",
          %{conn: conn, op: op, total_posts: total_posts} do
       limit = total_posts - 2
       Process.put([:bonfire, :default_pagination_limit], limit)
       Process.put([:bonfire, :pagination_hard_max_limit], limit)
 
-      session =
-        conn
-        |> visit("/discussion/#{op.id}")
-        |> click_button("button[data-id=load_more]", "Load more")
-        |> assert_has("[phx-update=stream] [data-id=comment]", count: total_posts)
-        |> assert_has("[phx-value-before]")
-
-      session
-      |> unwrap(fn view ->
-        view
-        |> Phoenix.LiveViewTest.element("[phx-value-before]")
-        |> Phoenix.LiveViewTest.render_click()
-      end)
+      conn
+      |> visit("/discussion/#{op.id}")
+      |> assert_has("[phx-update=stream] [data-id=comment]", count: limit)
+      |> refute_has("[phx-value-before]")
+      |> click_button("button[data-id=load_more]", "Load more")
       |> assert_has("[phx-update=stream] [data-id=comment]", count: total_posts)
-      |> refute_has("[data-role=threaded_replies_assigned] [data-id=comment]")
+      # this is the actual bug: loading more forward used to reveal a "load previous" button
+      |> refute_has("[phx-value-before]")
+      |> refute_has("a[data-id=previous_page]")
     end
   end
 end
