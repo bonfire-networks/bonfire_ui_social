@@ -10,6 +10,8 @@ defmodule Bonfire.UI.Social.Routes do
         live("/feed", FeedsLive, as: :feed)
         live("/feed/local", FeedsLive, :local, as: :feed)
 
+        live("/events", EventsLive, as: :events)
+
         # Atom/RSS feeds with optional param (username, tag, etc.)
         get "/feed/:feed_name/:param/feed.:format", FeedController, :feed
         get "/feed/:feed_name/feed.:format", FeedController, :feed

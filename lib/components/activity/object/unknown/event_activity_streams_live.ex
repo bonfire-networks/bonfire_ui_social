@@ -5,6 +5,8 @@ defmodule Bonfire.UI.Social.Activity.EventActivityStreamsLive do
 
   prop json, :any, default: nil
   prop object_type_readable, :any, default: nil
+  prop showing_within, :any, default: nil
+  prop viewing_main_object, :boolean, default: nil
 
   defp object_field(json, field) do
     e(json, "object", field, nil) || e(json, field, nil)
@@ -44,7 +46,7 @@ defmodule Bonfire.UI.Social.Activity.EventActivityStreamsLive do
   """
   def event_time(iso) when is_binary(iso) do
     with {:ok, datetime, offset} <- DateTime.from_iso8601(iso) do
-      %{iso: iso, local: DateTime.add(datetime, -offset, :second), offset: offset}
+      %{iso: iso, local: DateTime.add(datetime, offset, :second), offset: offset}
     else
       _ -> nil
     end
