@@ -32,6 +32,8 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
   | `data-creator` | script default | User ID to attribute thread creation to. |
   | `data-auth-mode` | `local` | How logged-out visitors authenticate: `local` shows Login/Register for this instance; `remote` shows a single button to the remote-interaction page so they can reply from any fediverse server (that page also offers local log in / sign up). |
   | `data-sort-by` | thread default | Initial comment sort: `latest_reply`, `reply_count`, `boost_count`, `like_count`, `popularity_score`, `newest`. |
+  | `data-sort-order` | per sort type | Sort direction for `data-sort-by`: `asc` or `desc`. |
+  | `data-mode` | instance/user setting | Initial thread display mode: `flat` or `nested`. |
   | `data-theme` | — | DaisyUI theme to apply inside the iframe (e.g. `dark`, `light`). |
   | `data-token-max-age` | `720` (hours ≈ 30 days) | JS-only: hours before the stored auth token is treated as stale and re-auth is prompted. The server still enforces a hard cap of 1 year. |
 
