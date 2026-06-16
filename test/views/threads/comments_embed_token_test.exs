@@ -131,5 +131,26 @@ defmodule Bonfire.UI.Social.CommentsEmbedTokenTest do
       assert html =~ ~s(src='/assets/bonfire_basic.js)
       assert html =~ ~s(data-live-socket="false")
     end
+
+    test "with a valid token via the controller GET: authenticates, no guest Login bar",
+         %{user: user, post: post} do
+      token = LoadCurrentUserFromEmbedToken.sign(@endpoint, user.id)
+
+      html =
+        conn()
+        |> get("/comments/embed/#{post.id}?bonfire_embed_token=#{token}")
+        |> html_response(200)
+
+      refute html =~ "inline_composer_login_"
+    end
+
+    test "without a token via the controller GET: renders the guest Login bar", %{post: post} do
+      html =
+        conn()
+        |> get("/comments/embed/#{post.id}")
+        |> html_response(200)
+
+      assert html =~ "inline_composer_login_"
+    end
   end
 end

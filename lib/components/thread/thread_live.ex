@@ -84,7 +84,9 @@ defmodule Bonfire.UI.Social.ThreadLive do
     {:ok,
      socket
      |> assign(Map.drop(assigns, [:insert_stream]))
-     |> assign(replies: [])
+     # Clear both plain-assign lists so they don't re-render alongside the stream
+     # (the manual-assign and stream blocks in thread_live.sface aren't exclusive).
+     |> assign(replies: [], threaded_replies: [])
      |> mark_has_replies(insert_stream_count(entries))
      |> LiveHandler.insert_comments(entries, reset: assigns[:reset_stream])}
   end
@@ -162,25 +164,38 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
         insert = {:threaded_replies, [{new_reply, []}], 0}
 
-        if is_nil(reply_to_id) or reply_to_id == thread_id do
-          debug("top level reply")
+        cond do
+          reply_to_id == thread_id ->
+            debug("top level reply")
 
-          {:ok,
-           socket
-           |> LiveHandler.insert_comments(insert)
-           |> bump_reply_count()}
-        else
-          debug(reply_to_id, "send to branch")
+            {:ok,
+             socket
+             |> LiveHandler.insert_comments(insert)
+             |> bump_reply_count()}
 
-          LiveHandler.send_thread_updates(
-            self(),
-            LiveHandler.component_id(reply_to_id, "nested"),
-            [insert_stream: insert],
-            ThreadBranchLive,
-            current_user: current_user(socket)
-          )
+          is_binary(reply_to_id) ->
+            debug(reply_to_id, "send to branch")
 
-          {:ok, bump_reply_count(socket)}
+            LiveHandler.send_thread_updates(
+              self(),
+              LiveHandler.component_id(reply_to_id, "nested"),
+              [insert_stream: insert],
+              ThreadBranchLive,
+              current_user: current_user(socket)
+            )
+
+            {:ok, bump_reply_count(socket)}
+
+          true ->
+            # Unknown reply target (no preloaded reply_to_id): reload the thread
+            # (resetting the stream) so it lands at the right nesting level once,
+            # rather than guessing top-level and duplicating it on the next load.
+            debug("unknown reply_to_id — reloading thread to place reply correctly")
+
+            {:ok,
+             socket
+             |> bump_reply_count()
+             |> LiveHandler.load_thread_maybe_async(false, true)}
         end
 
         # FIXME: we should inject the reply rather than reloading

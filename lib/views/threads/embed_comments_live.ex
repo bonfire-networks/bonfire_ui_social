@@ -118,9 +118,7 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
 
   # def handle_params(params, url, socket), do: load_params(params, url, socket)
 
-  def handle_info({:set_reply_to, reply_to_id}, socket) do
-    {:noreply, assign(socket, reply_to_id: reply_to_id)}
-  end
+  # reply_to_id is set via the generic `{:assign, ...}` handler (send_self), not a dedicated message.
 
   def handle_event("reset_reply_to", _params, socket) do
     {:noreply, assign(socket, reply_to_id: nil)}

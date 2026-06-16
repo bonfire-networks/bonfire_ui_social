@@ -19,6 +19,9 @@
       />
     </div>
 
+    {!-- Action slot for report/block on the root object --}
+    <div id={"action-slot-#{@thread_id}"} class="relative z-50" />
+
     <StatefulComponent
       module={maybe_component(Bonfire.UI.Social.ThreadLive)}
       :if={@thread_id}

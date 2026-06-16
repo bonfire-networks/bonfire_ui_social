@@ -123,26 +123,35 @@
                       activity_preloads={@activity_preloads}
                     />
                   </div>
+                  {!-- Embed portal teleport slots (flat-mode parity with ThreadBranchLive) --}
+                  <div :if={@showing_within == :thread_embed} id={"reply-slot-#{id(reply)}"} class="px-4 relative z-50" />
+                  <div :if={@showing_within == :thread_embed} id={"action-slot-#{id(reply)}"} class="px-4 relative z-50" />
                 {/for}
               </div>
 
               {!-- flat mode stream --}
               <div class="flex flex-col gap-0" id={"stream_#{@id}"} phx-update="stream">
                 {#for {entry_id, reply} <- @streams.replies}
-                  <div id={entry_id} data-role="comment-flat" class="reply flex relative w-full mx-auto">
-                    <CommentLive
-                      comment={reply}
-                      thread_id={@thread_id}
-                      highlight_reply_id={@highlight_reply_id}
-                      feed_id={@feed_id || @thread_id}
-                      current_url={@current_url}
-                      thread_object={@object}
-                      thread_mode={debug(@thread_mode, "thread_modessss")}
-                      showing_within={@showing_within || :thread}
-                      hide_actions={hide_actions}
-                      activity_inception={@activity_inception}
-                      activity_preloads={@activity_preloads}
-                    />
+                  {!-- Block entry with the flex on an inner wrapper, so the embed
+                       teleport slots stack BELOW the comment (not to its right). --}
+                  <div id={entry_id} data-role="comment-flat">
+                    <div class="reply flex relative w-full mx-auto">
+                      <CommentLive
+                        comment={reply}
+                        thread_id={@thread_id}
+                        highlight_reply_id={@highlight_reply_id}
+                        feed_id={@feed_id || @thread_id}
+                        current_url={@current_url}
+                        thread_object={@object}
+                        thread_mode={@thread_mode}
+                        showing_within={@showing_within || :thread}
+                        hide_actions={hide_actions}
+                        activity_inception={@activity_inception}
+                        activity_preloads={@activity_preloads}
+                      />
+                    </div>
+                    <div :if={@showing_within == :thread_embed} id={"reply-slot-#{id(reply)}"} class="px-4 relative z-50" />
+                    <div :if={@showing_within == :thread_embed} id={"action-slot-#{id(reply)}"} class="px-4 relative z-50" />
                   </div>
                 {/for}
               </div>

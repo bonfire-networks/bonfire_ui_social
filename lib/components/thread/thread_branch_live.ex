@@ -33,12 +33,19 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   def update(%{insert_stream: {:threaded_replies, entries, at}} = assigns, socket) do
     debug("branch is being poured into")
 
+    # No stream here (plain `assign`/`{#for}`), so dedup by id ourselves —
+    # incoming wins, matching stream_insert — since the same reply can be
+    # delivered twice (live_push hits both the thread_id and reply_to_id topics).
+    existing = e(assigns(socket), :threaded_replies, [])
+    merged = Enum.uniq_by(entries ++ existing, fn {entry, _children} -> id(entry) end)
+    added = max(length(merged) - length(existing), 0)
+
     socket =
       socket
       |> assign(Map.drop(assigns, [:insert_stream]))
       |> assign(
         :threaded_replies_count,
-        e(assigns(socket), :threaded_replies_count, 0) + length(entries || [])
+        e(assigns(socket), :threaded_replies_count, 0) + added
       )
 
     {
@@ -49,7 +56,7 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
       # and would otherwise reset the visual indentation to defaults.
       |> assign_show_thread_lines(assigns(socket))
       |> LiveHandler.insert_comments(
-        {:threaded_replies, entries ++ e(assigns(socket), :threaded_replies, []), at}
+        {:threaded_replies, merged, at}
       )
     }
   end
