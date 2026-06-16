@@ -55,9 +55,7 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
       # incoming `assigns` map lacks `thread_level`/`thread_mode`/`showing_within`
       # and would otherwise reset the visual indentation to defaults.
       |> assign_show_thread_lines(assigns(socket))
-      |> LiveHandler.insert_comments(
-        {:threaded_replies, merged, at}
-      )
+      |> LiveHandler.insert_comments({:threaded_replies, merged, at})
     }
   end
 

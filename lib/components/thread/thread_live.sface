@@ -124,8 +124,16 @@
                     />
                   </div>
                   {!-- Embed portal teleport slots (flat-mode parity with ThreadBranchLive) --}
-                  <div :if={@showing_within == :thread_embed} id={"reply-slot-#{id(reply)}"} class="px-4 relative z-50" />
-                  <div :if={@showing_within == :thread_embed} id={"action-slot-#{id(reply)}"} class="px-4 relative z-50" />
+                  <div
+                    :if={@showing_within == :thread_embed}
+                    id={"reply-slot-#{id(reply)}"}
+                    class="px-4 relative z-50"
+                  />
+                  <div
+                    :if={@showing_within == :thread_embed}
+                    id={"action-slot-#{id(reply)}"}
+                    class="px-4 relative z-50"
+                  />
                 {/for}
               </div>
 
@@ -150,8 +158,16 @@
                         activity_preloads={@activity_preloads}
                       />
                     </div>
-                    <div :if={@showing_within == :thread_embed} id={"reply-slot-#{id(reply)}"} class="px-4 relative z-50" />
-                    <div :if={@showing_within == :thread_embed} id={"action-slot-#{id(reply)}"} class="px-4 relative z-50" />
+                    <div
+                      :if={@showing_within == :thread_embed}
+                      id={"reply-slot-#{id(reply)}"}
+                      class="px-4 relative z-50"
+                    />
+                    <div
+                      :if={@showing_within == :thread_embed}
+                      id={"action-slot-#{id(reply)}"}
+                      class="px-4 relative z-50"
+                    />
                   </div>
                 {/for}
               </div>

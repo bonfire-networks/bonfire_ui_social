@@ -1,5 +1,4 @@
 defmodule Bonfire.UI.Social.CommentsEmbedTeleportTest do
-
   use Bonfire.UI.Social.ConnCase, async: false
   @moduletag :ui
 
