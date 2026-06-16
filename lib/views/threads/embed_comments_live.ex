@@ -54,16 +54,10 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
   def mount(raw_params, _session, socket) do
     socket = Phoenix.Component.assign_new(socket, :current_params, fn -> nil end)
     params = socket.assigns[:current_params] || (is_map(raw_params) && raw_params) || %{}
-    embed_theme = e(params, "theme", nil)
 
     {:ok,
      socket
-     |> Bonfire.UI.Common.ThemeHelper.push_theme(embed_theme)
-     |> assign_new(:no_header, fn -> true end)
-     |> assign_new(:without_sidebar, fn -> true end)
-     |> assign_new(:without_secondary_widgets, fn -> true end)
-     |> assign_new(:sidebar_widgets, fn -> [] end)
-     |> assign_new(:force_static, fn -> false end)
+     |> Bonfire.UI.Common.ThemeHelper.setup_embed(e(params, "theme", nil))
      |> assign(
        page_title: l("Comments"),
        page: "comments",
@@ -78,7 +72,6 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
        inline_action_permalink: nil,
        no_mobile_header: true,
        hide_thread_stats: true,
-       embed_theme: embed_theme,
        # "local" (default: Login/Register for this instance) or "remote"
        # (a single button to the remote-interaction page, so guests can reply
        # from any fediverse server). Set via the `data-auth-mode` embed attr.
