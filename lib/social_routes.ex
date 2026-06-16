@@ -34,7 +34,7 @@ defmodule Bonfire.UI.Social.Routes do
       # Serves cached static HTML to guests (CDN-cacheable) and full interactive
       # LiveView to signed-in users. Allows cross-origin iframe embedding.
       pipeline :cacheable_comments_public do
-        plug(Bonfire.UI.Common.CacheControlPlug, purgeable: true)
+        plug(Bonfire.UI.Common.CacheControlPlug, purgeable: true, cache_query_string: true)
       end
 
       scope "/", Bonfire.UI.Social do
