@@ -5,7 +5,7 @@
     aria-label={l("Thread stats and actions")}
   >
     {!-- Left: thread stats --}
-    <!-- <div class="flex items-center gap-3" role="group" aria-label={l("Thread stats")}>
+    <div class="flex items-center gap-3" role="group" aria-label={l("Thread stats")}>
       <div class="flex items-center gap-1.5" aria-label={l("Replies")} title={l("Replies")}>
         <#Icon iconify="ph:chat-circle-duotone" class="size-4 text-base-content/70" aria-hidden="true" />
         <span class="sr-only">{l("Replies:")}</span>
@@ -15,25 +15,7 @@
           <span class="text-sm text-base-content/60">{l("last")} {DatesTimes.date_from_now(@last_reply_id, format: :narrow)}</span>
         {/if}
       </div>
-
-      {!-- Boosts: only when > 0, not in messages, and extension enabled --}
-      <div
-        :if={@showing_within != :messages and
-          extension_enabled?(:bonfire_ui_reactions, @__context__) and
-          (@thread_boost_count || 0) > 0}
-        class="flex items-center gap-1.5"
-        aria-label={l("Boosts")}
-        title={l("Boosts")}
-      >
-        <#Icon
-          iconify="ph:arrows-counter-clockwise-duotone"
-          class="size-4 text-base-content/70"
-          aria-hidden="true"
-        />
-        <span class="sr-only">{l("Boosts:")}</span>
-        <span class="text-sm tabular-nums font-semibold text-base-content">{@thread_boost_count}</span>
-      </div>
-    </div> -->
+    </div>
 
     {!-- Right: thread controls + remote actions, unified into one segmented toolbar --}
     <div

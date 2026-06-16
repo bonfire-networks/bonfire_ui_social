@@ -376,7 +376,8 @@ defmodule Bonfire.UI.Social.Threads.LoadMoreTest do
       conn
       |> visit("/discussion/#{op.id}")
       # the button carries the LoadMore JS hook so it auto-loads when scrolled into view
-      |> assert_has("button[data-id=load_more][phx-hook=LoadMore]")
+      # (Surface's `:hook` renders the namespaced `phx-hook="Bonfire.UI.Common.LoadMoreLive#LoadMore"`)
+      |> assert_has(~s|button[data-id=load_more][phx-hook*="LoadMore"]|)
     end
 
     test "no 'load previous' control on a fresh thread visit",
