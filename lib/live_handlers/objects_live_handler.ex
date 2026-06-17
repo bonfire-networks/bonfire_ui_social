@@ -246,6 +246,10 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
     {object, activity} = Map.pop(activity, :object)
 
+    # root object's own `:peered` for more-actions locality (esp. Media roots, not covered by
+    # the activity's `:with_object_peered`); no-op when already loaded
+    object = repo().maybe_preload(object, :peered)
+
     init_object_activity_assigns(object, activity, socket)
   end
 
@@ -341,7 +345,9 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       Bonfire.Social.Boosts.list_of(object,
         current_user: current_user,
         paginate?: true,
-        limit: limit
+        limit: limit,
+        # JOIN booster's character.peered in the list query (facepile locality), no extra query
+        preload: :subject_character_peered
       )
       |> e(:edges, [])
       |> Enum.map(&e(&1, :edge, :subject, nil))

@@ -4,7 +4,7 @@ TODO: use preloaded boundaries for can? when available
 <OpenModalLive
   :if={@skip_permission_check == true or can_delete?(@__context__, @object, @object_boundary)}
   id={deterministic_dom_id("delete_modal", id(@object), @object_type_readable, @parent_id)}
-  title_text={l("Delete this") <> " " <> e(@object_type_readable, l("object"))}
+  title_text={l("Delete this %{object_or_type}", object_or_type: e(@object_type_readable, l("object")))}
   form_opts={@form_opts}
 >
   <div class="prose-sm prose mt-3">
@@ -32,7 +32,7 @@ TODO: use preloaded boundaries for can? when available
   <:open_btn>
     <div role="delete" title={l("Delete this object")} class={@open_btn_class}>
       <span :if={!@hide_text} class="text-sm font-medium truncate ellipsis text-left flex-1">
-        {l("Delete")} {e(@object_type_readable, l("object"))}
+        {l("Delete %{object_or_type}", object_or_type: e(@object_type_readable, l("object")))}
       </span>
       <#Icon :if={!@hide_icon} iconify="ph:trash-duotone" class={e(@icon_class, "w-5 h-5 shrink-0")} />
     </div>
@@ -46,7 +46,7 @@ TODO: use preloaded boundaries for can? when available
       phx_values={%{id: id(@object), redirect_after: @redirect_after}}
       loading_text={l("Deleting...")}
     >
-      {l("Delete")} {e(@object_type_readable, l("object"))}
+      {l("Delete %{object_or_type}", object_or_type: e(@object_type_readable, l("object")))}
     </.button>
   </:action_btns>
 </OpenModalLive>

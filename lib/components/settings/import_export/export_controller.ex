@@ -557,7 +557,8 @@ defmodule Bonfire.UI.Social.ExportController do
       Bonfire.Boundaries.Blocks.user_block_circles(current_user, block_type)
       |> List.first()
     end
-    |> repo().maybe_preload(encircles: [subject: [:character]])
+    # `character.peered` so `display_username(_, true)` can classify the blocked actor's locality
+    |> repo().maybe_preload(encircles: [subject: [character: [:peered]]])
     |> e(:encircles, [])
     |> prepare_rows(type, ...)
     # |> IO.inspect(label: "bloq")
@@ -573,6 +574,7 @@ defmodule Bonfire.UI.Social.ExportController do
 
     all_memberships =
       Enum.flat_map(circles, fn circle ->
+        # list_members/2 already preloads subject.character.peered (for display_username locality)
         members = Bonfire.Boundaries.Circles.list_members(circle, paginate: false)
 
         Enum.map(members, fn member ->
