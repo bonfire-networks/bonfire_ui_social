@@ -1084,6 +1084,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp maybe_put_new(list, _key, nil), do: list
   defp maybe_put_new(list, key, value), do: Keyword.put_new(list, key, value)
 
+  defp maybe_surface_enable_marker(opts, assigns) when is_list(assigns) do
+    if Keyword.has_key?(assigns, :enable_marker),
+      do: Keyword.put(opts, :enable_marker, assigns[:enable_marker]),
+      else: opts
+  end
+
+  defp maybe_surface_enable_marker(opts, _assigns), do: opts
+
   defp component_id(_feed_id_or_tuple, %{feed_component_id: feed_component_id} = _assigns)
        when not is_nil(feed_component_id),
        do: feed_component_id
@@ -1115,6 +1123,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        ) do
     opts =
       to_options(socket)
+      |> maybe_surface_enable_marker(assigns)
 
     # |> debug("ooopts")
     user_connected = user_socket_connected?(socket)
@@ -1316,6 +1325,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     cond do
       # cheap guards first: pagination/reset events shouldn't pay any settings lookup
       reset_stream == true or opts[:paginate] != nil ->
+        {opts, nil}
+
+      # presets can opt out of resuming entirely (e.g. notifications, profile feeds
+      # always start at the top) - same flag that gates saving in `reading_position_update_allowed?`
+      opts[:enable_marker] == false ->
         {opts, nil}
 
       is_atom(feed_atom) and not is_nil(feed_atom) ->
