@@ -1,0 +1,29 @@
+<div data-role="participants_list_wrapper">
+  {#case e(assigns, :participants, [])}
+    {#match participants when is_list(participants) and participants != []}
+      <ul class={@list_class} data-role="participants_list">
+        {#for participant <- if(@expanded, do: participants, else: Enum.take(participants, @limit))}
+          <li class={@item_class}>
+            <#slot {@default, participant: participant} />
+          </li>
+        {/for}
+      </ul>
+
+      {#if length(participants) > @limit}
+        <button
+          type="button"
+          phx-click="toggle_participants"
+          phx-target={@myself}
+          data-role="toggle_participants"
+          class="mt-1 text-sm text-base-content/60 hover:underline"
+        >
+          {#if @expanded}
+            {l("Show less")}
+          {#else}
+            {l("Show %{count} more", count: length(participants) - @limit)}
+          {/if}
+        </button>
+      {/if}
+    {#match _}
+  {/case}
+</div>

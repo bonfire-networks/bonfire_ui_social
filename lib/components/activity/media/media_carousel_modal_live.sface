@@ -100,9 +100,12 @@
                 class="w-full h-full flex items-center justify-center cursor-default"
               >
                 <div class="carousel-media-container relative flex items-center justify-center">
-                  {!-- Sensitive content overlay --}
-                  {#if @cw || @showing_within == :flags ||
-                      Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
+                  {!-- Sensitive content overlay — DISABLED (#2006): redundant, since the
+                    fullscreen viewer can only be opened after dismissing the thumbnail's
+                    overlay. Re-enable by removing the `false &&` guard below. --}
+                  {#if false &&
+                      (@cw || @showing_within == :flags ||
+                         Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__))}
                     <div
                       x-show={"currentIndex === #{counter}"}
                       id={deterministic_dom_id("carousel-sensitive-overlay", id(m), "media", @parent_id)}
@@ -205,7 +208,13 @@
                   <p :if={label not in [nil, ""]} class="text-white/90 text-sm leading-relaxed">{rich(label)}</p>
                   {#case Bonfire.Files.Media.media_alt(m.metadata, false)}
                     {#match media_alt}
-                      <p :if={media_alt not in [nil, ""]} class="text-white/75 text-xs mt-1">
+                      {!-- only show the alt text when it isn't a duplicate of the label above (#2005) --}
+                      <p
+                        :if={media_alt not in [nil, ""] and
+                          media_alt !=
+                            label}
+                        class="text-white/75 text-xs mt-1"
+                      >
                         {media_alt}
                       </p>
                   {/case}

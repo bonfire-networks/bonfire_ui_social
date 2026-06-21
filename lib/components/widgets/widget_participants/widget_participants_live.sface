@@ -5,35 +5,37 @@
         {#case Enum.sum(Map.values(reply_counts))}
           {#match total}
             <Bonfire.UI.Common.WidgetBlockLive widget_title={e(assigns, :widget_title, l("Top participants"))}>
-              <ul class="flex flex-col gap-3">
-                {#for participant <-
-                    Enum.sort_by(participants, &Map.get(reply_counts, id(&1), 0), :desc) |> Enum.take(5)}
-                  {#case Map.get(reply_counts, id(participant), 0)}
-                    {#match count}
-                      <li>
-                        <StatelessComponent
-                          module={maybe_component(Bonfire.UI.Me.ProfileItemLive, @__context__)}
-                          show_controls={[]}
-                          parent_id="widget_participants"
-                          character={e(participant, :character, nil)}
-                          profile={e(participant, :profile, nil)}
-                          avatar_class="w-9 h-9 rounded-full"
-                        >
-                          <div
-                            :if={count > 0 and total > 0}
-                            class="shrink-0 w-10 h-2 rounded-full bg-base-content/10 overflow-hidden"
-                            title={"#{count} " <> l("replies")}
-                          >
-                            <div
-                              class="h-full rounded-full bg-gradient-to-r from-primary/60 to-primary transition-all duration-300"
-                              style={"width: #{round(count / total * 100)}%"}
-                            />
-                          </div>
-                        </StatelessComponent>
-                      </li>
-                  {/case}
-                {/for}
-              </ul>
+              {!-- top 5 by reply count, with a reveal-the-rest control (#1988) --}
+              <Bonfire.UI.Social.ParticipantsListLive
+                id="widget_participants_list"
+                participants={Enum.sort_by(participants, &Map.get(reply_counts, id(&1), 0), :desc)}
+                limit={5}
+                list_class="flex flex-col gap-3"
+                :let={participant: participant}
+              >
+                {#case Map.get(reply_counts, id(participant), 0)}
+                  {#match count}
+                    <StatelessComponent
+                      module={maybe_component(Bonfire.UI.Me.ProfileItemLive, @__context__)}
+                      show_controls={[]}
+                      parent_id="widget_participants"
+                      character={e(participant, :character, nil)}
+                      profile={e(participant, :profile, nil)}
+                      avatar_class="w-9 h-9 rounded-full"
+                    >
+                      <div
+                        :if={count > 0 and total > 0}
+                        class="shrink-0 w-10 h-2 rounded-full bg-base-content/10 overflow-hidden"
+                        title={"#{count} " <> l("replies")}
+                      >
+                        <div
+                          class="h-full rounded-full bg-gradient-to-r from-primary/60 to-primary transition-all duration-300"
+                          style={"width: #{round(count / total * 100)}%"}
+                        />
+                      </div>
+                    </StatelessComponent>
+                {/case}
+              </Bonfire.UI.Social.ParticipantsListLive>
             </Bonfire.UI.Common.WidgetBlockLive>
         {/case}
     {/case}
