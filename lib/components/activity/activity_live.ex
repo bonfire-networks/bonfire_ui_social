@@ -399,7 +399,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     object_type =
       cond do
-        !reply_to and Activities.is_article?(object_type, object, false) -> :article
+        # Article is a first-class type now, so `Types.object_type/1` already returns it —
+        # just normalise to the `:article` atom the activity pipeline keys off of below.
+        !reply_to and object_type == Bonfire.Articles.Article -> :article
         true -> object_type
       end
       |> debug("object_type!!")
@@ -1057,23 +1059,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   is_remote={@is_remote}
                   hide_actions={@hide_actions}
                 />
-              {#match Bonfire.UI.Social.Activity.ArticleLive}
-                <Bonfire.UI.Social.Activity.ArticleLive
-                  :if={@hide_activity != "article"}
-                  __context__={@__context__}
-                  showing_within={@showing_within}
-                  parent_id={@activity_component_id}
-                  activity_inception={@activity_inception}
-                  activity_component_id={maybe_get(component_assigns, :activity_component_id, @activity_component_id)}
-                  activity={maybe_get(component_assigns, :activity, @activity)}
-                  object={maybe_get(component_assigns, :object, @object)}
-                  viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
-                  cw={@cw}
-                  thread_title={@thread_title}
-                  is_remote={@is_remote}
-                  hide_actions={@hide_actions}
-                  primary_image={maybe_get(component_assigns, :primary_image, nil)}
-                />
               {#match _
                 when component in [
                        Bonfire.UI.Social.Activity.UnknownLive,
@@ -1227,6 +1212,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   is_remote={maybe_get(component_assigns, :is_remote, @is_remote)}
                   hide_actions={maybe_get(component_assigns, :hide_actions, @hide_actions)}
                   is_thread_start={maybe_get(component_assigns, :is_thread_start, false)}
+                  parent_id={@activity_component_id}
+                  cw={@cw}
+                  thread_title={maybe_get(component_assigns, :thread_title, @thread_title)}
+                  subject={maybe_get(component_assigns, :subject, @subject_user)}
+                  primary_image={maybe_get(component_assigns, :primary_image, nil)}
                 />
             {/case}
           {/for}
@@ -2199,8 +2189,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
     []
   end
 
-  def component_for_object_type(:article, _, assigns) do
-    [{Bonfire.UI.Social.Activity.ArticleLive, assigns}]
+  # Articles are rendered by a component registered (by bonfire_articles) under
+  # `config :bonfire, :ui, object_preview: [{:article, …}]`, resolved dynamically so
+  # there's no compile-time dependency on that extension. `assigns` carries
+  # `primary_image` (see `component_object/3` call site).
+  def component_for_object_type(:article, object, assigns) do
+    component_def_for(:object_preview, :article, object, fn _, _ ->
+      [Bonfire.UI.Social.Activity.NoteLive]
+    end)
+    |> Enum.map(fn
+      {mod, _a} -> {mod, assigns}
+      mod -> {mod, assigns}
+    end)
   end
 
   def component_for_object_type(

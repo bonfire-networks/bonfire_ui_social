@@ -12,6 +12,14 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
       Bonfire.Data.Social.Message
     ]
 
+  def smart_input_icon(:message), do: "ph:chat-circle-text-duotone"
+  def smart_input_icon(:broadcast), do: "ph:megaphone-duotone"
+  def smart_input_icon(_), do: "ph:note-pencil-duotone"
+
+  def smart_input_label(:message), do: l("Message")
+  def smart_input_label(:broadcast), do: l("Broadcast")
+  def smart_input_label(_), do: l("Note")
+
   prop reply_to_id, :any, default: nil
   prop context_id, :string, default: nil
   # prop create_object_type, :any, default: nil
