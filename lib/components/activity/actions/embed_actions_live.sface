@@ -17,7 +17,8 @@
       object_boundary={@object_boundary}
       showing_within={@showing_within}
       icon="ph:arrow-up-duotone"
-      icon_pressed="ph:arrow-up-duotone"
+      icon_pressed="ph:arrow-up-fill"
+      no_data_tip
       like_count={e(
         Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object),
         :like_count,
