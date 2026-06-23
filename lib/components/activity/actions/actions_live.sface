@@ -102,6 +102,7 @@ data-show-plain-actions={!Settings.get(
           object_id={id(@object)}
           object_type={@object_type}
           object_boundary={@object_boundary}
+          creator={@creator}
           permalink={@permalink}
           thread_mode={@thread_mode}
           reply_count={if @showing_within == :thread and @thread_mode != :flat,

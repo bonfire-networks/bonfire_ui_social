@@ -1,6 +1,8 @@
 <div data-role="reply_action" class="relative z-dropdown flex items-center">
   {#case @object_type == Bonfire.Data.Social.Message or
-      Bonfire.Boundaries.can_or_unloaded?(@__context__, :reply, @object_boundary)}
+      Bonfire.Boundaries.can_interact_or_unloaded?(@__context__, :reply, @object_boundary,
+        target_user: @creator
+      )}
     {#match true}
       <.icon_button
         icon="ph:chat-circle-duotone"

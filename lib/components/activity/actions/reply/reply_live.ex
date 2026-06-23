@@ -2,12 +2,13 @@ defmodule Bonfire.UI.Social.Activity.ReplyLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
   prop object_id, :string, default: nil
-  prop object_type, :any
-  prop permalink, :string
+  prop object_type, :any, default: nil
+  prop permalink, :string, default: nil
   prop reply_count, :any, default: nil
   prop showing_within, :atom, default: nil
-  prop hide_reply, :any
+  prop hide_reply, :any, default: nil
   prop object_boundary, :any, default: nil
+  prop creator, :any, default: nil
   prop activity_component_id, :string, default: nil
   prop event_target, :any, default: nil
 

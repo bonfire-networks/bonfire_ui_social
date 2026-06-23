@@ -25,7 +25,7 @@
     role="menu"
     id={deterministic_dom_id(__MODULE__, id(@activity), "more_menu_content", @parent_id)}
     aria-orientation="vertical"
-    aria-labelledby="more-menu"
+    aria-label={l("More actions")}
   >
     <!-- phx-update="ignore" -->
     {#if @object_type == Bonfire.Data.Social.Message}
