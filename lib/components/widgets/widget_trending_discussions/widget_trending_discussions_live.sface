@@ -4,6 +4,9 @@
       class="w-full pt-4 flex-auto mx-auto bonfire-wrapper overflow-hidden"
       title_class="pb-2 text-xs px-4 font-medium uppercase tracking-wide text-base-content/60"
       widget_title={@widget_title || l("Top discussions")}
+      reset_cache_event="Bonfire.UI.Social.WidgetTrendingDiscussionsLive:reset_trending_discussions"
+      reset_cache_values={%{limit: @limit}}
+      can_reset
       empty={discussions == []}
       empty_icon="ph:chats-circle-duotone"
       empty_message={l("No popular discussions yet. Why not start one? Your post could be tomorrow's top thread.")}

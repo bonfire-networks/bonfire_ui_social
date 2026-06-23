@@ -5,6 +5,7 @@
       class="w-full p-3 lg:p-4 relative overflow-hidden lg:rounded-box bg-gradient-to-br from-secondary/25 via-secondary/10 to-transparent"
       title_class="pb-3 px-1 text-sm font-bold uppercase tracking-widest text-secondary"
       widget_title={e(@widget_title, l("Who to follow"))}
+      reset_cache_event="Bonfire.UI.Social.WidgetSuggestedProfilesLive:reset_suggested_profiles"
       empty={suggested_profiles == []}
       empty_icon="ph:user-plus-duotone"
       empty_message={l("No suggestions yet")}
