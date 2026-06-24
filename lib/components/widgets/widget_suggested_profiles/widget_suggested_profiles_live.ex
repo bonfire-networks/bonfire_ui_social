@@ -3,39 +3,23 @@ defmodule Bonfire.UI.Social.WidgetSuggestedProfilesLive do
 
   prop widget_title, :string, default: nil
 
-  @default_cache_ttl 1_000 * 60 * 60 * 6
-
   @doc """
-  Lists suggested profiles from the instance's suggested profiles circle.
-  Results are cached for 6 hours since this is public, instance-wide data.
+  Lists suggested profiles (curated by admins) — delegates to the shared, cached
+  `Bonfire.Boundaries.Circles.list_suggested_profiles/0` so the widget and the Masto
+  `/api/v2/suggestions` endpoint share one cache.
   """
-  def list_suggested_profiles() do
-    Cache.maybe_apply_cached(&do_list_suggested_profiles/0, [], expire: @default_cache_ttl)
-  end
+  def list_suggested_profiles, do: Bonfire.Boundaries.Circles.list_suggested_profiles()
 
-  defp do_list_suggested_profiles() do
-    circle_id = Bonfire.Boundaries.Scaffold.Instance.suggested_profiles_circle()
+  @doc "Busts the cache so a reload reflects edits to the circle (recomputed lazily on next read)."
+  def handle_event("reset_suggested_profiles", _params, socket) do
+    Bonfire.Boundaries.Circles.list_suggested_profiles(cache: :reset)
 
-    case Bonfire.Boundaries.Circles.list_members(circle_id, paginate: false) do
-      members when is_list(members) ->
-        members
-        |> Enum.map(& &1.subject)
-        |> Enum.reject(&is_nil/1)
-
-      %{edges: members} ->
-        members
-        |> Enum.map(& &1.subject)
-        |> Enum.reject(&is_nil/1)
-
-      _ ->
-        []
-    end
-  end
-
-  @doc """
-  Resets the cached suggested profiles list.
-  """
-  def list_suggested_profiles_reset do
-    Cache.reset(&do_list_suggested_profiles/0, [])
+    {:noreply,
+     assign_flash(
+       socket,
+       :info,
+       l("Suggested profiles have been reset.") <>
+         l(" You need to reload to see updates, if any.")
+     )}
   end
 end
