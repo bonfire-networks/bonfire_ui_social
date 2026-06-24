@@ -773,6 +773,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
         do: maybe_prepare(assigns),
         else: assigns
 
+    # Cache the current user id once per activity render. The feed template and
+    # subject components may check it many times while rendering a list of
+    # activities; doing the context lookup once keeps those checks cheap.
+    assigns = Map.put(assigns, :current_user_id, current_user_id(assigns[:__context__]))
+
     ~F"""
     <article
       id={@activity_component_id || "activity-unprepared-#{@activity_id || Text.random_string()}"}
@@ -826,7 +831,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       {!-- Preview click trigger (hidden `.open_preview_link`) — rendered alongside
            both the default activity content and any `@custom_preview`, so that
            clicking the article opens the PreviewContentLive modal in either case. --}
-      {#if @hide_activity != "all" and not is_nil(current_user_id(@__context__)) and
+      {#if @hide_activity != "all" and not is_nil(@current_user_id) and
           @showing_within not in [:smart_input, :thread, :widget, :nested_preview]}
         {!-- TODO: make the list of preview paths/components/views configurable/hookable, and derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") --}
         {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/", "/discuss/"])}
@@ -925,18 +930,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
           <form
             :if={!id(e(@activity, :seen, nil)) and not is_nil(@feed_id) and
               @showing_within in [:messages, :notifications] and
-              current_user_id(@__context__) !=
+              @current_user_id !=
                 (e(@object, :created, :creator_id, nil) || e(@activity, :subject, :id, nil))}
-            x-init={if @feed_id && current_user_id(@__context__),
+            x-init={if @feed_id && @current_user_id,
               do:
                 "if ($el.getBoundingClientRect().top < window.innerHeight && $el.getBoundingClientRect().bottom > 0) {
                 $el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true}));
                 $el.parentNode.classList.remove('unread-activity');
               }"}
-            x-intersect.once.full={if @feed_id && current_user_id(@__context__),
+            x-intersect.once.full={if @feed_id && @current_user_id,
               do:
                 "$el.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true})); $el.parentNode.classList.remove('unread-activity');"}
-            phx-submit={if @feed_id && current_user_id(@__context__), do: "Bonfire.Social.Feeds:mark_seen"}
+            phx-submit={if @feed_id && @current_user_id, do: "Bonfire.Social.Feeds:mark_seen"}
             phx-target={if @feed_id, do: "#unseen_count_#{@feed_id}"}
           >
             <input type="hidden" name="feed_id" value={@feed_id}>
@@ -1030,6 +1035,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   is_remote={@is_remote}
                   thread_title={maybe_get(component_assigns, :thread_title, @thread_title)}
                   subject_user={@subject_user}
+                  current_user_id={@current_user_id}
                   show_minimal_subject_and_note={maybe_get(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
                   request={e(maybe_get(component_assigns, :activity, @activity), :edge, :request, nil)}
                   extra_info={e(@object, :extra_info, nil)}

@@ -72,8 +72,8 @@
     >
       <:actions>
         <div
-          :if={current_user_id(@__context__) &&
-            current_user_id(@__context__) != @subject_id}
+          :if={@current_user_id &&
+            @current_user_id != @subject_id}
           class="p-3 pt-1 items-center"
         >
           <StatefulComponent
