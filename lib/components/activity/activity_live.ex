@@ -69,6 +69,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop quotes, :list, default: []
   prop hashtags, :list, default: []
   prop autoplay, :any, default: nil
+  prop feed_live_update_many_preload_mode, :atom, default: nil
 
   def update_many(assigns_sockets) do
     assigns_sockets
@@ -1105,7 +1106,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
                      ]}
                 {#if @hide_activity != "actions" and @hide_actions != true}
                   {#if user_socket_connected?(@__context__) &&
-                      LiveHandler.feed_live_update_many_preload_mode() in [:async_actions, :inline]}
+                      effective_feed_live_update_many_preload_mode(@feed_live_update_many_preload_mode) in [
+                        :async_actions,
+                        :inline
+                      ]}
                     <StatefulComponent
                       id={"#{@activity_component_id}_actions"}
                       module={component}
@@ -1137,6 +1141,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                         e(@object, :creator, nil) || e(@activity, :subject, nil)}
                       participants={@participants}
                       quotes={@quotes}
+                      feed_live_update_many_preload_mode={@feed_live_update_many_preload_mode}
                     />
                   {#else}
                     <StatelessComponent
@@ -1167,6 +1172,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                         e(maybe_get(component_assigns, :activity, @activity), :created, :creator, nil) ||
                         e(maybe_get(component_assigns, :object, @object), :creator, nil) ||
                         e(maybe_get(component_assigns, :activity, @activity), :subject, nil)}
+                      feed_live_update_many_preload_mode={@feed_live_update_many_preload_mode}
                     />
                   {/if}
                 {/if}
@@ -1234,6 +1240,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
     <div />
     """
   end
+
+  def effective_feed_live_update_many_preload_mode(nil),
+    do: LiveHandler.feed_live_update_many_preload_mode()
+
+  def effective_feed_live_update_many_preload_mode(mode), do: mode
 
   # def show_minimal_reply?(object, activity, showing_within) do
   #   (e(object, :post_content, nil) != nil and showing_within == :smart_input) or
