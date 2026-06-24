@@ -52,7 +52,7 @@
 
     <#slot {@extra_items} />
 
-    {#if current_user_id(@__context__)}
+    {#if @current_user_id}
       <!-- {#case e(@object, :peered, :canonical_uri, nil) || @is_remote}
         {#match nil}
         {#match false}
@@ -97,7 +97,7 @@
           @thread_id != id(@object)}
         class=""
       >
-        {!-- TODO: should depend on thread creator: current_user_id(@__context__) == @thread_creator_id --}
+        {!-- TODO: should depend on thread creator: @current_user_id == @thread_creator_id --}
         <StatelessComponent
           module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
           parent_id={id(@activity_component_id || @activity)}
@@ -112,7 +112,7 @@
       {#if module_enabled?(Bonfire.Social.Pins, @__context__) and
           @object_type != Bonfire.Data.Social.Message}
         <li :if={@showing_within == :thread and @thread_id != id(@object)} class="">
-          {!-- TODO: should depend on thread creator: current_user_id(@__context__) == @thread_creator_id --}
+          {!-- TODO: should depend on thread creator: @current_user_id == @thread_creator_id --}
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
             parent_id={deterministic_dom_id(
@@ -132,7 +132,7 @@
         {!--
         # TODO: re-enable once pins are shown on profile
         <li
-          :if={current_user_id(@__context__) == @creator_id}
+          :if={@current_user_id == @creator_id}
           class=" "
         >
           <StatelessComponent
@@ -172,7 +172,7 @@
         {#case e(@activity, :subject, :id, nil)}
           {#match nil}
           {#match subject_id}
-            <li :if={subject_id != current_user_id(@__context__)}>
+            <li :if={subject_id != @current_user_id}>
               <a
                 phx-disable-with={l("Unfollowing...")}
                 data-id="unfollow"
@@ -191,7 +191,7 @@
         {/case}
       {/if}
 
-      <li :if={(current_user_id(@__context__) && current_user_id(@__context__) != @creator_id) and
+      <li :if={(@current_user_id && @current_user_id != @creator_id) and
         Types.object_type(@creator) == Bonfire.Data.Identity.User}>
         <StatelessComponent
           module={maybe_component(Bonfire.UI.Boundaries.AddToCircleLive, @__context__)}
@@ -202,7 +202,7 @@
       </li>
     {/if}
 
-    {#case current_user_id(@__context__) && has_my_first_quote(@quotes, current_user_id(@__context__))}
+    {#case @current_user_id && has_my_first_quote(@quotes, @current_user_id)}
       {#match id when is_binary(id)}
         <li>
           <button
@@ -219,11 +219,11 @@
       {#match _}
     {/case}
 
-    {#if current_user_id(@__context__) != @creator_id and @verb != "Flag" and
+    {#if @current_user_id != @creator_id and @verb != "Flag" and
         module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}
       <li class="m-1 border-t border-base-content/10" />
 
-      {#if !current_user_id(@__context__)}
+      {#if !@current_user_id}
         <li>
           <LinkLive
             to={maybe_apply(
@@ -288,7 +288,7 @@
 
     {!-- Block the author, etc --}
     <StatelessComponent
-      :if={@creator_id && current_user_id(@__context__) != @creator_id}
+      :if={@current_user_id && @creator_id && @current_user_id != @creator_id}
       module={maybe_component(Bonfire.UI.Boundaries.BlockMenuButtonsLive, @__context__)}
       parent_id={@activity_component_id || id(@activity)}
       object={@creator || @creator_id}
@@ -301,7 +301,7 @@
 
     {!-- Advanced actions (boundary-dependent: edit, delete, lock, boundary details, etc.) --}
     <StatefulComponent
-      :if={@object_type != Bonfire.Data.Social.Message}
+      :if={@current_user_id && @object_type != Bonfire.Data.Social.Message}
       module={maybe_component(Bonfire.UI.Social.Activity.AdvancedActionsLive, @__context__)}
       id={deterministic_dom_id(__MODULE__, id(@activity || @object), "advanced_actions", @parent_id)}
       activity={@activity}

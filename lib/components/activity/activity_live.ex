@@ -73,7 +73,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def update_many(assigns_sockets) do
     assigns_sockets
     |> LiveHandler.activity_update_many(caller_module: __MODULE__)
-    |> debug("activity_updated_many")
     |> Enum.map(fn
       {assigns, socket} ->
         maybe_update(assigns, socket)
@@ -82,8 +81,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         maybe_update(assigns(socket), socket)
     end)
   end
-
-  defp debug_i(i, activity_inception), do: i || "inception-from-#{activity_inception}"
 
   def maybe_update(%{activity_remove: true}, socket) do
     remove(socket)
@@ -94,10 +91,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         %{assigns: %{activity_prepared: true}} = socket
       )
       when is_map(activity) and preloaded_async_activities == true do
-    debug(
-      "Activity ##{debug_i(assigns(socket)[:activity_id], assigns(socket)[:activity_inception])} prepared already, just assign updated activity"
-    )
-
     # debug(assigns)
 
     assign(
@@ -112,8 +105,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         %{update_activity: true} = assigns,
         socket
       ) do
-    debug("Activity - assigns with `update_activity` so we update them")
-
     socket
     |> assign(assigns)
     |> maybe_update_some_assigns(assigns, [])
@@ -124,29 +115,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
         %{assigns: %{activity_prepared: true}} = socket
       )
       when not is_nil(object_boundary) do
-    debug(
-      "Activity ##{debug_i(assigns(socket)[:activity_id], assigns(socket)[:activity_inception])} prepared already, just assign object_boundary"
-    )
-
     socket
     |> assign(object_boundary: object_boundary)
   end
 
   def maybe_update(assigns, %{assigns: %{activity_prepared: true}} = socket) do
-    debug(
-      "Activity ##{debug_i(assigns[:activity_id] || assigns(socket)[:activity_id], assigns[:activity_inception] || assigns(socket)[:activity_inception])} prepared already"
-    )
-
     # FYI: assigning blindly here causes problems
     socket
     |> maybe_update_some_assigns(assigns, [])
   end
 
   def maybe_update(assigns, socket) do
-    debug(
-      "Activity ##{debug_i(assigns[:activity_id] || assigns(socket)[:activity_id], assigns[:activity_inception] || assigns(socket)[:activity_inception])} not prepared, do so now"
-    )
-
     socket
     |> assign(prepare_assigns(assigns) |> assigns_clean())
   end
@@ -166,9 +145,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
        do: prepare_mutable_assigns(socket_assigns, assigns, extras)
 
   defp prepare_mutable_assigns(socket_assigns, assigns, extras) do
-    activity =
-      (assigns[:activity] || socket_assigns[:activity])
-      |> debug("the activity")
+    activity = assigns[:activity] || socket_assigns[:activity]
 
     object = assigns[:object] || e(activity, :object, nil) || socket_assigns[:object]
 
@@ -206,20 +183,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
         end,
       published_in:
         if(showing_within not in [:smart_input, :pinned],
-          do: maybe_published_in(debug(activity, "accct"), verb) |> debug("maybppp")
+          do: maybe_published_in(activity, verb)
         ),
       labelled: maybe_labelled(activity, verb),
       peered: peered,
       is_remote:
-        (assigns[:is_remote] ||| socket_assigns[:is_remote] |||
-           !Bonfire.Social.is_local?(
-             peered ||
-               e(activity, :subject, nil) ||
-               e(assigns, :subject_user, nil) ||
-               e(socket_assigns, :subject_user, nil),
-             false
-           ))
-        |> debug("is_remote"),
+        assigns[:is_remote] ||| socket_assigns[:is_remote] |||
+          !Bonfire.Social.is_local?(
+            peered ||
+              e(activity, :subject, nil) ||
+              e(assigns, :subject_user, nil) ||
+              e(socket_assigns, :subject_user, nil),
+            false
+          ),
       thread_title:
         e(assigns, :thread_title, nil) || e(socket_assigns, :thread_title, nil) ||
           e(extras[:thread], :named, :name, nil) ||
@@ -346,10 +322,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def prepare_assigns(%{activity: %{object: object} = activity, object: nil} = assigns)
       when not is_nil(object) do
-    debug(
-      "Activity ##{debug_i(assigns[:activity_id] || id(assigns[:activity]), assigns[:activity_inception])} prepare_assigns activity with object in assoc"
-    )
-
     Map.put(assigns, :object, object)
     |> Map.put(:activity, Map.delete(activity, :object))
     |> do_prepare_assigns()
@@ -381,7 +353,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
     replied =
       e(activity, :replied, nil) ||
         e(object, :replied, nil)
-        |> debug("areplied")
 
     thread_level = e(assigns, :thread_level, nil) || length(e(replied, :path, []))
 
@@ -404,7 +375,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         !reply_to and object_type == Bonfire.Articles.Article -> :article
         true -> object_type
       end
-      |> debug("object_type!!")
 
     object_type_readable =
       assigns[:object_type_readable] ||
@@ -444,8 +414,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       e(replied, :thread_id, nil) || id(e(replied, :thread, nil))
 
     current_url =
-      (assigns[:current_url] || current_url(assigns[:__context__]))
-      |> debug("activity_current_url")
+      assigns[:current_url] || current_url(assigns[:__context__])
 
     # permalink = path(object, [], preload_if_needed: false)
     permalink =
@@ -481,7 +450,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       verb: verb,
       thread: thread
     )
-    |> Enum.into(debug(assigns, "original passed assigns"))
+    |> Enum.into(assigns)
     |> Map.merge(%{
       activity_prepared: true,
       activity_id: a_id || "no-activity-id",
@@ -558,7 +527,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # |> debug("prepare_verb: raw verb before modification")
 
     Activities.verb_maybe_modify(raw_verb || fallback, activity)
-    |> debug("prepare_verb: final verb after verb_maybe_modify")
   end
 
   # defp derive_verb_from_table_id(%{table_id: "300STANN0VNCERESHARESH0VTS"}), do: "Boost"
@@ -595,16 +563,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def maybe_published_in(%{tree: %{parent: %{id: _} = parent}}, _) do
     parent
-    |> debug("maybe_published_in: matched tree.parent")
   end
 
   def maybe_published_in(%{tree: %{parent_id: parent_id}}, _) when is_binary(parent_id) do
     parent_id
-    |> debug("maybe_published_in: matched tree.parent_id")
   end
 
-  def maybe_published_in(none, verb) do
-    debug(none, "maybe_published_in: no match for verb=#{verb}")
+  def maybe_published_in(_none, _verb) do
     nil
   end
 
@@ -732,8 +697,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           showing_within,
           activity_inception,
           subject_user
-        )
-        |> debug("component_activity_subject result")) ++
+        ) || []) ++
        cw_fallback ++
        object_components ++
        if(verb == "Request to Quote" or showing_within == :media,
@@ -750,13 +714,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
          activity_inception,
          viewing_main_object
        ))
-    |> debug("preview_components unfiltered - #{activity_inception}")
     |> Enum.reject(&is_nil/1)
     |> Enum.map(fn
       c when is_atom(c) -> {c, nil}
       other -> other
     end)
-    |> debug("preview_components - #{activity_inception}")
   end
 
   def maybe_prepare(%{activity: _, activity_prepared: true} = assigns) do
@@ -997,14 +959,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                     )
                   )}
                   character_username={e(component_assigns, :character, :username, nil)}
-                  activity_id={id(
-                    maybe_get(component_assigns, :activity, @activity)
-                    |> debug("activity used in ActivityLive")
-                  )}
-                  object_id={id(
-                    maybe_get(component_assigns, :object, @object)
-                    |> debug("object used in ActivityLive")
-                  )}
+                  activity_id={id(maybe_get(component_assigns, :activity, @activity))}
+                  object_id={id(maybe_get(component_assigns, :object, @object))}
                   subject_id={maybe_get(component_assigns, :subject_id, nil) ||
                     e(maybe_get(component_assigns, :activity, @activity), :subject_id, nil)}
                   subjects_more={maybe_get(component_assigns, :subjects_more, [])}
@@ -1228,7 +1184,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def render(assigns) do
     warn("No activity provided")
-    debug(assigns)
 
     ~F"""
     <div />
@@ -1354,23 +1309,21 @@ defmodule Bonfire.UI.Social.ActivityLive do
        }
        |> prepare_assigns()}
     ]
-    |> debug("MATCHED react case for verb: #{verb} in component_activity_subject")
   end
 
   def component_activity_subject(verb, activity, object, object_type, _, _, _)
       when verb in @react_or_simple_verbs do
     # activity: repo().maybe_preload(activity, subject: [:character]),
-    ([
-       {Bonfire.UI.Social.Activity.SubjectMinimalLive,
-        %{
-          verb: verb,
-          subject_id: e(activity, :subject_id, nil),
-          subjects_more: e(activity, :subjects_more, []),
-          profile: e(activity, :subject, :profile, nil),
-          character: e(activity, :subject, :character, nil)
-        }}
-     ] ++ component_activity_maybe_creator(activity, object, object_type))
-    |> debug("MATCHED react case for verb: #{verb} in component_activity_subject")
+    [
+      {Bonfire.UI.Social.Activity.SubjectMinimalLive,
+       %{
+         verb: verb,
+         subject_id: e(activity, :subject_id, nil),
+         subjects_more: e(activity, :subjects_more, []),
+         profile: e(activity, :subject, :profile, nil),
+         character: e(activity, :subject, :character, nil)
+       }}
+    ] ++ component_activity_maybe_creator(activity, object, object_type)
   end
 
   # replies and mentions (when shown in notifications): prepend a minimal
@@ -1521,20 +1474,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
         %{created: %{creator: %{} = creator}} = object,
         _
       ),
-      do:
-        component_maybe_creator(creator) |> debug("component_activity_maybe_creator: result1") ||
-          component_maybe_creator_fallback(activity, object)
-          |> debug("component_activity_maybe_creator: fallback result1")
+      do: component_maybe_creator(creator) || component_maybe_creator_fallback(activity, object)
 
   def component_activity_maybe_creator(
         %{object: %{created: %{creator: %{} = creator}}} = activity,
         object,
         _
       ),
-      do:
-        component_maybe_creator(creator) |> debug("component_activity_maybe_creator: result2") ||
-          component_maybe_creator_fallback(activity, object)
-          |> debug("component_activity_maybe_creator: fallback result2")
+      do: component_maybe_creator(creator) || component_maybe_creator_fallback(activity, object)
 
   def component_activity_maybe_creator(activity, object, _) do
     # debug(activity, "component_activity_maybe_creator: activity")
@@ -1574,9 +1521,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
       do: component_maybe_creator(subject)
 
   def component_maybe_creator(%{created: %{creator: %{} = creator}} = _object) do
-    debug("component_maybe_creator: found created.creator")
-    debug(creator, "creator details")
-
     creator
     |> component_maybe_creator()
   end
@@ -1667,15 +1611,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
             e(object, :created, :creator_id, nil) || e(activity, :created, :creator_id, nil) ||
               e(object, :creator_id, nil) || e(activity, :object, :creator_id, nil)
 
-          case (creator ||
-                  if(not is_nil(creator_id) and creator_id == e(activity, :subject_id, nil),
-                    do: e(activity, :subject, nil)
-                  ) || creator_id)
-               |> debug("this is a fallback, component_maybe_creator *should* handle most cases") do
+          case creator ||
+                 if(not is_nil(creator_id) and creator_id == e(activity, :subject_id, nil),
+                   do: e(activity, :subject, nil)
+                 ) || creator_id do
             nil ->
-              debug("could not find a creator in activity or object")
-              debug(activity, "activity")
-              debug(object, "object")
               [Bonfire.UI.Social.Activity.NoSubjectLive]
 
             # [Bonfire.UI.Social.Activity.SubjectLive]
@@ -1690,7 +1630,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
               ]
 
             creator_id when is_binary(creator_id) ->
-              debug("could only find a creator_id")
               # debug(activity)
               # debug(object)
               [
@@ -1719,8 +1658,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
             }
           } = reply_to
       }) do
-    debug("we have a reply_to, preloaded with post_content")
-
     %{
       activity_id: activity_id,
       object: reply_to,
@@ -1743,8 +1680,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
           } = reply_to
       })
       when is_binary(reply_to_id) do
-    debug("we have another kind of reply_to, preloaded with creator")
-
     %{
       activity_id: activity_id,
       object: reply_to,
@@ -1762,8 +1697,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def prepare_reply_to(%{id: activity_id, reply_to: reply_to})
       when is_struct(reply_to, Bonfire.Files.Media) do
-    debug("we have a media-only reply_to, preloading its direct creator")
-
     reply_to =
       repo().maybe_preload(reply_to, [creator: [profile: [:icon], character: []]], force: true)
 
@@ -1799,8 +1732,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
             id: _reply_to_id
           } = reply_to
       }) do
-    debug("we have another kind of reply_to, but no creator")
-
     %{
       activity_id: activity_id,
       object: reply_to,
@@ -1917,35 +1848,40 @@ defmodule Bonfire.UI.Social.ActivityLive do
         opts
       ) do
     thread_start = Keyword.get(opts, :thread_start)
-    current_user_context = Keyword.get(opts, :current_user_context)
 
-    reply_context_mode =
-      Settings.get(
-        [Bonfire.UI.Social.ActivityLive, :reply_context_mode],
-        :reply_to,
-        current_user_context
-      )
+    if is_nil(reply_to) and is_nil(thread_start) do
+      []
+    else
+      current_user_context = Keyword.get(opts, :current_user_context)
 
-    case reply_context_mode do
-      :thread_start
-      when showing_within == :feed and is_nil(activity_inception) and not is_nil(thread_start) ->
-        component_thread_start(thread_start, thread_title, activity_component_id)
-
-      :minimal
-      when showing_within == :feed and is_nil(activity_inception) and not is_nil(reply_to) ->
-        [{Bonfire.UI.Social.Activity.RepliedInThreadIndicatorLive, %{}}]
-
-      _ ->
-        component_maybe_in_reply_to(
-          reply_to,
-          showing_within,
-          activity_inception,
-          viewing_main_object,
-          thread_mode,
-          thread_id,
-          thread_title,
-          activity_component_id
+      reply_context_mode =
+        Settings.get(
+          [Bonfire.UI.Social.ActivityLive, :reply_context_mode],
+          :reply_to,
+          current_user_context
         )
+
+      case reply_context_mode do
+        :thread_start
+        when showing_within == :feed and is_nil(activity_inception) and not is_nil(thread_start) ->
+          component_thread_start(thread_start, thread_title, activity_component_id)
+
+        :minimal
+        when showing_within == :feed and is_nil(activity_inception) and not is_nil(reply_to) ->
+          [{Bonfire.UI.Social.Activity.RepliedInThreadIndicatorLive, %{}}]
+
+        _ ->
+          component_maybe_in_reply_to(
+            reply_to,
+            showing_within,
+            activity_inception,
+            viewing_main_object,
+            thread_mode,
+            thread_id,
+            thread_title,
+            activity_component_id
+          )
+      end
     end
   end
 
@@ -2040,8 +1976,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         thread_title,
         activity_component_id
       ) do
-    debug(reply_to_object, "we have a reply_to, preloaded with post_content?")
-
     Bonfire.Common.Cache.put("has_reply_to:#{activity_id}", true)
 
     [
@@ -2105,8 +2039,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #   end
   # end
 
-  def component_maybe_in_reply_to(a, _, _, _, _, _, _, _) do
-    debug(a, "cannot determine if there's a reply_to")
+  def component_maybe_in_reply_to(_a, _, _, _, _, _, _, _) do
     []
   end
 
@@ -2171,7 +2104,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_object(%{} = object, object_type, assigns) do
     case object_type || Types.object_type(object) do
       type when is_atom(type) and not is_nil(type) ->
-        debug(type, "component object_type recognised")
         component_for_object_type(type, object, assigns)
 
       _ ->
@@ -2184,10 +2116,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     end
   end
 
-  def component_object(_, _, _) do
-    debug("activity has no object")
-    []
-  end
+  def component_object(_, _, _), do: []
 
   # Articles are rendered by a component registered (by bonfire_articles) under
   # `config :bonfire, :ui, object_preview: [{:article, …}]`, resolved dynamically so
@@ -2216,10 +2145,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def component_for_object_type(Bonfire.Data.Social.PostContent, _, assigns),
     do: [{Bonfire.UI.Social.Activity.NoteLive, assigns}]
 
-  def component_for_object_type(Bonfire.Data.Social.Post, _object, _) do
-    debug("post with no text content (eg. only with attachments)")
-    []
-  end
+  def component_for_object_type(Bonfire.Data.Social.Post, _object, _), do: []
 
   def component_for_object_type(Bonfire.Data.Social.Message, _, assigns),
     do: [{Bonfire.UI.Social.Activity.NoteLive, assigns}]
@@ -2246,9 +2172,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #   do: [Bonfire.UI.ValueFlows.Preview.IntentTaskLive]
 
   def component_for_object_type(Bonfire.Data.Social.APActivity, object, assigns) do
-    json =
-      e(object, :json, nil)
-      |> debug("APActivity json")
+    json = e(object, :json, nil)
 
     types =
       List.wrap(e(json, "object", "type", nil) || e(json, "type", nil) || "Remote Activity")
@@ -2323,7 +2247,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         error(other, "Unrecognised object_preview config")
         if is_function(fallback), do: fallback.(type, object), else: [fallback]
     end
-    |> debug("component from config")
   end
 
   defp component_object_fallback(_object_type, %{profile: %{id: _}}),
@@ -2400,7 +2323,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     {nil, []}
   end
 
-  def do_primary_image_and_component_maybe_attachments(id, other, _object_type) do
+  def do_primary_image_and_component_maybe_attachments(id, _other, _object_type) do
     # use cached amounts of images to display from MediaLive in case media is preloaded async
     case Bonfire.Common.Cache.get("num_media:#{id}") do
       {:ok, [multimedia_count, image_count, gif_count, link_count]} ->
@@ -2416,7 +2339,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
          ]}
 
       _ ->
-        debug(other, "no files")
         {nil, []}
     end
   end
@@ -2496,8 +2418,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     component_def_for(:object_actions, type, activity, Bonfire.UI.Social.Activity.ActionsLive)
   end
 
-  def actions_for_object_type(_activity, type) do
-    debug(type, "No specific actions defined fot this type")
+  def actions_for_object_type(_activity, _type) do
     [Bonfire.UI.Social.Activity.ActionsLive]
     # [Bonfire.UI.Social.Activity.NoActionsLive]
   end
@@ -2658,7 +2579,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             {Bonfire.UI.Social.ActivityLive,
              %{
                id: id,
-               activity: quoted_object |> debug("quoted_object"),
+               activity: quoted_object,
                object: quoted_object,
                activity_inception: id,
                showing_within: :quote_preview,

@@ -123,10 +123,10 @@ defmodule Bonfire.UI.Social.FeedLive do
     do: activity
 
   defp get_activity(%{activity: %{id: _} = activity, edge: %{id: _} = edge}),
-    do: merge_structs_as_map(activity, edge) |> debug("merged_structs_as_map")
+    do: merge_structs_as_map(activity, edge)
 
   defp get_activity(%{edge: %{id: _, activity: %{id: _} = activity} = edge}),
-    do: merge_structs_as_map(activity, edge) |> debug("merged_structs_as_map")
+    do: merge_structs_as_map(activity, edge)
 
   defp get_activity(%{activity: %{id: _} = activity}), do: activity
   defp get_activity(%{edge: %{id: _} = activity}), do: activity
@@ -187,8 +187,6 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   defp do_update(%{insert_stream: %{feed: entries}} = assigns, socket) do
-    debug("feed stream is being poured into")
-
     markers_enabled =
       assigns[:enable_marker] != false and
         Bonfire.Common.Settings.get([Bonfire.Social.Markers, :enabled], true,
@@ -215,8 +213,6 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   # adding new feed item
   defp do_update(%{new_activity: new_activity} = _assigns, socket) when is_map(new_activity) do
-    debug("new_activity, add to top of feed")
-
     activity_id =
       id(new_activity) || e(new_activity, :activity, :id, nil) ||
         e(new_activity, :object, :id, nil) || e(new_activity, :edge, :id, nil)
@@ -264,20 +260,16 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   defp do_update(_assigns, %{assigns: %{loading: loading?, feed: feed}} = socket)
        when loading? == false and feed != :loading do
-    debug("skip replacing feed unless it was loading")
     ok_socket(socket)
   end
 
   defp do_update(_assigns, %{assigns: %{feed: existing_feed}} = socket)
        when is_list(existing_feed) and length(existing_feed) > 0 do
     # FIXME: doesn't work because of temporary assigns?
-    debug("skip replacing already loaded feed")
     ok_socket(socket)
   end
 
   defp do_update(%{feed: feed, page_info: page_info} = assigns, socket) when is_list(feed) do
-    debug("an initial feed was provided via assigns, auto-converting to stream")
-
     socket =
       socket
       |> assign(Map.drop(assigns, [:feed]))
@@ -311,15 +303,11 @@ defmodule Bonfire.UI.Social.FeedLive do
          %{assigns: %{feed_count: feed_count}} = socket
        )
        when not is_nil(feed_count) do
-    debug("a feed was NOT provided, but we have a feed_count")
-
     ok_socket(socket)
   end
 
   defp do_update(%{feed: nil, feed_count: feed_count} = _assigns, socket)
        when not is_nil(feed_count) do
-    debug("a feed was NOT provided, but feed_count was passed")
-
     ok_socket(socket)
   end
 
@@ -331,8 +319,6 @@ defmodule Bonfire.UI.Social.FeedLive do
     if user_socket_connected?(socket) || !current_user_id(socket) ||
          LiveHandler.force_static?(socket) do
       # if LiveHandler.maybe_load_async?(socket) do
-
-      debug("a feed was NOT provided, fetching one now (without filters)")
 
       socket =
         socket
@@ -347,10 +333,6 @@ defmodule Bonfire.UI.Social.FeedLive do
       maybe_subscribe(socket)
       |> ok_socket()
     else
-      debug(
-        "a feed was NOT provided, but we don't have a user socket connected, so we just pass assigns and wait for the socket to connect"
-      )
-
       ok_socket(socket)
     end
   end
@@ -362,7 +344,6 @@ defmodule Bonfire.UI.Social.FeedLive do
     if user_socket_connected?(socket) || !current_user_id(socket) ||
          LiveHandler.force_static?(socket) do
       # if LiveHandler.maybe_load_async?(socket) do
-      debug("a feed was NOT provided, fetching one now (with filters)")
 
       socket =
         socket
@@ -377,23 +358,15 @@ defmodule Bonfire.UI.Social.FeedLive do
       maybe_subscribe(socket)
       |> ok_socket()
     else
-      debug(
-        "a feed was NOT provided, but we don't have a user socket connected, so we just pass assigns and wait for the socket to connect"
-      )
-
       ok_socket(socket)
     end
   end
 
   defp do_update(%{feed: :loading} = assigns, socket) do
-    debug("a feed is being loaded async")
-
     ok_socket(assign(socket, assigns))
   end
 
   defp do_update(%{loading: true} = assigns, socket) do
-    debug("a feed is being loaded async")
-
     ok_socket(assign(socket, assigns))
   end
 
@@ -913,12 +886,10 @@ defmodule Bonfire.UI.Social.FeedLive do
           # Enums.merge_to_struct(
           #   FeedFilters,
           Enums.merge_as_map(
-            debug(existing_filters, "existing filters"),
+            existing_filters,
             filters
-            |> debug("validated")
             # replace_lists: replace_lists
-          )
-          |> debug("merged"),
+          ),
           socket,
           Config.env() == :test
         )
@@ -963,7 +934,6 @@ defmodule Bonfire.UI.Social.FeedLive do
         true,
         true
       )
-      |> debug("reload with feed_assigns")
 
     {
       :noreply,

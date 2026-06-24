@@ -88,7 +88,6 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
             {image_list, video_list, gif_list, audio_embed_list, [m | link_list]}
         end
       end)
-      |> debug("media_lists")
 
     # Combine images, videos, and GIFs into visual_list for the carousel
     visual_list = Enum.reverse(image_list) ++ Enum.reverse(video_list) ++ Enum.reverse(gif_list)
@@ -424,7 +423,6 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
         e(media, :metadata, "other", "og:image", nil) ||
         e(media, :metadata, "other", "og:image:url", nil) ||
         Media.thumbnail_url(media)
-        |> debug("medthumbur")
 
     # Only fall back to media_img if we have a proper image media type
     # Never use video URLs as poster images
@@ -458,7 +456,6 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
 
   def media_img(%{} = media) do
     Media.image_url(media)
-    |> debug("medimageur")
     |> unwrap()
   end
 
