@@ -46,48 +46,10 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
     test "Load more works in Search page" do
     end
 
-    test "Load more works in messages list" do
-      limit = Bonfire.Common.Config.get(:default_pagination_limit, 2)
-
-      #  create alice user
-      account = fake_account!()
-      alice = fake_user!(account)
-      #  create bob user
-      bob = fake_user!(account)
-      #  create charlie user
-      charlie = fake_user!()
-      #  create dave user
-      dave = fake_user!()
-      #  create eve user
-      eve = fake_user!()
-
-      assert {:ok, message} =
-               Messages.send(alice, %{to_circles: [bob.id], post_content: %{html_body: "test DM"}})
-
-      assert {:ok, message} =
-               Messages.send(alice, %{
-                 to_circles: [charlie.id],
-                 post_content: %{html_body: "test DM"}
-               })
-
-      assert {:ok, message} =
-               Messages.send(alice, %{
-                 to_circles: [dave.id],
-                 post_content: %{html_body: "test DM"}
-               })
-
-      assert {:ok, message} =
-               Messages.send(alice, %{to_circles: [eve.id], post_content: %{html_body: "test DM"}})
-
-      conn =
-        conn(user: alice, account: account)
-        |> visit("/messages")
-        |> assert_has("[data-id=thread_participants]", count: limit)
-        # |> PhoenixTest.open_browser()
-        |> click_button("[data-id=load_more]", "Load more")
-        # |> PhoenixTest.open_browser()
-        |> assert_has("[data-id=thread_participants]", count: 4)
-    end
+    # NOTE: messages-list pagination + infinite-scroll is covered by
+    # Bonfire.UI.Messages.InfiniteScrollTest (co-located with the MessageThreadsLive
+    # component in the bonfire_ui_messages extension), which asserts the load_more
+    # control is wired for infinite scroll rather than driving the click fallback.
   end
 
   describe "Load More in Feeds" do
