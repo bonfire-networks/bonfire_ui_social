@@ -34,25 +34,34 @@
 
       {#if current_user_id(@__context__)}
         {!-- Collapse/expand button at the line junction --}
-        <div
+        <button
           :if={@show_thread_lines && has_replies?(@threaded_replies)}
+          type="button"
+          aria-label={l("Toggle replies")}
+          aria-expanded="true"
           phx-click={JS.toggle(to: "#replies-#{@id}")
           |> JS.toggle(to: "#line-#{@id}")
           |> JS.toggle(to: "#collapse-minus-#{@id}")
-          |> JS.toggle(to: "#collapse-plus-#{@id}")}
-          style={"left: #{20 + (@visual_level - 1) * 34}px; transform: translateX(-50%); top: 60px; width: 20px; height: 20px"}
-          class="absolute z-50 flex items-center justify-center rounded-full border border-base-content/20 bg-base-100 cursor-pointer hover:border-base-content/40 hover:bg-base-200 transition-colors"
+          |> JS.toggle(to: "#collapse-plus-#{@id}")
+          |> JS.toggle_attribute({"aria-expanded", "true", "false"})}
+          style={"left: #{20 + (@visual_level - 1) * 34}px; transform: translateX(-50%); top: 54px; width: 32px; height: 32px"}
+          class="group absolute z-50 flex items-center justify-center cursor-pointer"
         >
           <span
-            id={"collapse-minus-#{@id}"}
-            class="text-base-content/50 text-xs font-bold leading-none select-none"
-          >&minus;</span>
-          <span
-            id={"collapse-plus-#{@id}"}
-            style="display:none"
-            class="text-base-content/50 text-xs font-bold leading-none select-none"
-          >+</span>
-        </div>
+            style="width: 20px; height: 20px"
+            class="flex items-center justify-center rounded-full border border-base-content/20 bg-base-100 group-hover:border-base-content/40 group-hover:bg-base-200 transition-colors"
+          >
+            <span
+              id={"collapse-minus-#{@id}"}
+              class="text-base-content/50 text-xs font-bold leading-none select-none"
+            >&minus;</span>
+            <span
+              id={"collapse-plus-#{@id}"}
+              style="display:none"
+              class="text-base-content/50 text-xs font-bold leading-none select-none"
+            >+</span>
+          </span>
+        </button>
       {/if}
 
       <Bonfire.UI.Social.CommentLive

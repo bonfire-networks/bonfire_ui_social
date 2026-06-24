@@ -185,8 +185,8 @@
             <div class="flex flex-col items-center w-full place-content-center">
               {#if @loading && user_socket_connected?(@__context__)}
                 <div data-role="loading" class="flex items-center mt-8 place-content-center">
-                  <img src={Bonfire.Common.URIs.static_path("/images/loading.svg")}>
-                  <span class="sr-only">Loading...</span>
+                  <span class="loading loading-spinner loading-md text-base-content/50" />
+                  <span class="sr-only">{l("Loading…")}</span>
                 </div>
               {#else}
               {/if}
