@@ -200,7 +200,8 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
              slug_or_id,
              url,
              [
-               current_user: params["creator"] || current_user(socket),
+               creator: params["creator"],
+               current_user: current_user(socket),
                boundary: params["boundary"],
                group_id: params["group_id"],
                require_topic: params["require_topic"] == "true"
