@@ -50,8 +50,8 @@
                 </article>
             {/case}
           {#else}
-            <div class="text-base-content/70 text-sm flex items-center gap-2">
-              <#Icon iconify="ph:paperclip-duotone" class="w-4 h-4 text-base-content/70" />
+            <div class="text-muted text-sm flex items-center gap-2">
+              <#Icon iconify="ph:paperclip-bold" class="w-5 h-5 text-primary" />
               <span>{id(m)}</span>
             </div>
           {/if}
@@ -252,17 +252,7 @@
                                 <figcaption class="sr-only">{media_label}</figcaption>
                               </div>
                             </button>
-                            {#if media_label}
-                              <div
-                                class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top"
-                                onclick="event.stopPropagation()"
-                              >
-                                <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">{l("alt")}</label>
-                                <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-200 w-52">
-                                  <div class="prose-sm prose text-base-content">{media_label}</div>
-                                </div>
-                              </div>
-                            {/if}
+                            <Bonfire.UI.Social.Activity.AltCaptionLive media_label={media_label} />
                           {/if}
                         {#else}
                           {#if is_gif?(m.path, m.media_type, m)}
@@ -282,17 +272,7 @@
                                 alt={Bonfire.Files.Media.media_alt(m)}
                               />
                             {/if}
-                            {#if media_label}
-                              <div
-                                class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top"
-                                onclick="event.stopPropagation()"
-                              >
-                                <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">{l("alt")}</label>
-                                <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-200 w-52">
-                                  <div class="prose-sm prose text-base-content">{media_label}</div>
-                                </div>
-                              </div>
-                            {/if}
+                            <Bonfire.UI.Social.Activity.AltCaptionLive media_label={media_label} />
                             <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
                               GIF
                             </div>
@@ -329,16 +309,11 @@
                                     />
                                   {#else}
                                     <div class="flex items-center rounded-l shrink-0 w-10 h-10 place-content-center">
-                                      <#Icon iconify="octicon:file-media-24" class="w-8 h-8 text-base-content/70" />
+                                      <#Icon iconify="octicon:file-media-24" class="w-8 h-8 text-muted" />
                                     </div>
                                   {/if}
                               {/case}
-                              <div class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top">
-                                <label tabindex="0" class="text-white border-none rounded btn btn-xs bg-black/60">{l("alt")}</label>
-                                <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-200 w-52">
-                                  <div class="prose-sm prose text-base-content">{media_label}</div>
-                                </div>
-                              </div>
+                              <Bonfire.UI.Social.Activity.AltCaptionLive media_label={media_label} />
                               <figcaption class="sr-only">{media_label}</figcaption>
                             </a>
                           {/if}
@@ -353,8 +328,8 @@
       {#else}
         <div class="gap-2 mt-1">
           <div class="flex items-center gap-2">
-            <#Icon iconify="ph:paperclip-duotone" class="w-4 h-4 text-base-content/50" />
-            <span class="text-sm text-base-content/70">{length(@visual_list)} {l("media")}</span>
+            <#Icon iconify="ph:paperclip-bold" class="w-5 h-5 text-primary" />
+            <span class="text-sm text-muted">{length(@visual_list)} {l("media")}</span>
           </div>
         </div>
       {/if}
@@ -368,7 +343,7 @@
   :if={@link_list != [] && @showing_within not in [:smart_input, :pinned]}
   class={["flex flex-col gap-2 my-2", hidden: @cw]}
 >
-  {#for m <- if @showing_within == :feed, do: Enum.take(@link_list, 1), else: @link_list}
+  {#for m <- if @showing_within in [:feed, :profile], do: Enum.take(@link_list, 1), else: @link_list}
     {#case Media.media_url(m)}
       {#match nil}
       {#match media_url}
@@ -413,7 +388,7 @@
     {/case}
   {/for}
 
-  {#if @showing_within == :feed && length(@link_list) > 1}
+  {#if @showing_within in [:feed, :profile] && length(@link_list) > 1}
     <div class="text-xs text-base-content/50 flex items-center gap-1 px-2">
       <#Icon iconify="ph:link-simple" class="w-3 h-3" />
       <span>{length(@link_list) - 1} {l("more link(s)")}</span>

@@ -1,0 +1,12 @@
+{!-- "alt" caption dropdown overlaid on a media item; stops propagation so the
+     label click never triggers the surrounding open-modal button / link. --}
+<div
+  :if={@media_label}
+  class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top"
+  onclick="event.stopPropagation()"
+>
+  <label tabindex="0" class="text-white border-none rounded btn btn-sm bg-black/60">{l("alt")}</label>
+  <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-200 w-52">
+    <div class="prose-sm prose text-base-content">{@media_label}</div>
+  </div>
+</div>

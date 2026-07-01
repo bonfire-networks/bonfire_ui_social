@@ -3,5 +3,4 @@ defmodule Bonfire.UI.Social.Activity.InstanceIconLive do
 
   prop object, :any, default: nil
   prop peered, :any, default: nil
-  # prop verb_display, :string
 end

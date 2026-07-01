@@ -26,10 +26,10 @@
     
     phx-target={@event_target}
   ><a class={
-      "flex gap-2 text-base-content/70 border ",
+      "flex gap-2 text-muted border ",
       "border-base-content/5 active !text-base-content/100": e(@feed_filters, :time_limit, nil) == 1
     }>
-      <#Icon iconify="ri:24-hours-fill" class="w-5 h-5 text-base-content/70" />
+      <#Icon iconify="ri:24-hours-fill" class="w-5 h-5 text-muted" />
       <span class="sr-only">{l("Day")}</span></a></li>
   <li
     data-role="week"
@@ -39,10 +39,10 @@
     
     phx-target={@event_target}
   ><a class={
-      "flex gap-2 text-base-content/70 border ",
+      "flex gap-2 text-muted border ",
       "border-base-content/5 active !text-base-content/100": e(@feed_filters, :time_limit, nil) == 7
     }>
-      <#Icon iconify="mdi:numeric-7-box" class="w-5 h-5 text-base-content/70" />
+      <#Icon iconify="mdi:numeric-7-box" class="w-5 h-5 text-muted" />
       <span class="sr-only">{l("Week")}</span></a></li>
   <li
     data-role="month"
@@ -52,12 +52,12 @@
     
     phx-target={@event_target}
   ><a class={
-      "flex gap-2 text-base-content/70 border ",
+      "flex gap-2 text-muted border ",
       "border-base-content/5 active !text-base-content/100": e(@feed_filters, :time_limit, nil) == 30
     }>
       <#Icon
         iconify="streamline:interface-calendar-date-month-thirty-thirty-calendar-date-week-day-month"
-        class="w-5 h-5 text-base-content/70"
+        class="w-5 h-5 text-muted"
       />
       <span class="sr-only">{l("Month")}</span></a></li>
   <li
@@ -68,10 +68,10 @@
     
     phx-target={@event_target}
   ><a class={
-      "flex gap-2 text-base-content/70 border ",
+      "flex gap-2 text-muted border ",
       "border-base-content/5 active !text-base-content/100": e(@feed_filters, :time_limit, nil) == 365
     }>
-      <#Icon iconify="iconoir:birthday-cake" class="w-5 h-5 text-base-content/70" />
+      <#Icon iconify="iconoir:birthday-cake" class="w-5 h-5 text-muted" />
       <span class="sr-only">{l("Year")}</span></a></li>
   <li
     data-role="infinite"
@@ -81,10 +81,10 @@
     
     phx-target={@event_target}
   ><a class={
-      "flex gap-2 text-base-content/70 border ",
+      "flex gap-2 text-muted border ",
       "border-base-content/5 active !text-base-content/100": !e(@feed_filters, :time_limit, nil) or e(@feed_filters, :time_limit, nil) == 0
     }>
-      <#Icon iconify="fa6-solid:infinity" class="w-5 h-5 text-base-content/70" />
+      <#Icon iconify="fa6-solid:infinity" class="w-5 h-5 text-muted" />
       <span class="sr-only">{l("All time")}</span></a></li>
 </ul>
 </div> --}

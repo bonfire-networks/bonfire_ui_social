@@ -4,7 +4,7 @@
       <div class="flex flex-col gap-1.5 min-w-0 flex-1">
         <span
           :if={Bonfire.UI.Social.EventHelpers.event_time_range(edge)}
-          class="text-sm font-medium text-base-content/55 tabular-nums"
+          class="text-sm font-medium text-muted tabular-nums"
         >
           {Bonfire.UI.Social.EventHelpers.event_time_range(edge)}
         </span>
@@ -18,7 +18,7 @@
           {#match host}
             <LinkLive
               to={Bonfire.UI.Social.EventHelpers.event_host_path(edge) || "#"}
-              class="flex items-center gap-1.5 text-sm text-base-content/60 min-w-0 w-fit hover:text-base-content"
+              class="flex items-center gap-1.5 text-sm text-muted min-w-0 w-fit hover:text-base-content"
             >
               <Bonfire.UI.Common.AvatarLive
                 parent_id={"evprev-#{@activity_component_id}"}
@@ -36,8 +36,8 @@
         {#case Bonfire.UI.Social.EventHelpers.event_location(edge)}
           {#match nil}
           {#match loc}
-            <span class="flex items-center gap-1.5 text-sm text-base-content/60 min-w-0">
-              <#Icon iconify="ph:map-pin-duotone" class="w-4 h-4 shrink-0 text-base-content/45" />
+            <span class="flex items-center gap-1.5 text-sm text-muted min-w-0">
+              <#Icon iconify="ph:map-pin-fill" class="w-4 h-4 shrink-0 text-base-content/45" />
               <span class="truncate">{loc}</span>
             </span>
         {/case}
@@ -59,9 +59,9 @@
           </span>
           <span
             :if={Bonfire.UI.Social.EventHelpers.event_source(edge)}
-            class="inline-flex items-center gap-1 text-xs text-base-content/55 min-w-0"
+            class="inline-flex items-center gap-1 text-xs text-muted min-w-0"
           >
-            <#Icon iconify="ph:globe-simple-duotone" class="w-3.5 h-3.5 shrink-0" />
+            <#Icon iconify="ph:globe-simple-fill" class="w-3.5 h-3.5 shrink-0" />
             <span class="truncate">{l("via %{instance}", instance: Bonfire.UI.Social.EventHelpers.event_source(edge))}</span>
           </span>
         </div>

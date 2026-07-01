@@ -23,7 +23,7 @@
                 fallback_icon="majesticons:video"
               />
               <!-- <div class="h-60 flex items-center place-content-center rounded-t-box">
-                  <#Icon iconify="majesticons:video" class="w-32 h-32 text-base-content/70" />
+                  <#Icon iconify="majesticons:video" class="w-32 h-32 text-muted" />
                 </div> -->
               <div class="absolute inset-0 w-full h-full flex items-center place-content-center">
                 <div class="bg-gray-900/60 z-50 gap-4 px-4 h-12 rounded flex justify-center items-center place-content-center">
@@ -69,13 +69,13 @@
     {#case MediaLive.provider(@media)}
       {#match nil}
       {#match provider}
-        <span class="text-sm text-left text-base-content/70">{provider}</span>
+        <span class="text-sm text-left text-muted">{provider}</span>
     {/case}
     <div class="font-bold text-lg text-left">{@media_label}</div>
     {#case MediaLive.author(@media)}
       {#match nil}
       {#match author}
-        <div class="text-sm text-left font-medium text-base-content/70 mt-1">by
+        <div class="text-sm text-left font-medium text-muted mt-1">by
           {author}
         </div>
     {/case}

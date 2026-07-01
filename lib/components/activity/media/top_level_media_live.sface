@@ -1,18 +1,23 @@
 {#if @featured}
-  <!-- Featured layout: Large image at top, content below (like Mastodon's first item) -->
+  {!-- Featured layout: large hero on top, content below (mirrors media_link / Figma "Media preview") --}
   <div
     data-id="top_level_media"
     data-object_id={id(@link)}
-    class={"flex flex-col bg-base-100 overflow-hidden rounded-t-xl", @class}
+    class={"flex flex-col bg-base-100 rounded-box border-hair border-secondary overflow-hidden", @class}
   >
+    {!-- hero: full-width, rounded-box, hairline border, neutral placeholder --}
     {#case MediaLive.preview_img(@link)}
       {#match preview_img when is_binary(preview_img)}
         <Bonfire.UI.Common.OpenExternalLinkLive id={deterministic_dom_id("feed_link_featured", @link.path)}>
-          <LinkLive to={@link.path} target="_blank" class="block">
+          <LinkLive
+            to={@link.path}
+            target="_blank"
+            class="block rounded-box border-hair border-secondary overflow-hidden bg-placeholder aspect-[1.91/1]"
+          >
             <LazyImage
               parent_id={deterministic_dom_id("trending_featured", @link.path)}
-              class="w-full aspect-[1.91/1] object-cover"
-              fallback_class="w-12 h-12 text-base-content/70"
+              class="w-full h-full object-cover"
+              fallback_class="w-12 h-12 text-muted"
               src={preview_img}
               media={@link}
               fallback_icon="ion:newspaper-outline"
@@ -20,70 +25,68 @@
           </LinkLive>
         </Bonfire.UI.Common.OpenExternalLinkLive>
       {#match _}
-        {!-- No preview image, show placeholder --}
-        <div class="w-full aspect-[1.91/1] bg-base-200 flex items-center justify-center">
+        <div class="rounded-box border-hair border-secondary bg-placeholder aspect-[1.91/1] flex items-center justify-center">
           <#Icon iconify="ion:newspaper-outline" class="w-12 h-12 text-base-content/30" />
         </div>
     {/case}
 
-    <div class="p-4 flex flex-col gap-2">
-      <div class="flex items-center gap-2 text-sm text-base-content/60">
+    <div class="p-card flex flex-col gap-content">
+      {!-- publisher eyebrow + headline as one tight group --}
+      <div class="flex flex-col gap-half">
         {#case MediaLive.provider(@link)}
           {#match provider when is_binary(provider)}
-            <span class="text-primary font-medium">{provider}</span>
+            <div class="text-caption uppercase tracking-[0.04em] text-base-content font-medium truncate">{provider}</div>
           {#match _}
         {/case}
-      </div>
 
-      <Bonfire.UI.Common.OpenExternalLinkLive id={deterministic_dom_id("feed_link", @link.path)}>
-        <LinkLive
-          to={@link.path}
-          target="_blank"
-          class="text-lg font-bold link link-hover line-clamp-2 leading-snug text-balance"
-        >
-          {Bonfire.Files.Media.media_label_and_alt(@link)}
-        </LinkLive>
-      </Bonfire.UI.Common.OpenExternalLinkLive>
+        <Bonfire.UI.Common.OpenExternalLinkLive id={deterministic_dom_id("feed_link", @link.path)}>
+          <LinkLive
+            to={@link.path}
+            target="_blank"
+            class="block text-display font-medium tracking-[-0.03em] leading-[25px] text-base-content link link-hover line-clamp-2 text-balance"
+          >
+            {Bonfire.Files.Media.media_label_and_alt(@link)}
+          </LinkLive>
+        </Bonfire.UI.Common.OpenExternalLinkLive>
+      </div>
 
       {#case Bonfire.Files.Media.description(@link)}
         {#match description when is_binary(description) and description != ""}
-          <p class="text-sm text-base-content/70 line-clamp-2 text-pretty">{description}</p>
+          <p class="text-body text-muted line-clamp-2 text-pretty">{description}</p>
         {#match _}
       {/case}
 
-      <div class="flex items-center mt-2 gap-2 text-sm text-base-content/60">
+      <div class="flex items-center gap-2 text-body text-muted">
         <Bonfire.UI.Social.TrendingMediaActionsLive media={@link} />
       </div>
     </div>
   </div>
 {#else}
-  {!-- Compact layout: Small thumbnail on right, content on left --}
+  {!-- Compact layout: small thumbnail on right, content on left --}
   <div
     data-id="top_level_media"
     data-object_id={id(@link)}
-    class={"flex gap-3 bg-base-100", @class, "p-4": !@in_widget}
+    class={"flex gap-3 bg-base-100", @class, "p-card": !@in_widget}
   >
     {!-- Content on left --}
-    <div class="flex flex-col gap-1 flex-1 min-w-0">
-      <div class="flex items-center gap-2 text-sm text-base-content/60">
-        {#case MediaLive.provider(@link)}
-          {#match provider when is_binary(provider)}
-            <span class="text-primary">{provider}</span>
-          {#match _}
-        {/case}
-      </div>
+    <div class="flex flex-col gap-half flex-1 min-w-0">
+      {#case MediaLive.provider(@link)}
+        {#match provider when is_binary(provider)}
+          <div class="text-caption uppercase tracking-[0.04em] text-base-content font-medium truncate">{provider}</div>
+        {#match _}
+      {/case}
 
       <Bonfire.UI.Common.OpenExternalLinkLive id={deterministic_dom_id("feed_link", @link.path)}>
         <LinkLive
           to={@link.path}
           target="_blank"
-          class="text-base font-semibold link link-hover line-clamp-2 leading-tight"
+          class="text-body font-medium text-base-content link link-hover line-clamp-2 leading-snug"
         >
           {Bonfire.Files.Media.media_label_and_alt(@link)}
         </LinkLive>
       </Bonfire.UI.Common.OpenExternalLinkLive>
 
-      <div class="flex items-center mt-2 gap-2 text-sm text-base-content/60">
+      <div class="flex items-center gap-2 text-body text-muted">
         <Bonfire.UI.Social.TrendingMediaActionsLive media={@link} />
       </div>
     </div>
@@ -99,8 +102,8 @@
             <LinkLive to={@link.path} target="_blank" class="block">
               <LazyImage
                 parent_id={deterministic_dom_id("trending_thumb", @link.path)}
-                class="w-[120px] h-[120px] rounded-lg object-cover"
-                fallback_class="w-6 h-6 text-base-content/70"
+                class="w-[120px] h-[120px] rounded-box border-hair border-secondary object-cover"
+                fallback_class="w-6 h-6 text-muted"
                 src={preview_img}
                 media={@link}
                 fallback_icon="ion:newspaper-outline"
@@ -108,8 +111,7 @@
             </LinkLive>
           </Bonfire.UI.Common.OpenExternalLinkLive>
         {#match _}
-          {!-- No preview image, show small placeholder --}
-          <div class="w-[120px] h-[120px] rounded-lg bg-base-200 flex items-center justify-center shrink-0">
+          <div class="w-[120px] h-[120px] rounded-box border-hair border-secondary bg-placeholder flex items-center justify-center shrink-0">
             <#Icon iconify="ion:newspaper-outline" class="w-6 h-6 text-base-content/30" />
           </div>
       {/case}

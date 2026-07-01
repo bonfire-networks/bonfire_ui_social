@@ -16,7 +16,7 @@
       creator={@creator}
       object_boundary={@object_boundary}
       showing_within={@showing_within}
-      icon="ph:arrow-up-duotone"
+      icon="ph:arrow-up-fill"
       icon_pressed="ph:arrow-up-fill"
       no_data_tip
       like_count={e(
@@ -35,7 +35,7 @@
           ),
         else: "Bonfire.Social.Threads:reply"}
       phx-value-id={id(@object)}
-      class="btn btn-sm btn-ghost text-base-content/70 text-sm hover:text-primary normal-case font-normal"
+      class="btn btn-sm btn-ghost text-muted text-sm hover:text-primary normal-case font-normal"
       data-role="reply_enabled"
       data-id="action_reply"
     >
@@ -55,14 +55,14 @@
         class="tooltip-button btn btn-ghost group hover:bg-primary/10 btn-circle btn-sm"
       >
         <#Icon
-          iconify="ph:dots-three-outline-vertical-duotone"
-          class="w-[18px] h-[18px] group-hover:text-primary md:w-4 md:h-4 text-base-content/60"
+          iconify="ph:dots-three-outline-vertical-fill"
+          class="w-[18px] h-[18px] group-hover:text-primary md:w-4 md:h-4 text-muted"
         />
         <span class="sr-only">{l("More actions")}</span>
       </button>
       <ul
         tabindex="0"
-        class="tooltip z-tooltip menu bg-base-100 rounded-box w-64 absolute top-0 left-0 hidden tooltip-animated"
+        class="tooltip menu dropdown-panel"
         role="menu"
         id={deterministic_dom_id(__MODULE__, id(@activity), "embed_more_menu_content", @parent_id)}
         aria-orientation="vertical"
@@ -77,7 +77,7 @@
             class="flex items-center justify-between gap-2 text-sm text-base-content w-full"
           >
             <span class="flex-1 text-sm font-medium text-left" data-role="label">{l("Copy link")}</span>
-            <#Icon iconify="ph:copy-duotone" class="w-5 h-5 shrink-0" />
+            <#Icon iconify="ph:copy-fill" class="w-5 h-5 shrink-0" />
           </button>
         </li>
 
@@ -102,7 +102,7 @@
               <span class="flex-1 text-sm font-medium text-left" data-role="label">
                 {l("Report this %{object}", object: e(@object_type_readable, l("object")))}
               </span>
-              <#Icon iconify="ph:flag-duotone" class="w-5 h-5 shrink-0" />
+              <#Icon iconify="ph:flag-fill" class="w-5 h-5 shrink-0" />
             </button>
           </li>
         {/if}
@@ -121,7 +121,7 @@
               <span class="flex-1 text-sm font-medium text-left" data-role="label">
                 {l("Block this user")}
               </span>
-              <#Icon iconify="ph:prohibit-duotone" class="w-5 h-5 shrink-0" />
+              <#Icon iconify="ph:prohibit-fill" class="w-5 h-5 shrink-0" />
             </button>
           </li>
         {/if}

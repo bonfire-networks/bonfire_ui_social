@@ -2,12 +2,12 @@
   {#match suggested_profiles}
     <Bonfire.UI.Common.WidgetBlockLive
       :if={current_user_id(@__context__)}
-      class="w-full p-3 lg:p-4 relative overflow-hidden lg:rounded-box bg-gradient-to-br from-secondary/25 via-secondary/10 to-transparent"
-      title_class="pb-3 px-1 text-sm font-bold uppercase tracking-widest text-secondary"
+      class="w-full pt-4 flex-auto mx-auto border-y-hair border-secondary overflow-hidden"
+      title_class="flex items-center justify-between pb-card text-xs font-normal uppercase tracking-wide text-base-content px-card"
       widget_title={e(@widget_title, l("Who to follow"))}
       reset_cache_event="Bonfire.UI.Social.WidgetSuggestedProfilesLive:reset_suggested_profiles"
       empty={suggested_profiles == []}
-      empty_icon="ph:user-plus-duotone"
+      empty_icon="ph:user-plus-fill"
       empty_message={l("No suggestions yet")}
     >
       {!-- Carousel navigation arrows, shown in the header to the right of the title --}
@@ -16,7 +16,7 @@
           <button
             type="button"
             aria-label={l("Scroll left")}
-            class="btn btn-circle btn-sm bg-secondary/15 hover:bg-secondary/30 border-none text-secondary"
+            class="w-7 h-7 rounded-full bg-primary text-primary-content flex items-center justify-center shrink-0 disabled:opacity-30 transition-opacity cursor-pointer"
             phx-click={JS.dispatch("scroll-left", to: "#suggested-profiles-carousel")}
           >
             <#Icon iconify="ph:caret-left" class="w-4 h-4" />
@@ -24,7 +24,7 @@
           <button
             type="button"
             aria-label={l("Scroll right")}
-            class="btn btn-circle btn-sm bg-secondary/15 hover:bg-secondary/30 border-none text-secondary"
+            class="w-7 h-7 rounded-full bg-primary text-primary-content flex items-center justify-center shrink-0 disabled:opacity-30 transition-opacity cursor-pointer"
             phx-click={JS.dispatch("scroll-right", to: "#suggested-profiles-carousel")}
           >
             <#Icon iconify="ph:caret-right" class="w-4 h-4" />
@@ -41,9 +41,16 @@
           {#for user <- suggested_profiles}
             <div
               class="flex-shrink-0 snap-start rounded-xl bg-base-200 overflow-hidden"
-              style="width: calc(50% - 8px);"
+              style="width: calc(80% - 8px);"
             >
               <StatelessComponent
+                module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
+                character={e(user, :character, nil) || e(user, :activity, :subject, :character, nil)}
+                profile={e(user, :profile, nil) || e(user, :activity, :subject, :profile, nil)}
+                show_summary
+                show_controls={[:follows_me, :follow]}
+              />
+              {!-- <StatelessComponent
                 module={maybe_component(Bonfire.UI.Me.UserPreviewLive, @__context__)}
                 user={user}
                 href={"/@#{e(user, :character, :username, "")}"}
@@ -60,7 +67,7 @@
                     />
                   </div>
                 </:actions>
-              </StatelessComponent>
+              </StatelessComponent> --}
             </div>
           {/for}
         </div>

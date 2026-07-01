@@ -7,7 +7,6 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop creator, :any, default: nil
   prop subject_user, :any, default: nil
   prop object, :any, required: true
-  # prop profile, :any, default: nil
   prop thread_id, :string, required: true
   prop object_type, :any, required: true
   prop object_type_readable, :any, required: true
@@ -37,11 +36,9 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop my_like, :any, default: nil
   prop my_bookmark, :any, default: nil
 
-  # @decorate time()
   def update_many(assigns_sockets) do
     assigns_sockets
     |> LiveHandler.actions_update_many(caller_module: __MODULE__)
-    # |> debug("lllll")
     |> Enum.map(fn
       {assigns, socket} ->
         assign(socket, assigns)
@@ -49,12 +46,9 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
       socket ->
         socket
     end)
-
-    # |> debug("kkkk")
   end
 
   def count(replied) do
-    # debug(replied)
     e(replied, :nested_replies_count, 0) + e(replied, :direct_replies_count, 0)
   end
 

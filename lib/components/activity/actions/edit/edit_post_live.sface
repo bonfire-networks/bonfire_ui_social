@@ -34,10 +34,7 @@
         />
 
         <div class="relative border-b border-base-content/10">
-          <#Icon
-            iconify="ri:alert-fill"
-            class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-base-content/70"
-          />
+          <#Icon iconify="ri:alert-fill" class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-muted" />
           <input
             name="summary"
             class="w-full input"
@@ -64,7 +61,7 @@
           <div class="text-sm text-base-content">
             {l("Edit")}
           </div>
-          <#Icon iconify="ph:pencil-simple-line-duotone" class="w-5 h-5 shrink-0" />
+          <#Icon iconify="ph:pencil-simple-line-fill" class="w-5 h-5 shrink-0" />
         </div>
       </li>
       <li :if={@versioning_enabled}>

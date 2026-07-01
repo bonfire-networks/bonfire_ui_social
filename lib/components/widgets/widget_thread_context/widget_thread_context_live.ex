@@ -11,9 +11,9 @@ defmodule Bonfire.UI.Social.WidgetThreadContextLive do
   @doc "Iconify name keyed off category type."
   def icon(category) do
     case e(category, :type, nil) do
-      :topic -> "ph:hash-duotone"
-      :group -> "ph:users-three-duotone"
-      _ -> "ph:folder-duotone"
+      :topic -> "ph:hash-fill"
+      :group -> "ph:users-three-fill"
+      _ -> "ph:folder-fill"
     end
   end
 

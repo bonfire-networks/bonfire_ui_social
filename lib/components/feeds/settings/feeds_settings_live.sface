@@ -1,6 +1,6 @@
 <div class="flex flex-col">
   <div class="flex flex-col gap-1 py-6 p-4">
-    <div class="text-base-content/70">{l(
+    <div class="text-muted">{l(
         "Customize your feed experience by configuring default display settings and managing which feed presets appear in your sidebar navigation."
       )}</div>
   </div>
@@ -15,14 +15,14 @@
       tabindex="0"
       class="p-4 text-lg font-bold flex items-center gap-4 border-b border-base-content/10 cursor-pointer select-none"
     >
-      <#Icon iconify="ph:list-bullets-duotone" class="w-6 h-6 text-primary" />
+      <#Icon iconify="ph:list-bullets-fill" class="w-6 h-6 text-primary" />
       <span class="flex-1">{l("Default settings")}</span>
       <span class="transition-transform" x-bind:class="{'rotate-180': !open}">
-        <#Icon iconify="ph:caret-down" class="w-4 h-4 text-base-content/70" />
+        <#Icon iconify="ph:caret-down-bold" class="w-4 h-4 text-muted" />
       </span>
     </div>
 
-    <div x-show="open" x-cloak x-collapse class="bg-base-100 divide-y divide-base-content/10">
+    <div x-show="open" x-cloak x-collapse class="bg-base-100   divide-hair divide-secondary">
       <form data-scope="time_limit" class="p-4" phx-change="Bonfire.Common.Settings:set">
         <label for="set_default_time_limit" class="sr-only">{l("Set default time limit")}</label>
         <Bonfire.UI.Common.SettingsSelectLive
@@ -41,7 +41,7 @@
       <!-- <div class="flex items-center justify-between gap-4">
         <div class="flex flex-col gap-1">
           <div class="text-sm font-medium">{l("Default sort")}</div>
-          <div class="text-sm font-light text-base-content/70">{l(
+          <div class="text-sm font-light text-muted">{l(
               "Select the default sorting options for your feeds (can always change in the feed controls options)"
             )}</div>
         </div>
@@ -101,10 +101,10 @@
             <div class="text-sm font-medium">{l("Infinite scrolling")}</div>
           </div>
           <button type="button" x-cloak class="btn btn-circle btn-sm btn-ghost" x-show="open">
-            <#Icon iconify="ph:caret-down" class="w-4 h-4 text-base-content/70" />
+            <#Icon iconify="ph:caret-down-bold" class="w-4 h-4 text-muted" />
           </button>
           <button type="button" class="btn btn-circle btn-sm btn-ghost" x-show="!open">
-            <#Icon iconify="ph:caret-up-duotone" class="w-4 h-4 text-base-content/70" />
+            <#Icon iconify="ph:caret-up-fill" class="w-4 h-4 text-muted" />
           </button>
         </div>
         <div x-show="open" x-cloak x-collapse class="pt-2">
@@ -170,10 +170,10 @@
     <div class="">
       <div>
         <div class="p-4 text-lg font-bold flex items-start gap-4">
-          <#Icon iconify="ph:list-star-duotone" class="w-6 h-6 text-primary" />
+          <#Icon iconify="ph:list-star-fill" class="w-6 h-6 text-primary" />
           <div>
             <div>{l("Feed presets")}</div>
-            <div class="text-sm font-normal text-base-content/70">{l("Decide which feed you want to show in your sidebar.")}</div>
+            <div class="text-sm font-normal text-muted">{l("Decide which feed you want to show in your sidebar.")}</div>
           </div>
         </div>
       </div>
@@ -196,7 +196,7 @@
                     <Iconify.iconify icon={preset[:icon] || "ic:baseline-rss-feed"} class="w-7 h-7 opacity-70" />
                     <div class="flex flex-col gap-0 flex-1">
                       <div class="font-medium text-sm">{preset[:name] || preset[:description] || preset.id}</div>
-                      <div class="text-xs text-base-content/90">{preset[:description]}</div>
+                      <div class="text-xs text-base-content">{preset[:description]}</div>
                     </div>
                     {!-- <div class="text-xs text-base-content/50 mt-1 flex gap-2 flex-wrap">
                         {#if preset[:current_user_required]}
@@ -289,14 +289,14 @@
       <div x-on:click="open = !open" class="flex items-center justify-between gap-4 cursor-pointer">
         <div class="flex flex-col gap-1">
           <div class="text-sm font-medium">{l("Activity and content types")}</div>
-          <div class="text-sm font-light text-base-content/70">{l("Here you can decide which activity and content types you want to include in your feed control tab")}</div>
+          <div class="text-sm font-light text-muted">{l("Here you can decide which activity and content types you want to include in your feed control tab")}</div>
         </div>
 
         <button type="button" x-cloak class="btn btn-circle btn-sm btn-ghost" x-show="open">
-          <#Icon iconify="ph:caret-down" class="w-4 h-4 text-base-content/70" />
+          <#Icon iconify="ph:caret-down-bold" class="w-4 h-4 text-muted" />
         </button>
         <button type="button" class="btn btn-circle btn-sm btn-ghost" x-show="!open">
-          <#Icon iconify="ph:caret-up-duotone" class="w-4 h-4 text-base-content/70" />
+          <#Icon iconify="ph:caret-up-fill" class="w-4 h-4 text-muted" />
         </button>
       </div>
       <div x-show="open" x-cloak x-collapse>

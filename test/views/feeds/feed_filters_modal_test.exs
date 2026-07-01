@@ -179,7 +179,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> click_button("Last Week")
       |> click_button("Oldest first")
       |> apply_filters()
-      |> assert_has("[data-id=feed_controls] .badge.badge-primary")
+      |> assert_has("[data-id=feed_controls] .badge.badge-secondary")
     end
 
     test "active time filter is available in the modal after applying", %{conn: conn} do
@@ -341,7 +341,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> visit("/feed/local")
       |> open_filters_modal()
       |> click_button("[data-toggle='article'] button", "Only")
-      |> assert_has("summary:has([iconify='ph:article-ny-times-duotone']) .badge",
+      |> assert_has("summary:has([iconify='ph:article-ny-times-fill']) .badge",
         text: "1 only"
       )
     end

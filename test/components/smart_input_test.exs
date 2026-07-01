@@ -80,7 +80,7 @@ defmodule Bonfire.UI.Social.SmartInputTest do
     test "language selector is present", %{conn: conn} do
       conn
       |> visit("/feed/local")
-      |> assert_has("#language_btn")
+      |> assert_has("#language_dropdown")
     end
   end
 

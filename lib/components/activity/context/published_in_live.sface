@@ -1,14 +1,26 @@
-{debug({@showing_within, @context}, "pubbbbl") && ""}
 {!-- Something published in a Category / Topic --}
-<div style="margin-left: -32px; margin-bottom: 4px" data-role="published_in" class={@class}>
-  {!-- and Types.object_type(@context) != @showing_within --}
-  <#Icon iconify="ph:users-three-duotone" class="w-5 h-5 text-info" />
-  <div class="flex-1 ml-3">
-    <div class="text-sm font-medium text-base-content/70">
-      {l("Published in")}
-      <LinkLive class="font-medium link text-base-content/70" to={path(@context)}>
-        {e(@context, :profile, :name, nil) || e(@context, :character, :username, nil)}
-      </LinkLive>
+{#if @compact}
+  {!-- inline byline-end variant (right side of SubjectLive's byline row) --}
+  <div
+    data-role="published_in"
+    class="inline-flex items-center gap-1.5 shrink-0 text-body leading-tight"
+  >
+    <span class="text-muted">{l("In")}</span>
+    <#Icon iconify="ph:users-three-fill" class="w-[18px] h-[18px] text-primary shrink-0" />
+    <LinkLive class="link link-hover text-primary truncate max-w-[160px]" to={path(@context)}>
+      {e(@context, :profile, :name, nil) || e(@context, :character, :username, nil)}
+    </LinkLive>
+  </div>
+{#else}
+  <div data-role="published_in" class={@class}>
+    <#Icon iconify="ph:users-three-fill" class="w-5 h-5 text-primary" />
+    <div class="flex-1 ml-3">
+      <div class="text-sm text-muted">
+        {l("In")}
+        <LinkLive class="font-medium text-primary" to={path(@context)}>
+          {e(@context, :profile, :name, nil) || e(@context, :character, :username, nil)}
+        </LinkLive>
+      </div>
     </div>
   </div>
-</div>
+{/if}

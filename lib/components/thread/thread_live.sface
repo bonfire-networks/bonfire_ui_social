@@ -11,11 +11,6 @@
     :if={!@hide_thread_stats}
     event_target={@myself}
     showing_within={@showing_within}
-    reply_count={@reply_count}
-    participant_count={@participant_count}
-    participants={@participants}
-    last_reply_id={@last_reply_id}
-    thread_boost_count={@thread_boost_count}
     object={@object}
     activity={@activity}
     is_remote={e(@object, :peered, :canonical_uri, nil) != nil}

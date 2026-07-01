@@ -45,7 +45,7 @@
           <div class="absolute bottom-3 left-3 flex flex-col items-center justify-center leading-none rounded-lg bg-base-100 ring-1 ring-base-content/10 shadow-md px-3 py-1.5 min-w-[3rem]">
             <span class="text-[0.65rem] font-semibold uppercase tracking-wide text-primary">{c.weekday}</span>
             <span class="text-2xl font-bold text-base-content">{c.day}</span>
-            <span class="text-[0.65rem] font-medium uppercase tracking-wide text-base-content/70">{c.month}</span>
+            <span class="text-[0.65rem] font-medium uppercase tracking-wide text-muted">{c.month}</span>
           </div>
       {/case}
     </div>
@@ -66,7 +66,7 @@
         {#match nil}
         {#match start}
           <div class="flex items-start gap-2 mt-3">
-            <#Icon iconify="ph:calendar-blank-bold" class="w-4 h-4 mt-0.5 shrink-0 text-base-content/70" />
+            <#Icon iconify="ph:calendar-blank-bold" class="w-4 h-4 mt-0.5 shrink-0 text-muted" />
             <time datetime={start.iso} class="text-sm text-base-content leading-snug">
               {format_range(start, event_end_time(@json))}
             </time>
@@ -88,7 +88,7 @@
             {#match ""}
             {#match location_text}
               <div class="flex items-start gap-2 mt-2">
-                <#Icon iconify="ph:map-pin-fill" class="w-4 h-4 mt-0.5 shrink-0 text-base-content/70" />
+                <#Icon iconify="ph:map-pin-fill" class="w-4 h-4 mt-0.5 shrink-0 text-muted" />
                 <a
                   href={"https://www.openstreetmap.org/search?zoom=6&query=#{location_text}"}
                   target="_blank"
@@ -105,7 +105,7 @@
         {#match content}
           <article class={
             "mt-4 text-base-content/80 prose max-w-prose",
-            "prose-sm line-clamp-2 !text-base-content/70": !@viewing_main_object
+            "prose-sm line-clamp-2 !text-muted": !@viewing_main_object
           }>
             {rich(content)}
           </article>

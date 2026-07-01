@@ -15,7 +15,7 @@ TODO: use preloaded boundaries for can? when available
   <input name="object_id" type="hidden" value={id(@object)}>
 
   {#if @with_password_prompt}
-    <div class="p-3 rounded-lg bg-base-content/5 border border-base-content/10 mt-4">
+    <div class="p-3 rounded-lg bg-base-content/5 border-hair border-secondary mt-4">
       <div class="text-sm font-medium">{l("Enter password to confirm")}</div>
       <label class="label">
         <span class="label-text text-sm">{l("For security purposes please enter the password of your account")}</span>
@@ -34,7 +34,7 @@ TODO: use preloaded boundaries for can? when available
       <span :if={!@hide_text} class="text-sm font-medium truncate ellipsis text-left flex-1">
         {l("Delete %{object_or_type}", object_or_type: e(@object_type_readable, l("object")))}
       </span>
-      <#Icon :if={!@hide_icon} iconify="ph:trash-duotone" class={e(@icon_class, "w-5 h-5 shrink-0")} />
+      <#Icon :if={!@hide_icon} iconify="ph:trash-fill" class={e(@icon_class, "w-5 h-5 shrink-0")} />
     </div>
   </:open_btn>
 

@@ -30,7 +30,7 @@
           parent_id={"dp_#{@activity_component_id}"}
         />
         <div class="flex items-center gap-1.5 mt-1.5 badge badge-lg text-sm">
-          <#Icon iconify="ph:chat-circle-duotone" class="w-4 h-4" />
+          <#Icon iconify="ph:chat-circle-fill" class="w-4 h-4" />
           <span>{e(reply_count, 0)} {if e(reply_count, 0) == 1, do: l("reply"), else: l("replies")}</span>
         </div>
     {/case}

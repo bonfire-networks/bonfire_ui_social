@@ -32,7 +32,7 @@
         |> Enum.join(" · ")}
         {#match ""}
         {#match meta}
-          <div class="text-sm truncate text-base-content/60">{meta}</div>
+          <div class="text-sm truncate text-muted">{meta}</div>
       {/case}
     </div>
 

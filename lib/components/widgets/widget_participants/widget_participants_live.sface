@@ -4,13 +4,18 @@
       {#match reply_counts}
         {#case Enum.sum(Map.values(reply_counts))}
           {#match total}
-            <Bonfire.UI.Common.WidgetBlockLive widget_title={e(assigns, :widget_title, l("Top participants"))}>
+            <Bonfire.UI.Common.WidgetBlockLive
+              class="border-y-hair border-secondary pt-card"
+              title_class="flex px-card items-center justify-between pb-card text-xs font-normal uppercase tracking-wide text-base-content"
+              widget_title={e(assigns, :widget_title, l("Top participants"))}
+            >
               {!-- top 5 by reply count, with a reveal-the-rest control (#1988) --}
               <Bonfire.UI.Social.ParticipantsListLive
                 id="widget_participants_list"
                 participants={Enum.sort_by(participants, &Map.get(reply_counts, id(&1), 0), :desc)}
                 limit={5}
-                list_class="flex flex-col gap-3"
+                item_class="p-1"
+                list_class="divide-hair border-t-hair border-secondary flex flex-col divide-secondary"
                 :let={participant: participant}
               >
                 {#case Map.get(reply_counts, id(participant), 0)}
@@ -18,14 +23,16 @@
                     <StatelessComponent
                       module={maybe_component(Bonfire.UI.Me.ProfileItemLive, @__context__)}
                       show_controls={[]}
+                      wrapper_class="flex items-center bg-base-100 p-1 justify-between gap-1 rounded-field border-hair border-secondary"
                       parent_id="widget_participants"
                       character={e(participant, :character, nil)}
                       profile={e(participant, :profile, nil)}
                       avatar_class="w-9 h-9 rounded-full"
+                      fallback_class="w-9 h-9 rounded-full"
                     >
                       <div
                         :if={count > 0 and total > 0}
-                        class="shrink-0 w-10 h-2 rounded-full bg-base-content/10 overflow-hidden"
+                        class="shrink-0 mr-[20px] w-[60px] h-2 rounded-full bg-secondary overflow-hidden"
                         title={"#{count} " <> l("replies")}
                       >
                         <div

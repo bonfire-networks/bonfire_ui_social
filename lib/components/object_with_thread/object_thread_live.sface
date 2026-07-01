@@ -22,7 +22,7 @@
             </div>
           {#else}
             <Bonfire.UI.Social.ActivityLive
-              class="main_object_in_thread"
+              class=""
               id={@main_object_component_id}
               showing_within={@showing_within}
               thread_mode={@thread_mode}
@@ -36,14 +36,16 @@
             />
           {/if}
         {/if}
+        <StatelessComponent
+          :if={@thread_id}
+          module={maybe_component(Bonfire.UI.Social.Activity.FediverseReactionsLive, @__context__)}
+          object={@object}
+          reply_count={length(e(@replies, []))}
+          boosters={@root_boosters}
+          boost_count={@root_boost_count}
+        />
       </div>
-      <StatelessComponent
-        :if={@thread_id}
-        module={maybe_component(Bonfire.UI.Social.Activity.FediverseReactionsLive, @__context__)}
-        object={@object}
-        boosters={@root_boosters}
-        boost_count={@root_boost_count}
-      />
+
       <div class="">
         <Bonfire.UI.Social.ThreadLive
           :if={@thread_id}

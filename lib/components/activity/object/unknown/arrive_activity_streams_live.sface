@@ -33,7 +33,7 @@
         </div>
 
         <!-- {#if e(@json, "published", nil) || e(@json, "updated", nil)}
-          <div class="flex items-center gap-2 text-sm text-base-content/70 mb-2">
+          <div class="flex items-center gap-2 text-sm text-muted mb-2">
             <#Icon iconify="ph:calendar-blank" class="w-4 h-4" />
             {#case e(@json, "published", nil) || e(@json, "updated", nil)}
               {#match nil}

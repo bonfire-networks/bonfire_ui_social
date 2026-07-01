@@ -16,14 +16,11 @@
     previewable_truncate:
       !@viewing_main_object &&
         @showing_within not in [:smart_input, :pinned],
-    "!text-sm !text-base-content/70": e(@object_type, nil) == :article && @showing_within != :thread
+    "!text-sm !text-muted": e(@object_type, nil) == :article && @showing_within != :thread
   }
 >
   {rich(
-    # maybe_truncate(
     @html_body,
-    #  @viewing_main_object || @showing_within not in [nil, :feed, :search, :notifications]
-    # ),
     # remote content is stored in HTML, but local content may contain markdown and/or HTML
     skip_markdown: @is_remote,
     #  we want to sanitize rather than escape HTML in local content

@@ -4,32 +4,19 @@
   data-role="fediverse_reactions"
   role="region"
   aria-label={l("Fediverse reactions")}
-  class="flex flex-col gap-1.5 px-4 lg:px-0 pt-3 pb-1"
+  class="flex flex-col gap-2 pt-3 border-t-hair border-secondary mt-2"
 >
-  <!-- <span class="text-sm font-semibold text-base-content/80">{l("Fediverse Reactions")}</span> -->
-
-  {!-- BOOSTS --}
-  <div data-role="boosts_summary" class="flex items-center gap-2.5">
-    <#Icon
-      iconify="ph:arrows-counter-clockwise-duotone"
-      class="size-5 shrink-0 text-base-content/50"
-      aria-hidden="true"
-    />
-    <div class="flex -space-x-2" aria-hidden="true">
-      {#for booster <- Enum.take(@boosters, @max_avatars)}
-        <Bonfire.UI.Common.AvatarLive
-          parent_id={deterministic_dom_id(__MODULE__, id(booster), "reposter-av", @parent_id)}
-          class="w-6 h-6 rounded-full ring-2 ring-base-100"
-          wrapper_class="inline-flex"
-          user_id={id(booster)}
-          src={Media.avatar_url(booster)}
-          title={e(booster, :profile, :name, nil) || e(booster, :character, :username, "")}
-          is_remote={!check_is_local?(booster, preload_if_needed: false)}
-        />
-      {/for}
+  <div class="flex items-center gap-3" role="group" aria-label={l("Thread stats")}>
+    <div class="text-sm text-base-content" aria-label={l("Replies")} title={l("Replies")}>
+      <span data-id="reply_count" class="text-sm tabular-nums font-semibold text-base-content">{@reply_count || 0}</span>
+      <span class="">{l("Replies")}</span>
     </div>
-    <span class="text-sm font-medium text-base-content/80">
-      {lp("%{count} boost", "%{count} boosts", @boost_count, count: @boost_count)}
+    <span class="text-primary font-bold">
+      ·
     </span>
+    <div data-role="boosts_summary" class="text-sm text-base-content">
+      <span data-id="boosts_count" class="text-sm tabular-nums font-semibold text-base-content">{@boost_count || 0}</span>
+      <span class="">{l("Boosts")}</span>
+    </div>
   </div>
 </div>

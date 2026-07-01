@@ -16,7 +16,7 @@
           aria-pressed={to_string(@selected_category == category)}
           class={
             "group flex items-center gap-2.5 p-2 rounded-xl border text-left cursor-pointer transition-all duration-150 ease-out",
-            "border-primary/60 bg-primary/10": @selected_category == category,
+            "border-secondary bg-primary/10": @selected_category == category,
             "border-base-content/10 bg-base-200/40 hover:bg-base-200 hover:border-base-content/20":
               @selected_category != category
           }
@@ -64,8 +64,8 @@
 
     {#case filtered(@events, @selected_category)}
       {#match []}
-        <div class="flex flex-col items-center justify-center text-center py-16 text-base-content/60">
-          <#Icon iconify="ph:calendar-x-duotone" class="w-12 h-12 mb-3 opacity-40" />
+        <div class="flex flex-col items-center justify-center text-center py-16 text-muted">
+          <#Icon iconify="ph:calendar-x-fill" class="w-12 h-12 mb-3 opacity-40" />
           {#if @selected_category}
             <p class="font-medium">{l("No %{category} events coming up", category: EventCategories.label(@selected_category))}</p>
             <button type="button" class="btn btn-ghost btn-sm mt-3 gap-1" phx-click="clear_filters">
@@ -100,7 +100,7 @@
                 }>
                   {day_label(date)}
                 </span>
-                <span class="text-sm font-medium text-base-content/55">{weekday(date)}</span>
+                <span class="text-sm font-medium text-muted">{weekday(date)}</span>
               </h3>
 
               {#for edge <- day_events}
@@ -112,7 +112,7 @@
                   )}
                   activity={activity_for_preview(edge)}
                   custom_preview={Bonfire.UI.Social.Activity.EventPreviewLive}
-                  class="group rounded-box border border-base-content/10 bg-base-200 shadow-sm cursor-pointer hover:border-primary/40 hover:shadow-md transition-all duration-150 ease-out !pl-5"
+                  class="group rounded-box border border-base-content/10 bg-base-200 shadow-sm cursor-pointer hover:border-secondary hover:shadow-md transition-all duration-150 ease-out !pl-5"
                 />
               {/for}
             </section>

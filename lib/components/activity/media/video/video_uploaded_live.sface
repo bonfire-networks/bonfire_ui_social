@@ -19,7 +19,7 @@
           />
         {#else}
           <div class="h-60 flex items-center place-content-center rounded-t-box">
-            <#Icon iconify="majesticons:video" class="w-full h-32 text-base-content/70" />
+            <#Icon iconify="majesticons:video" class="w-full h-32 text-muted" />
           </div>
         {/if}
     {/case} --}
@@ -72,7 +72,7 @@
       {#case MediaLive.provider(@media)}
             {#match nil}
             {#match provider}
-        <span class="text-sm text-left text-base-content/70">{provider}</span>
+        <span class="text-sm text-left text-muted">{provider}</span>
       {/case}
       <div class="font-semibold text-left">{@media_label}</div>
     </div> --}

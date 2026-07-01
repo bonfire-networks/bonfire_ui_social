@@ -1,13 +1,10 @@
 <div
   data-id="feed_controls"
   id="feed_controls"
-  class="relative feed_control_wrapper bg-base-100 rounded-t-2xl"
+  class="relative z-10 feed_control_wrapper bg-base-300 rounded-box border-hair border-secondary border w-[calc(100%+2px)] max-w-[calc(100%+2px)] -ml-px -mb-px"
 >
   {#if @reloading}
-    <div
-      class="absolute z-10 inset-0 flex items-center justify-center bg-base-content/10"
-      role="status"
-    >
+    <div class="absolute z-10 inset-0 flex items-center justify-center" role="status">
       <span class="loading loading-ring loading-xl" />
       <span class="sr-only">{l("Loading...")}</span>
     </div>
@@ -15,7 +12,7 @@
 
   {#case Bonfire.UI.Social.FeedControlsLive.active_filters(@feed_filters, @__context__)}
     {#match active_filters}
-      <div class="flex w-full items-center gap-3 p-2">
+      <div class="flex w-full items-center gap-1 p-1">
         <StatefulComponent
           id="advanced_filter_controls"
           module={Bonfire.UI.Social.AdvancedFilterControlsLive}
@@ -35,12 +32,12 @@
             modal_assigns={Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}
           >
             <:open_btn>
-              <div class="btn btn-sm btn-outline border-base-content/10 rounded-full gap-2">
-                <#Icon iconify="ph:sliders-duotone" class="w-4 h-4" />
+              <div class="btn btn-sm btn-outline border-hair rounded-field border border-secondary bg-base-100 gap-2 pr-1">
+                <#Icon iconify="ph:funnel-fill" class="w-4 h-4 text-secondary" />
                 <span>{l("Filters")}</span>
                 {#if active_filters != []}
                   <span
-                    class="badge badge-primary badge-xs"
+                    class="badge badge-secondary badge-xs w-5 h-5"
                     aria-label={l("%{count} active filters", count: length(active_filters))}
                   >{length(active_filters)}</span>
                 {/if}
@@ -49,26 +46,5 @@
           </Bonfire.UI.Common.OpenModalLive>
         </div>
       </div>
-
-      <!-- {#if active_filters != []}
-        <div
-          class="flex gap-1.5 px-2 pb-2 overflow-x-auto scrollbar-none"
-          aria-live="polite"
-          role="status"
-        >
-          {#for {label, chip_icon, _field, _key} <- active_filters}
-            <span class="badge badge-soft badge-sm badge-primary gap-1 whitespace-nowrap">
-              {#case chip_icon}
-                {#match :show}
-                  <#Icon iconify="ph:eye-duotone" class="w-3 h-3" />
-                {#match :hide}
-                  <#Icon iconify="ph:eye-slash-duotone" class="w-3 h-3" />
-                {#match _}
-              {/case}
-              {label}
-            </span>
-          {/for}
-        </div>
-      {/if} -->
   {/case}
 </div>

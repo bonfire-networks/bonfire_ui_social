@@ -8,13 +8,13 @@
         type="button"
         phx-click="Bonfire.Social.Threads:clear_inline_action"
         aria-label={l("Close")}
-        class="btn btn-ghost btn-xs btn-circle"
+        class="btn btn-ghost btn-sm btn-circle"
       >
         <#Icon iconify="ph:x" class="w-4 h-4" />
       </button>
     </div>
 
-    <p class="text-xs text-base-content/70">
+    <p class="text-xs text-muted">
       {l(
         "This will go into a queue for moderators to review. They may get in touch with you and/or the author for clarification before taking action."
       )}

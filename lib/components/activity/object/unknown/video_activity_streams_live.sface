@@ -25,20 +25,20 @@
       {#case object_field(@json, "published")}
         {#match nil}
         {#match date}
-          <div class="text-sm text-base-content/70">{DatesTimes.date_from_now(date)}</div>
+          <div class="text-sm text-muted">{DatesTimes.date_from_now(date)}</div>
           <span>·</span>
       {/case}
 
       {#case e(object_field(@json, "category"), "name", nil)}
         {#match nil}
         {#match category}
-          <div class="text-sm text-base-content/70">{category}</div>
+          <div class="text-sm text-muted">{category}</div>
           {!-- <span>·</span> --}
       {/case}
 
       {#case object_field(@json, "views")}
         {#match views when is_number(views)}
-          <div class="text-sm text-base-content/70">
+          <div class="text-sm text-muted">
             ~{round_nearest(views) || 1} {l("Views")}</div>
         {#match _}
       {/case}

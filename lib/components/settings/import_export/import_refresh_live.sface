@@ -5,6 +5,6 @@
   phx-target={@event_target}
   phx-disable-with={l("Refreshing...")}
 >
-  <#Icon iconify="ph:arrows-clockwise-duotone" class="w-4 h-4 mr-2" />
+  <#Icon iconify="ph:arrows-clockwise-fill" class="w-4 h-4 mr-2" />
   {l("Refresh")}
 </button>

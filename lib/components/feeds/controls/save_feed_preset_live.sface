@@ -1,7 +1,7 @@
 <div>
   <button
     type="button"
-    class="btn btn-ghost btn-sm text-base-content/70"
+    class="btn btn-ghost btn-sm text-muted"
     phx-click={JS.toggle(to: "#save_feed_preset_form", in: "fade-in", out: "fade-out")}
   >
     <#Icon iconify="bxs:save" class="w-4 h-4" />
@@ -10,7 +10,7 @@
 
   <div id="save_feed_preset_form" class="hidden">
     <div class="border-t border-base-content/10 mt-3 pt-3">
-      <p class="text-sm text-base-content/60 mb-3">
+      <p class="text-sm text-muted mb-3">
         {l("Save this feed configuration as a preset to access it anytime from your feed navbar.")}
       </p>
       <form

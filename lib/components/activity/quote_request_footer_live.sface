@@ -25,7 +25,7 @@
         {#match {true, _false}}
           {!-- Previously rejected: show status + Accept option --}
           <span class="flex items-center gap-1 text-error text-xs">
-            <#Icon iconify="ph:x-duotone" class="w-3.5 h-3.5" aria-hidden="true" />
+            <#Icon iconify="ph:x" class="w-3.5 h-3.5" aria-hidden="true" />
             {l("Previously declined")}
           </span>
           <button
@@ -39,7 +39,7 @@
         {#match {_false, _true}}
           {!-- Accepted: show status + Remove option --}
           <span class="flex items-center gap-1 text-primary text-xs">
-            <#Icon iconify="ph:checks-duotone" class="w-3.5 h-3.5" aria-hidden="true" />
+            <#Icon iconify="ph:checks-fill" class="w-3.5 h-3.5" aria-hidden="true" />
             {l("Quote accepted")}
           </span>
           <button

@@ -1,22 +1,8 @@
 <div
   data-role="subject"
   data-main-object={@viewing_main_object}
-  class="subject relative flex items-start"
+  class="subject flex items-center gap-avatar"
 >
-  {!-- <div
-    data-trigger="hover"
-    data-position="top"
-    phx-hook="Tooltip"
-    id={"subject_avatar_tooltip_#{@subject_id}_#{@activity_id}_#{@reply_to_id}"}
-    class="w-full"
-  >
-    <label
-      class="tooltip-button relative"
-      tabindex="0"
-      role="button"
-      aria-haspopup="true"
-      aria-expanded="true"
-    > --}
   <LinkLive
     :if={@subject_id}
     opts={[
@@ -25,18 +11,12 @@
       "data-view-transition-name": "avatar-#{@subject_id}"
     ]}
     parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_avatar", @parent_id)}
-    class={[
-      "absolute -ml-[3.7rem] font-semibold text-base-content hover:underline z-50",
-      "!relative !ml-0 ": @viewing_main_object,
-      "margin-compact":
-        (@__context__[:ui_compact] && !@viewing_main_object) ||
-          @showing_within in [:smart_input, :pinned, :quote_preview] ||
-          (@showing_within in [:thread, :thread_embed] && !@viewing_main_object)
-    ]}
+    class="shrink-0"
     to={@path}
     label={l("%{username}'s profile", username: @character_username || @profile_name || "")}
   >
     <Bonfire.UI.Common.AvatarLive
+      ring
       parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject", @parent_id)}
       user_id={@subject_id}
       src={@profile_media}
@@ -44,7 +24,7 @@
       showing_within={@showing_within}
       fallback_class="w-8 h-8 opacity-30 mx-auto"
       class={[
-        "rounded-full w-12 h-12",
+        "rounded-full w-[35px] h-[35px]",
         "avatar-compact":
           @__context__[:ui_compact] ||
             @showing_within in [:smart_input, :pinned, :quote_preview] ||
@@ -52,49 +32,7 @@
       ]}
     />
   </LinkLive>
-  {!-- </label>
-    <Bonfire.UI.Me.UserPreviewLive
-      href={@path}
-      user={%{
-        id: @subject_id || id(@character) || id(@profile),
-        is_local: !@is_remote,
-        profile: %{
-          name: @profile_name,
-          icon: @profile_media,
-          summary: @profile_summary
-        },
-        character: %{
-          username: @character_username || e(@character, :username, nil)
-        }
-      }}
-      with_summary
-      class="tooltip z-tooltip absolute w-[300px] top-0 left-0 hidden"
-    >
-      <:actions>
-        <div
-          :if={current_user_id(@__context__) &&
-            current_user_id(@__context__) != @subject_id}
-          class="p-3 pt-1 items-center"
-        >
-          <StatefulComponent
-            module={maybe_component(Bonfire.UI.Social.Graph.FollowButtonLive, @__context__)}
-            id={ComponentID.new(Bonfire.UI.Social.Graph.FollowButtonLive, @subject_id, __MODULE__)}
-            object_id={@subject_id}
-            path={@path}
-            hide_icon
-          />
-          <div class="pt-1">
-            <StatelessComponent
-              module={maybe_component(Bonfire.UI.Boundaries.AddToCircleLive, @__context__)}
-              user_id={@subject_id}
-              parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_avatar_tooltip", "#{@activity_id}_#{@reply_to_id}")}
-              as_icon
-            />
-          </div>
-        </div>
-      </:actions>
-    </Bonfire.UI.Me.UserPreviewLive> --}
-  <div data-id="subject_details" class="flex flex-col gap-0 w-full feed-clickable justify-start">
+  <div data-id="subject_details" class="flex flex-col min-w-0 feed-clickable">
     <div class="flex" data-id="name_username">
       <LinkLive
         :if={@profile_name}
@@ -105,7 +43,7 @@
           "aria-label": l("%{name}'s profile", name: @profile_name)
         ]}
         parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_name", @parent_id)}
-        class="link max-w-[250px] lg:max-w-[500px] link-hover text-base font-bold truncate"
+        class="link link-hover text-body font-medium text-base-content leading-tight max-w-[250px] lg:max-w-[500px] truncate"
         to={@path}
       >
         {@profile_name}
@@ -114,7 +52,7 @@
     <span
       :if={@showing_within not in [:smart_input, :pinned]}
       data-id="subject_secondary"
-      class="flex flex-1 items-center gap-1 -mt-[2px]"
+      class="flex items-center gap-1 text-body text-muted leading-tight"
     >
       <LinkLive
         :if={@character_username && @showing_within not in [:smart_input, :pinned]}
@@ -125,54 +63,22 @@
           "aria-label": l("%{name}'s profile", name: @profile_name)
         ]}
         parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_username", @parent_id)}
-        class="text-sm truncate max-w-[150px] lg:max-w-[250px] link link-hover ellipsis text-base-content/70 subject_username"
+        class="link link-hover truncate max-w-[150px] lg:max-w-[250px] subject_username"
         to={e(@subject_peered, :canonical_uri, nil) || @path}
       >
         @{@character_username}
       </LinkLive>
-
-      {!-- NOTE: what is ActivityBoundaryLive doing here?
-      <Bonfire.UI.Social.ActivityBoundaryLive
-        :if={@object_type != Bonfire.Data.Social.Message and @activity_inception != "reply_to" and
-          LiveHandler.feed_live_update_many_preload_mode() != :async_actions}
-        object_id={@object_id}
-        object_type={Types.object_type(@published_in) || @object_type}
-        parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
-        with_icon
-        class="translate-y-0.5"
-        object_boundary={@object_boundary}
-      />
-      --}
 
       {#if @showing_within == :annotations and e(@extra_info, :info, "timestamps", nil)}
         <button
           data-role="annotation-checkpoint"
           data-in={e(@extra_info, :info, "timestamps", "in", "")}
           data-out={e(@extra_info, :info, "timestamps", "out", "")}
-          class="btn btn-soft btn-accent btn-xs"
+          class="btn btn-soft btn-accent btn-sm"
         >From {DatesTimes.format_duration(e(@extra_info, :info, "timestamps", "in", ""))} to {DatesTimes.format_duration(e(@extra_info, :info, "timestamps", "out", ""))}</button>
-      {#else}
-        <!-- NOTE: Need to find a better way to optionally display the info because it breakes the line -->
-        {!-- {#if @verb != "Create"}
-        
-          <span class="text-sm text-[15px] text-base-content/60 hidden lg:inline-block">
-            {#case @replies_more_count || 0}
-              {#match 0}
-                {@verb_display}
-              {#match n}
-                {lp(
-                  "(and %{number} other) recently %{verb_past_tense}",
-                  "(and %{number} others) recently %{verb_past_tense}",
-                  n,
-                  number: n,
-                  verb_past_tense: @verb_display
-                )}
-            {/case}
-          </span>
-        {/if} --}
       {/if}
 
-      <span class="text-sm text-base-content/70">&nbsp;·&nbsp;</span>
+      <span class="text-primary shrink-0" aria-hidden="true">·</span>
 
       <Bonfire.UI.Social.Activity.LinkToActivityLive permalink={@permalink}>
         <Bonfire.UI.Social.Activity.DateAgoLive
@@ -185,41 +91,4 @@
       <Bonfire.UI.Social.Activity.InstanceIconLive :if={@is_remote} peered={@peered} />
     </span>
   </div>
-  {!-- </div> --}
-
-  {!-- {#if @show_minimal_subject_and_note}      
-          <div class="flex items-top">
-            <div
-              class="font-medium cursor-pointer w-full max-w-full relative gap-1 prose prose-sm !text-sm !text-base-content/70 prose-a:text-base-content/70 prose-a:no-underline prose-p:inline-block"
-            >
-              {if @showing_within != :thread and @thread_title,
-                do:
-                    l("Replying to %{name} in %{thread_title}",
-                      name: @profile_name,
-                      thread_title: @thread_title
-                    ),
-                else: l("Replying to %{name}", name: @profile_name)
-                }
-               
-               {@show_minimal_subject_and_note}  
-            </div>
-          </div>
-        {/if}   --}
 </div>
-
-{!-- <a
-  :if={@reply_to_id == nil and @showing_within in [nil, :feed] and
-    !@viewing_main_object and @thread_title}
-  data-id="title_in_subject"
-  href={@permalink}
-  class="preview_activity_link flex items-center mt-1 font-medium gap-2 text-base"
->
-  <span class="link link-hover">{@thread_title}</span>
-</a>
-
-<div
-  :if={@thread_title && @showing_within == :thread && @viewing_main_object}
-  class="text-xl font-semibold leading-[36x] break-all"
->
-  {@thread_title}
-</div> --}

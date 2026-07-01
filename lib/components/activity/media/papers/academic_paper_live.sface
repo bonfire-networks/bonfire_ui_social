@@ -8,7 +8,7 @@
             e(@metadata, "url", "value", nil) || e(@metadata, "url", nil) ||
             e(@media.metadata, "facebook", "url", nil)}
           {#match doi}
-            <!-- <code>{inspect(@media.metadata, pretty: true)}</code> -->
+            {!-- <code>{inspect(@media.metadata, pretty: true)}</code> --}
             <div class={
               "w-full media_container text-base-content",
               @css_borders || "border border-base-content/10 rounded-lg p-2",
@@ -18,7 +18,7 @@
                 <div class="mb-1">
                   <span class="text-sm badge badge-accent rounded bg-accent/30 border-none !text-accent capitalize">{paper_type(@metadata)}</span>
 
-                  <span class="text-sm text-base-content/70 mb-1">{e(@metadata, "journal-title", "value", nil) || e(@metadata, "citation_journal_title", nil) ||
+                  <span class="text-sm text-muted mb-1">{e(@metadata, "journal-title", "value", nil) || e(@metadata, "citation_journal_title", nil) ||
                       e(@metadata, "publisher", "name", nil) ||
                       e(@metadata, "publisher", nil) || e(@metadata, "publicationTitle", nil) ||
                       e(@metadata, "isPartOf", "name", nil) ||
@@ -50,15 +50,15 @@
                     |> debug("dattte")}
                     {#match nil}
                     {#match published}
-                      <span class="text-base-content/70 text-sm flex items-center gap-2">
-                        <!-- <#Icon iconify="material-symbols:date-range-outline" class="w-4 h-4 text-base-content/70" /> -->
+                      <span class="text-muted text-sm flex items-center gap-2">
+                        {!-- <#Icon iconify="material-symbols:date-range-outline" class="w-4 h-4 text-muted" /> --}
                         <span class="font-medium">{published |> DatesTimes.format_date(format: "MMMM d, Y")}</span>
                       </span>
                   {/case}
 
                   <div
                     :if={doi || String.contains?(e(@media, :path, nil), "doi.org/")}
-                    class="text-base-content/70 text-sm flex items-center gap-2"
+                    class="text-muted text-sm flex items-center gap-2"
                   >
                     <span>
                       {#case doi || e(@media, :path, nil)}
@@ -67,13 +67,13 @@
                         {#match "https://dx.doi.org/" <> doi_id}
                           <a target="_blank" class="link" href={"https://doi.org/#{doi_id}"}>doi:{doi_id}</a>
                         {#match "http" <> _}
-                          <!-- <a target="_blank" class="link" href={doi}>{doi}</a> -->
+                          {!-- <a target="_blank" class="link" href={doi}>{doi}</a> --}
                         {#match "doi:" <> doi_id}
                           <a target="_blank" class="link" href={"https://doi.org/#{doi_id}"}>doi"{doi_id}</a>
                         {#match _ when is_binary(doi)}
                           <a target="_blank" class="link" href={"https://doi.org/#{doi}"}>doi:{doi}</a>
                         {#match _}
-                          <!-- no DOI match -->
+                          {!-- no DOI match --}
                       {/case}
                     </span>
                   </div>
@@ -91,7 +91,7 @@
                     {/case}
 
                     <div class={
-                      "mt-2 text-sm text-justify text-base-content/90 break-words",
+                      "mt-2 text-sm text-justify text-base-content break-words",
                       "line-clamp-5": @showing_within in [:feed, :profile]
                     }>
                       {raw(
@@ -116,7 +116,7 @@
                 </a>
 
                 {#if is_orcid_work_url?(media_url)}
-                  <!-- Special handling for ORCID work URLs -->
+                  {!-- Special handling for ORCID work URLs --}
                   {#case doi}
                     {#match doi_value when is_binary(doi_value)}
                       <LinkLive to={format_doi_url(doi_value)} class="btn btn-sm btn-soft flex-1" target="_blank">
@@ -124,19 +124,19 @@
                         <span>{l("Read paper")}</span>
                       </LinkLive>
                     {#match _}
-                      <!-- No DOI available for ORCID work -->
-                      <div class="text-sm text-base-content/70 italic p-2 text-center">
+                      {!-- No DOI available for ORCID work --}
+                      <div class="text-sm text-muted italic p-2 text-center">
                         {l("Paper link not available")}
                       </div>
                   {/case}
                 {#elseif is_binary(media_url) and not String.starts_with?(media_url, "doi:") and URIs.valid_url?(media_url)}
-                  <!-- Regular URL -->
+                  {!-- Regular URL --}
                   <LinkLive to={media_url} class="btn btn-sm btn-soft flex-1" target="_blank">
                     <#Icon iconify="heroicons-outline:external-link" class="w-4 h-4 opacity-70" />
                     <span>{l("Read paper")}</span>
                   </LinkLive>
                 {#else}
-                  <!-- Invalid or DOI-only URL -->
+                  {!-- Invalid or DOI-only URL --}
                 {/if}
               </div>
             </div>

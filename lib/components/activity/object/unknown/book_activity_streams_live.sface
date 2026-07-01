@@ -48,8 +48,8 @@
 
       {!-- PAGES --}
       <div :if={object_field(@json, "pages")} class="flex  items-center mt-2 gap-2">
-        <#Icon iconify="carbon:book" class="w-4 h-4 text-base-content/70" />
-        <span class="text-base-content/70 text-sm">{object_field(@json, "pages")} {l("pages")}</span>
+        <#Icon iconify="carbon:book" class="w-4 h-4 text-muted" />
+        <span class="text-muted text-sm">{object_field(@json, "pages")} {l("pages")}</span>
       </div>
 
       {!-- Publication date --}
@@ -58,8 +58,8 @@
           {#match nil}
           {#match published_date}
             <div class="flex  items-center mt-2 gap-2">
-              <#Icon iconify="carbon:building" class="w-4 h-4 text-base-content/70" />
-              <div class="flex items-baseline text-base-content/70 text-sm">
+              <#Icon iconify="carbon:building" class="w-4 h-4 text-muted" />
+              <div class="flex items-baseline text-muted text-sm">
                 {l("Published in %{year}", year: DatesTimes.format(published_date, format: :y) || published_date)}
                 {} {#case List.first(object_field(@json, "publishers") || [])}
                   {#match nil}
@@ -73,13 +73,13 @@
 
       {!-- Publisher --}
       {!-- <div class="flex items-center mt-2 gap-2">
-        <div class="flex items-baseline text-base-content/70 text-sm">
+        <div class="flex items-baseline text-muted text-sm">
           <span :if={object_field(@json, "publishers")} class="">{List.first(object_field(@json, "publishers") || [])} {l("Publisher")}</span>
         </div>
       </div> --}
 
       {!-- note --}
-      <article class={"mt-2 prose-sm prose max-w-prose text-base-content/90", "line-clamp-6": !@viewing_main_object}>
+      <article class={"mt-2 prose-sm prose max-w-prose text-base-content", "line-clamp-6": !@viewing_main_object}>
         {rich(
           object_field(@json, "description") || object_field(@json, "summary") ||
             object_field(@json, "content")

@@ -30,8 +30,8 @@
               <div class="normal-case font-normal absolute right-6 pointer-events-auto">
                 <LinkLive
                   to={~p"/settings/user/feeds"}
-                  class="z-999 tooltip-button btn btn-circle btn-ghost btn-xs"
-                ><#Icon iconify="ph:gear-six-duotone" class="w-4 h-4" /></LinkLive>
+                  class="z-999 tooltip-button btn btn-circle btn-outline btn-xs border-primary"
+                ><#Icon iconify="ph:gear-six-fill" class="w-4 h-4" /></LinkLive>
               </div>
             {/if}
           </summary>
@@ -61,8 +61,8 @@
               <div class="normal-case font-normal absolute right-6">
                 <LinkLive
                   to={~p"/settings/user/feeds"}
-                  class="z-999 tooltip-button btn btn-circle btn-ghost btn-xs"
-                ><#Icon iconify="ph:gear-six-duotone" class="w-4 h-4" /></LinkLive>
+                  class="z-999 tooltip-button btn btn-circle btn-outline btn-xs border-primary"
+                ><#Icon iconify="ph:gear-six-fill" class="w-4 h-4" /></LinkLive>
               </div>
             {/if}
           </summary>

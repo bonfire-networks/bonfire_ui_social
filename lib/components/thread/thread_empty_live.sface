@@ -1,7 +1,7 @@
 <div data-id="thread_empty" class="flex flex-col items-center text-center py-10 px-4">
   <div class="flex items-center justify-center size-14 rounded-full bg-base-content/5 ring-1 ring-base-content/10">
     <#Icon
-      iconify="ph:chat-circle-dots-duotone"
+      iconify="ph:chat-circle-dots-fill"
       class="size-7 text-base-content/50"
       aria-hidden="true"
     />
@@ -9,9 +9,9 @@
   {#case @showing_within}
     {#match :thread_embed}
       <p class="mt-4 text-base font-semibold text-base-content">{l("No comments yet")}</p>
-      <p class="mt-1 max-w-sm text-sm text-base-content/60">{l("Start the conversation by posting the first comment.")}</p>
+      <p class="mt-1 max-w-sm text-sm text-muted">{l("Start the conversation by posting the first comment.")}</p>
     {#match _}
       <p class="mt-4 text-base font-semibold text-base-content">{l("No replies yet")}</p>
-      <p class="mt-1 max-w-sm text-sm text-base-content/60">{l("Be the first to share your thoughts.")}</p>
+      <p class="mt-1 max-w-sm text-sm text-muted">{l("Be the first to share your thoughts.")}</p>
   {/case}
 </div>

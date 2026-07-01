@@ -1,6 +1,6 @@
 <Bonfire.UI.Common.WidgetBlockLive widget_title={e(@widget_title, "Notifications")}>
   <:action>
-    <LinkLive class="text-xs normal-case btn btn-xs btn-outline" to={path(:notifications)}>
+    <LinkLive class="text-xs normal-case btn btn-sm btn-outline" to={path(:notifications)}>
       {l("View more")}
     </LinkLive>
   </:action>

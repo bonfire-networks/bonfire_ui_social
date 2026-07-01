@@ -4,7 +4,7 @@
     data-id="feed"
     data-page="feed"
     phx-hook="Bonfire.UI.Common.PreviewContentLive#MainFeed"
-    class="w-full flex flex-col feed bonfire-wrapper mx-auto"
+    class="w-full flex flex-col feed mx-auto"
   >
     <div :if={!@hide_filters and current_user_id(@__context__)} id="feed_controls_wrapper">
       <StatelessComponent
@@ -61,14 +61,14 @@
         :if={@resumed_from_marker}
         id={"feed_resumed_banner_#{@feed_name || @feed_id || @id}"}
         data-feed-resume-actions
-        class="pointer-events-none sticky top-0 z-40 -mb-14 flex h-14 w-full items-start justify-center pt-2 bg-gradient-to-b from-base-100 via-base-100/90 to-base-100/0 [overflow-anchor:none]"
+        class="pointer-events-none sticky top-0 z-40 -mb-14 flex h-14 w-full items-start justify-center pt-2 [overflow-anchor:none]"
       >
         <div
           role="status"
-          class="pointer-events-auto flex min-h-8 items-center gap-2 rounded-full border border-base-content/10 bg-base-100/95 pl-3 pr-1 py-1 text-xs shadow-sm shadow-base-content/5 backdrop-blur"
+          class="pointer-events-auto flex min-h-8 items-center gap-2 rounded-full border-hair border-secondary bg-base-200 pl-3 pr-1 py-1 text-xs"
         >
-          <span class="flex items-center gap-1.5 font-light text-base-content/60">
-            <#Icon iconify="ph:bookmark-simple-duotone" class="w-3.5 h-3.5" />
+          <span class="flex items-center gap-1.5 font-light">
+            <#Icon iconify="ph:bookmark-simple-fill" class="w-3.5 h-3.5" />
             {l("Resumed where you left off")}
           </span>
           <button
@@ -99,7 +99,7 @@
           role="feed"
           aria-busy={to_string(@loading || @reloading || false)}
           phx-update="stream"
-          class="flex flex-col divide-y divide-base-content/10 [&>*:last-child]:border-b-0 flex-1 h-full grow"
+          class="flex flex-col flex-1 h-full grow gap-[7px]"
         >
           {#for {entry_id, entry} <- @streams.feed}
             <div
@@ -107,7 +107,7 @@
               :if={@hide_activities != "component"}
               role="article"
               class={
-                "activity_wrapper w-full max-w-full",
+                "activity_wrapper relative w-[calc(100%+2px)] max-w-[calc(100%+2px)] -ml-px rounded-box border-hair bg-base-100 border-secondary p-card !pt-3",
                 "infinite_scroll_hidden hidden": @hide_activities == "infinite_scroll",
                 "fresh_hidden hidden": fresh_entry?(@fresh_ids, entry)
               }
@@ -194,7 +194,7 @@
                               >
                                 <:if_no_more>
                                   {#if time_limit != 0}
-                                    <p class="text-sm py-4 mt-4 text-center text-base-content/50 font-medium">{lp(
+                                    <p class="text-display py-4 mt-4 text-center font-medium">{lp(
                                         "That's all for today...",
                                         "That's all for the last %{number} days...",
                                         time_limit,
@@ -228,7 +228,7 @@
                                         class="max-w-[220px] opacity-80 mx-auto"
                                         src={Bonfire.Common.URIs.static_path("/images/bonfire-exausted.png")}
                                       />
-                                      <p class="text-sm font-medium text-base-content/70 text-center my-4">{l("That's all folks...")}</p>
+                                      <p class="text-sm font-medium text-muted text-center my-4">{l("That's all folks...")}</p>
                                     {/if}
                                   {/if}
 
@@ -247,6 +247,7 @@
                                           target={@myself}
                                           hide_guest_fallback={@hide_guest_fallback}
                                           label={l("Show older activities")}
+                                          button_class="btn-ds-variant-outline"
                                           dom_id_suffix="show_older"
                                           opts={%{"phx-value-time_limit" => 0}}
                                           hide_if_no_more
@@ -257,13 +258,13 @@
                                         <div class="w-full flex items-center justify-center mb-4">
                                           <button
                                             data-id="load_all_time"
-                                            class="normal-case btn btn-soft btn-primary"
+                                            class="btn-ds-variant-outline"
                                             phx-click="set_filter"
                                             phx-value-time_limit={0}
                                             phx-target={@myself}
                                             phx-disable-with={l("Loading...")}
                                           >
-                                            {l("Show all activities (with no time limit)")}
+                                            {l("Show older activities")}
                                           </button>
                                         </div>
                                       {/if}
@@ -273,7 +274,7 @@
                                         <a
                                           :if={!@hide_guest_fallback}
                                           data-id="load_all_time"
-                                          class="normal-case btn btn-primary btn-soft btn-wide"
+                                          class="btn-ds-outline w-full"
                                           href={append_params_uri(
                                             @current_url || @__context__[:current_url],
                                             time_limit: 0,

@@ -8,7 +8,7 @@
       <div id={"#{@panel_prefix}_main"}>
         <div class="flex flex-col -mx-1">
           <section>
-            <h3 class="text-xs font-semibold uppercase tracking-wider text-base-content/40 px-2 mb-2">
+            <h3 class="text-xs uppercase tracking-wider text-base-content pb-2">
               {l("Boundary")}
             </h3>
             <StatefulComponent
@@ -21,8 +21,8 @@
             />
           </section>
 
-          <section class="border-t border-base-content/10 pt-4 mt-4 [&:not(:has(li))]:hidden">
-            <h3 class="text-xs font-semibold uppercase tracking-wider text-base-content/40 px-2 mb-2">
+          <section class="border-t-hair border-secondary pt-4 mt-4 [&:not(:has(li))]:hidden">
+            <h3 class="text-xs uppercase tracking-wider text-base-content pb-2">
               {l("Actions")}
             </h3>
             <ul class="menu px-0 w-full">
@@ -33,7 +33,7 @@
                   phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_edit_title")}
                   class="flex items-center gap-3 w-full text-base-content"
                 >
-                  <#Icon iconify="ph:text-h-one-duotone" class="w-4 h-4 shrink-0 text-base-content/60" />
+                  <#Icon iconify="ph:text-h-one-fill" class="w-4 h-4 shrink-0 text-muted" />
                   <span class="text-sm font-medium">{l("Edit discussion title")}</span>
                   <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-base-content/30 ml-auto" />
                 </button>
@@ -48,7 +48,7 @@
                     phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_edit_post")}
                     class="flex items-center gap-3 w-full text-base-content"
                   >
-                    <#Icon iconify="ph:pencil-simple-line-duotone" class="w-4 h-4 shrink-0 text-base-content/60" />
+                    <#Icon iconify="ph:pencil-simple-line-fill" class="w-4 h-4 shrink-0 text-muted" />
                     <span class="text-sm font-medium">{l("Edit")}</span>
                     <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-base-content/30 ml-auto" />
                   </button>
@@ -60,10 +60,7 @@
                     target="_top"
                     class="flex items-center gap-3 w-full text-base-content"
                   >
-                    <#Icon
-                      iconify="ph:clock-counter-clockwise-duotone"
-                      class="w-4 h-4 shrink-0 text-base-content/60"
-                    />
+                    <#Icon iconify="ph:clock-counter-clockwise-fill" class="w-4 h-4 shrink-0 text-muted" />
                     <span class="text-sm">{l("Version history")}</span>
                   </a>
                 </li>
@@ -116,7 +113,7 @@
                       phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_lock")}
                       class="flex items-center gap-3 w-full text-base-content"
                     >
-                      <#Icon iconify="ph:lock-duotone" class="w-4 h-4 shrink-0 text-base-content/60" />
+                      <#Icon iconify="ph:lock-fill" class="w-4 h-4 shrink-0 text-muted" />
                       <span class="text-sm font-medium">{l("Lock discussion")}</span>
                       <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-base-content/30 ml-auto" />
                     </button>
@@ -128,7 +125,7 @@
                       phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_unlock")}
                       class="flex items-center gap-3 w-full text-base-content"
                     >
-                      <#Icon iconify="ph:lock-open-duotone" class="w-4 h-4 shrink-0 text-base-content/60" />
+                      <#Icon iconify="ph:lock-open-fill" class="w-4 h-4 shrink-0 text-muted" />
                       <span class="text-sm font-medium">{l("Unlock discussion")}</span>
                       <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-base-content/30 ml-auto" />
                     </button>
@@ -139,7 +136,7 @@
           </section>
 
           {#if @object_boundary && (id(@object) || id(@activity))}
-            <section class="border-t border-base-content/10 pt-4 mt-4 [&:not(:has(li))]:hidden">
+            <section class="border-t-hair border-secondary pt-4 [&:not(:has(li))]:hidden">
               <h3 class="text-xs font-semibold uppercase tracking-wider text-error px-2 mb-2">
                 {l("Danger zone")}
               </h3>
@@ -151,7 +148,7 @@
                         phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_delete_object")}
                         class="flex items-center gap-3 w-full text-error/80"
                       >
-                        <#Icon iconify="ph:trash-duotone" class="w-4 h-4 shrink-0" />
+                        <#Icon iconify="ph:trash-fill" class="w-4 h-4 shrink-0" />
                         <span class="text-sm font-medium">{l("Delete")} {@object_type_label}</span>
                         <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
                       </button>
@@ -161,7 +158,7 @@
                         phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_delete_activity")}
                         class="flex items-center gap-3 w-full text-error/80"
                       >
-                        <#Icon iconify="ph:trash-duotone" class="w-4 h-4 shrink-0" />
+                        <#Icon iconify="ph:trash-fill" class="w-4 h-4 shrink-0" />
                         <span class="text-sm font-medium">{l("Delete from feeds")}</span>
                         <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
                       </button>
@@ -173,7 +170,7 @@
                       phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_delete_object")}
                       class="flex items-center gap-3 w-full text-error/80"
                     >
-                      <#Icon iconify="ph:trash-duotone" class="w-4 h-4 shrink-0" />
+                      <#Icon iconify="ph:trash-fill" class="w-4 h-4 shrink-0" />
                       <span class="text-sm font-medium">{l("Delete")} {@object_type_label}</span>
                       <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
                     </button>
@@ -190,7 +187,7 @@
         <div class="">
           <button
             phx-click={JS.hide(to: "##{@panel_prefix}_edit_title") |> JS.show(to: "##{@panel_prefix}_main")}
-            class="btn btn-sm btn-soft mb-4 mt-4"
+            class="btn btn-sm btn-soft mb-4"
             aria-label={l("Back")}
           >
             <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
@@ -219,7 +216,7 @@
         <div class="">
           <button
             phx-click={JS.hide(to: "##{@panel_prefix}_edit_post") |> JS.show(to: "##{@panel_prefix}_main")}
-            class="btn btn-sm btn-soft mb-4 mt-4"
+            class="btn btn-sm btn-outline mb-4"
             aria-label={l("Back")}
           >
             <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
@@ -259,7 +256,7 @@
         <div class="">
           <button
             phx-click={JS.hide(to: "##{@panel_prefix}_delete_object") |> JS.show(to: "##{@panel_prefix}_main")}
-            class="btn btn-sm btn-soft mb-4 mt-4"
+            class="btn btn-sm btn-outline mb-4"
             aria-label={l("Back")}
           >
             <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
@@ -267,7 +264,7 @@
           </button>
         </div>
         <div class="flex flex-col gap-4">
-          <p class="text-sm text-base-content/70">
+          <p class="text-sm text-muted">
             {l("A request will be sent to remote instances to delete it as well.")}
           </p>
           <button
@@ -275,7 +272,7 @@
             phx-value-id={id(@object)}
             class="normal-case w-full btn btn-error"
           >
-            <#Icon iconify="ph:trash-duotone" class="w-4 h-4" />
+            <#Icon iconify="ph:trash-fill" class="w-4 h-4" />
             {l("Delete")} {@object_type_label}
           </button>
         </div>
@@ -286,7 +283,7 @@
         <div class="">
           <button
             phx-click={JS.hide(to: "##{@panel_prefix}_delete_activity") |> JS.show(to: "##{@panel_prefix}_main")}
-            class="btn btn-sm btn-soft mb-4 mt-4"
+            class="btn btn-sm btn-outline mb-4"
             aria-label={l("Back")}
           >
             <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
@@ -294,7 +291,7 @@
           </button>
         </div>
         <div class="flex flex-col gap-4">
-          <p class="text-sm text-base-content/70">
+          <p class="text-sm text-muted">
             {l(
               "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
               object: @object_type_label,
@@ -306,7 +303,7 @@
             phx-value-id={id(@activity)}
             class="normal-case w-full btn btn-error"
           >
-            <#Icon iconify="ph:trash-duotone" class="w-4 h-4" />
+            <#Icon iconify="ph:trash-fill" class="w-4 h-4" />
             {l("Delete from feeds")}
           </button>
         </div>
@@ -317,7 +314,7 @@
         <div class="">
           <button
             phx-click={JS.hide(to: "##{@panel_prefix}_lock") |> JS.show(to: "##{@panel_prefix}_main")}
-            class="btn btn-sm btn-soft mb-4 mt-4"
+            class="btn btn-sm btn-outline mb-4"
             aria-label={l("Back")}
           >
             <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
@@ -325,7 +322,7 @@
           </button>
         </div>
         <div class="flex flex-col gap-4">
-          <p class="text-sm text-base-content/70">
+          <p class="text-sm text-muted">
             {l(
               "You can lock this discussion to prevent any replies from users on this instance and to block any remote replies from federating back to this instance."
             )}
@@ -335,7 +332,7 @@
             phx-value-id={@thread_id}
             class="normal-case w-full btn btn-warning"
           >
-            <#Icon iconify="ph:lock-duotone" class="w-4 h-4" />
+            <#Icon iconify="ph:lock-fill" class="w-4 h-4" />
             {l("Lock this discussion")}
           </button>
         </div>
@@ -346,7 +343,7 @@
         <div class="">
           <button
             phx-click={JS.hide(to: "##{@panel_prefix}_unlock") |> JS.show(to: "##{@panel_prefix}_main")}
-            class="btn btn-sm btn-soft mb-4 mt-4"
+            class="btn btn-sm btn-outline mb-4"
             aria-label={l("Back")}
           >
             <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
@@ -354,7 +351,7 @@
           </button>
         </div>
         <div class="flex flex-col gap-4">
-          <p class="text-sm text-base-content/70">
+          <p class="text-sm text-muted">
             {l("You can unlock this discussion to accept replies again.")}
           </p>
           <button
@@ -362,7 +359,7 @@
             phx-value-id={@thread_id}
             class="normal-case w-full btn btn-primary"
           >
-            <#Icon iconify="ph:lock-open-duotone" class="w-4 h-4" />
+            <#Icon iconify="ph:lock-open-fill" class="w-4 h-4" />
             {l("Unlock this discussion")}
           </button>
         </div>
@@ -374,7 +371,7 @@
           class="flex items-center justify-between w-full gap-2 text-sm text-base-content"
         >
           <span class="flex-1 text-sm text-left text-primary font-medium">{l("Advanced")}</span>
-          <#Icon iconify="ph:sparkle-duotone" class="w-5 h-5 text-primary shrink-0" />
+          <#Icon iconify="ph:sparkle-fill" class="w-5 h-5 text-primary shrink-0" />
         </div>
       </:open_btn>
     </Bonfire.UI.Common.OpenModalLive>

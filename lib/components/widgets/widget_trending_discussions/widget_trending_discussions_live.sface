@@ -1,36 +1,35 @@
 {#case load(current_user(@__context__), @limit)}
   {#match discussions}
     <Bonfire.UI.Common.WidgetBlockLive
-      class="w-full pt-4 flex-auto mx-auto bonfire-wrapper overflow-hidden"
-      title_class="pb-2 text-xs px-4 font-medium uppercase tracking-wide text-base-content/60"
+      class="w-full pt-4 pb-2 flex-auto mx-auto border-y-hair border-secondary overflow-hidden"
+      title_class="pb-4 text-xs px-4 font-medium uppercase tracking-wide text-base-content"
       widget_title={@widget_title || l("Top discussions")}
       reset_cache_event="Bonfire.UI.Social.WidgetTrendingDiscussionsLive:reset_trending_discussions"
       reset_cache_values={%{limit: @limit}}
       can_reset
       empty={discussions == []}
-      empty_icon="ph:chats-circle-duotone"
+      empty_icon="ph:chats-circle-fill"
       empty_message={l("No popular discussions yet. Why not start one? Your post could be tomorrow's top thread.")}
     >
       <:action>
         <LinkLive
           to={~p"/feed/trending_discussions"}
-          class="text-xs font-medium text-base-content/70 hover:text-primary"
+          class="text-xs font-medium text-muted hover:text-primary"
           aria-label={l("View all top discussions")}
         >
           {l("View all")}
         </LinkLive>
       </:action>
 
-      <ul class="flex flex-col divide-y divide-base-content/10" role="list">
+      <ul class="flex flex-col gap-2" role="list">
         {#for fp <- discussions}
-          <li class="">
+          <li class="bonfire-wrapper">
             <Bonfire.UI.Social.ActivityLive
               id={Bonfire.UI.Social.ActivityLive.component_id(
                 id(fp.activity) || id(fp.activity.object),
                 "trending_discussion"
               )}
               activity={fp.activity}
-              custom_preview={Bonfire.UI.Social.Activity.DiscussionPreviewLive}
             />
           </li>
         {/for}

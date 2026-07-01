@@ -143,7 +143,7 @@
                         {#case e(@media, :metadata, "name", nil)}
                           {#match nil}
                           {#match name}
-                            <div class="text-sm text-left font-semibold text-base-content/70">
+                            <div class="text-sm text-left font-semibold text-muted">
                               {name}
                             </div>
                         {/case}
@@ -176,7 +176,7 @@
                           <#Icon iconify="heroicons:musical-note" class="w-10 h-10 text-base-content/50" />
                         </div>
                         <div class="flex-1 min-w-0">
-                          <p class="text-sm text-base-content/70">{l("This audio cannot be previewed")}</p>
+                          <p class="text-sm text-muted">{l("This audio cannot be previewed")}</p>
                           <a
                             href={media_url}
                             target="_blank"
@@ -218,11 +218,11 @@
                                     class="cursor-pointer"
                                     title={l("Play inline")}
                                   >
-                                    <#Icon iconify="ph:play-duotone" class="w-6 h-6 text-gray-800" />
+                                    <#Icon iconify="ph:play-fill" class="w-6 h-6 text-gray-800" />
                                   </button>
                                   {!-- Open in new tab button --}
                                   <a href={media_url} target="_blank" class="" title={l("Open in new tab")}>
-                                    <#Icon iconify="ph:arrow-square-out-duotone" class="w-6 h-6 text-gray-600" />
+                                    <#Icon iconify="ph:arrow-square-out-fill" class="w-6 h-6 text-gray-600" />
                                   </a>
                                 </div>
                               </div>
@@ -272,7 +272,7 @@
                             {#case MediaLive.provider(@media)}
                               {#match nil}
                               {#match provider}
-                                <p class="text-sm text-base-content/70 mt-1 text-pretty">{provider}</p>
+                                <p class="text-sm text-muted mt-1 text-pretty">{provider}</p>
                             {/case}
                           </div>
                       {/case}

@@ -176,7 +176,7 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
 
       # Test clicking the "load_all_time" button (which reloads the feed with no time limit)
       |> assert_has_or_open_browser("[data-id=load_all_time]")
-      |> click_button("[data-id=load_all_time]", "Show all activities (with no time limit)")
+      |> click_button("[data-id=load_all_time]", "Show older activities")
       |> wait_async()
       # Now we should see more posts beyond the time limit
       |> assert_has("[data-id=feed] article [data-id=object_body]", count: limit)

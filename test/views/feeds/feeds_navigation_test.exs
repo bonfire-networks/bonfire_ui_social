@@ -39,19 +39,19 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
         "#order_dropdown_feed button[phx-value-sort_by='reply_count']",
         "Most replied"
       )
-      |> assert_has("#order_dropdown_feed_btn", text: "Most replied")
+      |> assert_has("#order_dropdown_feed_trigger", text: "Most replied")
       |> click_button(
         "#order_dropdown_feed button[phx-value-sort_by='boost_count']",
         "Most boosted"
       )
-      |> assert_has("#order_dropdown_feed_btn", text: "Most boosted")
+      |> assert_has("#order_dropdown_feed_trigger", text: "Most boosted")
       |> click_button("#order_dropdown_feed button[phx-value-sort_by='like_count']", "Most liked")
-      |> assert_has("#order_dropdown_feed_btn", text: "Most liked")
+      |> assert_has("#order_dropdown_feed_trigger", text: "Most liked")
       |> click_button(
         "#order_dropdown_feed button[phx-value-sort_by='date_created']",
         "Chronological"
       )
-      |> assert_has("#order_dropdown_feed_btn", text: "Chronological")
+      |> assert_has("#order_dropdown_feed_trigger", text: "Chronological")
     end
 
     test "user can change sort order", %{} do

@@ -13,52 +13,53 @@
 
   /> --}
 
-  <div class="relative z-40 dropdown dropdown-end">
-    <label
-      tabindex="0"
-      class="flex normal-case btn btn-square place-content-center rounded btn-ghost btn-sm"
-    >
-      <#Icon iconify="heroicons-solid:dots-vertical" class="w-4 h-4 text-base-content/70" />
-    </label>
-    <ul
-      tabindex="0"
-      class="!block w-64 z-[910] relative shadow menu md:menu-sm dropdown-content text-base-content bg-base-200 rounded-lg"
-    >
-      <li>
-        <Bonfire.UI.Common.OpenModalLive
-          :if={@thread_id}
-          id="object_header_thread_title"
-          title_text={l("Edit the thread title")}
-          no_actions
-          {%{"phx-submit" => "Bonfire.Social.Objects:set_name"}}
-        >
-          <Field name={:thread} class="my-4">
-            <TextInput
-              name="name"
-              class="w-full bg-base-content/10 input input-bordered"
-              value={e(@page_title, "")}
-              opts={[placeholder: "Set a name for the thread..."]}
-            />
-            <HiddenInput name="thread_id" value={@thread_id} />
-            <button class="normal-case w-full  btn-outline btn btn-primary mt-3">
-              {l("Save")}
-            </button>
-          </Field>
-          <:open_btn>
-            <div class="text-sm">
-              {l("Edit the thread title")}
-            </div>
-          </:open_btn>
-        </Bonfire.UI.Common.OpenModalLive>
-      </li>
+  <Dropdown
+    id={"object_header_aside_menu_#{@thread_id}"}
+    position="bottom-end"
+    wrapper_class="z-40"
+    trigger_class="flex normal-case btn btn-square place-content-center rounded btn-ghost btn-sm"
+    panel_class="md:menu-sm"
+    label={l("Options")}
+  >
+    <:trigger>
+      <#Icon iconify="heroicons-solid:dots-vertical" class="w-4 h-4 text-muted" />
+    </:trigger>
 
-      {!-- <li module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}>
+    <li>
+      <Bonfire.UI.Common.OpenModalLive
+        :if={@thread_id}
+        id="object_header_thread_title"
+        title_text={l("Edit the thread title")}
+        no_actions
+        {%{"phx-submit" => "Bonfire.Social.Objects:set_name"}}
+      >
+        <Field name={:thread} class="my-4">
+          <TextInput
+            name="name"
+            class="w-full bg-base-content/10 input input-bordered"
+            value={e(@page_title, "")}
+            opts={[placeholder: "Set a name for the thread..."]}
+          />
+          <HiddenInput name="thread_id" value={@thread_id} />
+          <button class="normal-case w-full  btn-outline btn btn-primary mt-3">
+            {l("Save")}
+          </button>
+        </Field>
+        <:open_btn>
+          <div class="text-sm">
+            {l("Edit the thread title")}
+          </div>
+        </:open_btn>
+      </Bonfire.UI.Common.OpenModalLive>
+    </li>
+
+    {!-- <li module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}>
         <Bonfire.UI.Common.OpenModalLive
           :if={@thread_id}
           id="object_header_participants"
           title_text={to_string(length(e(@participants, []))) <> " " <> l("participants")}
         >
-          <div class="flex flex-col divide-y divide-base-content/10">
+          <div class="flex flex-col   divide-hair divide-secondary">
             {#for p <- e(@participants, [])}
               <div class="py-2">
                 <StatelessComponent
@@ -77,6 +78,5 @@
           </:open_btn>
         </Bonfire.UI.Common.OpenModalLive>
       </li> --}
-    </ul>
-  </div>
+  </Dropdown>
 </div>

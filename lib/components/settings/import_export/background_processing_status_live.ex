@@ -481,7 +481,7 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
   defp format_state("available"), do: {l("Queued"), "text-info"}
   defp format_state("scheduled"), do: {l("Scheduled"), "text-info"}
   defp format_state("retryable"), do: {l("Retrying"), "text-warning"}
-  defp format_state("cancelled"), do: {l("Cancelled"), "text-base-content/60"}
+  defp format_state("cancelled"), do: {l("Cancelled"), "text-muted"}
   defp format_state("discarded"), do: {l("Failed"), "text-error"}
   defp format_state(other), do: {other, "text-base-content"}
 

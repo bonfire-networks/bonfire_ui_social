@@ -5,34 +5,28 @@
   {#match []}
     {!-- No circles to filter by --}
   {#match my_circles}
-    <div
-      data-position="bottom-end"
-      phx-hook="Tooltip"
-      class="flex w-full relative"
+    <Dropdown
       id={@container_id}
+      position="bottom-end"
+      wrapper_class="flex w-full"
+      trigger_class="btn btn-circle btn-outline border-base-content/10 btn-sm"
+      panel_class="divide-hair divide-secondary"
     >
-      <label
-        tabindex="0"
-        class="tooltip-button btn btn-circle btn-outline border-base-content/10 btn-sm"
-      >
+      <:trigger>
         <div class="sr-only">{l("Filter by circles")}</div>
-        <#Icon iconify="ph:circle-duotone" class="w-4 h-4 text-primary" />
-      </label>
-      <ul
-        tabindex="0"
-        class="tooltip z-dropdown menu bg-base-100 pt-0 shadow divide-y divide-base-content/10 border border-base-content/10 rounded-box w-72 absolute top-0 right-0 hidden"
-      >
-        <div class="pt-2" :for={circle <- my_circles}>
-          <Bonfire.UI.Social.ToggleTypeLive
-            label={elem(circle, 1)[:name]}
-            key={elem(circle, 1)[:id]}
-            field={:subject_circles}
-            feed_filters={@feed_filters}
-            event_target={@event_target}
-            event_name={@event_name}
-            label_default={l("Include")}
-          />
-        </div>
-      </ul>
-    </div>
+        <#Icon iconify="ph:circle-fill" class="w-4 h-4 text-primary" />
+      </:trigger>
+
+      <div class="pt-2" :for={circle <- my_circles}>
+        <Bonfire.UI.Social.ToggleTypeLive
+          label={elem(circle, 1)[:name]}
+          key={elem(circle, 1)[:id]}
+          field={:subject_circles}
+          feed_filters={@feed_filters}
+          event_target={@event_target}
+          event_name={@event_name}
+          label_default={l("Include")}
+        />
+      </div>
+    </Dropdown>
 {/case}

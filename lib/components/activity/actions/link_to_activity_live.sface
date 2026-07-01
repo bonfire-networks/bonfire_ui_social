@@ -3,7 +3,7 @@
   href={@permalink}
   target="_top"
   data-role="subject_timestamp"
-  class="preview_activity_link subject_timestamp text-sm no-underline text-base-content/70"
+  class="preview_activity_link subject_timestamp text-sm no-underline"
 >
   <span class="sr-only">{l("activity timestamp")}</span>
   <#slot />

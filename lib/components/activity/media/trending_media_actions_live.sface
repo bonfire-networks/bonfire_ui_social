@@ -16,7 +16,7 @@
                 {#if @media.unique_sharers > 3}
                   <button
                     type="button"
-                    class="ml-1 text-sm text-base-content/70 hover:text-primary hover:underline cursor-pointer"
+                    class="ml-1 text-sm text-muted hover:text-primary hover:underline cursor-pointer"
                     :on-click={JS.toggle(to: "#sharers-#{deterministic_dom_id("trending_link_sharers", @media.path)}")}
                   >
                     +{@media.unique_sharers - 3} {l("others")}
@@ -27,7 +27,7 @@
   <!-- <span class="text-base-content/30">·</span> -->
   <LinkLive to={URIs.path(@media.newest_activity_id)}>
     <span class="flex items-center gap-1" title={l("Shares")}>
-      <#Icon iconify="ph:note-duotone" class="w-4 h-4" />
+      <#Icon iconify="ph:note-fill" class="w-4 h-4" />
       {@media.object_count}
     </span>
   </LinkLive>
@@ -35,21 +35,21 @@
 {#if to_int(@media.reply_count) > 0}
   <span class="text-base-content/30">·</span>
   <span class="flex items-center gap-1" title={l("Replies")}>
-    <#Icon iconify="ph:chat-teardrop-text-duotone" class="w-4 h-4" />
+    <#Icon iconify="ph:chat-teardrop-text-fill" class="w-4 h-4" />
     {@media.reply_count}
   </span>
 {/if}
 {#if to_int(@media.boost_count) > 0}
   <span class="text-base-content/30">·</span>
   <span class="flex items-center gap-1" title={l("Boosts")}>
-    <#Icon iconify="ph:rocket-launch-duotone" class="w-4 h-4" />
+    <#Icon iconify="ph:rocket-launch-fill" class="w-4 h-4" />
     {@media.boost_count}
   </span>
 {/if}
 {#if to_int(@media.like_count) > 0}
   <span class="text-base-content/30">·</span>
   <span class="flex items-center gap-1" title={l("Likes")}>
-    <#Icon iconify="ph:fire-duotone" class="w-4 h-4" />
+    <#Icon iconify="ph:fire-fill" class="w-4 h-4" />
     {@media.like_count}
   </span>
 {/if}

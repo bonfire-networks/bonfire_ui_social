@@ -25,7 +25,7 @@
                 4
           }>
             <figure class="w-10 h-10" iconify="vscode-icons:file-type-video">
-              <span class="sr-only">Loading...</span>
+              <span class="sr-only">{l("Loading...")}</span>
             </figure>
           </article>
         {/for}
@@ -57,8 +57,8 @@
               num_medias ==
                 4
           }>
-            <figure class="w-10 h-10 text-base-content/10" " iconify="octicon:file-media-24">
-              <span class="sr-only">Loading...</span>
+            <figure class="w-10 h-10 text-base-content/10" iconify="octicon:file-media-24">
+              <span class="sr-only">{l("Loading...")}</span>
             </figure>
           </article>
         {/for}
@@ -84,7 +84,7 @@
           <div class="h-2 bg-base-content/10 rounded-full max-w-[360px]" />
         </div>
       {/for}
-      <span class="sr-only">Loading...</span>
+      <span class="sr-only">{l("Loading...")}</span>
     </div>
   </div>
 {/if}

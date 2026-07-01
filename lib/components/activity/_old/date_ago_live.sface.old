@@ -16,7 +16,7 @@
       >
         {#case Bonfire.Files.FaviconStore.favicon_url(@permalink)}
           {#match nil}
-            <#Icon solid="ExternalLink" class="w-4 h-4 text-base-content/70" />
+            <#Icon solid="ExternalLink" class="w-4 h-4 text-muted" />
           {#match image}
             <img src={image} class="w-4 h-4">
         {/case}
@@ -31,7 +31,7 @@
 {#else}
   <div class="flex items-center">
     <Bonfire.UI.Social.Activity.LinkToActivityLive permalink={@permalink}>
-      <span data-role="date_ago" class="subject_timestamp text-base-content/70">
+      <span data-role="date_ago" class="subject_timestamp text-muted">
         {@date_ago}
       </span>
     </Bonfire.UI.Social.Activity.LinkToActivityLive>

@@ -1,51 +1,44 @@
 <div class="flex items-center gap-1">
-  <div
-    data-position="bottom-end"
-    phx-hook="Tooltip"
+  <Dropdown
     id="order_dropdown_feed"
-    class="flex w-full relative"
+    position="bottom-end"
+    wrapper_class="flex w-full"
+    trigger_class="btn-sm w-full btn btn-outline border-hair border-secondary rounded-field bg-base-100"
+    label={case e(@feed_filters, :sort_by, nil) do
+      :reply_count ->
+        if e(@feed_filters, :sort_order, nil) == :asc,
+          do: l("Sort: least replied"),
+          else: l("Sort: most replied")
+
+      :boost_count ->
+        if e(@feed_filters, :sort_order, nil) == :asc,
+          do: l("Sort: least boosted"),
+          else: l("Sort: most boosted")
+
+      :like_count ->
+        if e(@feed_filters, :sort_order, nil) == :asc,
+          do: l("Sort: least liked"),
+          else: l("Sort: most liked")
+
+      _ ->
+        l("Sort: chronological")
+    end}
   >
-    <button
-      type="button"
-      id="order_dropdown_feed_btn"
-      aria-haspopup="menu"
-      aria-expanded="false"
-      aria-controls="order_dropdown_feed_menu"
-      aria-label={case e(@feed_filters, :sort_by, nil) do
-        :reply_count ->
-          if e(@feed_filters, :sort_order, nil) == :asc,
-            do: l("Sort: least replied"),
-            else: l("Sort: most replied")
-
-        :boost_count ->
-          if e(@feed_filters, :sort_order, nil) == :asc,
-            do: l("Sort: least boosted"),
-            else: l("Sort: most boosted")
-
-        :like_count ->
-          if e(@feed_filters, :sort_order, nil) == :asc,
-            do: l("Sort: least liked"),
-            else: l("Sort: most liked")
-
-        _ ->
-          l("Sort: chronological")
-      end}
-      class="tooltip-button btn-sm w-full btn btn-outline border-base-content/10 rounded-full"
-    >
+    <:trigger>
       {#case e(@feed_filters, :sort_by, nil)}
         {#match :reply_count}
           <span class="flex items-center">
-            <#Icon iconify="ph:chat-circle-duotone" class="lg:hidden block w-4 h-4" />
+            <#Icon iconify="ph:chat-circle-fill" class="lg:hidden block w-4 h-4" />
             <span class="hidden lg:block">{if e(@feed_filters, :sort_order, nil) == :asc, do: l("Least replied"), else: l("Most replied")}</span>
           </span>
         {#match :boost_count}
           <span class="flex items-center">
-            <#Icon iconify="ph:arrows-counter-clockwise-duotone" class="lg:hidden block w-4 h-4" />
+            <#Icon iconify="ph:arrows-counter-clockwise-fill" class="lg:hidden block w-4 h-4" />
             <span class="hidden lg:block">{if e(@feed_filters, :sort_order, nil) == :asc, do: l("Least boosted"), else: l("Most boosted")}</span>
           </span>
         {#match :like_count}
           <span class="flex items-center">
-            <#Icon iconify="ph:fire-duotone" class="lg:hidden block h-[20px] w-[18px]" />
+            <#Icon iconify="ph:fire-fill" class="lg:hidden block h-[20px] w-[18px]" />
             <span class="hidden lg:block">{if e(@feed_filters, :sort_order, nil) == :asc, do: l("Least liked"), else: l("Most liked")}</span>
           </span>
         {#match _}
@@ -56,93 +49,87 @@
       {/case}
 
       <#Icon iconify="mdi:chevron-down" class="w-4 h-4" aria-hidden="true" />
-    </button>
-    <ul
-      id="order_dropdown_feed_menu"
-      role="menu"
-      aria-labelledby="order_dropdown_feed_btn"
-      class="tooltip z-dropdown menu bg-base-100 pt-0 shadow border border-base-content/10 rounded-box w-72 absolute top-0 right-0 hidden"
-    >
-      <li>
-        <button
-          type="button"
-          role="menuitem"
-          phx-click="set_filter"
-          phx-value-sort_by="date_created"
-          phx-target={@event_target}
-          class="w-full flex gap-3 px-2 text-base-content justify-between items-center"
-        >
-          {l("Chronological")}
-          <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
-            <span
-              :if={e(@feed_filters, :sort_by, nil) not in [:reply_count, :boost_count, :like_count]}
-              class="w-[14px] h-[14px] bg-primary rounded-full"
-            />
-          </div>
-        </button>
-      </li>
+    </:trigger>
 
+    <li>
+      <button
+        type="button"
+        role="menuitem"
+        phx-click="set_filter"
+        phx-value-sort_by="date_created"
+        phx-target={@event_target}
+        class="w-full flex gap-3 px-2 text-base-content justify-between items-center"
+      >
+        {l("Chronological")}
+        <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
+          <span
+            :if={e(@feed_filters, :sort_by, nil) not in [:reply_count, :boost_count, :like_count]}
+            class="w-[14px] h-[14px] bg-primary rounded-full"
+          />
+        </div>
+      </button>
+    </li>
+
+    <li>
+      <button
+        type="button"
+        role="menuitem"
+        phx-click="set_filter"
+        phx-value-sort_by="reply_count"
+        phx-value-sort_order="desc"
+        phx-target={@event_target}
+        class="w-full flex gap-3 px-2 text-base-content justify-between items-center"
+      >
+        {l("Most replied")}
+        <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
+          <span
+            :if={e(@feed_filters, :sort_by, nil) == :reply_count}
+            class="w-[14px] h-[14px] bg-primary rounded-full"
+          />
+        </div>
+      </button>
+    </li>
+
+    {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
       <li>
         <button
           type="button"
           role="menuitem"
           phx-click="set_filter"
-          phx-value-sort_by="reply_count"
+          phx-value-sort_by="boost_count"
           phx-value-sort_order="desc"
           phx-target={@event_target}
           class="w-full flex gap-3 px-2 text-base-content justify-between items-center"
         >
-          {l("Most replied")}
+          {l("Most boosted")}
           <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
             <span
-              :if={e(@feed_filters, :sort_by, nil) == :reply_count}
+              :if={e(@feed_filters, :sort_by, nil) == :boost_count}
               class="w-[14px] h-[14px] bg-primary rounded-full"
             />
           </div>
         </button>
       </li>
 
-      {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
-        <li>
-          <button
-            type="button"
-            role="menuitem"
-            phx-click="set_filter"
-            phx-value-sort_by="boost_count"
-            phx-value-sort_order="desc"
-            phx-target={@event_target}
-            class="w-full flex gap-3 px-2 text-base-content justify-between items-center"
-          >
-            {l("Most boosted")}
-            <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
-              <span
-                :if={e(@feed_filters, :sort_by, nil) == :boost_count}
-                class="w-[14px] h-[14px] bg-primary rounded-full"
-              />
-            </div>
-          </button>
-        </li>
-
-        <li>
-          <button
-            type="button"
-            role="menuitem"
-            phx-click="set_filter"
-            phx-value-sort_by="like_count"
-            phx-value-sort_order="desc"
-            phx-target={@event_target}
-            class="w-full flex gap-3 px-2 text-base-content justify-between items-center"
-          >
-            {l("Most liked")}
-            <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
-              <span
-                :if={e(@feed_filters, :sort_by, nil) == :like_count}
-                class="w-[14px] h-[14px] bg-primary rounded-full"
-              />
-            </div>
-          </button>
-        </li>
-      {/if}
-    </ul>
-  </div>
+      <li>
+        <button
+          type="button"
+          role="menuitem"
+          phx-click="set_filter"
+          phx-value-sort_by="like_count"
+          phx-value-sort_order="desc"
+          phx-target={@event_target}
+          class="w-full flex gap-3 px-2 text-base-content justify-between items-center"
+        >
+          {l("Most liked")}
+          <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
+            <span
+              :if={e(@feed_filters, :sort_by, nil) == :like_count}
+              class="w-[14px] h-[14px] bg-primary rounded-full"
+            />
+          </div>
+        </button>
+      </li>
+    {/if}
+  </Dropdown>
 </div>

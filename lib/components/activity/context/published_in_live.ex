@@ -3,5 +3,11 @@ defmodule Bonfire.UI.Social.Activity.PublishedInLive do
 
   prop context, :any, default: nil
   prop showing_within, :atom, default: nil
-  prop class, :css_class, default: ["flex items-center -ml-8 justify-start -ml-[30px]"]
+  # compact = inline byline-end variant (in SubjectLive); default = standalone top-line
+  prop compact, :boolean, default: false
+
+  prop class, :css_class,
+    default: [
+      "flex items-center justify-start border-b-hair border-secondary pb-2 -mx-card px-card -mt-1.5"
+    ]
 end

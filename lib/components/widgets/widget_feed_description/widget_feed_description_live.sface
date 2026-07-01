@@ -1,14 +1,14 @@
-<Bonfire.UI.Common.WidgetBlockLive>
+<Bonfire.UI.Common.WidgetBlockLive class="p-card pb-[36px] border-t border-y-secondary border-t-hair">
   {#case preset(@feed_name, @__context__)}
     {#match %{} = preset}
-      <div class="flex items-center gap-2">
-        <Iconify.iconify icon={e(preset, :icon, "ph:globe-duotone")} class="w-5 h-5 text-primary" />
-        <span class="text-sm font-semibold">{e(preset, :name, l("Feed"))}</span>
+      <div class="">
+        {!-- <Iconify.iconify icon={e(preset, :icon, "ph:globe-fill")} class="w-5 h-5 text-primary" /> --}
+        <span class="text-display font-semibold">{e(preset, :description, l("Feed"))}</span>
       </div>
-      <div :if={e(preset, :description, nil)} class="prose mt-2 text-sm prose-sm">{e(preset, :description, nil)}</div>
+      {!-- <div :if={e(preset, :description, nil)} class="prose mt-2 text-sm prose-sm">{e(preset, :description, nil)}</div> --}
     {#match _}
       <div class="flex items-center gap-2">
-        <#Icon iconify="ph:globe-duotone" class="w-5 h-5 text-primary" />
+        <#Icon iconify="ph:globe-fill" class="w-5 h-5 text-primary" />
         <span class="text-sm font-semibold">{l("Public feed")}</span>
       </div>
       <div class="prose mt-2 text-sm prose-sm">{l("Public feed")}</div>

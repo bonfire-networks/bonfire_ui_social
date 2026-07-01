@@ -1,39 +1,33 @@
 <Bonfire.UI.Common.WidgetBlockLive
   :if={@presets != []}
+  class="pt-card border-y border-y-secondary border-y-hair pb-0"
+  title_class="flex items-center justify-between pb-card text-xs font-normal uppercase tracking-wide text-base-content px-base"
   widget_title={e(@widget_title, l("Feeds"))}
 >
   <:action :if={!Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}>
     <LinkLive
       to={~p"/settings/user/feeds"}
-      class="tooltip-button btn btn-circle btn-ghost btn-xs"
+      class="tooltip-button btn btn-circle btn-outline border-primary btn-sm"
       data-tip={l("Customize feeds")}
     >
-      <#Icon iconify="ph:gear-six-duotone" class="w-4 h-4" />
+      <#Icon iconify="ph:gear-six-fill" class="w-4 h-4 text-primary" />
     </LinkLive>
   </:action>
-
-  <ul class="flex flex-col gap-0.5 -mx-2">
+  {!--  --}
+  <ul class="flex flex-col divide-hair border-t-hair border-secondary divide-secondary">
     {#for preset <- @presets}
-      <li>
+      <li class="p-1">
         <LinkLive
           to={preset[:href]}
           class={[
-            "group inline-flex items-center gap-3 px-2 py-1.5 rounded-md transition-colors duration-150",
+            "group inline-flex items-center gap-3 bg-base-100 w-full px-2 py-1.5 rounded-box border-hair border-secondary text-secondary",
             "bg-primary/20": preset[:selected?],
             "hover:bg-base-content/5": !preset[:selected?]
           ]}
           label={preset[:name] || preset[:text] || preset[:description]}
         >
-          <div class={[
-            "shrink-0 w-6 h-6 rounded-md flex items-center justify-center transition-colors duration-150 bg-primary/15 group-hover:bg-primary/20",
-            "!bg-primary/25": preset[:selected?]
-          ]}>
-            <Iconify.iconify icon={preset[:icon]} class="size-4 text-primary" />
-          </div>
-          <span class={[
-            "text-sm truncate text-base-content/80 group-hover:text-base-content",
-            "!text-base-content !font-medium": preset[:selected?]
-          ]}>
+          <Iconify.iconify icon={preset[:icon]} class="size-4 text-primary" />
+          <span class="text-sm truncate text-primary font-medium">
             {localise_dynamic(
               preset[:name] || preset[:text] || preset[:description],
               preset[:extension] || preset[:module] || __MODULE__

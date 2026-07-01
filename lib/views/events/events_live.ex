@@ -31,7 +31,7 @@ defmodule Bonfire.UI.Social.EventsLive do
   end
 
   declare_nav_link(l("Events"),
-    icon: "ph:calendar-blank-duotone",
+    icon: "ph:calendar-blank-fill",
     page: "events",
     href: "/events"
   )
@@ -50,7 +50,7 @@ defmodule Bonfire.UI.Social.EventsLive do
      |> assign(
        page: "events",
        page_title: l("Discover Events"),
-       page_header_icon: "ph:calendar-blank-duotone",
+       page_header_icon: "ph:calendar-blank-fill",
        no_index: true,
        back: true,
        today: Date.utc_today(),

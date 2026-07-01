@@ -7,6 +7,7 @@
       rel="noopener noreferrer"
       data-id="peered"
       data-tip={l("Originates from a remote instance")}
+      aria-label={l("Originates from a remote instance")}
       class="z-50 tooltip tooltip-top opacity-70"
     >
       {#case Bonfire.Files.FaviconStore.favicon_url(link)}
@@ -15,6 +16,7 @@
         {#match image}
           <img
             src={image}
+            alt=""
             class="w-4 h-4"
             onerror="this.classList.add('iconify'); this.setAttribute('iconify','ph:planet-fill')"
           />

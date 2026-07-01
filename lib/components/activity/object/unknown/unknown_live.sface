@@ -5,7 +5,7 @@
         <div class="mb-2 text-sm font-medium text-base-content text-opacity-80">
           {l("Unknown object")}
         </div>
-        <div class="text-sm text-base-content/70">
+        <div class="text-sm text-muted">
           {l("This object is of an unsupported type or has been deleted.")}
         </div>
       </div>

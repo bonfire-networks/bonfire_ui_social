@@ -12,7 +12,7 @@
         {!-- <tr>
           <td>Circles</td>
           <td>2</td>
-          <td><button class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2">
+          <td><button class="btn btn-ghost items-center text-muted btn-sm normal-case  gap-2">
               <#Icon iconify="pajamas:import" class="w-4 h-4" />
               <span>CSV</span>
             </button></td>
@@ -20,7 +20,7 @@
         <tr>
           <td>Boundaries</td>
           <td>2</td>
-          <td><button class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2">
+          <td><button class="btn btn-ghost items-center text-muted btn-sm normal-case  gap-2">
               <#Icon iconify="pajamas:import" class="w-4 h-4" />
               <span>CSV</span>
             </button></td>
@@ -32,7 +32,7 @@
           <td><a
               download
               href={"/settings/export/csv/silenced?scope=#{@scope}"}
-              class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2"
+              class="btn btn-ghost items-center text-muted btn-sm normal-case  gap-2"
             >
               <#Icon iconify="pajamas:import" class="w-4 h-4" />
               <span>CSV</span>
@@ -44,7 +44,7 @@
           <td><a
               download
               href={"/settings/export/csv/ghosted?scope=#{@scope}"}
-              class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2"
+              class="btn btn-ghost items-center text-muted btn-sm normal-case  gap-2"
             >
               <#Icon iconify="pajamas:import" class="w-4 h-4" />
               <span>CSV</span>
@@ -53,7 +53,7 @@
         {!-- <tr>
           <td>Blocks</td>
           <td>23</td>
-          <td><button class="btn btn-ghost items-center text-base-content/70 btn-xs normal-case  gap-2">
+          <td><button class="btn btn-ghost items-center text-muted btn-sm normal-case  gap-2">
               <#Icon iconify="pajamas:import" class="w-4 h-4" />
               <span>CSV</span>
             </button></td>

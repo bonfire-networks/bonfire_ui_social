@@ -15,7 +15,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop muted, :boolean, default: false
   prop autoplay, :any, default: nil
 
-  prop css_borders, :css_class, default: "border border-base-content/10 rounded-md"
+  prop css_borders, :css_class, default: "border border-hair border-secondary rounded-box"
   prop small_icon, :boolean, default: false
   prop disable_lazy, :boolean, default: false
 
@@ -40,21 +40,9 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop multimedia_types, :list, default: @multimedia_types
 
   def render(assigns) do
-    # medias = the_medias(medias)
-
-    # {multimedia_list, link_list} =
-    # the_medias(medias)
-    # |> Enum.split_with(
-    #   &(String.starts_with?(&1.media_type, @multimedia_types) or
-    #       String.ends_with?(Media.media_url(&1), @multimedia_exts))
-    # )
-
     media =
       assigns[:media]
-      # |> debug()
       |> the_medias()
-
-    # |> debug("the_medias...")
 
     # Split media into categories: images, videos, gifs, audio/embeds, links
     {image_list, video_list, gif_list, audio_embed_list, link_list} =
@@ -88,7 +76,6 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
             {image_list, video_list, gif_list, audio_embed_list, [m | link_list]}
         end
       end)
-      |> debug("media_lists")
 
     # Combine images, videos, and GIFs into visual_list for the carousel
     visual_list = Enum.reverse(image_list) ++ Enum.reverse(video_list) ++ Enum.reverse(gif_list)
@@ -424,7 +411,6 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
         e(media, :metadata, "other", "og:image", nil) ||
         e(media, :metadata, "other", "og:image:url", nil) ||
         Media.thumbnail_url(media)
-        |> debug("medthumbur")
 
     # Only fall back to media_img if we have a proper image media type
     # Never use video URLs as poster images
@@ -458,7 +444,6 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
 
   def media_img(%{} = media) do
     Media.image_url(media)
-    |> debug("medimageur")
     |> unwrap()
   end
 

@@ -38,20 +38,20 @@
 {!-- <div class="dropdown dropdown-end">
     <label
       tabindex="0"
-      class=" btn-sm btn btn-ghost normal-case text-base-content/70"
+      class=" btn-sm btn btn-ghost normal-case text-muted"
     >
       {#case e(@feed_filters, :sort_by, nil)}
         {#match :reply_count}
-          <#Icon iconify="ph:chat-circle-duotone" class="w-5 h-5 stroke-1 fill-base-content/50" />
+          <#Icon iconify="ph:chat-circle-fill" class="w-5 h-5 stroke-1 fill-base-content/50" />
           <span>{l("Sort by amount of replies")}</span>
         {#match :boost_count}
           <#Icon iconify="ph:rocket-launch" class="w-5 h-5 stroke-1 fill-base-content/50" />
           <span>{l("Sort by amount of boosts")}</span>
         {#match :like_count}
-          <#Icon iconify="ph:fire-duotone" class="w-5 h-5" />
+          <#Icon iconify="ph:fire-fill" class="w-5 h-5" />
           <span>{l("Sort by amount of likes")}</span>
         {#match _}
-          <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
+          <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-muted" />
           <span>{l("default")}</span>
       {/case}
     </label></div> --}
@@ -69,11 +69,11 @@
     <a
       data-tip={l("Chronological")}
       class={
-        "lg:tooltip lg:tooltip-bottom flex gap-2 text-base-content/70 border ",
+        "lg:tooltip lg:tooltip-bottom flex gap-2 text-muted border ",
         "border-base-content/5 active !text-base-content/100": is_nil(e(@feed_filters, :sort_by, nil))
       }
     >
-      <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-base-content/70" />
+      <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-muted" />
       <span class="sr-only">{l("Chronological")}</span>
     </a></li>
   <li
@@ -87,11 +87,11 @@
     <a
       data-tip={l("Most replied")}
       class={
-        "lg:tooltip lg:tooltip-bottom flex gap-2 text-base-content/70 border ",
+        "lg:tooltip lg:tooltip-bottom flex gap-2 text-muted border ",
         "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :reply_count
       }
     >
-      <#Icon iconify="ph:chat-circle-duotone" class="w-5 h-5 stroke-1 fill-base-content/50" />
+      <#Icon iconify="ph:chat-circle-fill" class="w-5 h-5 stroke-1 fill-base-content/50" />
       <span class="sr-only">{l("Most replied")}</span>
     </a>
   </li>
@@ -106,7 +106,7 @@
     <a
       data-tip={l("Most boosted")}
       class={
-        "lg:tooltip lg:tooltip-bottom flex gap-2 text-base-content/70 border ",
+        "lg:tooltip lg:tooltip-bottom flex gap-2 text-muted border ",
         "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :boost_count
       }
     >
@@ -125,7 +125,7 @@
     <a
       data-tip={l("Most liked")}
       class={
-        "lg:tooltip lg:tooltip-bottom flex gap-2 text-base-content/70 border ",
+        "lg:tooltip lg:tooltip-bottom flex gap-2 text-muted border ",
         "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :like_count
       }
     >

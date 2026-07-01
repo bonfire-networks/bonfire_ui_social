@@ -3,16 +3,14 @@
   permalink={@permalink}
 >
   <div class="previewable_activity flex">
-    <!-- <img src={e(@object, :post_content, :media, [])} class="w-[160px] h-[160px] rounded-lg"> -->
-
     <div class="flex flex-col gap-1">
       {#case e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil)}
         {#match nil}
-          <div :if={!@is_remote} class="font-semibold text-lg text-base-content/90">
+          <div :if={!@is_remote} class="font-medium text-lg text-base-content">
             {"No title"}
           </div>
         {#match title}
-          <div class="font-semibold text-lg text-base-content/90">
+          <div class="font-medium text-lg text-base-content">
             <p>{title}</p>
           </div>
       {/case}
@@ -20,7 +18,7 @@
       {#case e(@object, :post_content, :html_body, nil)}
         {#match nil}
         {#match html_body}
-          <div class="prose prose-sm line-clamp-3  prose-sm">
+          <div class="prose prose-sm line-clamp-3">
             {rich(html_body,
               skip_markdown: @is_remote,
               __unsafe__: !@is_remote
@@ -39,9 +37,9 @@
         showing_within={:quote_preview}
       />
 
-      <div class="flex items-center text-sm text-base-content/70 mt-1 gap-4">
+      <div class="flex items-center text-sm text-muted mt-1 gap-4">
         <div class="flex items-center gap-2">
-          <#Icon iconify="ph:chat-circle-duotone" class="w-5 h-5 text-base-content/50" />
+          <#Icon iconify="ph:chat-circle-fill" class="w-5 h-5 text-base-content/50" />
           <div class="text-sm">
             {@reply_count}
           </div>

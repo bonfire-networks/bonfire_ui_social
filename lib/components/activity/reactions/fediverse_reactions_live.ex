@@ -13,4 +13,5 @@ defmodule Bonfire.UI.Social.Activity.FediverseReactionsLive do
   prop boost_count, :integer, default: 0
   prop max_avatars, :integer, default: 5
   prop parent_id, :any, default: nil
+  prop reply_count, :integer, default: 0
 end

@@ -60,7 +60,7 @@
         {rich(object_field(debug(@json, "apjson"), "name") || l("Untitled audio"))}
       </div>
 
-      <p class="mt-1 text-xs text-base-content/70">
+      <p class="mt-1 text-xs text-muted">
         {#case object_field(@json, "duration")}
           {#match duration when is_number(duration)}
             {Bonfire.Common.Localise.Cldr.Unit.new(:second, duration)
@@ -73,7 +73,7 @@
       </p>
 
       <div class="">
-        <article class={"text-sm mt-3 text-base-content/70 ", p_line_clamp_4: !@viewing_main_object}>
+        <article class={"text-sm mt-3 text-muted ", p_line_clamp_4: !@viewing_main_object}>
           {!-- "p_line_clamp_6": @viewing_main_object --}
           {!-- TODO: show more button for long descriptions like in NoteLive --}
           {rich(object_field(@json, "content") || e(object_field(@json, "description"), "content", nil))}

@@ -796,13 +796,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
       data-compact={@__context__[:ui_compact]}
       data-answer={not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil))}
       data-verb={@verb}
+      data-reply-context={not is_nil(@reply_to) and is_nil(@activity_inception) and
+        @showing_within in [nil, :feed, :profile]}
       aria-label="user activity"
       tabIndex="0"
       class={[
-        "activity relative flex flex-col gap-1 touch-pan-y p-5 activity-padding #{@class}",
-        "activity-padding-compact":
-          @showing_within in [:thread, :thread_embed] && !@viewing_main_object,
-        "hover:bg-base-200/5":
+        "activity relative flex flex-col gap-1 touch-pan-y #{@class}",
+        "cursor-pointer":
           @showing_within not in [:thread, :thread_embed, :smart_input, :widget] &&
             (!@activity_inception || @showing_within == :quote_preview),
         "replied !p-0 mb-8":
@@ -823,6 +823,28 @@ defmodule Bonfire.UI.Social.ActivityLive do
             @showing_within not in [:smart_input, :pinned] and @viewing_main_object == false
       ]}
     >
+      {!-- "See full thread" header strip for the feed reply-context (Figma node 30:553):
+           a full-bleed bg-base-200 band with a hairline divider, link right-aligned. The
+           dotted "continues-up" line runs in the avatar column (via CSS ::before). --}
+      <div
+        :if={not is_nil(@reply_to) and is_nil(@activity_inception) and
+          @showing_within in [nil, :feed, :profile]}
+        data-role="thread_header"
+        class="-mx-card -mt-[12px] mb-2 px-card py-3 bg-base-200 border-b-hair border-secondary rounded-t-[var(--radius-box)] flex items-center justify-end"
+      >
+        {!-- plain anchor with `preview_activity_link` so the PreviewActivity hook
+             opens the PreviewContent modal instead of navigating (real link as fallback) --}
+        <a
+          href={@thread_url || @permalink || "#"}
+          target="_top"
+          data-role="see_full_thread"
+          class="preview_activity_link group no-underline"
+          aria-label={l("See full thread")}
+        >
+          <span class="text-xs uppercase tracking-[0.48px] text-base-content group-hover:text-primary transition-colors">{l("See full thread")}</span>
+        </a>
+      </div>
+
       {!-- Preview click trigger (hidden `.open_preview_link`) — rendered alongside
            both the default activity content and any `@custom_preview`, so that
            clicking the article opens the PreviewContentLive modal in either case. --}
@@ -902,13 +924,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         {/if}
       {/if}
 
-      <Bonfire.UI.Social.Activity.PublishedInLive
-        :if={@published_in && id(@published_in) != @feed_id && @showing_within != :topic &&
-          !@viewing_main_object}
-        context={@published_in}
-        showing_within={@showing_within}
-      />
-
       {#if @custom_preview}
         <StatelessComponent
           permalink={@permalink}
@@ -942,6 +957,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
             <input type="hidden" name="feed_id" value={@feed_id}>
             <input type="hidden" name="activity_id" value={@activity_id}>
           </form>
+
+          {!-- "Published in <group>" as a standalone top-line, rendered once per
+               activity card (not per subject component, so group boosts don't double it). --}
+          <Bonfire.UI.Social.Activity.PublishedInLive
+            :if={@published_in && id(@published_in) != @feed_id && @showing_within != :topic &&
+              !@viewing_main_object}
+            context={@published_in}
+            showing_within={@showing_within}
+          />
 
           {#for {component, component_assigns} when is_atom(component) <-
               activity_components(
@@ -1022,6 +1046,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   parent_id={@activity_component_id}
                   thread_id={@thread_id}
                   published_in={@published_in}
+                  feed_id={@feed_id}
                   verb={maybe_get(component_assigns, :verb, @verb)}
                   verb_display={maybe_get(component_assigns, :verb_display, @verb_display)}
                   emoji={@emoji || e(maybe_get(component_assigns, :activity, @activity), :emoji, nil)}
@@ -1042,7 +1067,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 />
               {#match Bonfire.UI.Social.Activity.NoteLive}
                 <span :if={@is_thread_start} class="badge badge-outline badge-warning mb-2">
-                  <#Icon iconify="ph:chats-circle-duotone" class="w-4 h-4 mr-1" />
+                  <#Icon iconify="ph:chats-circle-fill" class="w-4 h-4 mr-1" />
                   {l("Original post")}
                 </span>
                 <Bonfire.UI.Social.Activity.NoteLive
@@ -1355,6 +1380,29 @@ defmodule Bonfire.UI.Social.ActivityLive do
        |> prepare_assigns()}
     ]
     |> debug("MATCHED react case for verb: #{verb} in component_activity_subject")
+  end
+
+  # poll votes (notifications): prepend a minimal "X voted on your poll" header
+  # above the poll (the vote activity's object + its creator)
+  def component_activity_subject(
+        "Vote" = verb,
+        activity,
+        object,
+        object_type,
+        :notifications,
+        _,
+        _
+      ) do
+    [
+      {Bonfire.UI.Social.Activity.SubjectMinimalLive,
+       %{
+         verb: verb,
+         subject_id: e(activity, :subject_id, nil),
+         subjects_more: e(activity, :subjects_more, []),
+         profile: e(activity, :subject, :profile, nil),
+         character: e(activity, :subject, :character, nil)
+       }}
+    ] ++ component_activity_maybe_creator(activity, object, object_type)
   end
 
   def component_activity_subject(verb, activity, object, object_type, _, _, _)
@@ -1928,11 +1976,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     case reply_context_mode do
       :thread_start
-      when showing_within == :feed and is_nil(activity_inception) and not is_nil(thread_start) ->
+      when showing_within in [:feed, :profile] and is_nil(activity_inception) and
+             not is_nil(thread_start) ->
         component_thread_start(thread_start, thread_title, activity_component_id)
 
       :minimal
-      when showing_within == :feed and is_nil(activity_inception) and not is_nil(reply_to) ->
+      when showing_within in [:feed, :profile] and is_nil(activity_inception) and
+             not is_nil(reply_to) ->
         [{Bonfire.UI.Social.Activity.RepliedInThreadIndicatorLive, %{}}]
 
       _ ->
@@ -2049,9 +2099,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
        %{
          id: "reply_to-#{activity_component_id}-#{object_id}",
          activity_inception: activity_id,
-         #  show_minimal_subject_and_note: name_or_text(reply_to_object) || true,
-         # FIXME: not showing reply_to post content
-         show_minimal_subject_and_note: true,
+         # show the reply_to parent's full byline + body (the "post with reply" design)
+         show_minimal_subject_and_note: false,
          viewing_main_object: false,
          # share thread context with parent so the nested article computes a
          # /discussion/{thread_id}/... permalink (matching the reply) instead
@@ -2446,7 +2495,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   # WIP: THIS NEEDS TO BE REFACTORED ACCORDING TO actions_for_object_type
-  def component_actions("Flag", _, _, _, _, _), do: [Bonfire.UI.Social.Activity.ActionsLive]
+  # Flag activities get the moderation action menu (Mediate / Take action),
+  # not the regular post actions.
+  def component_actions("Flag", _, _, _, _, _), do: [Bonfire.UI.Moderation.FlaggedActionsLive]
 
   # def component_actions(_, activity, _, _, _, true) do
   #   [Bonfire.UI.Social.Activity.MainObjectInfoLive] ++ component_actions(nil, activity, nil)
@@ -2604,7 +2655,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     # Wrap each component with preview styling and add a header
     _preview_header = [
-      {:html, "<h4 class=\"text-sm font-medium text-base-content/70 mb-2\">#{field_name}:</h4>"}
+      {:html, "<h4 class=\"text-sm font-medium text-muted mb-2\">#{field_name}:</h4>"}
     ]
 
     preview_components =

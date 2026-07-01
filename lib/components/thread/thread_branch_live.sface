@@ -11,7 +11,7 @@
     <div
       :if={@parent_visual_level >= 1 && @visual_level > @parent_visual_level && @show_thread_lines}
       style={"left: #{20 + (@parent_visual_level - 1) * 34}px; width: 38px; height: 28px; border-bottom-left-radius: 12px"}
-      class="absolute top-0 border-l border-b border-base-content/20 z-30 pointer-events-none"
+      class="absolute top-0 border-l-hair border-b-hair border-secondary z-30 pointer-events-none"
     />
 
     {!-- R1 piece A (parent trunk) + R2 collapse button. Wrapping CommentLive
@@ -25,10 +25,10 @@
         |> JS.hide(to: "#line-#{@id}")
         |> JS.hide(to: "#collapse-minus-#{@id}")
         |> JS.show(to: "#collapse-plus-#{@id}")}
-        style={"left: #{24 + (@visual_level - 1) * 34}px; top: 20px"}
+        style={"left: #{24 + (@visual_level - 1) * 34}px; top: 36px"}
         class={
-          "absolute bottom-0 border-l border-base-content/20 z-40 px-1 -ml-1 ",
-          "cursor-pointer hover:border-l-2 hover:border-base-content/40": current_user_id(@__context__)
+          "absolute bottom-0 border-l-hair border-secondary z-40 px-1 -ml-1 ",
+          "cursor-pointer hover:border-l-2 hover:border-primary": current_user_id(@__context__)
         }
       />
 
@@ -49,16 +49,16 @@
         >
           <span
             style="width: 20px; height: 20px"
-            class="flex items-center justify-center rounded-full border border-base-content/20 bg-base-100 group-hover:border-base-content/40 group-hover:bg-base-200 transition-colors"
+            class="flex items-center justify-center rounded-full border-hair border-secondary bg-base-100 group-hover:border-primary group-hover:bg-base-200 transition-colors"
           >
             <span
               id={"collapse-minus-#{@id}"}
-              class="text-base-content/50 text-xs font-bold leading-none select-none"
+              class="text-secondary text-xs font-bold leading-none select-none"
             >&minus;</span>
             <span
               id={"collapse-plus-#{@id}"}
               style="display:none"
-              class="text-base-content/50 text-xs font-bold leading-none select-none"
+              class="text-secondary text-xs font-bold leading-none select-none"
             >+</span>
           </span>
         </button>
@@ -129,7 +129,7 @@
                   ],
                   fallback_return: "/login"
                 )}
-                class="btn btn-xs"
+                class="btn btn-sm"
               >
                 {l("%{count} more replies", count: extra_replies_count(@comment, @threaded_replies_count))}</LinkLive>
             {/if}
@@ -147,7 +147,7 @@
                   <div
                     :if={@show_thread_lines && more_siblings_below?(@comment, index, @threaded_replies_count)}
                     style={"left: #{20 + (@visual_level - 1) * 34}px"}
-                    class="absolute top-[18px] bottom-0 border-l border-base-content/20 z-30 pointer-events-none"
+                    class="absolute top-[18px] bottom-0 border-l-hair border-secondary z-30 pointer-events-none"
                   />
                   <StatefulComponent
                     module={maybe_component(Bonfire.UI.Social.ThreadBranchLive, @__context__)}

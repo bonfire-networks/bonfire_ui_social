@@ -6,7 +6,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   alias Bonfire.UI.Social.FeedController
 
   declare_extension("Social UI",
-    icon: "ph:rss-simple-duotone",
+    icon: "ph:rss-simple-fill",
     # emoji: "📰",
     description:
       l(
@@ -32,7 +32,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   )
 
   declare_nav_link(l("Notifications"),
-    icon: "ph:bell-duotone",
+    icon: "ph:bell-fill",
     page: "notifications",
     href: "/notifications",
     badge: [
@@ -45,11 +45,11 @@ defmodule Bonfire.UI.Social.FeedsLive do
   #   l("Feeds"),
   #   %{
   #     page: "feed",
-  #     icon: "ph:rss-simple-duotone",
+  #     icon: "ph:rss-simple-fill",
   #     href: &nav_link_feed/1,
   #     #  TODO: these should be generated from preset filters and settings
   #     sub_links: [
-  #       {l("Following"), page: "following", href: "/feed/my", icon: "ph:house-duotone"},
+  #       {l("Following"), page: "following", href: "/feed/my", icon: "ph:house-fill"},
   #       {l("Explore"), page: "explore", href: "/feed/explore", icon: "carbon:explore"},
   #       {l("Local"),
   #        page: "local", href: "/feed/local", icon: "material-symbols:camping-rounded"},
@@ -61,8 +61,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
   #       # #  href: &nav_link_discussions/1,
   #       #  icon: "ri:discuss-line"},
   #       {l("Bookmarks"),
-  #        page: "bookmarks", href: "/feed/bookmarks", icon: "ph:bookmark-duotone-filled"},
-  #       {l("Likes"), page: "likes", href: "/feed/likes", icon: "ph:fire-duotone"}
+  #        page: "bookmarks", href: "/feed/bookmarks", icon: "ph:bookmark-fill-filled"},
+  #       {l("Likes"), page: "likes", href: "/feed/likes", icon: "ph:fire-fill"}
   #     ]
   #   }
   # )
@@ -100,7 +100,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
          selected_tab: nil,
          #  page: :explore,
          page_title: nil,
-         page_header_icon: "ph:house-duotone",
+         page_header_icon: "ph:house-fill",
          feed: nil,
          page_info: nil,
          no_header: false,

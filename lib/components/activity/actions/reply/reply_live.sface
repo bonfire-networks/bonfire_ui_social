@@ -5,11 +5,12 @@
       )}
     {#match true}
       <.icon_button
-        icon="ph:chat-circle-duotone"
+        icon="ph:chat-circle-fill"
+        icon_class="w-[18px] h-[18px]"
         aria_label={l("Reply")}
         variant="ghost"
         tooltip={l("Reply")}
-        tooltip_position="bottom"
+        tooltip_position="top"
         phx_click={if @event_target || @activity_component_id,
           do:
             Bonfire.Social.Feeds.LiveHandler.reply_to_activity(
@@ -17,7 +18,7 @@
             ),
           else: "Bonfire.Social.Threads:reply"}
         phx_values={%{id: @object_id}}
-        class={"text-base-content/60 hover:text-primary", @class}
+        class={"text-muted hover:text-primary", @class}
         data-role="reply_enabled"
         data-id="action_reply"
       />
@@ -32,7 +33,8 @@
     {#match _}
       {#if @object_boundary}
         <.icon_button
-          icon="ph:chat-circle-duotone"
+          icon="ph:chat-circle-fill"
+          icon_class="w-[18px] h-[18px]"
           aria_label={@cannot_reply_text || l("Cannot reply")}
           variant="ghost"
           disabled
@@ -48,7 +50,7 @@
           {@reply_count}
         </span>
       {#else}
-        <span class="loading loading-spinner loading-sm text-base-content/70" />
+        <span class="loading loading-spinner loading-sm text-muted" />
       {/if}
   {/case}
 </div>

@@ -7,7 +7,7 @@
   >
     <span
       data-role="no_subject"
-      class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-base-content/70"
+      class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-muted"
     >
       <Bonfire.UI.Social.Activity.DateAgoLive
         date_ago={@date_ago}
@@ -17,18 +17,6 @@
       />
     </span>
   </Bonfire.UI.Social.Activity.LinkToActivityLive>
-
-  {!-- NOTE: what is ActivityBoundaryLive doing here?
-  <Bonfire.UI.Social.ActivityBoundaryLive
-    :if={@object_type != Bonfire.Data.Social.Message and
-      LiveHandler.feed_live_update_many_preload_mode() != :async_actions}
-    object_id={@object_id}
-    object_type={Types.object_type(@published_in) || @object_type}
-    parent_id={deterministic_dom_id(__MODULE__, @activity_inception, "activity_inception", @parent_id)}
-    with_icon
-    object_boundary={@object_boundary}
-  /> 
-  --}
 
   <Bonfire.UI.Social.Activity.InstanceIconLive peered={@peered} />
 </div>
