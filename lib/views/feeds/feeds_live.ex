@@ -5,8 +5,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
   alias Bonfire.UI.Social.FeedLive
   alias Bonfire.UI.Social.FeedController
 
-  declare_extension("Social UI",
-    icon: "ph:rss-simple-fill",
+  declare_extension(l("Social UI"),
+    icon: "ph:rss-simple-duotone",
     # emoji: "📰",
     description:
       l(
