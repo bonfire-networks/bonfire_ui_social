@@ -48,7 +48,7 @@
                 character={e(user, :character, nil) || e(user, :activity, :subject, :character, nil)}
                 profile={e(user, :profile, nil) || e(user, :activity, :subject, :profile, nil)}
                 show_summary
-                show_controls={[:follows_me, :follow]}
+                show_controls={[:follow]}
               />
               {!-- <StatelessComponent
                 module={maybe_component(Bonfire.UI.Me.UserPreviewLive, @__context__)}
