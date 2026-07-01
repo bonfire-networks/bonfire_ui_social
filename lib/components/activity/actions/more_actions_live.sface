@@ -31,7 +31,7 @@
         URIs.canonical_url(@object, preload_if_needed: false)}
       class="flex items-center justify-between gap-2 text-sm text-base-content w-full"
     >
-      <span class="flex-1 text-sm font-medium text-left" data-role="label">{l("Copy link")}</span>
+      <span class="flex-1 text-sm text-left" data-role="label">{l("Copy link")}</span>
       <#Icon iconify="ph:copy-fill" class="w-5 h-5 shrink-0" />
     </button>
   </li>
@@ -104,7 +104,7 @@
               phx-value-id={subject_id}
               class="flex items-center justify-between gap-2 text-sm text-base-content w-full"
             >
-              <span class="flex-1 text-sm font-medium text-left truncate ellipsis" data-role="label">{l("Unfollow %{name}",
+              <span class="flex-1 text-sm text-left truncate ellipsis" data-role="label">{l("Unfollow %{name}",
                   name:
                     e(@activity, :subject, :profile, :name, nil) ||
                       e(@activity, :subject, :character, :username, nil)

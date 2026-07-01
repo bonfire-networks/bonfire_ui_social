@@ -16,7 +16,7 @@
           <button
             type="button"
             aria-label={l("Scroll left")}
-            class="w-7 h-7 rounded-full bg-primary text-primary-content flex items-center justify-center shrink-0 disabled:opacity-30 transition-opacity cursor-pointer"
+            class="w-7 h-7 rounded-full bg-primary text-primary-content flex items-center justify-center shrink-0 disabled:opacity-30 transition-opacity cursor-pointer cursor-pointer"
             phx-click={JS.dispatch("scroll-left", to: "#suggested-profiles-carousel")}
           >
             <#Icon iconify="ph:caret-left" class="w-4 h-4" />
@@ -24,7 +24,7 @@
           <button
             type="button"
             aria-label={l("Scroll right")}
-            class="w-7 h-7 rounded-full bg-primary text-primary-content flex items-center justify-center shrink-0 disabled:opacity-30 transition-opacity cursor-pointer"
+            class="w-7 h-7 rounded-full bg-primary text-primary-content flex items-center justify-center shrink-0 disabled:opacity-30 transition-opacity cursor-pointer cursor-pointer"
             phx-click={JS.dispatch("scroll-right", to: "#suggested-profiles-carousel")}
           >
             <#Icon iconify="ph:caret-right" class="w-4 h-4" />

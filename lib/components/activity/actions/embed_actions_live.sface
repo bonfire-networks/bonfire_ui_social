@@ -76,7 +76,7 @@
               URIs.canonical_url(@object, preload_if_needed: false)}
             class="flex items-center justify-between gap-2 text-sm text-base-content w-full"
           >
-            <span class="flex-1 text-sm font-medium text-left" data-role="label">{l("Copy link")}</span>
+            <span class="flex-1 text-sm text-left" data-role="label">{l("Copy link")}</span>
             <#Icon iconify="ph:copy-fill" class="w-5 h-5 shrink-0" />
           </button>
         </li>
@@ -99,7 +99,7 @@
               phx-value-permalink={@permalink}
               class="flex items-center justify-between gap-2 text-sm text-base-content w-full"
             >
-              <span class="flex-1 text-sm font-medium text-left" data-role="label">
+              <span class="flex-1 text-sm text-left" data-role="label">
                 {l("Report this %{object}", object: e(@object_type_readable, l("object")))}
               </span>
               <#Icon iconify="ph:flag-fill" class="w-5 h-5 shrink-0" />
@@ -118,7 +118,7 @@
               phx-value-object_label={l("this user")}
               class="flex items-center justify-between gap-2 text-sm text-base-content w-full"
             >
-              <span class="flex-1 text-sm font-medium text-left" data-role="label">
+              <span class="flex-1 text-sm text-left" data-role="label">
                 {l("Block this user")}
               </span>
               <#Icon iconify="ph:prohibit-fill" class="w-5 h-5 shrink-0" />
