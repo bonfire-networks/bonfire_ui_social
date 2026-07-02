@@ -30,6 +30,11 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
 
   prop custom_preview, :any, default: nil
 
+  # when true, the rendered ActivityLive re-checks `:read` via `maybe_check_boundaries`
+  # (nulls the object if the viewer may `:see` but not `:read` it) — used by the preview
+  # modal so a see-only object's body isn't exposed.
+  prop check_object_boundary, :boolean, default: false
+
   # NOTE: the update callback will only run when this is being used as a stateful component (i.e. in some cases in preview component)
   def update(%{post_id: id} = assigns, %{assigns: %{object: %{id: previously_loaded}}} = socket)
       when is_binary(id) and id == previously_loaded do
