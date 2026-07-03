@@ -1284,11 +1284,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   defp reading_position_update_allowed?(socket, feed_name, cursor)
        when is_binary(feed_name) and is_binary(cursor) do
     current_user_id(socket) &&
-      socket.assigns[:enable_marker] != false &&
-      to_string(socket.assigns[:feed_name]) == feed_name &&
-      chronological_desc_feed?(socket.assigns[:feed_filters]) &&
+      assigns(socket)[:enable_marker] != false &&
+      to_string(assigns(socket)[:feed_name]) == feed_name &&
+      chronological_desc_feed?(assigns(socket)[:feed_filters]) &&
       Bonfire.Common.Types.is_ulid?(cursor) &&
-      markers_enabled?(socket)
+      markers_enabled?(assigns(socket))
   end
 
   defp reading_position_update_allowed?(_socket, _feed_name, _cursor), do: false

@@ -286,9 +286,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
       label: "",
       showing_within: :thread,
       modal_component: Bonfire.UI.Social.ObjectThreadLive,
-      modal_component_stateful?: not top_of_thread? and not reply_to_top_of_thread?,
+      modal_component_stateful?: true,
+      check_object_boundary: true,
+      # ^ enable stateful and boundary check for thread preview modal so that the user cannot read something they are allowed to see/discover but not allowed to read
+      # modal_component_stateful?: not top_of_thread? and not reply_to_top_of_thread?,
+      # check_object_boundary: not top_of_thread? and not reply_to_top_of_thread?,
       activity_inception: "preview",
-      check_object_boundary: not top_of_thread? and not reply_to_top_of_thread?,
       object:
         cond do
           top_of_thread? -> object

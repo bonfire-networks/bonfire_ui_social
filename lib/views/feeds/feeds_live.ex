@@ -229,7 +229,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
         base = Path.rootname(feed_str)
         FeedController.feed_redirect(socket, format, base, attrs)
 
-      format = socket.assigns[:maybe_rss_or_atom] ->
+      format = assigns(socket)[:maybe_rss_or_atom] ->
         FeedController.feed_redirect(socket, format, feed, attrs)
 
       true ->

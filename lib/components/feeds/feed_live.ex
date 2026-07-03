@@ -192,7 +192,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     markers_enabled =
       assigns[:enable_marker] != false and
         Bonfire.Common.Settings.get([Bonfire.Social.Markers, :enabled], true,
-          context: socket.assigns[:__context__]
+          context: assigns(socket)[:__context__]
         )
 
     socket
@@ -210,7 +210,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   defp assign_or_existing(assigns, socket, key) do
-    if Map.has_key?(assigns, key), do: assigns[key], else: socket.assigns[key]
+    if Map.has_key?(assigns, key), do: assigns[key], else: assigns(socket)[key]
   end
 
   # adding new feed item
@@ -764,7 +764,7 @@ defmodule Bonfire.UI.Social.FeedLive do
         socket
       )
       when not is_nil(circle_id) do
-    current_circles = e(socket.assigns, :feed_filters, :subject_circles, [])
+    current_circles = e(assigns(socket), :feed_filters, :subject_circles, [])
 
     updated_circles =
       if circle_id in current_circles do
