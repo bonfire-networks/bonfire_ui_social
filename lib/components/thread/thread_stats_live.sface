@@ -1,6 +1,6 @@
 <div>
   <div
-    class="relative z-tooltip feed_control_wrapper bg-base-300 rounded-field border-hair border-secondary border w-[calc(100%+2px)] max-w-[calc(100%+2px)] p-1"
+    class="relative feed_control_wrapper bg-base-300 rounded-field border-hair border-secondary border w-[calc(100%+2px)] max-w-[calc(100%+2px)] p-1"
     role="region"
     aria-label={l("Thread stats and actions")}
   >
@@ -30,7 +30,7 @@
             phx-click="Bonfire.Social.Feeds:fetch_thread"
             phx-target={@event_target}
             phx-value-id={id(@object) || id(@activity)}
-            class="tooltip tooltip-bottom btn btn-ghost btn-sm btn-square rounded-lg min-h-11 min-w-11 lg:min-h-8 lg:min-w-8 lg:h-8 lg:w-8 text-muted hover:text-base-content"
+            class="tooltip tooltip-bottom btn btn-outline btn-primary btn-sm btn-circle"
             data-tip={l("Get latest replies")}
             aria-label={l("Get latest replies")}
           >
@@ -49,7 +49,7 @@
             href={canonical_uri}
             target="_blank"
             rel="noopener noreferrer"
-            class="tooltip tooltip-bottom btn btn-ghost btn-sm btn-square rounded-lg min-h-11 min-w-11 lg:min-h-8 lg:min-w-8 lg:h-8 lg:w-8 text-muted hover:text-base-content"
+            class="tooltip tooltip-bottom btn btn-outline btn-primary btn-sm btn-circle"
             data-tip={l("View remotely")}
             aria-label={l("View remotely")}
           >

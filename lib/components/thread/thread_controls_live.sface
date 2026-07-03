@@ -9,10 +9,10 @@
     <:trigger>
       {#if @thread_mode == :flat}
         {!-- <#Icon iconify="bi:list" class="w-4 h-4" aria-hidden="true" /> --}
-        <span class="hidden lg:block">{l("Linear")}</span>
+        <span class="">{l("Linear")}</span>
       {#else}
         {!-- <#Icon iconify="bi:list-nested" class="w-4 h-4" aria-hidden="true" /> --}
-        <span class="hidden lg:block">{l("Threaded")}</span>
+        <span class="">{l("Threaded")}</span>
       {/if}
       <#Icon iconify="mdi:chevron-down" class="w-4 h-4 opacity-60" aria-hidden="true" />
     </:trigger>
