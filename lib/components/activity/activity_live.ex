@@ -830,13 +830,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
         :if={not is_nil(@reply_to) and is_nil(@activity_inception) and
           @showing_within in [nil, :feed, :profile]}
         data-role="thread_header"
-        class="-mx-card -mt-[12px] mb-2 px-card py-3 bg-base-200 border-b-hair border-secondary rounded-t-[var(--radius-box)] flex items-center justify-end"
+        class="-mx-card -mt-[18px] mb-2 px-card py-3 bg-base-200 border-b-hair border-secondary rounded-t-[var(--radius-box)] flex items-center justify-end"
       >
         {!-- plain anchor with `preview_activity_link` so the PreviewActivity hook
              opens the PreviewContent modal instead of navigating (real link as fallback) --}
         <a
           href={@thread_url || @permalink || "#"}
-          target="_top"
+          target={e(@__context__, :link_target, nil) || "_top"}
+          rel={if e(@__context__, :link_target, nil) == "_blank", do: "noopener"}
           data-role="see_full_thread"
           class="preview_activity_link group no-underline"
           aria-label={l("See full thread")}

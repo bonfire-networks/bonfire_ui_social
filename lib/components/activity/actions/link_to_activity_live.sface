@@ -1,7 +1,8 @@
 {!-- NOTE: we use a simple anchor here, so it gets overriden by OpenPreviewLive JS --}
 <a
   href={@permalink}
-  target="_top"
+  target={e(@__context__, :link_target, nil) || "_top"}
+  rel={if e(@__context__, :link_target, nil) == "_blank", do: "noopener"}
   data-role="subject_timestamp"
   class="preview_activity_link subject_timestamp text-sm no-underline"
 >
