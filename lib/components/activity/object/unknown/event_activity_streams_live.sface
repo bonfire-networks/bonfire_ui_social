@@ -1,10 +1,10 @@
 {#if @showing_within in [:smart_input, :pinned]}
   <div>
-    <div class="flex badge badge-neutral items-center gap-2 font-semibold">
+    <div class="flex badge badge-neutral items-center gap-2 font-medium">
       <#Icon iconify="ph:calendar-blank-bold" class="w-4 h-4" />
       {l("Event")}
     </div>
-    <h2 class="mt-2 font-semibold text-base-content">
+    <h2 class="mt-2 font-medium text-base-content">
       {rich(object_field(@json, "name") || l("Untitled event"))}
     </h2>
   </div>
@@ -34,7 +34,7 @@
           />
       {/case}
 
-      <div class="absolute top-3 right-3 badge badge-neutral gap-1.5 font-semibold shadow-sm">
+      <div class="absolute top-3 right-3 badge badge-neutral gap-1.5 font-medium shadow-sm">
         <#Icon iconify="ph:calendar-blank-bold" class="w-3.5 h-3.5" />
         {l("Event")}
       </div>
@@ -43,7 +43,7 @@
         {#match nil}
         {#match c}
           <div class="absolute bottom-3 left-3 flex flex-col items-center justify-center leading-none rounded-lg bg-base-100 ring-1 ring-base-content/10 shadow-md px-3 py-1.5 min-w-[3rem]">
-            <span class="text-[0.65rem] font-semibold uppercase tracking-wide text-primary">{c.weekday}</span>
+            <span class="text-[0.65rem] font-medium uppercase tracking-wide text-primary">{c.weekday}</span>
             <span class="text-2xl font-bold text-base-content">{c.day}</span>
             <span class="text-[0.65rem] font-medium uppercase tracking-wide text-muted">{c.month}</span>
           </div>
@@ -53,7 +53,7 @@
     <div class="p-4">
       <a href={object_field(@json, "id")} target="_blank" rel="noopener noreferrer">
         <h2 class={
-          "font-semibold text-base-content text-balance leading-snug hover:underline",
+          "font-medium text-base-content text-balance leading-snug hover:underline",
           "text-xl": @viewing_main_object,
           "text-lg": !@viewing_main_object
         }>

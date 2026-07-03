@@ -30,7 +30,7 @@
             <Bonfire.UI.Social.EventCategoryIconLive category={category} class="w-[18px] h-[18px]" />
           </span>
           <span class="flex flex-col min-w-0 leading-tight">
-            <span class="font-semibold text-sm text-base-content truncate">{EventCategories.label(category)}</span>
+            <span class="font-medium text-sm text-base-content truncate">{EventCategories.label(category)}</span>
             <span class="text-xs text-base-content/50">{count_label(category_count(@category_counts, category))}</span>
           </span>
         </button>

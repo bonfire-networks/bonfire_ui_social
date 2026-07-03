@@ -9,7 +9,7 @@
           {Bonfire.UI.Social.EventHelpers.event_time_range(edge)}
         </span>
 
-        <h4 class="font-semibold text-base-content text-lg leading-snug text-balance line-clamp-2 group-hover:text-primary transition-colors">
+        <h4 class="font-medium text-base-content text-lg leading-snug text-balance line-clamp-2 group-hover:text-primary transition-colors">
           {Bonfire.UI.Social.EventHelpers.event_title(edge)}
         </h4>
 

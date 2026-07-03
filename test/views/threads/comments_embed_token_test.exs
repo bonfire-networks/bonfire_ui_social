@@ -10,6 +10,13 @@ defmodule Bonfire.UI.Social.CommentsEmbedTokenTest do
   @external_host "https://blog.example.com"
   @media_uri "#{@external_host}/my-article/"
 
+  defp assert_iframe_shell(html) do
+    assert html =~ ~s(id="iframe-resize-hook")
+    refute html =~ ~s(data-id="bonfire_live")
+    refute html =~ ~s(id="nav_sidebar")
+    refute html =~ ~s(data-id="right_nav_and_widgets")
+  end
+
   setup do
     # Allow the external host so LoginController appends a token on redirect
     System.put_env("IFRAME_ALLOWED_ORIGINS", @external_host)
@@ -151,6 +158,38 @@ defmodule Bonfire.UI.Social.CommentsEmbedTokenTest do
         |> html_response(200)
 
       assert html =~ "inline_composer_login_"
+    end
+
+    test "without a token via the controller GET: renders iframe shell without app sidebars",
+         %{post: post} do
+      html =
+        conn()
+        |> get("/comments/embed/#{post.id}")
+        |> html_response(200)
+
+      assert_iframe_shell(html)
+    end
+
+    test "with a signed-in session via the controller GET: renders iframe shell without redirect or app sidebars",
+         %{account: account, user: user, post: post} do
+      html =
+        conn(user: user, account: account)
+        |> get("/comments/embed/#{post.id}")
+        |> html_response(200)
+
+      assert html =~ ~s(src='/assets/bonfire_live.js)
+      assert html =~ "test post"
+      refute html =~ "/images/loading.svg"
+      assert_iframe_shell(html)
+    end
+
+    test "with a signed-in session via LiveView connect: keeps the user in the iframe LiveView",
+         %{account: account, user: user, post: post} do
+      {:ok, view, _html} =
+        conn(user: user, account: account)
+        |> live("/comments/embed/#{post.id}")
+
+      assert :sys.get_state(view.pid).socket.assigns.current_user_id == user.id
     end
   end
 end

@@ -1,16 +1,16 @@
 {#if @showing_within in [:smart_input, :pinned]}
   <div class="">
-    <div class="flex badge badge-neutral items-center gap-2 font-semibold">
+    <div class="flex badge badge-neutral items-center gap-2 font-medium">
       <#Icon iconify="material-symbols:location-on" class="w-4 h-4" />
       {l("Arrival")}
     </div>
     {#case e(@json, "location", "name", nil) || e(@json, "location", "pointer", :name, nil)}
       {#match nil}
-        <h2 class="mt-2 font-semibold text-base-content">
+        <h2 class="mt-2 font-medium text-base-content">
           {l("Arrived at unknown location")}
         </h2>
       {#match location_name}
-        <h2 class="mt-2 font-semibold text-base-content">
+        <h2 class="mt-2 font-medium text-base-content">
           {l("Arrived in %{location}", location: location_name)}
         </h2>
     {/case}

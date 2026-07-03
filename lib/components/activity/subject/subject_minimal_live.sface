@@ -56,7 +56,7 @@
                 alt={e(emoji, :metadata, "shortcode", nil) <> " " <> e(emoji, :metadata, "label", nil)}
               />
             {#match %{summary: emoji}}
-              <span class="text-warning text-[15px] leading-none" aria-hidden="true">{emoji}</span>
+              <span class="text-warning text-body leading-none" aria-hidden="true">{emoji}</span>
             {#match _}
               <Iconify.iconify
                 icon={notification_icon(@verb) || Bonfire.Boundaries.Verbs.get(@verb)[:icon]}
@@ -173,7 +173,7 @@
                   alt={e(emoji, :metadata, "label", nil) || e(emoji, :metadata, "shortcode", nil)}
                 />
               {#match %{summary: emoji}}
-                <span class="text-warning text-[15px] leading-none" aria-hidden="true">{emoji}</span>
+                <span class="text-warning text-body leading-none" aria-hidden="true">{emoji}</span>
               {#match _}
                 <Iconify.iconify
                   icon={notification_icon(@verb)}

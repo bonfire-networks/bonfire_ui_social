@@ -8,14 +8,14 @@
 >
   <div class="flex items-center gap-3" role="group" aria-label={l("Thread stats")}>
     <div class="text-sm text-base-content" aria-label={l("Replies")} title={l("Replies")}>
-      <span data-id="reply_count" class="text-sm tabular-nums font-semibold text-base-content">{@reply_count || 0}</span>
+      <span data-id="reply_count" class="text-sm tabular-nums font-medium text-base-content">{@reply_count || 0}</span>
       <span class="">{l("Replies")}</span>
     </div>
     <span class="text-primary font-bold">
       ·
     </span>
     <div data-role="boosts_summary" class="text-sm text-base-content">
-      <span data-id="boosts_count" class="text-sm tabular-nums font-semibold text-base-content">{@boost_count || 0}</span>
+      <span data-id="boosts_count" class="text-sm tabular-nums font-medium text-base-content">{@boost_count || 0}</span>
       <span class="">{l("Boosts")}</span>
     </div>
   </div>

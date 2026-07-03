@@ -1,6 +1,6 @@
 <div class="rounded-box border border-base-content/10 bg-base-200 p-4 mt-2">
   <div class="flex items-start justify-between gap-3 mb-3">
-    <h3 class="font-semibold text-sm text-base-content">
+    <h3 class="font-medium text-sm text-base-content">
       {l("Block this user?")}
     </h3>
     <button

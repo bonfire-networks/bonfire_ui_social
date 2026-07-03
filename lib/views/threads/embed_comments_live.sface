@@ -1,7 +1,4 @@
-<div
-  class="p-2"
-  data-theme={@embed_theme || Bonfire.UI.Common.ThemeHelper.current_theme(assigns)}
->
+<div data-theme={@embed_theme || Bonfire.UI.Common.ThemeHelper.current_theme(assigns)}>
   {#if @thread_id}
     {!-- Default reply slot at top: composer lands here when replying to the root post.
          For guests (no live socket), portal teleportation can't run, so render the
@@ -16,6 +13,11 @@
         context_id={@thread_id}
         showing_within={:thread_embed}
         auth_mode={@auth_mode}
+      />
+      <StatelessComponent
+        :if={current_user_id(@__context__) && @reply_to_id && to_string(@reply_to_id) != to_string(@thread_id)}
+        module={maybe_component(Bonfire.UI.Common.InlineReplyFallbackLive, @__context__)}
+        dom_id={@thread_id}
       />
     </div>
 

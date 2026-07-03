@@ -22,6 +22,7 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
 
   prop reply_to_id, :any, default: nil
   prop context_id, :string, default: nil
+  prop composer_dom_id, :any, default: nil
   # prop create_object_type, :any, default: nil
   prop to_boundaries, :any, default: nil
   prop boundary_preset, :any, default: nil

@@ -74,7 +74,7 @@
             {#match provider}
         <span class="text-sm text-left text-muted">{provider}</span>
       {/case}
-      <div class="font-semibold text-left">{@media_label}</div>
+      <div class="font-medium text-left">{@media_label}</div>
     </div> --}
   </div>
   <figcaption class="sr-only">{@media_label}</figcaption>

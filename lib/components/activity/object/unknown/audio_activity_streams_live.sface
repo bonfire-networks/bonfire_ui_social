@@ -56,7 +56,7 @@
       {#match _}
     {/case}
     <div class="py-2">
-      <div class="font-semibold text-base-content">
+      <div class="font-medium text-base-content">
         {rich(object_field(debug(@json, "apjson"), "name") || l("Untitled audio"))}
       </div>
 

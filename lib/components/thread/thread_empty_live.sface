@@ -8,10 +8,10 @@
   </div>
   {#case @showing_within}
     {#match :thread_embed}
-      <p class="mt-4 text-base font-semibold text-base-content">{l("No comments yet")}</p>
+      <p class="mt-4 text-base font-medium text-base-content">{l("No comments yet")}</p>
       <p class="mt-1 max-w-sm text-sm text-muted">{l("Start the conversation by posting the first comment.")}</p>
     {#match _}
-      <p class="mt-4 text-base font-semibold text-base-content">{l("No replies yet")}</p>
+      <p class="mt-4 text-base font-medium text-base-content">{l("No replies yet")}</p>
       <p class="mt-1 max-w-sm text-sm text-muted">{l("Be the first to share your thoughts.")}</p>
   {/case}
 </div>

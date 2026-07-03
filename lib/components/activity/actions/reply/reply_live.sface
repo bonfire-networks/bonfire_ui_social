@@ -9,6 +9,7 @@
         icon_class="w-[18px] h-[18px]"
         aria_label={l("Reply")}
         variant="ghost"
+        size="sm"
         tooltip={l("Reply")}
         tooltip_position="top"
         phx_click={if @event_target || @activity_component_id,
@@ -37,6 +38,7 @@
           icon_class="w-[18px] h-[18px]"
           aria_label={@cannot_reply_text || l("Cannot reply")}
           variant="ghost"
+          size="sm"
           disabled
           class="text-base-content/20"
           data-role="reply_disabled"

@@ -26,7 +26,7 @@
   </Bonfire.UI.Social.Activity.ThreadStatsLive>
 
   {#if @loading != true || @replies != []}
-    <div class="flex bonfire-wrapper flex-col flex-1 p-2 pr-0">
+    <div class={"flex bonfire-wrapper flex-col flex-1 p-2 pr-0": @showing_within != :thread_embed}>
       <div data-id="replies" class="flex flex-col flex-1">
         {!-- A thread reads top-to-bottom from the root, so there is no "load previous":
              replies only ever accumulate forward via infinite scroll on the LoadMoreLive below. --}

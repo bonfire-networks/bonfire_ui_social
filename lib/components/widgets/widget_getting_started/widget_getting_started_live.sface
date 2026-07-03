@@ -14,7 +14,7 @@
         class="w-full border-b-hair border-t-hair border-secondary p-card"
       >
         <div class="flex items-start justify-between gap-3 pb-3">
-          <span class="text-[12px] font-medium uppercase tracking-[0.12em] text-muted">{l("Getting started")}</span>
+          <span class="type-caption font-medium uppercase tracking-[0.12em] text-muted">{l("Getting started")}</span>
           <button
             type="button"
             aria-label={l("Hide getting started")}
@@ -58,7 +58,7 @@
                 <#Icon iconify="ph:caret-left-bold" class="w-3 h-[13px]" />
               </button>
               <span
-                class="flex-1 text-center text-[12px] font-medium uppercase tracking-[0.12em] text-muted"
+                class="flex-1 text-center type-caption font-medium uppercase tracking-[0.12em] text-muted"
                 data-id="widget_getting_started_progress"
               >
                 {l("Step %{n} of %{total}", n: @viewing_index + 1, total: @total_count)}

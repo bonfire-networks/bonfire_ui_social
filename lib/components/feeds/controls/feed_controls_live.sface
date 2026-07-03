@@ -1,7 +1,7 @@
 <div
   data-id="feed_controls"
   id="feed_controls"
-  class="relative z-10 feed_control_wrapper bg-base-300 rounded-box border-hair border-secondary border w-[calc(100%+2px)] max-w-[calc(100%+2px)] -ml-px -mb-px"
+  class="relative z-10 feed_control_wrapper bg-base-300 rounded-field border-hair border-secondary border w-[calc(100%+2px)] max-w-[calc(100%+2px)] -ml-px -mb-px"
 >
   {#if @reloading}
     <div class="absolute z-10 inset-0 flex items-center justify-center" role="status">

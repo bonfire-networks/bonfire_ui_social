@@ -4,7 +4,7 @@
     )}
     {#match federating?}
       {!-- <div class="flex items-center justify-between mb-4 mx-4">
-        <h2 class="text-lg font-semibold">{l("Import Data")}</h2>
+        <h2 class="text-lg font-medium">{l("Import Data")}</h2>
       </div> --}
 
       <div class="p-4 mb-0 rounded-md bg-info/10">
@@ -66,12 +66,12 @@
         <div class="p-4">
           <div class="grid grid-cols-2 mt-5 items-center gap-3">
             <div class="flex flex-col gap-1 flex-1" id="import_type" phx-update="ignore">
-              <h2 class="font-semibold text-sm">{l("Import type")}</h2>
+              <h2 class="font-medium text-sm">{l("Import type")}</h2>
               <Select field={:type} class="select" options={options_list(@scope, @type, federating?)} />
             </div>
 
             <div class="flex flex-col gap-1 flex-1">
-              <div class="font-semibold text-sm">{l("Data")}</div>
+              <div class="font-medium text-sm">{l("Data")}</div>
               {!-- <FileInput field="file" class="mt-4 file-input file-input-bordered w-full max-w-md" opts={"accepts": ".csv"} /> --}
               <label for={@uploads.file.ref} class="w-full max-w-md">
                 <!-- <span>{l("Upload or drop")}</span> -->
@@ -95,7 +95,7 @@
             <div class="items-start flex gap-3">
               <#Icon iconify="ph:swap-fill" class="w-7 h-7 text-primary" />
               <div class="flex flex-col">
-                <div class="font-semibold">{l("Move from a different profile")}</div>
+                <div class="font-medium">{l("Move from a different profile")}</div>
                 <div class="text-sm font-light text-muted">{l(
                     "Move from another profile to this one (works across instances, and also with other fediverse tools like Mastodon or Akkoma)"
                   )}</div>

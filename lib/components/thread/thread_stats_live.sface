@@ -1,6 +1,6 @@
 <div>
   <div
-    class="relative z-tooltip feed_control_wrapper bg-base-300 rounded-box border-hair border-secondary border w-[calc(100%+2px)] max-w-[calc(100%+2px)] -ml-px -mb-px p-1"
+    class="relative z-tooltip feed_control_wrapper bg-base-300 rounded-field border-hair border-secondary border w-[calc(100%+2px)] max-w-[calc(100%+2px)] p-1"
     role="region"
     aria-label={l("Thread stats and actions")}
   >

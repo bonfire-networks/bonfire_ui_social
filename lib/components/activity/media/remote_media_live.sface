@@ -143,7 +143,7 @@
                         {#case e(@media, :metadata, "name", nil)}
                           {#match nil}
                           {#match name}
-                            <div class="text-sm text-left font-semibold text-muted">
+                            <div class="text-sm text-left font-medium text-muted">
                               {name}
                             </div>
                         {/case}
@@ -268,7 +268,7 @@
                         {#match nil}
                         {#match title}
                           <div class="p-3 text-left bg-base-100">
-                            <h3 class="font-semibold text-base-content line-clamp-2 text-balance">{title}</h3>
+                            <h3 class="font-medium text-base-content line-clamp-2 text-balance">{title}</h3>
                             {#case MediaLive.provider(@media)}
                               {#match nil}
                               {#match provider}

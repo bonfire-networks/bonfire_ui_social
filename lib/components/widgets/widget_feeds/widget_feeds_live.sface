@@ -7,7 +7,7 @@
   <:action :if={!Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}>
     <LinkLive
       to={~p"/settings/user/feeds"}
-      class="tooltip-button btn btn-circle btn-outline border-primary btn-sm"
+      class="tooltip-button btn btn-circle btn-outline border-primary btn-xs"
       data-tip={l("Customize feeds")}
     >
       <#Icon iconify="ph:gear-six-fill" class="w-4 h-4 text-primary" />

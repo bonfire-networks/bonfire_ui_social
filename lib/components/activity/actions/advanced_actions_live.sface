@@ -137,7 +137,7 @@
 
           {#if @object_boundary && (id(@object) || id(@activity))}
             <section class="border-t-hair border-secondary pt-4 [&:not(:has(li))]:hidden">
-              <h3 class="text-xs font-semibold uppercase tracking-wider text-error px-2 mb-2">
+              <h3 class="text-xs font-medium uppercase tracking-wider text-error px-2 mb-2">
                 {l("Danger zone")}
               </h3>
               <ul class="menu px-0 w-full">
@@ -191,7 +191,7 @@
             aria-label={l("Back")}
           >
             <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
-            <span class="text-sm font-semibold">{l("Edit discussion title")}</span>
+            <span class="text-sm font-medium">{l("Edit discussion title")}</span>
           </button>
         </div>
         <form phx-submit="Bonfire.Social.Objects:set_name" phx-target={"##{@activity_component_id}"}>
@@ -220,7 +220,7 @@
             aria-label={l("Back")}
           >
             <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
-            <span class="text-sm font-semibold">{l("Edit")}</span>
+            <span class="text-sm font-medium">{l("Edit")}</span>
           </button>
         </div>
         <form phx-submit="Bonfire.Posts:edit" phx-target={"##{@activity_component_id}"}>
@@ -260,7 +260,7 @@
             aria-label={l("Back")}
           >
             <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
-            <span class="text-sm font-semibold">{l("Delete")} {@object_type_label}</span>
+            <span class="text-sm font-medium">{l("Delete")} {@object_type_label}</span>
           </button>
         </div>
         <div class="flex flex-col gap-4">
@@ -287,7 +287,7 @@
             aria-label={l("Back")}
           >
             <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
-            <span class="text-sm font-semibold">{l("Delete from feeds")}</span>
+            <span class="text-sm font-medium">{l("Delete from feeds")}</span>
           </button>
         </div>
         <div class="flex flex-col gap-4">
@@ -318,7 +318,7 @@
             aria-label={l("Back")}
           >
             <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
-            <span class="text-sm font-semibold">{l("Lock discussion")}</span>
+            <span class="text-sm font-medium">{l("Lock discussion")}</span>
           </button>
         </div>
         <div class="flex flex-col gap-4">
@@ -347,7 +347,7 @@
             aria-label={l("Back")}
           >
             <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
-            <span class="text-sm font-semibold">{l("Unlock discussion")}</span>
+            <span class="text-sm font-medium">{l("Unlock discussion")}</span>
           </button>
         </div>
         <div class="flex flex-col gap-4">

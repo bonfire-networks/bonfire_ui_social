@@ -107,7 +107,7 @@
               :if={@hide_activities != "component"}
               role="article"
               class={
-                "activity_wrapper relative w-[calc(100%+2px)] max-w-[calc(100%+2px)] -ml-px rounded-box border-hair bg-base-100 border-secondary p-card !pt-3",
+                "activity_wrapper relative w-[calc(100%+2px)] max-w-[calc(100%+2px)] -ml-px rounded-box border-hair bg-base-100 border-secondary p-card",
                 "infinite_scroll_hidden hidden": @hide_activities == "infinite_scroll",
                 "fresh_hidden hidden": fresh_entry?(@fresh_ids, entry)
               }

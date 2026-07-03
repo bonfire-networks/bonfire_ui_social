@@ -34,7 +34,7 @@
 
   <div id="more_filters" class="pb-0 flex flex-col gap-2 hidden mt-2">
     <div class="flex flex-col w-full">
-      <div class="font-semibold uppercase text-xs text-muted mb-3  border-t border-base-content/10 pt-3">{l("Time limit")}</div>
+      <div class="font-medium uppercase text-xs text-muted mb-3  border-t border-base-content/10 pt-3">{l("Time limit")}</div>
       <Bonfire.UI.Social.TimeControlLive
         feed_name={@feed_name}
         event_target={@event_target}
@@ -43,7 +43,7 @@
         scope={:user}
       />
     </div>
-    <div class="font-semibold uppercase text-xs text-muted mb-3  border-t border-base-content/10 pt-3 mt-3">{l("Advanced Filters")}</div>
+    <div class="font-medium uppercase text-xs text-muted mb-3  border-t border-base-content/10 pt-3 mt-3">{l("Advanced Filters")}</div>
 
     <StatefulComponent
       id="advanced_filter_controls_lite"

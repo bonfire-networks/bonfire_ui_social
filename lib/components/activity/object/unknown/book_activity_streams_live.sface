@@ -19,7 +19,7 @@
 
     <div class="">
       <a href={object_field(@json, "id")} target="_blank">
-        <h2 class="font-semibold text-lg text-base-content">
+        <h2 class="font-medium text-lg text-base-content">
           {rich(
             object_field(debug(@json, "apjson"), "title") || object_field(@json, "name") ||
               l("Untitled book")
@@ -42,7 +42,7 @@
         </div>
       {/if}
       {!-- TYPE --}
-      <div class="flex items-center mt-1 gap-2 text-sm font-semibold text-base-content/80">
+      <div class="flex items-center mt-1 gap-2 text-sm font-medium text-base-content/80">
         {object_field(@json, "physicalFormat")} {object_field(@json, "type")}
       </div>
 

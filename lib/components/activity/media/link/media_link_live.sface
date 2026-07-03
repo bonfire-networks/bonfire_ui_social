@@ -126,7 +126,7 @@
                     wrapper_class="avatar"
                     class="w-4 h-4"
                   />
-                  <span class="font-semibold text-base-content">{creator.display_name}</span>
+                  <span class="font-medium text-base-content">{creator.display_name}</span>
                 </LinkLive>
               {#match _}
             {/case}

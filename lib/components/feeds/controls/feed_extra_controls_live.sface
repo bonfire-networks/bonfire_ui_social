@@ -138,7 +138,7 @@
 </div>
 
 {!-- <div :if={:sort_by not in @hide_filters} class="flex flex-col gap-2 pt-3 w-full">
-  <span class="font-semibold uppercase text-xs text-muted pb-2 border-b border-base-content/10 mb-2">{l("Sort by")}</span>
+  <span class="font-medium uppercase text-xs text-muted pb-2 border-b border-base-content/10 mb-2">{l("Sort by")}</span>
   <StatelessComponent
     module={maybe_component(Bonfire.UI.Social.SortItemsLive, @__context__)}
     scope={:user}
