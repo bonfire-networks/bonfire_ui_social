@@ -132,4 +132,36 @@ defmodule Bonfire.UI.Social.PreviewGatedTest do
     # … but the deep body past the truncation is never sent to the client
     |> refute_has("article", text: @secret)
   end
+
+  test "the feed shows the see-only article's primary image", %{
+    author: author,
+    viewer: viewer,
+    viewer_account: viewer_account
+  } do
+    {:ok, _article} =
+      Posts.publish(
+        current_user: author,
+        schema: Bonfire.Articles.Article,
+        post_attrs: %{
+          post_content: %{
+            name: "Paywalled Image Headline",
+            html_body: long_body()
+          },
+          uploaded_media: [
+            %{
+              "href" => "https://example.com/paid-cover.jpg",
+              "alt" => "Paid article cover",
+              "primary_image" => true
+            }
+          ]
+        },
+        boundary: "local:preview"
+      )
+
+    conn(user: viewer, account: viewer_account)
+    |> visit("/feed/local")
+    |> assert_has("article", text: "Paywalled Image Headline")
+    |> assert_has("[data-id=article_cover]")
+    |> refute_has("article", text: @secret)
+  end
 end
