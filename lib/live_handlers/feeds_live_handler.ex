@@ -1187,10 +1187,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
               end
             rescue
               e in RuntimeError ->
-                err(
+                error(
                   e,
                   "There was an error when trying to load the feed. Runtime error raised by feed_assigns"
                 )
+
+                warn(__STACKTRACE__, "Stacktrace")
 
                 assign_error(
                   socket,
@@ -1200,12 +1202,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                 )
 
               e ->
-                debug(
+                error(
                   e,
                   "There was an error when trying to load the feed. Error raised by feed_assigns"
                 )
 
-                debug(__STACKTRACE__, "Stacktrace")
+                warn(__STACKTRACE__, "Stacktrace")
 
                 assign_error(
                   socket,

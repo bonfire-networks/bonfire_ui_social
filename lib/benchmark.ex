@@ -34,6 +34,122 @@ defmodule Bonfire.UI.Social.Benchmark do
     )
   end
 
+  @boundarise_strategies %{
+    "summary_subquery" => [boundarise_strategy: :summary_subquery],
+    "summary_view" => [boundarise_strategy: :view],
+    "direct_exists" => [boundarise_strategy: :direct_exists],
+    "no_boundaries_floor" => [skip_boundary_check: true]
+  }
+
+  @doc """
+  Benchmarks the boundarised :see/:read check under each `boundarise_strategy`, against EXISTING data — read-only, safe on production (run in `bin/bonfire remote`, where the no-Benchee fallback kicks in).
+
+  Options (env vars so they work the same in iex and mix):
+  - `BENCH_SUBJECTS=3` how many recent local users to benchmark as viewers (+ anon)
+  - `BENCH_LIMIT=20` feed page size
+  - `BENCH_THREAD_ID=...` thread for the replies scenario (uuid or ulid); defaults to the thread with the most replies
+  - `BENCH_TIME=5` seconds per Benchee scenario
+  - `BENCH_ITERATIONS=10` iterations per scenario in the no-Benchee fallback
+  """
+  def boundarise_strategies do
+    Logger.configure(level: :error)
+    # without this, feeds on instances with older data return 0 edges and the benchmark
+    # measures empty queries
+    Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
+    scenarios = boundarise_strategy_queries()
+
+    if Code.ensure_loaded?(Benchee) do
+      Utils.maybe_apply(Benchee, :run, [
+        scenarios,
+        [
+          parallel: 1,
+          warmup: 2,
+          time: String.to_integer(System.get_env("BENCH_TIME", "5")),
+          formatters: formatters("benchmarks/output/boundarise_strategies.html")
+        ]
+      ])
+    else
+      info("Benchee not available — falling back to Bonfire.Common.Benchmark.apply_timed")
+
+      Enum.each(scenarios, fn {name, fun} ->
+        IO.puts("\n#{name}")
+
+        for _ <- 1..String.to_integer(System.get_env("BENCH_ITERATIONS", "10")) do
+          Bonfire.Common.Benchmark.apply_timed(fun)
+        end
+      end)
+    end
+
+    Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+    Logger.configure(level: @log_level)
+  end
+
+  defp boundarise_strategy_queries do
+    limit = String.to_integer(System.get_env("BENCH_LIMIT", "20"))
+    thread_id = biggest_thread_id()
+
+    for {subject_label, subject} <- bench_subjects(),
+        {strategy_label, strategy_opts} <- @boundarise_strategies,
+        {scenario_label, fun} <- [
+          # :my (follows-based) for logged-in — no :local origin OR-filter masking boundary cost
+          {"feed",
+           fn ->
+             Bonfire.Social.FeedActivities.feed(
+               if(subject, do: :my, else: :local),
+               [limit: limit, current_user: subject, query_with_deferred_join: true] ++
+                 strategy_opts
+             )
+           end},
+          # threads boundarise the full candidate set (no deferred join) = biggest strategy delta
+          {"thread",
+           fn ->
+             Bonfire.Social.Threads.list_replies(
+               thread_id,
+               [current_user: subject, limit: 500] ++ strategy_opts
+             )
+           end}
+        ],
+        into: %{} do
+      {"#{scenario_label} | #{strategy_label} | #{subject_label}", catching(fun)}
+    end
+  end
+
+  defp bench_subjects do
+    # Real users from the DB (no seeding/faking — prod-safe). Preload character.peered so
+    # subject resolution classifies locality without a DB round-trip (see user_and_circle_ids
+    # in Bonfire.Boundaries.Queries).
+    n = String.to_integer(System.get_env("BENCH_SUBJECTS", "3"))
+
+    local_users =
+      Bonfire.Me.Users.list(skip_boundary_check: true, show: :local, limit: n)
+      |> Bonfire.Common.Repo.preload(character: [:peered])
+      |> Enum.take(n)
+      |> Enum.with_index()
+      |> Enum.map(fn {u, i} -> {"local_user_#{i}", u} end)
+
+    [{"anon", nil}] ++ local_users
+  end
+
+  defp biggest_thread_id do
+    case System.get_env("BENCH_THREAD_ID") do
+      nil ->
+        %{rows: [[id] | _]} =
+          Bonfire.Common.Repo.query!("""
+          SELECT r.thread_id FROM bonfire_data_social_replied r
+          WHERE r.thread_id IS NOT NULL GROUP BY 1 ORDER BY count(*) DESC LIMIT 1
+          """)
+
+        Needle.ULID.load(id) |> elem(1)
+
+      id_str ->
+        # accept uuid form (as SQL returns it) or ulid form
+        case Ecto.UUID.cast(id_str) do
+          {:ok, uuid} -> Ecto.UUID.dump!(uuid) |> Needle.ULID.load() |> elem(1)
+          :error -> id_str
+        end
+    end
+  end
+
   defp catching(fun) do
     fn ->
       try do
@@ -202,7 +318,7 @@ defmodule Bonfire.UI.Social.Benchmark do
           Bonfire.Social.FeedActivities.feed(:local,
             limit: 1,
             query_with_deferred_join: false,
-            boundarise_with_view: true
+            boundarise_strategy: :view
           )
 
           Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
@@ -213,7 +329,7 @@ defmodule Bonfire.UI.Social.Benchmark do
           Bonfire.Social.FeedActivities.feed(:local,
             limit: 10,
             query_with_deferred_join: false,
-            boundarise_with_view: true
+            boundarise_strategy: :view
           )
 
           Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
@@ -224,7 +340,7 @@ defmodule Bonfire.UI.Social.Benchmark do
           Bonfire.Social.FeedActivities.feed(:local,
             limit: 20,
             query_with_deferred_join: false,
-            boundarise_with_view: true
+            boundarise_strategy: :view
           )
 
           Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
