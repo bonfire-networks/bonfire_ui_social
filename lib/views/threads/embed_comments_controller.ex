@@ -29,13 +29,9 @@ defmodule Bonfire.UI.Social.EmbedCommentsController do
     )
   end
 
-  # For logged-in users the rendered HTML is personalized, but the
-  # `:browser_or_cacheable` pipeline never loads the user into conn assigns, so
-  # CacheControlPlug can't detect them and leaves its `public` cache-control
-  # headers in place. Override with `private, no-store` so a header-trusting
-  # shared cache/CDN can't store or share an authed user's HTML. (Guests keep
-  # the cacheable headers.) No-op in dev, where CacheControlPlug already forces
-  # `no-store`.
+  # CacheControlPlug detects auth via conn assigns, but `:browser_or_cacheable`
+  # never loads the user there, so it stamps authed HTML `public` too. Override
+  # to keep a shared cache/CDN from storing a logged-in user's response.
   defp maybe_no_cache(conn, true),
     do: Plug.Conn.put_resp_header(conn, "cache-control", "private, no-store")
 
