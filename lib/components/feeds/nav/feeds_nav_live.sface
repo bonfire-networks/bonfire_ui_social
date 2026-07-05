@@ -16,7 +16,7 @@
       {/case}
     {#match _}
   {/case}
-  <ul class="menu relative p-0 w-full mt-2 px-[24px] gap-0">
+  <ul class="menu relative p-0 w-full mt-2 px-0 lg:px-[24px] gap-0">
     <li class="w-full">
       {#if Bonfire.Common.Settings.get(
           [:ui, :sidebar, :disable_collapsible],
