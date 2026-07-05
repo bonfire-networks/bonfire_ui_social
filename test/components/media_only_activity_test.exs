@@ -153,5 +153,58 @@ defmodule Bonfire.UI.Social.MediaOnlyActivityTest do
                "expected no skeleton for object_type #{inspect(type)}"
       end
     end
+
+    test "non-media objects reuse the richer cached media skeleton layout summary" do
+      id = "act-#{System.unique_integer([:positive])}"
+
+      Bonfire.Common.Cache.put("num_media:#{id}", %{
+        multimedia_count: 1,
+        image_count: 1,
+        video_count: 1,
+        gif_count: 1,
+        visual_count: 3,
+        link_count: 2,
+        visible_link_count: 1,
+        link_preview_count: 1,
+        no_cover_links?: true,
+        small_icon_links?: true
+      })
+
+      assert {nil, [{Bonfire.UI.Social.Activity.MediaSkeletonLive, assigns}]} =
+               ActivityLive.do_primary_image_and_component_maybe_attachments(id, nil, :post)
+
+      assert assigns.multimedia_count == 1
+      assert assigns.visual_count == 3
+      assert assigns.link_count == 2
+      assert assigns.visible_link_count == 1
+      assert assigns.link_preview_count == 1
+      assert Map.fetch!(assigns, :no_cover_links?)
+      assert Map.fetch!(assigns, :small_icon_links?)
+    end
+
+    test "non-media objects emit no skeleton when the media count cache is missing" do
+      id = "act-#{System.unique_integer([:positive])}"
+
+      assert {nil, []} =
+               ActivityLive.do_primary_image_and_component_maybe_attachments(id, nil, :post)
+    end
+
+    test "non-media objects still accept the previous cached media count list" do
+      id = "act-#{System.unique_integer([:positive])}"
+      Bonfire.Common.Cache.put("num_media:#{id}", [1, 2, 1, 2])
+
+      assert {nil, [{Bonfire.UI.Social.Activity.MediaSkeletonLive, assigns}]} =
+               ActivityLive.do_primary_image_and_component_maybe_attachments(id, nil, :post)
+
+      assert assigns.multimedia_count == 1
+      assert assigns.image_count == 2
+      assert assigns.gif_count == 1
+      assert assigns.visual_count == 3
+      assert assigns.link_count == 2
+      assert assigns.visible_link_count == 2
+      assert assigns.link_preview_count == 0
+      assert Map.fetch!(assigns, :no_cover_links?)
+      assert Map.fetch!(assigns, :small_icon_links?)
+    end
   end
 end

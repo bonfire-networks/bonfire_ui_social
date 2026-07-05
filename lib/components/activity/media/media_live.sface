@@ -86,7 +86,7 @@
           </Bonfire.UI.Common.OpenModalLive>
         {/if}
 
-        <div class="relative mt-3">
+        <div class="relative">
           {#if num_medias > 1}
             <div class="absolute inset-y-0 left-2 z-30 flex items-center">
               <button
@@ -341,7 +341,7 @@
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
   :if={@link_list != [] && @showing_within not in [:smart_input, :pinned]}
-  class={["flex flex-col gap-2 my-2", hidden: @cw]}
+  class={["flex flex-col gap-2", hidden: @cw]}
 >
   {#for m <- if @showing_within in [:feed, :profile], do: Enum.take(@link_list, 1), else: @link_list}
     {#case Media.media_url(m)}

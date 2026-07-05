@@ -16,7 +16,7 @@
       {/case}
     {#match _}
   {/case}
-  <ul class="menu relative p-0 w-full mt-2">
+  <ul class="menu relative p-0 w-full mt-2 px-[24px] gap-0">
     <li class="w-full">
       {#if Bonfire.Common.Settings.get(
           [:ui, :sidebar, :disable_collapsible],
@@ -24,19 +24,17 @@
           @__context__[:instance_settings] || :instance
         )}
         <details open class="details-static w-full overflow-hidden">
-          <summary class="relative font-medium uppercase pl-5 text-xs text-base-content/50">
-            <span>{l("Feeds")}</span>
+          <summary class="flex items-center justify-between px-4 lg:px-[40px] mt-2 mb-1">
+            <span class="font-medium text-muted uppercase text-xs">{l("Feeds")}</span>
             {#if !Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
-              <div class="normal-case font-normal absolute right-6 pointer-events-auto">
                 <LinkLive
                   to={~p"/settings/user/feeds"}
-                  class="z-999 tooltip-button btn btn-circle btn-outline btn-xs border-primary"
+                  class="btn btn-circle btn-outline btn-xs border-secondary"
                 ><#Icon iconify="ph:gear-six-fill" class="w-4 h-4" /></LinkLive>
-              </div>
             {/if}
           </summary>
 
-          <div class="pointer-events-auto">
+          <div class="pointer-events-auto px-[24px]">
             <Bonfire.UI.Common.WidgetsLive
               id="feeds_nav_links"
               widgets={@presets}
@@ -54,15 +52,15 @@
         >
           <summary
             phx-click="Bonfire.Social.Feeds:toggle_feeds_nav_visibility"
-            class="relative font-medium uppercase pl-5 text-xs text-base-content/50"
+            class="relative font-medium uppercase pl-4 text-xs text-base-content/50 list-none after:content-none [&::-webkit-details-marker]:hidden"
           >
             <span>{l("Feeds")}</span>
             {#if !Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
-              <div class="normal-case font-normal absolute right-6">
+              <div class="normal-case font-normal absolute right-4">
                 <LinkLive
                   to={~p"/settings/user/feeds"}
-                  class="z-999 tooltip-button btn btn-circle btn-outline btn-xs border-primary"
-                ><#Icon iconify="ph:gear-six-fill" class="w-4 h-4" /></LinkLive>
+                  class="z-999 tooltip-button btn btn-circle border-hair btn-outline btn-xs border-secondary"
+                ><#Icon iconify="ph:gear-six-fill" class="w-4 h-4 text-primary" /></LinkLive>
               </div>
             {/if}
           </summary>

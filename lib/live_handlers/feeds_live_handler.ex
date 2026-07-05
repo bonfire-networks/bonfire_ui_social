@@ -793,8 +793,24 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     # ++ feed_filter_assigns(filters_or_custom_query_or_feed_id_or_ids)
     assigns =
-      Keyword.merge(feed_default_assigns(feed_name, socket), loading: show_loader)
+      Keyword.merge(feed_default_assigns(feed_name, socket),
+        loading: show_loader,
+        feed_load_ref: new_feed_load_ref()
+      )
       |> debug("start by setting feed_default_assigns + feed_filter_assigns")
+
+    # when custom filters are passed, they are what the query will use — don't let the
+    # preset-default feed_filters from feed_default_assigns overwrite them on the component
+    # while the async load is in flight (it would make the customize-feed widget flash stale
+    # state and corrupt any further filter change merged on top in the meantime)
+    assigns =
+      case filters_or_custom_query_or_feed_id_or_ids do
+        %{} = custom_filters when custom_filters != %{} ->
+          Keyword.put(assigns, :feed_filters, custom_filters)
+
+        _ ->
+          assigns
+      end
 
     # Preserve caller-provided feed_ids when a preset name is also passed,
     # and alias the component under those feed_ids so `send_feed_updates`
@@ -846,7 +862,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # |> debug()
 
     assigns =
-      Keyword.merge(feed_default_assigns(feed_name, socket), loading: show_loader)
+      Keyword.merge(feed_default_assigns(feed_name, socket),
+        loading: show_loader,
+        feed_load_ref: new_feed_load_ref()
+      )
       |> debug("start by setting feed_default_assigns")
 
     feed_assigns_maybe_async_load(
@@ -856,6 +875,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       reset_stream
     )
   end
+
+  # Each feed load gets a monotonically-increasing ref, assigned to the component along with
+  # the loading placeholder and echoed back with the async result — so `FeedLive` can drop
+  # results from loads that were superseded before they finished (e.g. rapid preset-filter
+  # changes racing the slower unfiltered initial load).
+  defp new_feed_load_ref, do: System.unique_integer([:monotonic, :positive])
 
   # def page_header_asides(socket, component_id) do
   #   [
@@ -1164,7 +1189,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                      loaded_async: true,
                      reset_stream: reset_stream,
                      loading: false,
-                     reloading: false
+                     reloading: false,
+                     # echo the load ref so FeedLive can drop superseded (stale) results
+                     feed_load_ref: assigns[:feed_load_ref]
                    )},
                   Bonfire.UI.Social.FeedLive
                 )
@@ -1351,7 +1378,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
         cursor =
           if e(marker_settings, :enabled, true) and max_age_days != 0 and
-               chronological_desc_feed?(filters) do
+               chronological_desc_feed?(filters) and
+               not custom_filters_active?(filters, feed_atom, opts) do
             client_reading_position(opts, feed_name) ||
               if(user,
                 do:
@@ -1383,6 +1411,157 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   # config+account+user merge per key on every feed mount.
   defp marker_settings(user) do
     Bonfire.Common.Settings.get([Bonfire.Social.Markers], nil, current_user: user) || %{}
+  end
+
+  # Saved reading positions are recorded against a feed's default view; when the current
+  # filters deviate from the feed preset's own (custom feed filters via URL or the
+  # customize-feed widget), resuming would jump into the wrong keyset (and force
+  # time_limit 0, overriding e.g. a "recent only" filter) — so don't resume then.
+  @resume_significant_filter_keys [
+    :activity_types,
+    :exclude_activity_types,
+    :object_types,
+    :exclude_object_types,
+    :media_types,
+    :exclude_media_types,
+    :origin,
+    :time_limit,
+    :subjects,
+    :exclude_subjects,
+    :subject_types,
+    :exclude_subject_types,
+    :subject_circles,
+    :creators,
+    :tags
+  ]
+
+  @doc """
+  Best-effort check of a live-pushed (PubSub) activity against the feed's current filters,
+  so filtered feeds (e.g. the customize-feed widget's Focus preset) don't get unrelated
+  activities inserted at the top. Verb and subject dimensions are verified in memory;
+  object types are verified when they resolve to tables; dimensions that would need a
+  query (media types, circles, origin, tags...) are treated conservatively — but only
+  when they DEVIATE from the feed preset's own canonical filters: a preset-set value
+  (like the Local feed's `origin: :local`) is intrinsic to what gets published into that
+  feed in the first place, so it must not block its live updates.
+  """
+  def live_activity_matches_filters?(activity, filters, opts \\ [])
+
+  def live_activity_matches_filters?(_activity, filters, _opts) when filters in [nil, %{}, []],
+    do: true
+
+  def live_activity_matches_filters?(activity, filters, opts) do
+    verb_id =
+      e(activity, :verb_id, nil) || e(activity, :verb, :id, nil) ||
+        e(activity, :activity, :verb_id, nil) || e(activity, :activity, :verb, :id, nil)
+
+    passes_verb_exclude? =
+      case Bonfire.Boundaries.Verbs.ids(
+             List.wrap(e(filters, :exclude_activity_types, nil) || [])
+           ) do
+        [] -> true
+        # unknown verb + active exclusions -> be conservative and skip
+        exclude_verb_ids -> is_binary(verb_id) and verb_id not in exclude_verb_ids
+      end
+
+    passes_verb_include? =
+      case List.wrap(e(filters, :activity_types, nil) || []) do
+        [] -> true
+        types -> is_binary(verb_id) and verb_id in Bonfire.Boundaries.Verbs.ids(types)
+      end
+
+    passes_object_types? =
+      case List.wrap(e(filters, :object_types, nil) || []) do
+        [] ->
+          true
+
+        types ->
+          case Bonfire.Social.Objects.partition_table_types(types) do
+            {table_ids, [], _} when is_list(table_ids) and table_ids != [] ->
+              object_table_id =
+                Types.table_type(
+                  e(activity, :object, nil) || e(activity, :activity, :object, nil)
+                )
+
+              is_binary(object_table_id) and object_table_id in table_ids
+
+            _ ->
+              # includes JSON/AP types we can't verify in memory
+              false
+          end
+      end
+
+    subject_id =
+      e(activity, :subject, :id, nil) || e(activity, :activity, :subject, :id, nil) ||
+        e(activity, :subject_id, nil)
+
+    passes_subject_exclude? =
+      case List.wrap(e(filters, :exclude_subjects, nil) || []) do
+        [] -> true
+        excluded -> is_nil(subject_id) or to_string(subject_id) not in Enum.map(excluded, &to_string/1)
+      end
+
+    preset_filters = preset_canonical_filters(e(filters, :feed_name, nil), opts)
+
+    # dimensions we can't verify in memory: skip live inserts only when they deviate from
+    # the feed preset's own filters (deviation = the user customized them)
+    unverifiable_deviates? =
+      Enum.any?(
+        [
+          :exclude_object_types,
+          :media_types,
+          :exclude_media_types,
+          :origin,
+          :subjects,
+          :subject_types,
+          :exclude_subject_types,
+          :subject_circles,
+          :exclude_subject_circles,
+          :creators,
+          :exclude_creators,
+          :tags
+        ],
+        fn key ->
+          not filter_value_matches?(e(filters, key, nil), e(preset_filters, key, nil))
+        end
+      )
+
+    passes_verb_exclude? and passes_verb_include? and passes_object_types? and
+      passes_subject_exclude? and not unverifiable_deviates?
+  end
+
+  defp custom_filters_active?(filters, feed_atom, opts) do
+    preset_filters = preset_canonical_filters(feed_atom, opts)
+
+    Enum.any?(@resume_significant_filter_keys, fn key ->
+      # a key ABSENT (nil) from the current filters inherits the preset's value when the
+      # query is built, so only a key that is explicitly set to something else counts as
+      # a deviation (comparing absent vs preset would flag every preset feed as custom,
+      # killing marker-resume on exactly the feeds it exists for)
+      case e(filters, key, nil) do
+        nil -> false
+        value -> not filter_value_matches?(value, e(preset_filters, key, nil))
+      end
+    end)
+  end
+
+  @doc "The canonical filters a feed preset defines (empty map when there is no such permitted preset)."
+  def preset_canonical_filters(feed_name, opts) do
+    case Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, opts) do
+      {:ok, %{filters: preset_filters}} -> preset_filters
+      _ -> %{}
+    end
+  end
+
+  @doc "Compares two filter values ignoring atom-vs-string, list order, and the empty representations (nil/false/0/[])."
+  def filter_value_matches?(a, b), do: normalize_filter_value(a) == normalize_filter_value(b)
+
+  defp normalize_filter_value(value) do
+    case value do
+      empty when empty in [nil, false, 0, []] -> []
+      list when is_list(list) -> list |> Enum.map(&to_string/1) |> Enum.sort()
+      other -> [to_string(other)]
+    end
   end
 
   defp client_reading_position(opts, feed_name) when is_binary(feed_name) do

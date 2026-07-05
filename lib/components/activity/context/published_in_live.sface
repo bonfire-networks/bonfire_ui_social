@@ -6,7 +6,7 @@
     class="inline-flex items-center gap-1.5 shrink-0 text-body leading-tight"
   >
     <span class="text-muted">{l("In")}</span>
-    <#Icon iconify="ph:users-three-fill" class="w-[18px] h-[18px] text-primary shrink-0" />
+    <#Icon iconify="ph:users-three-fill" class="size-5 text-primary shrink-0" />
     <LinkLive class="link link-hover text-primary truncate max-w-[160px]" to={path(@context)}>
       {e(@context, :profile, :name, nil) || e(@context, :character, :username, nil)}
     </LinkLive>

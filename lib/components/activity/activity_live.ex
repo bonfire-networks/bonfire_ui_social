@@ -804,7 +804,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       aria-label="user activity"
       tabIndex="0"
       class={[
-        "activity relative flex flex-col gap-1 touch-pan-y #{@class}",
+        "activity relative flex flex-col gap-3 touch-pan-y #{@class}",
         "cursor-pointer":
           @showing_within not in [:thread, :thread_embed, :smart_input, :widget] &&
             (!@activity_inception || @showing_within == :quote_preview),
@@ -826,9 +826,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
             @showing_within not in [:smart_input, :pinned] and @viewing_main_object == false
       ]}
     >
-      {!-- "See full thread" header strip for the feed reply-context (Figma node 30:553):
-           a full-bleed bg-base-200 band with a hairline divider, link right-aligned. The
-           dotted "continues-up" line runs in the avatar column (via CSS ::before). --}
       <div
         :if={not is_nil(@reply_to) and is_nil(@activity_inception) and
           @showing_within in [nil, :feed, :profile]}
@@ -854,7 +851,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
            clicking the article opens the PreviewContentLive modal in either case. --}
       {#if @hide_activity != "all" and not is_nil(current_user_id(@__context__)) and
           @showing_within not in [:smart_input, :thread, :widget, :nested_preview]}
-        {!-- TODO: make the list of preview paths/components/views configurable/hookable, and derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") --}
+        <div class="contents">
+          {!-- TODO: make the list of preview paths/components/views configurable/hookable, and derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") --}
         {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/", "/discuss/"])}
           <Bonfire.UI.Common.OpenPreviewLive
             href={@permalink}
@@ -890,23 +888,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             ]}
           />
         {#elseif String.starts_with?(@permalink || "", ["/@", "/profile/", "/user"])}
-          {!-- <Bonfire.UI.Common.OpenPreviewLive
-              href={@permalink}
-              parent_id={@activity_component_id}
-              open_btn_text={l("View profile")}
-              title_text={e(@object, :profile, :name, nil) || l("Profile")}
-              modal_assigns={
-                id: @thread_id || @object_id,
-                current_url: @permalink,
-                modal_view: Bonfire.UI.Me.ProfileLive,
-                activity_inception: "preview"
-              }
-              root_assigns={
-                page_title: l("Profile")
-              }
-            />
-             --}
-        {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"]) and
+             {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"]) and
             module_enabled?(Bonfire.UI.Coordination.TaskLive)}
           <Bonfire.UI.Common.OpenPreviewLive
             href={@permalink}
@@ -926,6 +908,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             ]}
           />
         {/if}
+        </div>
       {/if}
 
       {#if @custom_preview}
@@ -2456,22 +2439,57 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def do_primary_image_and_component_maybe_attachments(id, other, _object_type) do
     # use cached amounts of images to display from MediaLive in case media is preloaded async
     case Bonfire.Common.Cache.get("num_media:#{id}") do
-      {:ok, [multimedia_count, image_count, gif_count, link_count]} ->
+      {:ok, %{} = media_skeleton} ->
         {nil,
          [
            {Bonfire.UI.Social.Activity.MediaSkeletonLive,
-            %{
-              multimedia_count: multimedia_count,
-              image_count: image_count,
-              gif_count: gif_count,
-              link_count: link_count
-            }}
+            media_skeleton_assigns(media_skeleton)}
          ]}
+
+      {:ok, [_, _, _, _] = media_skeleton} ->
+        {nil,
+         [
+           {Bonfire.UI.Social.Activity.MediaSkeletonLive,
+            media_skeleton_assigns(media_skeleton)}
+         ]}
+
+      {:ok, nil} ->
+        {nil, []}
 
       _ ->
         debug(other, "no files")
         {nil, []}
     end
+  end
+
+  defp media_skeleton_assigns(%{} = media_skeleton) do
+    %{
+      multimedia_count: Map.get(media_skeleton, :multimedia_count, 0),
+      image_count: Map.get(media_skeleton, :image_count, 0),
+      video_count: Map.get(media_skeleton, :video_count, 0),
+      gif_count: Map.get(media_skeleton, :gif_count, 0),
+      visual_count: Map.get(media_skeleton, :visual_count, 0),
+      link_count: Map.get(media_skeleton, :link_count, 0),
+      visible_link_count: Map.get(media_skeleton, :visible_link_count, Map.get(media_skeleton, :link_count, 0)),
+      link_preview_count: Map.get(media_skeleton, :link_preview_count, 0),
+      no_cover_links?: Map.get(media_skeleton, :no_cover_links?, false),
+      small_icon_links?: Map.get(media_skeleton, :small_icon_links?, false)
+    }
+  end
+
+  defp media_skeleton_assigns([multimedia_count, image_count, gif_count, link_count]) do
+    %{
+      multimedia_count: multimedia_count,
+      image_count: image_count,
+      video_count: 0,
+      gif_count: gif_count,
+      visual_count: image_count + gif_count,
+      link_count: link_count,
+      visible_link_count: link_count,
+      link_preview_count: 0,
+      no_cover_links?: link_count > 1,
+      small_icon_links?: link_count > 1
+    }
   end
 
   # @decorate time()

@@ -4,8 +4,8 @@
     class="btn btn-ghost btn-sm text-muted"
     phx-click={JS.toggle(to: "#save_feed_preset_form", in: "fade-in", out: "fade-out")}
   >
-    <#Icon iconify="bxs:save" class="w-4 h-4" />
-    <span>{l("Save custom feed")}</span>
+    <#Icon iconify="ph:bookmark-simple-fill" class="w-4 h-4" />
+    <span>{l("Save as custom feed")}</span>
   </button>
 
   <div id="save_feed_preset_form" class="hidden">
@@ -14,15 +14,20 @@
         {l("Save this feed configuration as a preset to access it anytime from your feed navbar.")}
       </p>
       <form
-        id="form_create_feed_preset"
+        id="save_feed_preset_create_form"
         class="w-full flex flex-col gap-2"
         phx-submit="Bonfire.Social.Feeds:preset_create"
         phx-target={@event_target}
       >
         <fieldset class="fieldset">
           <legend class="fieldset-legend">{l("Feed title")}</legend>
-          <label for="feed_name" class="sr-only">{l("Feed title")}</label>
-          <input id="feed_name" name="name" class="input w-full" placeholder={l("Add a title...")}>
+          <label for="save_feed_preset_name" class="sr-only">{l("Feed title")}</label>
+          <input
+            id="save_feed_preset_name"
+            name="name"
+            class="input w-full"
+            placeholder={l("Add a title...")}
+          >
         </fieldset>
 
         <fieldset class="fieldset">

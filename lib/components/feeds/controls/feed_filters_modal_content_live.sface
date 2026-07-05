@@ -5,7 +5,7 @@
         <div class="flex items-start gap-2 px-4 py-2.5 border-b border-base-content/10">
           <div class="flex-1 flex flex-wrap gap-1.5">
             <span class="inline-flex items-center gap-1 h-7 px-2.5 rounded-full bg-base-100 border border-base-content/10 text-xs text-base-content/80">
-              <#Icon iconify="ph:user-minus-fill" class="w-3.5 h-3.5 text-muted" />
+              <#Icon iconify="ph:user-minus-fill" class="size-4 text-primary" />
               {l("Hiding my activity")}
             </span>
           </div>
@@ -24,7 +24,7 @@
         <div class="flex-1 flex flex-wrap gap-1.5">
           {#if @user_activities_excluded?}
             <span class="inline-flex items-center gap-1 h-7 pl-2.5 pr-1 rounded-full bg-base-100 border border-base-content/10 text-xs text-base-content/80">
-              <#Icon iconify="ph:user-minus-fill" class="w-3.5 h-3.5 text-muted" />
+              <#Icon iconify="ph:user-minus-fill" class="size-4 text-primary" />
               {l("Hiding my activity")}
             </span>
           {/if}
@@ -34,7 +34,7 @@
                 {#match :show}
                   <#Icon iconify="ph:target-fill" class="w-3.5 h-3.5 text-primary" />
                 {#match :hide}
-                  <#Icon iconify="ph:eye-slash-fill" class="w-3.5 h-3.5 text-muted" />
+                  <#Icon iconify="ph:eye-slash-fill" class="size-4 text-primary" />
                 {#match _}
               {/case}
               {label}
@@ -65,64 +65,10 @@
 
   <div class="flex flex-col   divide-hair divide-secondary overflow-y-auto flex-1 min-h-0 mb-6">
     <section>
-      <div class="px-4 py-2 flex flex-col gap-0">
-        {#if current_user_id(@__context__) &&
-            !(@showing_within == :profile && e(@pending_filters, :by, nil) == current_user_id(@__context__))}
-          <label
-            data-scope="include_my_activities"
-            class="flex items-center justify-between gap-3 min-h-11 py-1 cursor-pointer"
-          >
-            <span class="text-sm text-base-content">{l("Hide my own activities")}</span>
-            <input
-              type="checkbox"
-              checked={@user_activities_excluded?}
-              class="toggle toggle-sm toggle-primary"
-              phx-click="set_filter"
-              phx-value-toggle="subjects"
-              phx-value-toggle_type={current_user_id(@__context__)}
-              phx-value-toggle_value={if @user_activities_excluded?, do: "default", else: "false"}
-              phx-target={@myself}
-            />
-          </label>
-        {/if}
-
-        <label
-          data-scope="hide_replies"
-          class="flex items-center justify-between gap-3 min-h-11 py-1 cursor-pointer"
-        >
-          <span class="text-sm text-base-content">{l("Hide replies")}</span>
-          <input
-            type="checkbox"
-            checked={@replies_excluded?}
-            class="toggle toggle-sm toggle-primary"
-            phx-click="set_filter"
-            phx-value-toggle="activity_types"
-            phx-value-toggle_type="reply"
-            phx-value-toggle_value={if @replies_excluded?, do: "default", else: "false"}
-            phx-target={@myself}
-          />
-        </label>
-
-        <label
-          data-scope="hide_boosts"
-          class="flex items-center justify-between gap-3 min-h-11 py-1 cursor-pointer"
-        >
-          <span class="text-sm text-base-content">{l("Hide boosts")}</span>
-          <input
-            type="checkbox"
-            checked={@boosts_excluded?}
-            class="toggle toggle-sm toggle-primary"
-            phx-click="set_filter"
-            phx-value-toggle="activity_types"
-            phx-value-toggle_type="boost"
-            phx-value-toggle_value={if @boosts_excluded?, do: "default", else: "false"}
-            phx-target={@myself}
-          />
-        </label>
-
+      <div  class="">
         {#case @preset_origin_info}
           {#match %{preset_has_fixed_origin: true, preset_origin: preset_origin}}
-            <div class="flex items-center justify-between gap-3 min-h-11 py-1">
+            <div class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
               <span class="text-sm text-base-content" title={l("Fixed for this feed")}>
                 {l("Content origin")}
               </span>
@@ -139,7 +85,7 @@
               </div>
             </div>
           {#match _}
-            <div class="flex items-center justify-between gap-3 min-h-11 py-1">
+            <div class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
               <span id="content-origin-label" class="text-sm text-base-content">{l("Content origin")}</span>
               <div
                 role="radiogroup"
@@ -176,7 +122,7 @@
     <details class="group">
       <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
         <div class="flex items-center gap-3">
-          <#Icon iconify="ph:timer-fill" class="size-4 text-base-content/80" />
+          <#Icon iconify="ph:timer-fill" class="size-4 text-primary" />
           <h4 class="text-sm font-medium text-base-content/80">{l("Time range")}</h4>
         </div>
         <div class="flex items-center gap-2 min-w-0">
@@ -212,7 +158,7 @@
     <details class="group">
       <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
         <div class="flex items-center gap-3">
-          <#Icon iconify="ph:sort-ascending-fill" class="size-4 text-base-content/80" />
+          <#Icon iconify="ph:sort-ascending-fill" class="size-4 text-primary" />
           <h4 class="text-sm font-medium text-base-content/80">{l("Sort order")}</h4>
         </div>
         <div class="flex items-center gap-2 min-w-0">
@@ -258,7 +204,7 @@
     <details class="group">
       <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
         <div class="flex items-center gap-3">
-          <#Icon iconify="ph:article-ny-times-fill" class="size-4 text-base-content/80" />
+          <#Icon iconify="ph:article-ny-times-fill" class="size-4 text-primary" />
           <h4 class="text-sm font-medium text-base-content/80">{l("Content types")}</h4>
         </div>
         <div class="flex items-center gap-2 min-w-0">
@@ -337,7 +283,7 @@
       <details class="group">
         <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
           <div class="flex items-center gap-3">
-            <#Icon iconify="ph:pulse-fill" class="size-4 text-base-content/80" />
+            <#Icon iconify="ph:pulse-fill" class="size-4 text-primary" />
             <h4 class="text-sm font-medium text-base-content/80">{l("Activity types")}</h4>
           </div>
           <div class="flex items-center gap-2 min-w-0">
@@ -406,7 +352,7 @@
     <details class="group">
       <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
         <div class="flex items-center gap-3">
-          <#Icon iconify="ph:play-circle-fill" class="size-4 text-base-content/80" />
+          <#Icon iconify="ph:play-circle-fill" class="size-4 text-primary" />
           <h4 class="text-sm font-medium text-base-content/80">{l("Media types")}</h4>
         </div>
         <div class="flex items-center gap-2 min-w-0">
@@ -509,7 +455,7 @@
     <details class="group">
       <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
         <div class="flex items-center gap-3">
-          <#Icon iconify="ph:circle-fill" class="size-4 text-base-content/80" />
+          <#Icon iconify="ph:circle-fill" class="size-4 text-primary" />
           <h4 class="text-sm font-medium text-base-content/80">{l("Filter by circles")}</h4>
         </div>
         <div class="flex items-center gap-2 min-w-0">

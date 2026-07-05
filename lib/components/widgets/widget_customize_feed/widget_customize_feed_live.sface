@@ -1,0 +1,72 @@
+<Bonfire.UI.Common.WidgetBlockLive
+  widget_title={@widget_title || l("Customize this feed")}
+  title_class="flex items-center justify-between p-card text-xs font-normal uppercase tracking-wide text-base-content border-b-hair border-secondary"
+  class="w-full flex-auto mx-auto border-y-hair border-secondary"
+>
+  <div class="flex flex-col" data-id="widget_customize_feed">
+    {!-- Level 1: a handful of simple presets that cover most users --}
+    <Bonfire.UI.Common.Settings.Calm.PresetCardsLive
+      scope={nil}
+      event_name="set_filter_preset"
+      event_target={@event_target}
+      form_name="feed_preset"
+      legend={l("Feed preset")}
+      field_name="feed_preset"
+      current={Bonfire.UI.Social.WidgetCustomizeFeedLive.current_preset(@feed_filters)}
+      cards={Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_cards()}
+      options_id={"feed_preset_options_#{@feed_name}"}
+      preset_role="feed_preset"
+      class="border-b-hair border-secondary"
+      options_class="flex flex-col divide-hair divide-secondary"
+      card_class="relative flex flex-wrap items-start gap-x-3 gap-y-2 p-3 cursor-pointer transition-colors hover:bg-base-content/5 has-[:checked]:bg-primary/10"
+    />
+
+    {!-- Level 2: scope modifiers (origin / time window / own activity) — dimensions the cards above
+      never touch, so these compose with any preset instead of un-matching it --}
+    <Bonfire.UI.Common.Settings.Calm.OverrideTogglesLive
+      scope={nil}
+      event_name="set_filter_overrides"
+      event_target={@event_target}
+      form_name="feed_overrides"
+      form_role="feed_override_toggles"
+      rows={Bonfire.UI.Social.WidgetCustomizeFeedLive.override_rows(@feed_filters, @feed_name, @__context__)}
+      field_prefix="scope"
+      toggle_role="feed_override_toggle"
+    />
+
+    {!-- Level 3: the full filter matrix, behind an explicit gesture — opens the all-filters modal directly.
+      Deliberately quieter than the toggles above (normal weight, muted) so it reads as the door to advanced
+      territory, not another setting; no border-b since the widget's own bottom border closes the block. --}
+    {#case Bonfire.UI.Social.FeedControlsLive.active_filters(@feed_filters, @__context__)}
+      {#match active_filters}
+        <Bonfire.UI.Common.OpenModalLive
+          id="feed_filters_modal"
+          title_text={l("Feed filters")}
+          wrapper_class="!p-0"
+          no_actions
+          modal_assigns={Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}
+        >
+          <:open_btn>
+            <div
+              data-role="feed_advanced_filters"
+              class="p-3 w-full text-sm text-base-content/80 flex items-center gap-2 hover:bg-base-content/5 hover:text-base-content transition-colors"
+            >
+              <Iconify.iconify icon="ph:sliders-horizontal-duotone" class="w-4 h-4 text-muted" />
+              <span class="flex-1 text-left">{l("Advanced filters")}</span>
+              {#if active_filters != []}
+                <span
+                  class="badge badge-secondary badge-xs w-5 h-5"
+                  aria-label={l("%{count} active filters", count: length(active_filters))}
+                >{length(active_filters)}</span>
+              {/if}
+              <#Icon iconify="ph:caret-right-bold" class="w-4 h-4 text-base-content/50" />
+            </div>
+          </:open_btn>
+        </Bonfire.UI.Common.OpenModalLive>
+    {/case}
+
+    {!-- <div class="px-4 pt-3">
+      <Bonfire.UI.Social.SaveFeedPresetLive event_target={@event_target} />
+    </div> --}
+  </div>
+</Bonfire.UI.Common.WidgetBlockLive>

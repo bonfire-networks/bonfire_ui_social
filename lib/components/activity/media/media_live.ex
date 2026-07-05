@@ -89,18 +89,27 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     gif_count = Enum.count(gif_list)
     visual_count = Enum.count(visual_list)
     link_count = Enum.count(link_list)
+    visible_link_count = visible_link_count(link_count, assigns[:showing_within])
+    visible_link_list = Enum.take(link_list, visible_link_count)
+    link_preview_count = Enum.count(visible_link_list, &(is_binary(preview_img(&1))))
 
     case assigns[:parent_id] do
       nil ->
         nil
 
       id ->
-        Bonfire.Common.Cache.put("num_media:#{id}", [
-          multimedia_count,
-          image_count,
-          gif_count,
-          link_count
-        ])
+        Bonfire.Common.Cache.put("num_media:#{id}", %{
+          multimedia_count: multimedia_count,
+          image_count: image_count,
+          video_count: video_count,
+          gif_count: gif_count,
+          visual_count: visual_count,
+          link_count: link_count,
+          visible_link_count: visible_link_count,
+          link_preview_count: link_preview_count,
+          no_cover_links?: link_count > 1 and !assigns[:small_icon],
+          small_icon_links?: assigns[:small_icon] || link_count > 1
+        })
     end
 
     # Determine autoplay value based on prop and settings
@@ -141,6 +150,11 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
       |> assign(:link_count, link_count)
       |> render_sface()
   end
+
+  defp visible_link_count(link_count, showing_within) when showing_within in [:feed, :profile],
+    do: min(link_count, 1)
+
+  defp visible_link_count(link_count, _showing_within), do: link_count
 
   def the_medias(medias) when is_list(medias) do
     medias

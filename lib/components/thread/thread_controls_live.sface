@@ -74,59 +74,35 @@
       {#case {@sort_by, @sort_order}}
         {#match {nil, :desc}}
           <span class="flex items-center">
-            {!-- <#Icon
-              iconify="mdi:order-alphabetical-descending"
-              class="lg:hidden block w-4 h-4"
-              aria-hidden="true"
-            /> --}
-            <span class="hidden lg:block">{l("Newest first")}</span>
+            <span class="">{l("Newest first")}</span>
           </span>
         {#match {nil, _}}
           <span class="flex items-center">
-            {!-- <#Icon
-              iconify="mdi:order-alphabetical-ascending"
-              class="lg:hidden block w-4 h-4"
-              aria-hidden="true"
-            /> --}
-            <span class="hidden lg:block">{if @thread_mode != :flat, do: l("Thread order"), else: l("Oldest first")}</span>
+            <span class="">{if @thread_mode != :flat, do: l("Thread order"), else: l("Oldest first")}</span>
           </span>
         {#match {:latest_reply, _}}
           <span class="flex items-center">
-            {!-- <#Icon iconify="mdi:sprout" class="lg:hidden block w-4 h-4" aria-hidden="true" /> --}
-            <span class="hidden lg:block">{l("Recently active")}</span>
+            <span class="">{l("Recently active")}</span>
           </span>
         {#match {:reply_count, _}}
           <span class="flex items-center">
-            {!-- <#Icon iconify="ph:chat-circle-fill" class="lg:hidden block w-4 h-4" aria-hidden="true" /> --}
-            <span class="hidden lg:block">{l("Most replies")}</span>
+            <span class="">{l("Most replies")}</span>
           </span>
         {#match {:boost_count, _}}
           <span class="flex items-center">
-            {!-- <#Icon
-              iconify="ph:arrows-counter-clockwise-fill"
-              class="lg:hidden block w-4 h-4"
-              aria-hidden="true"
-            /> --}
-            <span class="hidden lg:block">{l("Most boosts")}</span>
+           <span class="">{l("Most boosts")}</span>
           </span>
         {#match {:like_count, _}}
           <span class="flex items-center">
-            {!-- <#Icon iconify="ph:fire-fill" class="lg:hidden block h-[20px] w-[18px]" aria-hidden="true" /> --}
-            <span class="hidden lg:block">{l("Most liked")}</span>
+            <span class="">{l("Most liked")}</span>
           </span>
         {#match {:popularity_score, _}}
           <span class="flex items-center">
-            {!-- <#Icon iconify="ph:trend-up-fill" class="lg:hidden block w-4 h-4" aria-hidden="true" /> --}
-            <span class="hidden lg:block">{l("Trending")}</span>
+            <span class="">{l("Trending")}</span>
           </span>
         {#match _}
           <span class="flex items-center">
-            {!-- <#Icon
-              iconify="mdi:order-alphabetical-ascending"
-              class="lg:hidden block w-4 h-4"
-              aria-hidden="true"
-            /> --}
-            <span class="hidden lg:block">{if @thread_mode != :flat, do: l("Thread order"), else: l("Oldest first")}</span>
+            <span class="">{if @thread_mode != :flat, do: l("Thread order"), else: l("Oldest first")}</span>
           </span>
       {/case}
       <#Icon iconify="mdi:chevron-down" class="w-4 h-4 opacity-60" aria-hidden="true" />
