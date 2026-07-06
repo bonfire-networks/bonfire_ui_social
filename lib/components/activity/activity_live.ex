@@ -867,61 +867,61 @@ defmodule Bonfire.UI.Social.ActivityLive do
           @showing_within not in [:smart_input, :thread, :widget, :nested_preview]}
         <div class="contents">
           {!-- TODO: make the list of preview paths/components/views configurable/hookable, and derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") --}
-        {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/", "/discuss/"])}
-          <Bonfire.UI.Common.OpenPreviewLive
-            href={@permalink}
-            parent_id={@activity_component_id}
-            open_btn_text=""
-            title_text={@thread_title || e(@object, :name, nil) || e(@object, :post_content, :name, nil) ||
-              l("Discussion")}
-            modal_assigns={thread_preview_modal_assigns(
-              @thread_id,
-              @object_id,
-              @activity_id,
-              @activity,
-              @object,
-              @reply_to
-            ) ++
-              [
-                post_id:
-                  if(
-                    @object_type in [Bonfire.Data.Social.Post, :article] or
-                      String.starts_with?(@permalink || "", ["/post/"]),
-                    do: @thread_id || @object_id
-                  ),
-                # ^ tells the comments loader to include the ancestors of the object regardless of max depth
-                current_url: @permalink,
-                cw: false,
-                autoplay:
-                  @autoplay ||
-                    Settings.get([Bonfire.UI.Social.Activity.MediaLive, :autoplay], nil, @__context__) ==
-                      true
+          {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/", "/discuss/"])}
+            <Bonfire.UI.Common.OpenPreviewLive
+              href={@permalink}
+              parent_id={@activity_component_id}
+              open_btn_text=""
+              title_text={@thread_title || e(@object, :name, nil) || e(@object, :post_content, :name, nil) ||
+                l("Discussion")}
+              modal_assigns={thread_preview_modal_assigns(
+                @thread_id,
+                @object_id,
+                @activity_id,
+                @activity,
+                @object,
+                @reply_to
+              ) ++
+                [
+                  post_id:
+                    if(
+                      @object_type in [Bonfire.Data.Social.Post, :article] or
+                        String.starts_with?(@permalink || "", ["/post/"]),
+                      do: @thread_id || @object_id
+                    ),
+                  # ^ tells the comments loader to include the ancestors of the object regardless of max depth
+                  current_url: @permalink,
+                  cw: false,
+                  autoplay:
+                    @autoplay ||
+                      Settings.get([Bonfire.UI.Social.Activity.MediaLive, :autoplay], nil, @__context__) ==
+                        true
+                ]}
+              root_assigns={[
+                page_title: l("Discussion")
               ]}
-            root_assigns={[
-              page_title: l("Discussion")
-            ]}
-          />
-        {#elseif String.starts_with?(@permalink || "", ["/@", "/profile/", "/user"])}
-             {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"]) and
-            module_enabled?(Bonfire.UI.Coordination.TaskLive)}
-          <Bonfire.UI.Common.OpenPreviewLive
-            href={@permalink}
-            parent_id={@activity_component_id}
-            open_btn_text={l("View task")}
-            title_text={e(@object, :name, nil) || l("Task")}
-            modal_assigns={[
-              id: @thread_id || @object_id,
-              current_url: @permalink,
-              modal_view: Bonfire.UI.Coordination.TaskLive,
-              activity_inception: "preview",
-              check_object_boundary: false,
-              loaded: true
-            ]}
-            root_assigns={[
-              page_title: l("Task")
-            ]}
-          />
-        {/if}
+            />
+          {#elseif String.starts_with?(@permalink || "", ["/@", "/profile/", "/user"])}
+          {#elseif String.starts_with?(@permalink || "", ["/coordination/task/"]) and
+              module_enabled?(Bonfire.UI.Coordination.TaskLive)}
+            <Bonfire.UI.Common.OpenPreviewLive
+              href={@permalink}
+              parent_id={@activity_component_id}
+              open_btn_text={l("View task")}
+              title_text={e(@object, :name, nil) || l("Task")}
+              modal_assigns={[
+                id: @thread_id || @object_id,
+                current_url: @permalink,
+                modal_view: Bonfire.UI.Coordination.TaskLive,
+                activity_inception: "preview",
+                check_object_boundary: false,
+                loaded: true
+              ]}
+              root_assigns={[
+                page_title: l("Task")
+              ]}
+            />
+          {/if}
         </div>
       {/if}
 
@@ -2456,15 +2456,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
       {:ok, %{} = media_skeleton} ->
         {nil,
          [
-           {Bonfire.UI.Social.Activity.MediaSkeletonLive,
-            media_skeleton_assigns(media_skeleton)}
+           {Bonfire.UI.Social.Activity.MediaSkeletonLive, media_skeleton_assigns(media_skeleton)}
          ]}
 
       {:ok, [_, _, _, _] = media_skeleton} ->
         {nil,
          [
-           {Bonfire.UI.Social.Activity.MediaSkeletonLive,
-            media_skeleton_assigns(media_skeleton)}
+           {Bonfire.UI.Social.Activity.MediaSkeletonLive, media_skeleton_assigns(media_skeleton)}
          ]}
 
       {:ok, nil} ->
@@ -2484,7 +2482,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       gif_count: Map.get(media_skeleton, :gif_count, 0),
       visual_count: Map.get(media_skeleton, :visual_count, 0),
       link_count: Map.get(media_skeleton, :link_count, 0),
-      visible_link_count: Map.get(media_skeleton, :visible_link_count, Map.get(media_skeleton, :link_count, 0)),
+      visible_link_count:
+        Map.get(media_skeleton, :visible_link_count, Map.get(media_skeleton, :link_count, 0)),
       link_preview_count: Map.get(media_skeleton, :link_preview_count, 0),
       no_cover_links?: Map.get(media_skeleton, :no_cover_links?, false),
       small_icon_links?: Map.get(media_skeleton, :small_icon_links?, false)

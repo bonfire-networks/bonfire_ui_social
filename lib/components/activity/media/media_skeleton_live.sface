@@ -3,10 +3,7 @@
     {#match 0}
     {#match num_medias}
       {!-- AUDIO / EMBED ATTACHMENTS --}
-      <div
-        x-show="content_open == true"
-        class="animate-pulse flex flex-col gap-2 my-2"
-      >
+      <div x-show="content_open == true" class="animate-pulse flex flex-col gap-2 my-2">
         {#for _counter <- 1..num_medias}
           <article class="m-entry rounded-box border-hair border-secondary bg-base-content/10 overflow-hidden">
             <div class="aspect-video flex items-center justify-center">

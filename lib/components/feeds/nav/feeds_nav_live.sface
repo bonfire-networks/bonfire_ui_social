@@ -27,14 +27,14 @@
           <summary class="flex items-center justify-between px-4 lg:px-[40px] mt-2 mb-1">
             <span class="font-medium text-muted uppercase text-xs">{l("Feeds")}</span>
             {#if !Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
-                <LinkLive
-                  to={~p"/settings/user/feeds"}
-                  class="btn btn-circle btn-outline btn-xs border-secondary"
-                ><#Icon iconify="ph:gear-six-fill" class="w-4 h-4" /></LinkLive>
+              <LinkLive
+                to={~p"/settings/user/feeds"}
+                class="btn btn-circle btn-outline btn-xs border-secondary"
+              ><#Icon iconify="ph:gear-six-fill" class="w-4 h-4" /></LinkLive>
             {/if}
           </summary>
 
-          <div class="pointer-events-auto px-[24px]">
+          <div class="pointer-events-auto">
             <Bonfire.UI.Common.WidgetsLive
               id="feeds_nav_links"
               widgets={@presets}

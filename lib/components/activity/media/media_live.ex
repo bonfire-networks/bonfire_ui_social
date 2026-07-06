@@ -91,7 +91,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
     link_count = Enum.count(link_list)
     visible_link_count = visible_link_count(link_count, assigns[:showing_within])
     visible_link_list = Enum.take(link_list, visible_link_count)
-    link_preview_count = Enum.count(visible_link_list, &(is_binary(preview_img(&1))))
+    link_preview_count = Enum.count(visible_link_list, &is_binary(preview_img(&1)))
 
     case assigns[:parent_id] do
       nil ->

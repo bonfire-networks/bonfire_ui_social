@@ -13,6 +13,7 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   alias Bonfire.UI.Social.FeedExtraControlsLive
 
   prop widget_title, :string, default: nil
+
   @doc "DOM selector of the feed component (e.g. `\"#feed_component_id\"`) that filter events are sent to."
   prop event_target, :any, default: nil
   prop feed_id, :any, default: nil
@@ -72,25 +73,25 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
         value: "default",
         name: l("Everything"),
         icon: "ph:sparkle-duotone",
-        description: l("Posts, replies, boosts, likes and follows.")
+        description: l("Posts, replies, boosts, likes, etc.")
       },
       %{
         value: "focus",
         name: l("Focus"),
         icon: "ph:crosshair-simple-duotone",
-        description: l("Only top-level posts.")
+        description: l("Hide replies and boosts.")
       },
       %{
         value: "discussions",
         name: l("Most replied"),
         icon: "ph:chats-circle-duotone",
-        description: l("This week's most replied conversations.")
+        description: l("This week's most active conversations.")
       },
       %{
         value: "trending",
         name: l("Most boosted"),
         icon: "ph:trend-up-duotone",
-        description: l("This week's most boosted posts.")
+        description: l("This week's popular posts.")
       }
     ]
   end
