@@ -770,6 +770,20 @@ defmodule Bonfire.UI.Social.ActivityLive do
     prepare_assigns(assigns)
   end
 
+  # The viewer may `:see` the object but not `:read` it: `maybe_check_boundaries`
+  # nulled the activity/object wherever `check_object_boundary` was set.
+  def render(%{object_boundary: :not_visible} = assigns) do
+    ~F"""
+    <div data-id="activity_not_visible">
+      <StatelessComponent
+        :if={Bonfire.UI.Social.RestrictedContentLive.enabled?(@__context__)}
+        module={maybe_component(Bonfire.UI.Social.RestrictedContentLive, @__context__)}
+        object_id={@object_id}
+      />
+    </div>
+    """
+  end
+
   def render(%{activity: _} = assigns) do
     assigns =
       if assigns[:activity_prepared] == :defer_to_render,

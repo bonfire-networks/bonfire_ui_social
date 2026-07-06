@@ -15,6 +15,7 @@ defmodule Bonfire.UI.Social.PostHistoryLive do
        post: nil,
        object: nil,
        object_id: nil,
+       object_not_permitted: nil,
        post_id: nil,
        back: true
      )}

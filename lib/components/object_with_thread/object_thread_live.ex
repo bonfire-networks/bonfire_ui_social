@@ -30,6 +30,10 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
 
   prop custom_preview, :any, default: nil
 
+  # object type display name, set when the viewer lacks permission to read the
+  # object (by `Objects.LiveHandler.not_found_fallback/3` or `check_read_permission/1`)
+  prop object_not_permitted, :any, default: nil
+
   # when true, the rendered ActivityLive re-checks `:read` via `maybe_check_boundaries`
   # (nulls the object if the viewer may `:see` but not `:read` it) — used by the preview
   # modal so a see-only object's body isn't exposed.
@@ -56,7 +60,7 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
     with %Phoenix.LiveView.Socket{} = socket <-
            Bonfire.Social.Objects.LiveHandler.load_object_assigns(socket)
            |> debug("loaded_object_assigns") do
-      {:ok, socket}
+      {:ok, check_read_permission(socket)}
     else
       {:error, e} ->
         {:ok, assign_error(socket, e)}
@@ -64,6 +68,36 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
       other ->
         error(other)
         {:ok, socket}
+    end
+  end
+
+  # When used as the preview modal (`check_object_boundary` set by
+  # `thread_preview_modal_assigns`), the object may arrive pre-loaded from a feed
+  # where the viewer only needed `:see` — re-check `:read` so they don't get the
+  # body of something they may only discover. Guests never reach this (the modal
+  # trigger requires login; guest page loads are already `:read`-boundarised).
+  defp check_read_permission(socket) do
+    object = e(assigns(socket), :object, nil)
+    current_user = current_user(socket)
+
+    if e(assigns(socket), :check_object_boundary, nil) == true and is_struct(object) and
+         not is_nil(current_user) and
+         Bonfire.Boundaries.load_pointers(id(object),
+           current_user: current_user,
+           verbs: [:read],
+           ids_only: true
+         )
+         |> Enums.ids() == [] do
+      socket
+      |> assign(
+        object_not_permitted:
+          Bonfire.Common.Types.object_type_display(Bonfire.Common.Types.object_type(object)) ||
+            l("post"),
+        object: nil,
+        activity: nil
+      )
+    else
+      socket
     end
   end
 

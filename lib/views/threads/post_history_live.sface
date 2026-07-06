@@ -1,1 +1,9 @@
-<Bonfire.UI.Social.VersionHistoryLive object={@object || @object_id} />
+{#if @object_not_permitted}
+  <StatelessComponent
+    module={maybe_component(Bonfire.UI.Social.RestrictedContentLive, @__context__)}
+    object_type_name={@object_not_permitted}
+    object_id={@object_id}
+  />
+{#else}
+  <Bonfire.UI.Social.VersionHistoryLive object={@object || @object_id} />
+{/if}

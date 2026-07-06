@@ -275,6 +275,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     |> assign_generic(
       object_id: id,
       object_loaded: true,
+      object_not_permitted: nil,
       canonical_url: canonical_url,
       activity: activity,
       object: object,
@@ -502,20 +503,35 @@ defmodule Bonfire.Social.Objects.LiveHandler do
               thing = Bonfire.Common.Types.object_type_display(type) || l("post")
               msg = l("Sorry, you can't view this %{thing}", thing: thing)
 
-              if current_user_id(socket) do
-                {:error, msg}
-              else
-                url =
-                  maybe_apply(
-                    Bonfire.UI.Me.RemoteInteractionLive,
-                    :generate_url,
-                    ["read", thing, Bonfire.Common.URIs.canonical_url(id), socket],
-                    fallback_return: "/login"
-                  )
+              cond do
+                # only show the restricted-content screen when the object actually
+                # exists (the type may also come from a `?type=` param or a stale
+                # cache, e.g. for deleted objects)
+                Bonfire.UI.Social.RestrictedContentLive.enabled?(
+                  e(assigns(socket), :__context__, nil)
+                ) and
+                    match?(
+                      {:ok, _},
+                      Bonfire.Common.Needles.one(uid, skip_boundary_check: true)
+                    ) ->
+                  socket
+                  |> assign(object_not_permitted: thing)
 
-                socket
-                |> assign_error(msg)
-                |> maybe_deferred_redirect(url)
+                current_user_id(socket) ->
+                  {:error, msg}
+
+                true ->
+                  url =
+                    maybe_apply(
+                      Bonfire.UI.Me.RemoteInteractionLive,
+                      :generate_url,
+                      ["read", thing, Bonfire.Common.URIs.canonical_url(id), socket],
+                      fallback_return: "/login"
+                    )
+
+                  socket
+                  |> assign_error(msg)
+                  |> maybe_deferred_redirect(url)
               end
 
             _ ->

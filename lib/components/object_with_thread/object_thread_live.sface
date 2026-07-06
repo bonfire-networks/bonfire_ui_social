@@ -6,7 +6,13 @@
     {!-- INITIAL POST --}
     <div class="relative">
       <div class="bonfire-wrapper" id="thread_main_object">
-        {#if is_nil(@activity) and is_nil(@object)}
+        {#if @object_not_permitted}
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Social.RestrictedContentLive, @__context__)}
+            object_type_name={@object_not_permitted}
+            object_id={@object_id || @post_id || @thread_id}
+          />
+        {#elseif is_nil(@activity) and is_nil(@object)}
           <div class="m-3 text-center p-8 rounded-lg border border-base-content/30 flex items-center place-content-center">{l("Sorry, you cannot view this.")}</div>
         {#else}
           {#if @custom_preview}
@@ -32,13 +38,13 @@
               object={@object}
               feed_id={@feed_id || @thread_id}
               activity_inception={@activity_inception}
-              check_object_boundary={@check_object_boundary}
+              check_object_boundary={false}
               object_boundary={if @showing_within == :messages, do: :skip_boundary_check, else: :skip_boundary_preload}
             />
           {/if}
         {/if}
         <StatelessComponent
-          :if={@thread_id}
+          :if={@thread_id && !@object_not_permitted}
           module={maybe_component(Bonfire.UI.Social.Activity.FediverseReactionsLive, @__context__)}
           object={@object}
           reply_count={length(e(@replies, []))}
@@ -49,7 +55,7 @@
 
       <div class="">
         <Bonfire.UI.Social.ThreadLive
-          :if={@thread_id}
+          :if={@thread_id && !@object_not_permitted}
           id={@thread_id}
           thread_id={@thread_id}
           highlight_reply_id={@reply_id}
