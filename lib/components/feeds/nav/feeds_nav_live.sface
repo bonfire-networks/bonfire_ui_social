@@ -34,7 +34,7 @@
             {/if}
           </summary>
 
-          <div class="pointer-events-auto px-[24px]">
+          <div class="pointer-events-auto">
             <Bonfire.UI.Common.WidgetsLive
               id="feeds_nav_links"
               widgets={@presets}

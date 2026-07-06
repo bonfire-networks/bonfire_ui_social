@@ -549,7 +549,7 @@
       phx-click="apply_filters"
       phx-target={@event_target}
       phx-value-filters={Bonfire.UI.Social.FeedFiltersModalContentLive.encode_filters(@pending_filters)}
-      class="btn btn-primary min-h-11 rounded-full px-6"
+      class="btn btn-sm btn-primary min-h-11 rounded-full px-6"
     >
       {l("Apply filters")}
     </button>

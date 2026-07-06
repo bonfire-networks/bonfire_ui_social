@@ -6,7 +6,23 @@
     phx-hook="Bonfire.UI.Common.PreviewContentLive#MainFeed"
     class="w-full flex flex-col feed mx-auto"
   >
-    {!-- feed controls moved to the sidebar customize-feed widget (see WidgetCustomizeFeedLive); just show a slim indicator here while filters reload the feed in place --}
+    {!-- feed controls moved to the sidebar customize-feed widget (see WidgetCustomizeFeedLive) --}
+    {!-- <div
+      :if={!@hide_filters and Config.get(__MODULE__, :feed_controls_in_header) and current_user_id(@__context__)}
+      id="feed_controls_wrapper"
+    >
+      <StatelessComponent
+        module={Bonfire.UI.Social.FeedControlsLive}
+        event_target={@myself}
+        feed_id={@feed_id}
+        feed_name={@feed_name}
+        feed_filters={@feed_filters}
+        showing_within={@showing_within}
+        reloading={@reloading}
+      />
+    </div> --}
+
+    {!-- show a slim indicator here while filters reload the feed in place --}
     <div
       :if={@reloading}
       id="feed_controls_wrapper"

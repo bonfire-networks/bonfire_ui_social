@@ -34,35 +34,26 @@
       toggle_role="feed_override_toggle"
     />
 
-    {!-- Level 3: the full filter matrix, behind an explicit gesture — opens the all-filters modal directly.
+    {!-- Level 3: the full filter matrix, behind an explicit gesture — expands the all-filters editor inline.
       Deliberately quieter than the toggles above (normal weight, muted) so it reads as the door to advanced
       territory, not another setting; no border-b since the widget's own bottom border closes the block. --}
     {#case Bonfire.UI.Social.FeedControlsLive.active_filters(@feed_filters, @__context__)}
       {#match active_filters}
-        <Bonfire.UI.Common.OpenModalLive
-          id="feed_filters_modal"
-          title_text={l("Feed filters")}
-          wrapper_class="!p-0"
-          no_actions
+        <Bonfire.UI.Common.OpenExpanderLive
+          parent_id={"feed_filters_#{@feed_name}"}
           modal_assigns={Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}
         >
           <:open_btn>
-            <div
-              data-role="feed_advanced_filters"
-              class="p-3 w-full text-sm text-base-content/80 flex items-center gap-2 hover:bg-base-content/5 hover:text-base-content transition-colors"
-            >
-              <Iconify.iconify icon="ph:sliders-horizontal-duotone" class="w-4 h-4 text-muted" />
-              <span class="flex-1 text-left">{l("Advanced filters")}</span>
-              {#if active_filters != []}
-                <span
-                  class="badge badge-secondary badge-xs w-5 h-5"
-                  aria-label={l("%{count} active filters", count: length(active_filters))}
-                >{length(active_filters)}</span>
-              {/if}
-              <#Icon iconify="ph:caret-right-bold" class="w-4 h-4 text-base-content/50" />
-            </div>
+            <Iconify.iconify icon="ph:sliders-horizontal-duotone" class="w-4 h-4 text-muted" />
+            <span class="flex-1 text-left" data-role="feed_advanced_filters">{l("Advanced filters")}</span>
+            {#if active_filters != []}
+              <span
+                class="badge badge-secondary badge-xs w-5 h-5"
+                aria-label={l("%{count} active filters", count: length(active_filters))}
+              >{length(active_filters)}</span>
+            {/if}
           </:open_btn>
-        </Bonfire.UI.Common.OpenModalLive>
+        </Bonfire.UI.Common.OpenExpanderLive>
     {/case}
 
     {!-- <div class="px-4 pt-3">
