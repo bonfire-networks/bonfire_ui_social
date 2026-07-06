@@ -2019,13 +2019,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
+  # NOTE: no ProcessTree read — nothing sets the key as a process override (test-env
+  # `Config.get` already checks the process tree), while a MISS walked the whole ancestry on
+  # every feed live-update batch
   def feed_live_update_many_preload_mode,
     do:
-      (ProcessTree.get(:feed_live_update_many_preload_mode) ||
-         Config.get(:feed_live_update_many_preload_mode, nil,
-           name: l("Feed Update Preload Mode"),
-           description: l("How to preload data when updating feeds (technical setting).")
-         ) || :async_actions)
+      (Config.get(:feed_live_update_many_preload_mode, nil,
+         name: l("Feed Update Preload Mode"),
+         description: l("How to preload data when updating feeds (technical setting).")
+       ) || :async_actions)
       |> debug()
 
   defp assigns_to_params(assigns) do
