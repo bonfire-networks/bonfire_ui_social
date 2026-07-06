@@ -13,7 +13,19 @@
             object_id={@object_id || @post_id || @thread_id}
           />
         {#elseif is_nil(@activity) and is_nil(@object)}
-          <div class="m-3 text-center p-8 rounded-lg border border-base-content/30 flex items-center place-content-center">{l("Sorry, you cannot view this.")}</div>
+          <div
+            data-id="object_not_viewable"
+            class="flex flex-col items-center w-full max-w-prose px-6 py-12 mx-auto text-center"
+          >
+            <div
+              class="flex items-center justify-center w-16 h-16 rounded-full bg-base-content/5"
+              aria-hidden="true"
+            >
+              <#Icon iconify="ph:eye-slash-duotone" class="w-8 h-8 text-base-content/50" />
+            </div>
+            <h2 class="mt-4 text-lg font-semibold text-base-content">{l("Sorry, you cannot view this.")}</h2>
+            <p class="mt-1 text-sm text-base-content/80">{l("It may have been deleted, or you may not have permission to see it.")}</p>
+          </div>
         {#else}
           {#if @custom_preview}
             <div>

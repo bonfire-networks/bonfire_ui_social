@@ -15,9 +15,6 @@ defmodule Bonfire.UI.Social.RuntimeConfig do
 
     config :bonfire_ui_social, Bonfire.UI.Social.ThreadLive, thread_mode: :nested
 
-    # opt-in screen shown instead of a permission error, see that module's docs
-    config :bonfire_ui_social, Bonfire.UI.Social.RestrictedContentLive, modularity: :disabled
-
     config :bonfire, :ui,
       explore: [
         sections: [

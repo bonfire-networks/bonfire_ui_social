@@ -1,35 +1,48 @@
 <div
   data-id="restricted_content"
-  class="flex flex-col items-center gap-4 p-8 m-4 text-center rounded-xl bg-base-200"
+  class="flex flex-col items-center w-full max-w-prose px-6 py-12 mx-auto text-center"
 >
-  <#Icon iconify="ph:lock-key-duotone" class="w-12 h-12 text-primary" />
+  <div class="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10" aria-hidden="true">
+    <#Icon iconify="ph:lock-key-duotone" class="w-8 h-8 text-primary" />
+  </div>
 
-  <h2 class="text-xl font-semibold">
+  <h2 class="mt-4 text-lg font-semibold text-base-content">
     {get_setting(
       @rc_settings,
       :title,
-      l("You don't have permission to view this %{thing}", thing: @object_type_name || l("content"))
+      l("This %{thing} isn't visible to you", thing: @object_type_name || l("content"))
     )}
   </h2>
 
-  {#case get_setting(@rc_settings, :message, nil)}
-    {#match nil}
-    {#match message}
-      <p class="max-w-prose text-base-content/70">{message}</p>
-  {/case}
+  <p class="mt-1 text-sm text-base-content/80 max-w-prose">
+    {get_setting(@rc_settings, :message, l("It was shared with a limited audience."))}
+  </p>
 
-  {#case get_setting(@rc_settings, :cta_url, nil)}
-    {#match nil}
-    {#match cta_url}
-      <a href={cta_url} class="btn btn-primary" data-role="restricted_content_cta">
-        {get_setting(@rc_settings, :cta_label, l("Find out more"))}
-      </a>
-  {/case}
+  {#if get_setting(@rc_settings, :cta_url, nil) || is_nil(current_user_id(@__context__))}
+    <div class="flex flex-wrap items-center justify-center gap-3 mt-6">
+      {#case get_setting(@rc_settings, :cta_url, nil)}
+        {#match nil}
+        {#match cta_url}
+          <a
+            href={cta_url}
+            target={e(@__context__, :link_target, nil) || "_top"}
+            rel={if e(@__context__, :link_target, nil) == "_blank", do: "noopener"}
+            class="btn btn-primary"
+            data-role="restricted_content_cta"
+          >
+            {get_setting(@rc_settings, :cta_label, l("Find out more"))}
+          </a>
+      {/case}
+
+      {#if is_nil(current_user_id(@__context__))}
+        <LinkLive to={path(:login, :index)} class="btn btn-outline" data-role="restricted_login">
+          {l("Log in")}
+        </LinkLive>
+      {/if}
+    </div>
+  {/if}
 
   {#if is_nil(current_user_id(@__context__))}
-    <LinkLive to={path(:login, :index)} class="text-sm link link-primary">
-      {l("Already have an account? Log in")}
-    </LinkLive>
     {#case @object_id &&
         maybe_apply(
           Bonfire.UI.Me.RemoteInteractionLive,
@@ -43,8 +56,8 @@
           fallback_return: nil
         )}
       {#match url when is_binary(url)}
-        <LinkLive to={url} class="text-sm link" data-role="remote_interaction">
-          {l("Or interact from your account on another instance")}
+        <LinkLive to={url} class="mt-4 text-sm link link-hover text-muted" data-role="remote_interaction">
+          {l("Use your account on another instance")}
         </LinkLive>
       {#match _}
     {/case}

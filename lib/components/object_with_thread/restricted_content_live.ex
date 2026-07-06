@@ -32,9 +32,22 @@ defmodule Bonfire.UI.Social.RestrictedContentLive do
     |> render_sface()
   end
 
-  @doc "Whether to show this screen instead of the standard permission error (also checked by `Bonfire.Social.Objects.LiveHandler.not_found_fallback/3`)"
+  @doc """
+  Whether to show this screen instead of the standard permission error (also
+  checked by `Bonfire.Social.Objects.LiveHandler.not_found_fallback/3`).
+
+  Opt-in: only an explicit `modularity: true` (or `:enabled`) turns it on —
+  unset means off, unlike the usual modularity semantics. A boot-time default
+  would be clobbered by/clobber flavour config (extension `RuntimeConfig`s run
+  after compile-time config), so no default is written anywhere.
+  """
   def enabled?(context \\ nil) do
-    module_enabled?(__MODULE__, context || [])
+    Settings.get(
+      [__MODULE__, :modularity],
+      nil,
+      Settings.LiveHandler.scoped(:instance, context)
+    )
+    |> Bonfire.Common.Extend.enabled_value?()
   end
 
   @doc "Read one of the configured copy fields, treating unset or empty values as `default`"
