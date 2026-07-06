@@ -1456,9 +1456,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         e(activity, :activity, :verb_id, nil) || e(activity, :activity, :verb, :id, nil)
 
     passes_verb_exclude? =
-      case Bonfire.Boundaries.Verbs.ids(
-             List.wrap(e(filters, :exclude_activity_types, nil) || [])
-           ) do
+      case Bonfire.Boundaries.Verbs.ids(List.wrap(e(filters, :exclude_activity_types, nil) || [])) do
         [] -> true
         # unknown verb + active exclusions -> be conservative and skip
         exclude_verb_ids -> is_binary(verb_id) and verb_id not in exclude_verb_ids
@@ -1497,8 +1495,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     passes_subject_exclude? =
       case List.wrap(e(filters, :exclude_subjects, nil) || []) do
-        [] -> true
-        excluded -> is_nil(subject_id) or to_string(subject_id) not in Enum.map(excluded, &to_string/1)
+        [] ->
+          true
+
+        excluded ->
+          is_nil(subject_id) or to_string(subject_id) not in Enum.map(excluded, &to_string/1)
       end
 
     preset_filters = preset_canonical_filters(e(filters, :feed_name, nil), opts)

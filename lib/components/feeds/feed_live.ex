@@ -882,18 +882,28 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     attrs =
       case scope["replies"] do
-        "true" when not replies_hidden? -> toggle_exclude_activity_type(%{}, filters, :reply, true)
-        "false" when replies_hidden? -> toggle_exclude_activity_type(%{}, filters, :reply, false)
-        _ -> %{}
+        "true" when not replies_hidden? ->
+          toggle_exclude_activity_type(%{}, filters, :reply, true)
+
+        "false" when replies_hidden? ->
+          toggle_exclude_activity_type(%{}, filters, :reply, false)
+
+        _ ->
+          %{}
       end
 
     boosts_hidden? = Bonfire.UI.Social.FeedExtraControlsLive.boosts_excluded?(filters)
 
     attrs =
       case scope["boosts"] do
-        "true" when not boosts_hidden? -> toggle_exclude_activity_type(attrs, filters, :boost, true)
-        "false" when boosts_hidden? -> toggle_exclude_activity_type(attrs, filters, :boost, false)
-        _ -> attrs
+        "true" when not boosts_hidden? ->
+          toggle_exclude_activity_type(attrs, filters, :boost, true)
+
+        "false" when boosts_hidden? ->
+          toggle_exclude_activity_type(attrs, filters, :boost, false)
+
+        _ ->
+          attrs
       end
 
     groups_included? =

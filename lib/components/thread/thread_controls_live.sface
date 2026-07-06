@@ -90,7 +90,7 @@
           </span>
         {#match {:boost_count, _}}
           <span class="flex items-center">
-           <span class="">{l("Most boosts")}</span>
+            <span class="">{l("Most boosts")}</span>
           </span>
         {#match {:like_count, _}}
           <span class="flex items-center">

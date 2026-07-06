@@ -19,7 +19,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
       Bonfire.Web.Views.DashboardLive,
       Bonfire.UI.Social.FeedsNavLinkLive,
       Bonfire.UI.Social.FeedsLive,
-      Bonfire.UI.Social.FeedsNavLive, # moved to right sidebar as WidgetFeedsLive
+      # moved to right sidebar as WidgetFeedsLive
+      Bonfire.UI.Social.FeedsNavLive,
       Bonfire.Search.Web.SearchLive,
       Bonfire.UI.Messages.MessagesLive,
       # Bonfire.UI.Social.NotificationsFeedLive,

@@ -65,7 +65,7 @@
 
   <div class="flex flex-col   divide-hair divide-secondary overflow-y-auto flex-1 min-h-0 mb-6">
     <section>
-      <div  class="">
+      <div class="">
         {#case @preset_origin_info}
           {#match %{preset_has_fixed_origin: true, preset_origin: preset_origin}}
             <div class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">

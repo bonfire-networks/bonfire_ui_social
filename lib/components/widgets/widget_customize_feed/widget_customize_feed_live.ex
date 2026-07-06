@@ -13,6 +13,7 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   alias Bonfire.UI.Social.FeedExtraControlsLive
 
   prop widget_title, :string, default: nil
+
   @doc "DOM selector of the feed component (e.g. `\"#feed_component_id\"`) that filter events are sent to."
   prop event_target, :any, default: nil
   prop feed_id, :any, default: nil

@@ -27,7 +27,7 @@
             name="name"
             class="input w-full"
             placeholder={l("Add a title...")}
-          >
+          />
         </fieldset>
 
         <fieldset class="fieldset">
