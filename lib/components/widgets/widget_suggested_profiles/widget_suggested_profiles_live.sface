@@ -40,7 +40,7 @@
         >
           {#for user <- suggested_profiles}
             <div
-              class="flex-shrink-0 snap-start rounded-xl bg-base-200 overflow-hidden"
+              class="flex-shrink-0 snap-start rounded-box bg-base-200 overflow-hidden"
               style="width: calc(80% - 8px);"
             >
               <StatelessComponent
