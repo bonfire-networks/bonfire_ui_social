@@ -224,7 +224,7 @@
                                             <img src={@cute_gif}>
                                           </div>
                                         {#else}
-                                          <img src={Bonfire.Common.URIs.static_path("/images/loading.svg")}>
+                                          <span class="loading loading-ring loading-xl text-primary" />
                                         {/if}
 
                                         <div class="sr-only text-base-content">{l("Loading...")}</div>

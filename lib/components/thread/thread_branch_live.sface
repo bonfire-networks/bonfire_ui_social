@@ -19,16 +19,21 @@
          overshooting into the children subtree. See THREAD_LINES.md §8 v3. --}
     <div class="relative">
       <div
-        :if={@show_thread_lines && has_replies?(@threaded_replies)}
+        :if={@show_thread_lines &&
+          (has_replies?(@threaded_replies) ||
+             show_more_replies_button?(@comment, @thread_level, @depth_loaded, @threaded_replies_count))}
         id={"line-#{@id}"}
-        phx-click={JS.hide(to: "#replies-#{@id}")
-        |> JS.hide(to: "#line-#{@id}")
-        |> JS.hide(to: "#collapse-minus-#{@id}")
-        |> JS.show(to: "#collapse-plus-#{@id}")}
+        phx-click={if has_replies?(@threaded_replies) do
+          JS.hide(to: "#replies-#{@id}")
+          |> JS.hide(to: "#line-#{@id}")
+          |> JS.hide(to: "#collapse-minus-#{@id}")
+          |> JS.show(to: "#collapse-plus-#{@id}")
+        end}
         style={"left: #{24 + (@visual_level - 1) * 34}px; top: 36px"}
         class={
           "absolute -bottom-1 border-l-hair border-secondary z-40 px-1 -ml-1 ",
-          "cursor-pointer hover:border-l-2 hover:border-primary": current_user_id(@__context__)
+          "cursor-pointer hover:border-l-2 hover:border-primary":
+            current_user_id(@__context__) && has_replies?(@threaded_replies)
         }
       />
 
@@ -100,11 +105,18 @@
 
     {#if @thread_mode != :flat}
       <div class="relative">
-        {#if (@thread_level == @depth_loaded and
-             @threaded_replies_count) &&
-            (e(@comment, :total_replies_count, nil) || e(@comment, :replied, :total_replies_count, nil) || 0) >
-              @threaded_replies_count}
-          <div class="flex items-center" style={"padding-left: #{24 + (@visual_level - 1) * 34}px"}>
+        {#if show_more_replies_button?(@comment, @thread_level, @depth_loaded, @threaded_replies_count)}
+          <div
+            class="relative flex items-center"
+            style={"padding-left: #{34 + (@visual_level - 1) * 34}px"}
+          >
+            {!-- Elbow connecting the parent trunk to the more-replies button,
+                 same geometry as the child-avatar connector above --}
+            <div
+              :if={@show_thread_lines}
+              style={"left: #{20 + (@visual_level - 1) * 34}px; width: 18px; height: 16px;"}
+              class="absolute top-0 border-l-hair border-b-hair border-secondary z-30 pointer-events-none"
+            />
             {#if user_socket_connected?(@__context__)}
               <button
                 data-id="load_more_replies"
@@ -129,7 +141,7 @@
                   ],
                   fallback_return: "/login"
                 )}
-                class="btn btn-sm"
+                class="btn btn-sm ml-2"
               >
                 {l("%{count} more replies", count: extra_replies_count(@comment, @threaded_replies_count))}</LinkLive>
             {/if}

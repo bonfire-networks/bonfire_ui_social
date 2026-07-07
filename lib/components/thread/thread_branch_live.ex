@@ -93,6 +93,12 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
 
   def has_replies?(replies), do: replies not in [nil, [], {}, [{}]]
 
+  def show_more_replies_button?(comment, thread_level, depth_loaded, threaded_replies_count) do
+    thread_level == depth_loaded and is_integer(threaded_replies_count) and
+      (e(comment, :total_replies_count, nil) || e(comment, :replied, :total_replies_count, nil) ||
+         0) > threaded_replies_count
+  end
+
   def sub_replies_count(comment) do
     activity = CommentLive.get_activity(comment)
 

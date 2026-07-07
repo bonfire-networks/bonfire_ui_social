@@ -19,7 +19,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop hide_guest_fallback, :boolean, default: false
 
   prop loading, :boolean, default: true
-  prop reloading, :boolean, default: true
+  prop reloading, :boolean, default: false
 
   prop cache_strategy, :any, default: nil
   prop hide_activities, :any, default: nil
