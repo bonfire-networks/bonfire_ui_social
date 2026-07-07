@@ -24,7 +24,7 @@
           @__context__[:instance_settings] || :instance
         )}
         <details open class="details-static w-full overflow-hidden">
-          <summary class="flex items-center justify-between px-4 lg:px-[40px] mt-2 mb-1">
+          <summary class="relative font-medium uppercase pl-4 text-xs text-base-content/50 list-none after:content-none [&::-webkit-details-marker]:hidden">
             <span class="font-medium text-muted uppercase text-xs">{l("Feeds")}</span>
             {#if !Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
               <LinkLive
