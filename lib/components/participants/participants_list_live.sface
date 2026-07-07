@@ -15,7 +15,7 @@
           phx-click="toggle_participants"
           phx-target={@myself}
           data-role="toggle_participants"
-          class="mt-1 text-sm text-muted hover:underline"
+          class="mt-1 text-sm text-muted hover:underline mx-2 mb-2"
         >
           {#if @expanded}
             {l("Show less")}
