@@ -24,7 +24,7 @@
           @__context__[:instance_settings] || :instance
         )}
         <details open class="details-static w-full overflow-hidden">
-          <summary class="relative font-medium uppercase pl-4 text-xs text-base-content/50 list-none after:content-none [&::-webkit-details-marker]:hidden">
+          <summary class="relative font-medium uppercase pl-4 text-xs text-base-content/50 list-none after:content-none [&::-webkit-details-marker]:hidden flex">
             <span class="font-medium text-muted uppercase text-xs">{l("Feeds")}</span>
             {#if !Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
               <LinkLive
@@ -52,9 +52,9 @@
         >
           <summary
             phx-click="Bonfire.Social.Feeds:toggle_feeds_nav_visibility"
-            class="relative font-medium uppercase pl-4 text-xs text-base-content/50 list-none after:content-none [&::-webkit-details-marker]:hidden"
+            class="relative font-medium uppercase pl-4 text-xs text-base-content/50 list-none after:content-none [&::-webkit-details-marker]:hidden flex"
           >
-            <span>{l("Feeds")}</span>
+            <span class="flex-1 w-full">{l("Feeds")}</span>
             {#if !Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
               <div class="normal-case font-normal absolute right-2">
                 <LinkLive
