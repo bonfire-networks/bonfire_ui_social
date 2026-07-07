@@ -52,7 +52,7 @@ defmodule Bonfire.UI.Social.Benchmark do
   - `BENCH_ITERATIONS=10` iterations per scenario in the no-Benchee fallback
   """
   def boundarise_strategies do
-    Logger.configure(level: :error)
+    Logger.configure(level: :critical)
     # without this, feeds on instances with older data return 0 edges and the benchmark
     # measures empty queries
     Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
@@ -153,7 +153,7 @@ defmodule Bonfire.UI.Social.Benchmark do
     that decides whether count-sort indexes pay off, see plan T1)
   """
   def feed_presets do
-    Logger.configure(level: :error)
+    Logger.configure(level: :critical)
     run_scenarios(feed_preset_queries(), "feed_presets")
     Logger.configure(level: @log_level)
   end
@@ -163,11 +163,16 @@ defmodule Bonfire.UI.Social.Benchmark do
 
     scenarios =
       %{
-        # baseline for comparison
-        "local(baseline)" => :local,
+        # baseline for comparison (:explore, NOT :local — the :local origin OR-filter has its
+        # own known slowness that would pollute every preset comparison)
+        "explore(baseline)" => :explore,
         "trending_discussions" => :trending_discussions,
         "recent_discussions" => :recent_discussions,
-        "local_media" => :local_media
+        # the real preset (carries the origin OR-filter tax for logged-in viewers — see
+        # activities.ex maybe_filter {:origin, :local}) …
+        "local_media" => :local_media,
+        # … and the origin-free variant that isolates the media machinery itself
+        "media_all(no_origin)" => %Bonfire.Social.FeedFilters{media_types: ["*"]}
       }
       |> Map.merge(disabled_preset_filters())
       |> subset_by_env("BENCH_PRESETS")
@@ -187,14 +192,15 @@ defmodule Bonfire.UI.Social.Benchmark do
   `BENCH_BASE_PRESET=local`; plus the usual `BENCH_*`.
   """
   def feed_sorts do
-    Logger.configure(level: :error)
+    Logger.configure(level: :critical)
     run_scenarios(feed_sort_queries(), "feed_sorts")
     Logger.configure(level: @log_level)
   end
 
   defp feed_sort_queries do
     limit = String.to_integer(System.get_env("BENCH_LIMIT", "20"))
-    base = System.get_env("BENCH_BASE_PRESET", "local") |> String.to_existing_atom()
+    # :explore not :local — see note in feed_preset_queries
+    base = System.get_env("BENCH_BASE_PRESET", "explore") |> String.to_existing_atom()
 
     sorts =
       %{
@@ -241,7 +247,11 @@ defmodule Bonfire.UI.Social.Benchmark do
           Bonfire.Common.Repo.query!("SET statement_timeout = 0")
 
           IO.puts(
-            Bonfire.Common.Repo.explain(:all, query, analyze: true, buffers: true, timeout: :infinity)
+            Bonfire.Common.Repo.explain(:all, query,
+              analyze: true,
+              buffers: true,
+              timeout: :infinity
+            )
           )
         after
           Bonfire.Common.Repo.query!("RESET ALL")
@@ -643,7 +653,7 @@ defmodule Bonfire.UI.Social.Benchmark do
   end
 
   def feed_queries_without_benchee do
-    Logger.configure(level: :error)
+    Logger.configure(level: :critical)
 
     Enum.each(
       some_feed_queries(),
