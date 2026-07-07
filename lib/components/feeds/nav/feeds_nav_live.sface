@@ -10,7 +10,7 @@
       {#case to_string(Bonfire.Common.Settings.get([:ui, :sidebar, :section_divider_image], "", :instance))}
         {#match src when src != ""}
           <div class="my-1 flex justify-center" aria-hidden="true">
-            <img src={src} class="h-5 w-full object-contain mt-4" alt="">
+            <img src={src} class="h-5 w-full object-contain mt-[36px]" alt="">
           </div>
         {#match _}
       {/case}
