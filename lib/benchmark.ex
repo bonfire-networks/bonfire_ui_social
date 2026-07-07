@@ -56,8 +56,16 @@ defmodule Bonfire.UI.Social.Benchmark do
     # without this, feeds on instances with older data return 0 edges and the benchmark
     # measures empty queries
     Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 0)
-    scenarios = boundarise_strategy_queries()
 
+    run_scenarios(boundarise_strategy_queries(), "boundarise_strategies")
+
+    Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
+    Logger.configure(level: @log_level)
+  end
+
+  # shared Benchee-or-fallback runner (the fallback kicks in on releases, where Benchee
+  # isn't shipped — read the medians across iterations there)
+  defp run_scenarios(scenarios, output_name) do
     if Code.ensure_loaded?(Benchee) do
       Utils.maybe_apply(Benchee, :run, [
         scenarios,
@@ -65,7 +73,7 @@ defmodule Bonfire.UI.Social.Benchmark do
           parallel: 1,
           warmup: 2,
           time: String.to_integer(System.get_env("BENCH_TIME", "5")),
-          formatters: formatters("benchmarks/output/boundarise_strategies.html")
+          formatters: formatters("benchmarks/output/#{output_name}.html")
         ]
       ])
     else
@@ -79,9 +87,6 @@ defmodule Bonfire.UI.Social.Benchmark do
         end
       end)
     end
-
-    Config.put([Bonfire.UI.Social.FeedLive, :time_limit], 7)
-    Logger.configure(level: @log_level)
   end
 
   defp boundarise_strategy_queries do
@@ -111,6 +116,174 @@ defmodule Bonfire.UI.Social.Benchmark do
         ],
         into: %{} do
       {"#{scenario_label} | #{strategy_label} | #{subject_label}", catching(fun)}
+    end
+  end
+
+  # ── custom feeds (plan: custom-feeds-perf.md › T0) ─────────────────────────
+
+  # DISABLED presets' filters, copied verbatim from their commented-out definitions in
+  # bonfire_social/runtime_config.ex — `FeedLoader.feed/2` takes filters directly, so we can
+  # measure exactly what re-enabling would ship without touching config
+  defp disabled_preset_filters do
+    %{
+      "trending(disabled)" => %Bonfire.Social.FeedFilters{
+        exclude_activity_types: [:reply],
+        sort_by: :popularity_score,
+        sort_order: :desc,
+        time_limit: 7
+      },
+      "trending_links(disabled)" => %Bonfire.Social.FeedFilters{
+        exclude_activity_types: [:reply, :boost],
+        media_types: [:link],
+        sort_by: :popularity_score,
+        sort_order: :desc,
+        time_limit: 2,
+        show_objects_only_once: false
+      }
+    }
+  end
+
+  @doc """
+  Benchmarks the custom-feed presets (discussions/media/trending) against EXISTING data —
+  read-only, safe on production (`bin/bonfire remote`, no-Benchee fallback).
+
+  Env options (in addition to `BENCH_SUBJECTS/BENCH_LIMIT/BENCH_TIME/BENCH_ITERATIONS`):
+  - `BENCH_PRESETS=local,trending_discussions` subset by (label) name
+  - `BENCH_TIME_LIMIT=0` override every scenario's time window (0 = unbounded — the variant
+    that decides whether count-sort indexes pay off, see plan T1)
+  """
+  def feed_presets do
+    Logger.configure(level: :error)
+    run_scenarios(feed_preset_queries(), "feed_presets")
+    Logger.configure(level: @log_level)
+  end
+
+  defp feed_preset_queries do
+    limit = String.to_integer(System.get_env("BENCH_LIMIT", "20"))
+
+    scenarios =
+      %{
+        # baseline for comparison
+        "local(baseline)" => :local,
+        "trending_discussions" => :trending_discussions,
+        "recent_discussions" => :recent_discussions,
+        "local_media" => :local_media
+      }
+      |> Map.merge(disabled_preset_filters())
+      |> subset_by_env("BENCH_PRESETS")
+
+    for {preset_label, preset_or_filters} <- scenarios,
+        {subject_label, subject} <- bench_subjects(),
+        into: %{} do
+      {"#{preset_label} | #{subject_label}",
+       catching(fn -> call_feed(preset_or_filters, limit: limit, current_user: subject) end)}
+    end
+  end
+
+  @doc """
+  Benchmarks each `sort_by` over the same base feed — isolates sort cost from preset filters.
+
+  Env options: `BENCH_SORTS=reply_count,popularity_score` to subset;
+  `BENCH_BASE_PRESET=local`; plus the usual `BENCH_*`.
+  """
+  def feed_sorts do
+    Logger.configure(level: :error)
+    run_scenarios(feed_sort_queries(), "feed_sorts")
+    Logger.configure(level: @log_level)
+  end
+
+  defp feed_sort_queries do
+    limit = String.to_integer(System.get_env("BENCH_LIMIT", "20"))
+    base = System.get_env("BENCH_BASE_PRESET", "local") |> String.to_existing_atom()
+
+    sorts =
+      %{
+        "chronological(baseline)" => nil,
+        "like_count" => :like_count,
+        "boost_count" => :boost_count,
+        "reply_count" => :reply_count,
+        "popularity_score" => :popularity_score
+      }
+      |> subset_by_env("BENCH_SORTS")
+
+    for {sort_label, sort_by} <- sorts,
+        {subject_label, subject} <- bench_subjects(),
+        into: %{} do
+      filters = if sort_by, do: %{sort_by: sort_by, sort_order: :desc}, else: %{}
+
+      {"sort=#{sort_label} | #{subject_label}",
+       catching(fn ->
+         Bonfire.Social.FeedLoader.feed(base, maybe_override_time_limit(filters),
+           limit: limit,
+           current_user: subject
+         )
+       end)}
+    end
+  end
+
+  @doc """
+  Prints `EXPLAIN (ANALYZE, BUFFERS)` for a preset (atom) or `%FeedFilters{}`/map of filters —
+  the before/after artifact for index work. Uses the `return: :query` seam, so it explains the
+  CORE feed query (pre-preloads). Same env options as the benchmarks apply.
+
+      Benchmark.feed_explain(:trending_discussions)
+      Benchmark.feed_explain(%{sort_by: :reply_count}, current_user: me)
+  """
+  def feed_explain(preset_or_filters \\ :local, opts \\ []) do
+    limit = String.to_integer(System.get_env("BENCH_LIMIT", "20"))
+
+    query = call_feed(preset_or_filters, Keyword.merge([limit: limit, return: :query], opts))
+
+    Bonfire.Common.Repo.checkout(
+      fn ->
+        try do
+          Bonfire.Common.Repo.query!("RESET ALL")
+          Bonfire.Common.Repo.query!("SET statement_timeout = 0")
+
+          IO.puts(
+            Bonfire.Common.Repo.explain(:all, query, analyze: true, buffers: true, timeout: :infinity)
+          )
+        after
+          Bonfire.Common.Repo.query!("RESET ALL")
+        end
+      end,
+      timeout: :infinity
+    )
+  end
+
+  # named presets + BENCH_TIME_LIMIT need the 3-arity feed (preset, extra_filters, opts)
+  defp call_feed(preset_or_filters, opts) do
+    case maybe_override_time_limit(preset_or_filters) do
+      {preset, extra_filters} -> Bonfire.Social.FeedLoader.feed(preset, extra_filters, opts)
+      other -> Bonfire.Social.FeedLoader.feed(other, opts)
+    end
+  end
+
+  defp maybe_override_time_limit(preset_or_filters) do
+    case System.get_env("BENCH_TIME_LIMIT") do
+      nil ->
+        preset_or_filters
+
+      t ->
+        t = String.to_integer(t)
+
+        case preset_or_filters do
+          %Bonfire.Social.FeedFilters{} = f -> %{f | time_limit: t}
+          %{} = f -> Map.put(f, :time_limit, t)
+          # named preset: the override rides opts-level filters instead
+          preset when is_atom(preset) -> {preset, %{time_limit: t}}
+        end
+    end
+  end
+
+  defp subset_by_env(map, env_var) do
+    case System.get_env(env_var) do
+      nil ->
+        map
+
+      list ->
+        wanted = String.split(list, ",") |> Enum.map(&String.trim/1)
+        Map.filter(map, fn {label, _} -> Enum.any?(wanted, &String.starts_with?(label, &1)) end)
     end
   end
 
