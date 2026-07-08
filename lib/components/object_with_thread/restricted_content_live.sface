@@ -2,7 +2,10 @@
   data-id="restricted_content"
   class="flex flex-col items-center w-full max-w-prose px-6 py-12 mx-auto text-center"
 >
-  <div class="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10" aria-hidden="true">
+  <div
+    class="flex items-center justify-center w-16 h-16 rounded-full bg-primary/10"
+    aria-hidden="true"
+  >
     <#Icon iconify="ph:lock-key-duotone" class="w-8 h-8 text-primary" />
   </div>
 
