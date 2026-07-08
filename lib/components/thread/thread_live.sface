@@ -78,7 +78,7 @@
               </div>
 
               {!-- nested mode stream --}
-              <div class="flex flex-col gap-0" id={"stream_#{@id}"} phx-update="stream">
+              <div class="flex flex-col gap-4" id={"stream_#{@id}"} phx-update="stream">
                 {#for {entry_id, {reply, child_replies}} <- @streams.threaded_replies}
                   <ThreadBranchLive
                     id={entry_id}
@@ -133,7 +133,7 @@
               </div>
 
               {!-- flat mode stream --}
-              <div class="flex flex-col gap-0" id={"stream_#{@id}"} phx-update="stream">
+              <div class="flex flex-col gap-4" id={"stream_#{@id}"} phx-update="stream">
                 {#for {entry_id, reply} <- @streams.replies}
                   {!-- Block entry with the flex on an inner wrapper, so the embed
                        teleport slots stack BELOW the comment (not to its right). --}
