@@ -607,6 +607,20 @@ defmodule Bonfire.UI.Social.FeedLive do
   def widgets(assigns) do
     feed_name = e(assigns, :feed_name, nil)
 
+    customize_feed_widget =
+      if e(assigns, :hide_filters, nil) != true,
+        do: [
+          {Bonfire.UI.Social.WidgetCustomizeFeedLive,
+           [
+             event_target: "##{e(assigns, :feed_component_id, nil)}",
+             feed_id: e(assigns, :feed_id, nil),
+             feed_name: feed_name,
+             feed_filters: e(assigns, :feed_filters, nil),
+             showing_within: e(assigns, :showing_within, nil)
+           ]}
+        ],
+        else: []
+
     [
       # page_header_aside: [
       #   {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: feed_name]}
@@ -618,21 +632,15 @@ defmodule Bonfire.UI.Social.FeedLive do
           ]
         ],
         users: [
-          secondary: [
-            # {Bonfire.UI.Social.WidgetGettingStartedLive, [type: Surface.LiveComponent]},
-            # {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: feed_name]},
-            # {Bonfire.UI.Social.WidgetFeedsLive, []},
-            {Bonfire.UI.Social.WidgetCustomizeFeedLive,
-             [
-               event_target: "##{e(assigns, :feed_component_id, nil)}",
-               feed_id: e(assigns, :feed_id, nil),
-               feed_name: feed_name,
-               feed_filters: e(assigns, :feed_filters, nil),
-               showing_within: e(assigns, :showing_within, nil)
-             ]},
-            {Bonfire.Tag.Web.WidgetTagsLive, []}
-            # {Bonfire.UI.Social.WidgetTrendingLinksLive, []}
-          ]
+          secondary:
+            customize_feed_widget ++
+              [
+                # {Bonfire.UI.Social.WidgetGettingStartedLive, [type: Surface.LiveComponent]},
+                # {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: feed_name]},
+                # {Bonfire.UI.Social.WidgetFeedsLive, []},
+                {Bonfire.Tag.Web.WidgetTagsLive, []}
+                # {Bonfire.UI.Social.WidgetTrendingLinksLive, []}
+              ]
         ]
       ]
     ]

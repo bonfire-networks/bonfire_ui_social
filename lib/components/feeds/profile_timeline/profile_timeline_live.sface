@@ -32,6 +32,7 @@
       selected_tab={@selected_tab}
       feed_title={@feed_title}
       loading={@loading}
+      hide_filters={@hide_filters}
       showing_within={@showing_within}
       custom_preview={@custom_preview}
     >
