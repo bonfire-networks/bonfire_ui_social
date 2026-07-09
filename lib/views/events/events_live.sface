@@ -1,132 +1,55 @@
-<section class="bonfire-wrapper p-4 gap-8 flex flex-col">
-  {!-- only categories that have events --}
-  <section
-    :if={@category_counts != %{}}
-    class="flex flex-col gap-3"
-    aria-label={l("Browse by category")}
+<section class="bonfire-wrapper flex flex-col !p-0 -mx-px">
+  {!-- category filter bar: a horizontal, scrollable row of chips --}
+  <div
+    class="flex items-center gap-2 overflow-x-auto p-4 border-b border-base-content/10"
+    role="group"
+    aria-label={l("Filter events by category")}
   >
-    <h2 class="text-lg font-bold text-base-content">{l("Browse by Category")}</h2>
+    <button
+      type="button"
+      phx-click="clear_category"
+      aria-pressed={to_string(is_nil(@selected_category))}
+      class={
+        "shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm font-medium cursor-pointer transition-colors",
+        "border-secondary bg-primary/10 text-base-content": is_nil(@selected_category),
+        "border-base-content/15 bg-base-200/40 text-base-content/70 hover:bg-base-200 hover:text-base-content":
+          not is_nil(@selected_category)
+      }
+    >
+      {l("All")}
+    </button>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2" role="group">
-      {#for category <- categories(@category_counts)}
-        <button
-          type="button"
-          phx-click="select_category"
-          phx-value-category={category}
-          aria-pressed={to_string(@selected_category == category)}
-          class={
-            "group flex items-center gap-2.5 p-2 rounded-xl border text-left cursor-pointer transition-all duration-150 ease-out",
-            "border-secondary bg-primary/10": @selected_category == category,
-            "border-base-content/10 bg-base-200/40 hover:bg-base-200 hover:border-base-content/20":
-              @selected_category != category
-          }
-        >
-          <span class={
-            "flex items-center justify-center w-9 h-9 rounded-lg shrink-0 transition-colors",
-            "bg-primary/15": @selected_category == category,
-            "bg-base-100 ring-1 ring-base-content/5 group-hover:ring-base-content/10":
-              @selected_category != category
-          }>
-            <Bonfire.UI.Social.EventCategoryIconLive category={category} class="w-[18px] h-[18px]" />
-          </span>
-          <span class="flex flex-col min-w-0 leading-tight">
-            <span class="font-medium text-sm text-base-content truncate">{EventCategories.label(category)}</span>
-            <span class="text-xs text-base-content/50">{count_label(category_count(@category_counts, category))}</span>
-          </span>
-        </button>
-      {/for}
-    </div>
-  </section>
-
-  <div class="flex flex-col gap-4 border-t border-base-content/10 pt-8">
-    <div class="flex items-center gap-2">
-      <h2 class="text-lg font-bold text-base-content">{l("Upcoming")}</h2>
-      <span
-        :if={@selected_category}
-        class="inline-flex items-center gap-1.5 badge badge-sm badge-primary"
-      >
-        <Bonfire.UI.Social.EventCategoryIconLive
-          category={@selected_category}
-          class="w-3 h-3"
-          colored={false}
-        />
-        {EventCategories.label(@selected_category)}
-      </span>
+    {#for category <- categories()}
       <button
-        :if={@selected_category}
         type="button"
-        class="btn btn-ghost btn-sm ml-auto gap-1"
-        phx-click="clear_filters"
+        phx-click="select_category"
+        phx-value-category={category}
+        aria-pressed={to_string(@selected_category == category)}
+        class={
+          "shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm font-medium cursor-pointer transition-colors",
+          "border-secondary bg-primary/10 text-base-content": @selected_category == category,
+          "border-base-content/15 bg-base-200/40 text-base-content/70 hover:bg-base-200 hover:text-base-content":
+            @selected_category != category
+        }
       >
-        <#Icon iconify="ph:x-bold" class="w-3 h-3" />{l("Clear")}
+        <Bonfire.UI.Social.EventCategoryIconLive category={category} class="w-4 h-4" colored={false} />
+        {category_label(category)}
       </button>
-    </div>
-
-    {#case filtered(@events, @selected_category)}
-      {#match []}
-        <div class="flex flex-col items-center justify-center text-center py-16 text-muted">
-          <#Icon iconify="ph:calendar-x-fill" class="w-12 h-12 mb-3 opacity-40" />
-          {#if @selected_category}
-            <p class="font-medium">{l("No %{category} events coming up", category: EventCategories.label(@selected_category))}</p>
-            <button type="button" class="btn btn-ghost btn-sm mt-3 gap-1" phx-click="clear_filters">
-              <#Icon iconify="ph:arrow-counter-clockwise" class="w-4 h-4" />{l("Show all events")}
-            </button>
-          {#else}
-            <p class="font-medium">{@feedback_title}</p>
-            <p class="text-sm text-base-content/40 max-w-xs mt-1">{@feedback_message}</p>
-          {/if}
-        </div>
-      {#match list}
-        <div class="relative flex flex-col gap-8 pl-7" role="feed" aria-label={l("Events")}>
-          {!-- vertical spine connecting every date --}
-          <div class="absolute left-[5px] top-2 bottom-2 w-px bg-base-content/20" aria-hidden="true" />
-
-          {#for {date, day_events} <- grouped(list)}
-            <section class="relative flex flex-col gap-3">
-              {!-- date marker dot on the spine --}
-              <span
-                class={
-                  "absolute top-[9px] rounded-full ring-4 ring-base-100",
-                  "-left-[28px] w-3 h-3 bg-primary": date == @today,
-                  "-left-[28px] w-3 h-3 bg-base-content/40": date != @today
-                }
-                aria-hidden="true"
-              />
-              <h3 class="flex items-baseline gap-2">
-                <span class={
-                  "text-lg font-bold tracking-tight",
-                  "text-primary": date == @today,
-                  "text-base-content": date != @today
-                }>
-                  {day_label(date)}
-                </span>
-                <span class="text-sm font-medium text-muted">{weekday(date)}</span>
-              </h3>
-
-              {#for edge <- day_events}
-                {!-- ActivityLive owns preview-on-click + permalink; compact layout via custom_preview --}
-                <Bonfire.UI.Social.ActivityLive
-                  id={Bonfire.UI.Social.ActivityLive.component_id(
-                    e(edge, :activity, :object_id, nil) || e(edge, :activity, :id, nil),
-                    "event"
-                  )}
-                  activity={activity_for_preview(edge)}
-                  custom_preview={Bonfire.UI.Social.Activity.EventPreviewLive}
-                  class="group rounded-box border border-base-content/10 bg-base-200 shadow-sm cursor-pointer hover:border-secondary hover:shadow-md transition-all duration-150 ease-out !pl-5"
-                />
-              {/for}
-            </section>
-          {/for}
-        </div>
-    {/case}
-
-    {!-- outside the case so more pages load even when the filter hides the current ones --}
-    <Bonfire.UI.Common.LoadMoreLive
-      :if={@page_info}
-      live_handler={__MODULE__}
-      page_info={@page_info}
-      context="events"
-      hide_if_no_more
-    />
+    {/for}
   </div>
+
+  {#if @feed_component_id}
+    <StatefulComponent
+      module={maybe_component(Bonfire.UI.Social.FeedLive, @__context__)}
+      id={@feed_component_id}
+      feed_id={@feed_id}
+      feed_name={:events}
+      feedback_title={@feedback_title}
+      feedback_message={@feedback_message}
+      feed={@feed}
+      page_info={@page_info}
+      loading={@loading}
+      feed_filters={Map.merge(%{feed_name: :events}, @feed_filters)}
+    />
+  {/if}
 </section>

@@ -2,67 +2,20 @@ defmodule Bonfire.UI.Social.Activity.EventActivityStreamsLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
   alias Bonfire.Common.DatesTimes
+  alias Bonfire.Social.Events
 
   prop json, :any, default: nil
   prop object_type_readable, :any, default: nil
   prop showing_within, :any, default: nil
   prop viewing_main_object, :boolean, default: nil
 
-  defp object_field(json, field) do
-    e(json, "object", field, nil) || e(json, field, nil)
-  end
-
-  @doc "Returns the URL of the first image attachment to use as the event poster, or `nil`."
-  def poster_url(json) do
-    case object_field(json, "attachment") do
-      attachments when is_list(attachments) ->
-        attachments
-        |> Enum.find(fn a ->
-          e(a, "type", nil) == "Document" and
-            String.starts_with?(to_string(e(a, "mediaType", "")), "image/")
-        end)
-        |> case do
-          nil ->
-            nil
-
-          attachment ->
-            e(attachment, "url", 0, "href", nil) || e(attachment, "url", "href", nil) ||
-              e(attachment, "url", nil)
-        end
-
-      _ ->
-        nil
-    end
-  end
-
-  @doc """
-  Parse an ISO8601 event time into the data the card needs.
-
-  Restores the event's *original* local wall-clock time (federated events carry
-  their own timezone), so a 17:00 event reads as 17:00 regardless of the viewer's
-  zone, and keeps the raw ISO string for a machine-readable `<time datetime=…>`.
-
-  Returns `%{iso: binary, local: DateTime.t(), offset: integer}` or `nil`.
-  """
-  def event_time(iso) when is_binary(iso) do
-    with {:ok, datetime, offset} <- DateTime.from_iso8601(iso) do
-      %{iso: iso, local: DateTime.add(datetime, offset, :second), offset: offset}
-    else
-      _ -> nil
-    end
-  end
-
-  def event_time(_), do: nil
-
-  @doc """
-  The end time of an event, or `nil` when there's no end or it's marked hidden
-  (`displayEndTime == "false"`).
-  """
-  def event_end_time(json) do
-    if object_field(json, "displayEndTime") != "false" do
-      event_time(object_field(json, "endTime"))
-    end
-  end
+  # AS2 parsing is owned by the `Bonfire.Social.Events` context; these thin
+  # delegates keep the template call-sites terse and the parsing single-sourced.
+  defdelegate object_field(json, field), to: Events
+  defdelegate poster_url(json), to: Events
+  defdelegate source_host(url), to: Events
+  defdelegate event_time(iso), to: Events, as: :parse_time
+  defdelegate event_end_time(json), to: Events, as: :end_time
 
   @doc """
   A concise, human-readable date/time range.
@@ -126,16 +79,4 @@ defmodule Bonfire.UI.Social.Activity.EventActivityStreamsLive do
   end
 
   def chip_parts(_), do: nil
-
-  @doc """
-  Host of the source URL, for the read-only "View on …" link (e.g. `"gancio.cisti.org"`).
-  """
-  def source_host(url) when is_binary(url) do
-    case URI.parse(url) do
-      %URI{host: host} when is_binary(host) and host != "" -> host
-      _ -> nil
-    end
-  end
-
-  def source_host(_), do: nil
 end

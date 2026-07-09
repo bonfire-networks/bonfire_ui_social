@@ -1,8 +1,8 @@
 defmodule Bonfire.UI.Social.EventsLiveTest do
-  use Bonfire.UI.Social.ConnCase, async: true
+  use Bonfire.UI.Social.ConnCase, async: false
   @moduletag :ui
 
-  # Insert an APActivity-backed Event into the user's :events feed.
+  # Insert an APActivity-backed AS2 Event into the user's :events feed.
   defp fake_event!(user, attrs) do
     start_time = attrs[:start] || DateTime.add(DateTime.utc_now(), 7, :day)
 
@@ -38,67 +38,51 @@ defmodule Bonfire.UI.Social.EventsLiveTest do
     {:ok, conn: conn(user: me, account: account), me: me, account: account}
   end
 
-  test "renders the events page hero", %{conn: conn} do
+  test "renders the events page with the category filter bar", %{conn: conn} do
     conn
     |> visit("/events")
-    |> assert_has("h1", text: "Discover Events")
+    # the always-visible category chip bar
+    |> assert_has("[aria-label='Filter events by category']")
+    |> assert_has("button", text: "All")
+    |> assert_has("button", text: "Music")
   end
 
-  test "shows the category grid only when events have categories", %{conn: conn, me: me} do
-    # no categorised events yet → grid hidden
-    conn |> visit("/events") |> refute_has("h2", text: "Browse by Category")
-
-    fake_event!(me, name: "Jazz Night", category: "MUSIC")
-    conn |> visit("/events") |> assert_has("h2", text: "Browse by Category")
-  end
-
-  test "lists an upcoming event in the agenda", %{conn: conn, me: me} do
+  test "lists an upcoming event in the feed", %{conn: conn, me: me} do
     fake_event!(me, name: "Bonfire Launch Party")
 
     conn
     |> visit("/events")
-    |> assert_has("[role=feed]", text: "Bonfire Launch Party")
+    |> wait_async()
+    |> assert_has("[data-id=feed]", text: "Bonfire Launch Party")
   end
 
-  test "filtering by category narrows the agenda", %{conn: conn, me: me} do
+  test "filtering by category narrows the feed", %{conn: conn, me: me} do
     fake_event!(me, name: "Jazz Night", category: "MUSIC")
     fake_event!(me, name: "Gallery Opening", category: "ARTS")
 
-    conn
-    |> visit("/events")
-    |> assert_has("[role=feed]", text: "Jazz Night")
-    |> assert_has("[role=feed]", text: "Gallery Opening")
-    |> click_button("Music")
-    |> assert_has("[role=feed]", text: "Jazz Night")
-    |> refute_has("[role=feed]", text: "Gallery Opening")
+    session =
+      conn
+      |> visit("/events")
+      |> wait_async()
+
+    # unfiltered: both events show
+    session
+    |> assert_has("[data-id=feed]", text: "Jazz Night")
+    |> assert_has("[data-id=feed]", text: "Gallery Opening")
+
+    # selecting Music re-scopes the feed to that category
+    session
+    |> click_button("button", "Music")
+    |> wait_async()
+    |> assert_has("[data-id=feed]", text: "Jazz Night")
+    |> refute_has("[data-id=feed]", text: "Gallery Opening")
   end
 
-  test "shows the empty state when there are no events", %{conn: conn} do
+  test "shows an empty feed when there are no events", %{conn: conn} do
     conn
     |> visit("/events")
-    |> assert_has("p", text: "No events found")
-  end
-
-  test "paginates: a 'Load more' control appends further pages", %{conn: conn, me: me} do
-    # small page size avoids seeding 50+ events to reach a 2nd page
-    Config.put([Bonfire.UI.Social.EventsLive, :per_page], 2)
-
-    # the feed pages by ULID (federation order), so the first-federated event
-    # ("Early Bird") is the one held back to page 2
-    fake_event!(me, name: "Early Bird", start: DateTime.add(DateTime.utc_now(), 3, :day))
-    fake_event!(me, name: "Second Event", start: DateTime.add(DateTime.utc_now(), 5, :day))
-    fake_event!(me, name: "Third Event", start: DateTime.add(DateTime.utc_now(), 7, :day))
-
-    session = conn |> visit("/events")
-
-    session
-    |> assert_has("[role=feed]", text: "Second Event")
-    |> assert_has("[role=feed]", text: "Third Event")
-    |> refute_has("[role=feed]", text: "Early Bird")
-
-    session
-    |> click_button("Load more")
-    |> assert_has("[role=feed]", text: "Early Bird")
-    |> assert_has("[role=feed]", text: "Third Event")
+    |> wait_async()
+    |> assert_has("[data-id=feed]")
+    |> refute_has("[data-id=feed] article[data-id=activity]")
   end
 end
