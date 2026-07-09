@@ -429,6 +429,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
       # workaround for mobilizon not supported mentions
 
+      summary_is_cw? =
+        object_type not in [Bonfire.Articles.Article, :article, "Article", "Page"]
+
       [
         # reset_smart_input: false, # avoid double-reset
         reply_to_id: reply_to_id,
@@ -442,8 +445,11 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           create_object_type: create_object_type,
           recipients_editable: false,
           cw:
-            e(reply_to, :post_content, :summary, nil) ||
-              e(activity, :object, :post_content, :summary, nil),
+            if(summary_is_cw?,
+              do:
+                e(reply_to, :post_content, :summary, nil) ||
+                  e(activity, :object, :post_content, :summary, nil)
+            ),
           inherit_sensitive:
             e(reply_to, :sensitive, :is_sensitive, nil) ||
               e(activity, :sensitive, :is_sensitive, nil) || false

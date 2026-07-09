@@ -362,6 +362,45 @@ defmodule Bonfire.UI.Social.SmartInputTest do
       assert assigns[:context_id] == id(post)
     end
 
+    test "prepare_reply_assigns does NOT inherit an article's summary as CW", %{me: me} do
+      attrs = %{
+        post_content: %{
+          name: "My article",
+          html_body: "long form article content",
+          summary: "a genuine abstract, not a content warning"
+        }
+      }
+
+      {:ok, article} =
+        Bonfire.Articles.publish(current_user: me, post_attrs: attrs, boundary: "public")
+
+      activity = %{
+        object: article,
+        replied: %{thread_id: id(article)},
+        sensitive: nil
+      }
+
+      assigns =
+        Bonfire.Social.Threads.LiveHandler.prepare_reply_assigns(
+          article,
+          activity,
+          nil,
+          %{
+            assigns: %{
+              __context__: %{current_user: me},
+              current_user: me,
+              object_type: nil,
+              object_boundary: nil,
+              published_in: nil,
+              participants: []
+            }
+          }
+        )
+
+      assert is_list(assigns)
+      assert e(assigns, :smart_input_opts, :cw, nil) == nil
+    end
+
     test "prepare_reply_assigns does NOT inherit CW when parent has none", %{me: me} do
       attrs = %{post_content: %{html_body: "post without cw"}}
       {:ok, post} = Posts.publish(current_user: me, post_attrs: attrs, boundary: "public")
