@@ -55,10 +55,10 @@
                 disabled={@total_count <= 1}
                 class="w-7 h-7 rounded-full bg-primary text-primary-content flex items-center justify-center shrink-0 disabled:opacity-30 transition-opacity cursor-pointer"
               >
-                <#Icon iconify="ph:caret-left-bold" class="w-3 h-[13px]" />
+                <#Icon iconify="ph:caret-left-bold" class="size-4" />
               </button>
               <span
-                class="flex-1 text-center type-caption font-medium uppercase tracking-[0.12em] text-muted"
+                class="flex-1 text-center type-caption uppercase tracking-[0.12em]"
                 data-id="widget_getting_started_progress"
               >
                 {l("Step %{n} of %{total}", n: @viewing_index + 1, total: @total_count)}
@@ -71,7 +71,7 @@
                 disabled={@total_count <= 1}
                 class="w-7 h-7 rounded-full bg-primary text-primary-content flex items-center justify-center shrink-0 disabled:opacity-30 transition-opacity cursor-pointer"
               >
-                <#Icon iconify="ph:caret-right-bold" class="w-3 h-[13px]" />
+                <#Icon iconify="ph:caret-right-bold" class="size-4" />
               </button>
               <button
                 type="button"
@@ -85,7 +85,7 @@
             </div>
 
             <div
-              class="flex gap-1.5 my-4"
+              class="flex my-card"
               role="progressbar"
               aria-valuemin="0"
               aria-valuemax={@total_count}
@@ -93,10 +93,10 @@
             >
               {#for {pip_step, idx} <- Enum.with_index(@steps)}
                 <span class={[
-                  "h-1 flex-1 rounded-sm transition-colors duration-300",
+                  "h-[7px] flex-1 rounded-sm transition-colors duration-300",
                   "bg-primary": pip_step.done?,
                   "bg-primary/40": idx == @viewing_index and not pip_step.done?,
-                  "bg-primary/20": idx != @viewing_index and not pip_step.done?
+                  "border border-secondary": idx != @viewing_index and not pip_step.done?
                 ]} />
               {/for}
             </div>

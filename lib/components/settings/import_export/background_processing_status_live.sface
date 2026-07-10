@@ -55,7 +55,7 @@
           phx-value-status="successful"
         >
           <div class="stat-figure text-success">
-            <#Icon iconify="ph:check-fill" class="w-6 h-6" />
+            <#Icon iconify="ph:check-bold" class="w-6 h-6" />
           </div>
           <div class="stat-title text-xs">{l("Success Rate")}</div>
           <div class="stat-value text-lg text-success">{@stats.success_rate || 0}%</div>

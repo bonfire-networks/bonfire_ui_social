@@ -21,7 +21,7 @@
         </LinkLive>
       </:action>
 
-      <ul class="flex flex-col gap-2" role="list">
+      <ul class="flex -mx-px flex-col gap-2" role="list">
         {#for fp <- discussions}
           <li class="bonfire-wrapper">
             <Bonfire.UI.Social.ActivityLive
