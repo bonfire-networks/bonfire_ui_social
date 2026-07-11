@@ -63,7 +63,7 @@
       </div>
   {/case}
 
-  <div class="flex flex-col   divide-hair divide-secondary overflow-y-auto flex-1 min-h-0 mb-6">
+  <div class="flex flex-col divide-hair divide-secondary overflow-y-auto flex-1 min-h-0">
     <section>
       <div class="">
         {#case @preset_origin_info}
@@ -493,15 +493,14 @@
         {/case}
       </div>
     </details>
-    <details class="group shrink-0 mx-2 my-2 rounded-xl bg-base-content/[0.03] overflow-hidden">
-      <summary class="flex items-center gap-2 cursor-pointer list-none px-3 py-2.5 hover:bg-base-content/[0.05]">
-        <#Icon iconify="ph:bookmark-fill" class="w-4 h-4 text-muted shrink-0" />
+    <details class="group shrink-0 mx-2 my-2 rounded-xl border-hair border-secondary overflow-hidden">
+      <summary class="flex items-center gap-2 cursor-pointer list-none px-3 py-2.5">
         <span class="flex-1 text-sm font-medium text-base-content truncate">
           {l("Save as custom feed")}
         </span>
         <#Icon
           iconify="ph:caret-down-bold"
-          class="w-4 h-4 text-base-content/50 shrink-0 transition-transform duration-150 group-open:rotate-180"
+          class="w-4 h-4 text-primary shrink-0 transition-transform duration-150 group-open:rotate-180"
         />
       </summary>
       <div class="px-3 pb-3 pt-1">
@@ -549,7 +548,7 @@
       phx-click="apply_filters"
       phx-target={@event_target}
       phx-value-filters={Bonfire.UI.Social.FeedFiltersModalContentLive.encode_filters(@pending_filters)}
-      class="btn btn-sm btn-primary min-h-11 rounded-full px-6"
+      class="btn btn-sm btn-primary rounded-full px-6"
     >
       {l("Apply filters")}
     </button>
