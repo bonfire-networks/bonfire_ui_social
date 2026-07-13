@@ -149,7 +149,7 @@
                         class="flex items-center gap-3 w-full text-error/80"
                       >
                         <#Icon iconify="ph:trash-fill" class="w-4 h-4 shrink-0" />
-                        <span class="text-sm font-medium">{l("Delete")} {@object_type_label}</span>
+                        <span class="text-sm font-medium">{l("Delete %{object_or_type}", object_or_type: @object_type_label)}</span>
                         <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
                       </button>
                     </li>
@@ -171,7 +171,7 @@
                       class="flex items-center gap-3 w-full text-error/80"
                     >
                       <#Icon iconify="ph:trash-fill" class="w-4 h-4 shrink-0" />
-                      <span class="text-sm font-medium">{l("Delete")} {@object_type_label}</span>
+                      <span class="text-sm font-medium">{l("Delete %{object_or_type}", object_or_type: @object_type_label)}</span>
                       <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
                     </button>
                   </li>
@@ -260,7 +260,7 @@
             aria-label={l("Back")}
           >
             <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
-            <span class="text-sm font-medium">{l("Delete")} {@object_type_label}</span>
+            <span class="text-sm font-medium">{l("Delete %{object_or_type}", object_or_type: @object_type_label)}</span>
           </button>
         </div>
         <div class="flex flex-col gap-4">
@@ -273,7 +273,7 @@
             class="normal-case w-full btn btn-error"
           >
             <#Icon iconify="ph:trash-fill" class="w-4 h-4" />
-            {l("Delete")} {@object_type_label}
+            {l("Delete %{object_or_type}", object_or_type: @object_type_label)}
           </button>
         </div>
       </div>

@@ -14,7 +14,6 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
       <script
         src="https://your-instance.example/js/comments_embed.js"
         data-media-uri="https://example.com/my-article"
-        data-boundary="public"
         data-sort-by="latest_reply"
         data-theme="dark"
         async
@@ -26,10 +25,6 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
   | `data-media-uri` | current page URL | URL to find or create the thread for. The canonical URI is used as the dedup key. |
   | `data-canonical-slug` | — | Ghost post slug to find/create a thread for. |
   | `data-canonical-id` | — | Ghost post ID (alternative to slug; prefixed `id:` server-side). |
-  | `data-boundary` | `"public"` | Visibility of the created thread (e.g. `public`, `local`, `nonfederated`, `discoverable`, `nonfederated:preview`). |
-  | `data-group-id` | — | Bonfire group/topic the thread should be posted under. |
-  | `data-require-topic` | — | When `"true"`, only create the thread if the canonical category or primary tag matches a Bonfire topic. |
-  | `data-creator` | script default | User ID to attribute thread creation to. |
   | `data-auth-mode` | `local` | How logged-out visitors authenticate: `local` shows Login/Register for this instance; `remote` shows a single button to the remote-interaction page so they can reply from any fediverse server (that page also offers local log in / sign up). |
   | `data-sort-by` | thread default | Initial comment sort: `latest_reply`, `reply_count`, `boost_count`, `like_count`, `popularity_score`, `newest`. |
   | `data-sort-order` | per sort type | Sort direction for `data-sort-by`: `asc` or `desc`. |
@@ -37,9 +32,14 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
   | `data-theme` | — | DaisyUI theme to apply inside the iframe (e.g. `dark`, `light`). |
   | `data-token-max-age` | `720` (hours ≈ 30 days) | JS-only: hours before the stored auth token is treated as stale and re-auth is prompted. The server still enforces a hard cap of 1 year. |
 
-  Ghost-specific usage (`data-canonical-slug`, `data-canonical-id`,
-  `data-group-id`, `data-require-topic`) is also documented in
-  `bonfire_ghost/README.md`.
+  Ghost-specific usage (`data-canonical-slug`, `data-canonical-id`) is also
+  documented in `bonfire_ghost/README.md`.
+
+  ## Who a created thread belongs to (and why you can't set it here)
+
+  This LiveView is unauthenticated and its params come from a third-party page, so it accepts nothing that chooses a created post's author, audience or destination: `data-creator`, `data-boundary`, `data-group-id`, `data-to-circles` and `data-require-topic` are parsed-and-ignored (old snippets keep working; a warning is logged). They previously let any visitor forge a post's author, place it in an arbitrary group, or publish a paid Ghost article publicly via `data-boundary=public`.
+
+  Instead a thread is attributed to the signed-in viewer, else to the instance's configured import author (`Bonfire.Ghost.auto_import_as/0`), and a Ghost article's audience is derived from its Ghost `visibility`/tiers. Set the author and destination group in the instance's Ghost settings.
   """
 
   use Bonfire.UI.Common.Web,
@@ -169,17 +169,28 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
   def load_params(%{"media_uri" => uri} = params, _url, socket) when is_binary(uri) do
     socket = assign_global(socket, :go, e(params, "embed_parent", nil) || uri)
 
+    warn_ignored_params(params)
+
     # TODO: cache result
-    with {:ok, %{id: id} = _media} <-
+    with creator when not is_nil(creator) <- embed_anchor_creator(socket),
+         {:ok, %{id: id} = _media} <-
            Bonfire.Files.Media.get_or_add_media_by_uri(
-             params["creator"] || current_user_or_id(socket),
+             creator,
              uri,
-             params["boundary"] || "public",
-             params["to_circles"],
+             "public",
+             nil,
              update_existing: false
            ) do
       load_params(%{"id" => id}, nil, socket)
     else
+      nil ->
+        error(
+          uri,
+          "No embed creator configured — set an import author in the instance's Ghost settings (or sign in) to create thread anchors from embeds"
+        )
+
+        {:noreply, assign_error(socket, l("No comments available here."))}
+
       other ->
         error(other, "Could not resolve media_uri to a thread")
         {:noreply, assign_error(socket, l("No comments available here."))}
@@ -191,21 +202,38 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
     {:noreply, assign_error(socket, l("No comments available here."))}
   end
 
+  # accepted-but-ignored, so old embed snippets keep working — see the moduledoc
+  @ignored_params ~w(creator boundary group_id to_circles require_topic)
+
+  defp warn_ignored_params(params) do
+    case Enum.filter(@ignored_params, &(not is_nil(params[&1]))) do
+      [] ->
+        :ok
+
+      ignored ->
+        warn(
+          ignored,
+          "Ignoring embed-supplied params — a thread's author and audience are decided by instance settings, not by the embedding page"
+        )
+    end
+  end
+
+  # server-decided: the signed-in viewer, else the instance's configured import author
+  defp embed_anchor_creator(socket) do
+    current_user(socket) || maybe_apply(Bonfire.Ghost, :auto_import_as, [], fallback_return: nil)
+  end
+
   defp handle_ghost_params(slug_or_id, params, _url, socket) do
     socket = assign_global(socket, :go, e(params, "embed_parent", nil))
     url = e(params, "media_uri", nil) || e(params, "embed_parent", nil)
+    warn_ignored_params(params)
 
+    # deliberately passes no opts from `params` — see the moduledoc (EmbedHelper also drops them)
     with {:ok, %{id: id}} <-
            maybe_apply(Bonfire.Ghost.EmbedHelper, :get_or_create_post_for_article, [
              slug_or_id,
              url,
-             [
-               creator: params["creator"],
-               current_user: current_user(socket),
-               boundary: params["boundary"],
-               group_id: params["group_id"],
-               require_topic: params["require_topic"] == "true"
-             ]
+             []
            ]) do
       load_params(%{"id" => id}, nil, socket)
     else
