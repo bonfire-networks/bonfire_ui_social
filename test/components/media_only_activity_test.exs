@@ -145,7 +145,9 @@ defmodule Bonfire.UI.Social.MediaOnlyActivityTest do
   describe "#2 no duplicate media skeleton for a media-only activity" do
     test "media-typed objects emit NO attachment skeleton even with cached counts" do
       id = "act-#{System.unique_integer([:positive])}"
-      Bonfire.Common.Cache.put("num_media:#{id}", [0, 0, 0, 1])
+      # async: false — Cache.put writes in a background task by default, so a
+      # read-immediately-after-write in the same test would race it
+      Bonfire.Common.Cache.put("num_media:#{id}", [0, 0, 0, 1], async: false)
 
       for type <- [Bonfire.Files.Media, :link, :article, :image, :audio, :video] do
         assert {nil, []} =
@@ -157,18 +159,22 @@ defmodule Bonfire.UI.Social.MediaOnlyActivityTest do
     test "non-media objects reuse the richer cached media skeleton layout summary" do
       id = "act-#{System.unique_integer([:positive])}"
 
-      Bonfire.Common.Cache.put("num_media:#{id}", %{
-        multimedia_count: 1,
-        image_count: 1,
-        video_count: 1,
-        gif_count: 1,
-        visual_count: 3,
-        link_count: 2,
-        visible_link_count: 1,
-        link_preview_count: 1,
-        no_cover_links?: true,
-        small_icon_links?: true
-      })
+      Bonfire.Common.Cache.put(
+        "num_media:#{id}",
+        %{
+          multimedia_count: 1,
+          image_count: 1,
+          video_count: 1,
+          gif_count: 1,
+          visual_count: 3,
+          link_count: 2,
+          visible_link_count: 1,
+          link_preview_count: 1,
+          no_cover_links?: true,
+          small_icon_links?: true
+        },
+        async: false
+      )
 
       assert {nil, [{Bonfire.UI.Social.Activity.MediaSkeletonLive, assigns}]} =
                ActivityLive.do_primary_image_and_component_maybe_attachments(id, nil, :post)
@@ -191,7 +197,7 @@ defmodule Bonfire.UI.Social.MediaOnlyActivityTest do
 
     test "non-media objects still accept the previous cached media count list" do
       id = "act-#{System.unique_integer([:positive])}"
-      Bonfire.Common.Cache.put("num_media:#{id}", [1, 2, 1, 2])
+      Bonfire.Common.Cache.put("num_media:#{id}", [1, 2, 1, 2], async: false)
 
       assert {nil, [{Bonfire.UI.Social.Activity.MediaSkeletonLive, assigns}]} =
                ActivityLive.do_primary_image_and_component_maybe_attachments(id, nil, :post)

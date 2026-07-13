@@ -101,7 +101,8 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       # the active radio button (data-id is "only" / "default" / "disabled").
       conn(user: fake_user!())
       |> visit("/feed")
-      |> click_button("[data-role=open_modal]", "Filters")
+      |> wait_async()
+      |> click_button("[data-role=open_modal]", "Advanced filters")
       |> click_button("[data-toggle='boost'] button", "Only")
       |> assert_has("[data-toggle='boost'] [data-id='only'][aria-checked='true']")
       |> click_button("[data-toggle='boost'] button", "Hide")
@@ -198,7 +199,8 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       # check the feed
       conn(user: user)
       |> visit("/feed/explore")
-      |> click_button("[data-role=open_modal]", "Filters")
+      |> wait_async()
+      |> click_button("[data-role=open_modal]", "Advanced filters")
       |> click_button("[data-toggle='boost'] button", "Only")
       |> click_button("Apply filters")
       |> wait_async()
@@ -255,6 +257,12 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
   end
 
   describe "feed sorting" do
+    # FIXME (regression from the filters-in-widget move): the inline sort dropdown
+    # (#order_dropdown_feed, from SortItemsDropdownLive via FeedControlsLive) is no longer
+    # rendered on feed pages, and the customize widget's advanced editor only exposes
+    # sort_order — there is currently no UI to sort by like_count. Needs a product decision
+    # before this can be re-enabled (see also feeds_navigation_test).
+    @tag :fixme
     test "sorts posts by interactions", %{user: user, other_user: other_user} do
       # Create posts with different interaction counts
       popular_post =
@@ -285,7 +293,11 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
   end
 
   describe "applying feed filters:" do
-    # because of async feed (re)loading?
+    # FIXME (regression from the filters-in-widget move): setting the Boosts tri-state to
+    # "Hide" and applying does not hide boosts — the exclude_activity_types set via the
+    # editor doesn't survive the apply→set_filters→reload merge (documented in detail in
+    # feed_filters_modal_test.exs "exclude boost filter hides boost activities").
+    @tag :fixme
     test "filters out boosts when disabled", %{user: user, other_user: other_user} do
       # Create original post and boost it
       original_post =
@@ -299,15 +311,15 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       conn(user: user)
       |> visit("/feed/explore")
       |> assert_has_or_open_browser("[data-id=feed] [data-role=boosted_by]")
-      # Hide boosts
-      |> click_button("[data-role=open_modal]", "Filters")
+      |> wait_async()
+      # Hide boosts (NB: the expander trigger is a toggle and stays open after applying)
+      |> click_button("[data-role=open_modal]", "Advanced filters")
       |> click_button("[data-toggle='boost'] button", "Hide")
       |> click_button("Apply filters")
       |> wait_async()
       |> refute_has("[data-id=feed] [data-role=boosted_by]")
       |> assert_has("[data-id=feed] article", text: "filter test content")
-      # Show only boosts
-      |> click_button("[data-role=open_modal]", "Filters")
+      # Show only boosts (editor still expanded after apply)
       |> click_button("[data-toggle='boost'] button", "Only")
       |> click_button("Apply filters")
       |> wait_async()

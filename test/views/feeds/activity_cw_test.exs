@@ -98,7 +98,6 @@ defmodule Bonfire.UI.Social.ActivityCW.Test do
     # CW text is displayed
     |> assert_has("[data-role=cw]", text: cw)
     # Link preview exists but is hidden behind the CW toggle
-    |> open_browser()
     |> assert_has_or_open_browser("[data-id=media_link]")
     |> assert_has("div.hidden [data-id=media_link]")
   end
@@ -113,7 +112,7 @@ defmodule Bonfire.UI.Social.ActivityCW.Test do
         boundary: "public"
       )
 
-    original_url = Bonfire.Common.URIs.canonical_url(original)
+    original_url = Bonfire.Common.URIs.canonical_url(original, preload_if_needed: true)
 
     # Create a post with CW that quotes the original (include URL in body to create quote tag)
     attrs = %{
@@ -129,7 +128,6 @@ defmodule Bonfire.UI.Social.ActivityCW.Test do
     conn
     |> visit("/feed/local")
     # CW text is displayed
-    |> open_browser()
     |> assert_has("[data-role=cw]", text: "quote cw")
     # Quoted post is hidden (inside a wrapper with hidden class)
     |> assert_has("div.hidden .quote-preview")
@@ -148,7 +146,7 @@ defmodule Bonfire.UI.Social.ActivityCW.Test do
         boundary: "public"
       )
 
-    sensitive_url = Bonfire.Common.URIs.canonical_url(sensitive_post)
+    sensitive_url = Bonfire.Common.URIs.canonical_url(sensitive_post, preload_if_needed: true)
 
     # Create a post that quotes the sensitive post (without its own CW)
     attrs = %{
@@ -160,7 +158,6 @@ defmodule Bonfire.UI.Social.ActivityCW.Test do
     conn
     |> visit("/feed/local")
     # The quoting post text is visible
-    |> open_browser()
     |> assert_has("[data-id=activity_note]", text: "look at this quote")
     # The quoted post has its own CW toggle
     |> assert_has(".quote-preview [data-role=cw]", text: "trigger warning")

@@ -163,12 +163,12 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
          %{alice: alice, account: account, total_posts: total_posts, limit: limit} do
       conn = conn(user: alice, account: account)
 
-      # Visit feed with time_limit=1 via URL param (the time range control is now inside the Filters modal, so URL param is a more stable way to set it in tests)
+      # Visit feed with time_limit=1 and non-date sorting via URL params (the time range control
+      # lives in the advanced-filters editor and the inline sort dropdown is no longer rendered
+      # on feed pages, so URL params are a more stable way to set them in tests)
       conn
-      |> visit("/feed/local?time_limit=1")
+      |> visit("/feed/local?time_limit=1&sort_by=like_count")
       |> assert_has_or_open_browser("[data-id=feed] article")
-      # Set sort to likes via the inline sort dropdown (still rendered on the page)
-      |> click_button("#order_dropdown_feed button[phx-value-sort_by='like_count']", "Most liked")
       |> wait_async()
       # Check that we only see posts from today (count should be less than total)
       # Today's post
