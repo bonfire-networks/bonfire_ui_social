@@ -575,7 +575,7 @@ defmodule Bonfire.UI.Social.ExportTest do
   defp verify_bookmarks_csv(content, expected_bookmarks) do
     # Bookmarks CSV has no headers, just URLs
     for bookmark <- expected_bookmarks do
-      bookmark_url = URIs.canonical_url(bookmark)
+      bookmark_url = URIs.canonical_url(bookmark, preload_if_needed: true)
       assert String.contains?(content, bookmark_url)
     end
   end

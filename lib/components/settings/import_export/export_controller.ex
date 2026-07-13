@@ -669,16 +669,24 @@ defmodule Bonfire.UI.Social.ExportController do
       [:with_post_content, :with_subject, :with_reply_to, :tags],
       skip_boundary_check: true
     )
+    # `created: [:peered]` so `canonical_url(record)` classifies locality without an on-demand raise
+    |> repo().maybe_preload([:peered, created: [:peered]], prune: true)
   end
 
   defp preload_assocs(records, type) when type in ["posts"] do
-    records |> repo().preload([:post_content, :peered])
+    # `created: [:peered]` so `canonical_url/1` classifies locality without an on-demand raise
+    records |> repo().preload([:post_content, :peered, created: [:peered]])
   end
 
   defp preload_assocs(records, type) when type in ["bookmarks", "likes", "boosts"] do
     records
-    # object: [:post_content, :created]])
     |> repo().preload(edge: [:object])
+    # the edge object (whose `canonical_url` we export) may be a post OR an actor — preload the
+    # locality assocs `canonical_url/1` needs, pruned per schema (mixed object types)
+    |> repo().maybe_preload(
+      [edge: [object: [:peered, character: [:peered], created: [:peered]]]],
+      prune: true
+    )
   end
 
   defp preload_assocs(records, type) when type in ["outbox"] do
@@ -710,6 +718,8 @@ defmodule Bonfire.UI.Social.ExportController do
   defp prepare_record(type, record) when type in ["silenced", "ghosted"] do
     [
       record
+      # `character: [:peered]` so `display_username(_, true)`'s locality check doesn't raise
+      |> repo().maybe_preload([subject: [character: [:peered]]], prune: true)
       |> e(:subject, nil)
       |> Bonfire.Me.Characters.display_username(true)
     ]

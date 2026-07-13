@@ -149,17 +149,7 @@
     {#if !current_user_id(@__context__)}
       <li>
         <LinkLive
-          to={maybe_apply(
-            Bonfire.UI.Me.RemoteInteractionLive,
-            :generate_url,
-            [
-              "flag",
-              l("this %{object}", object: @object_type_readable || l("object")),
-              @permalink || URIs.canonical_url(@object),
-              @__context__
-            ],
-            fallback_return: "/login"
-          )}
+          to={"#{path(@object)}/interact/flag"}
           class="flex items-center w-full gap-2 text-sm text-base-content"
         >
           <span class="truncate ellipsis">{l("Flag this %{object}", object: e(@object_type_readable, l("object")))}</span>

@@ -53,8 +53,8 @@ defmodule Bonfire.UI.Social.ExportImportBookmarksTest do
 
     # Verify exported CSV contains the expected URLs
     exported_content = conn.resp_body
-    assert String.contains?(exported_content, URIs.canonical_url(post1))
-    assert String.contains?(exported_content, URIs.canonical_url(post2))
+    assert String.contains?(exported_content, URIs.canonical_url(post1, preload_if_needed: true))
+    assert String.contains?(exported_content, URIs.canonical_url(post2, preload_if_needed: true))
 
     # Write exported CSV to file
     csv_path = "/tmp/test_exported_bookmarks.csv"
@@ -112,7 +112,7 @@ defmodule Bonfire.UI.Social.ExportImportBookmarksTest do
     csv_path = "/tmp/test_mixed_bookmarks.csv"
 
     mixed_content = """
-    #{URIs.canonical_url(post)}
+    #{URIs.canonical_url(post, preload_if_needed: true)}
     invalid_url
     not_a_url
     """
