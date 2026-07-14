@@ -950,8 +950,8 @@ defmodule Bonfire.UI.Social.Benchmark do
   end
 
   def render_feed(%{edges: feed, page_info: page_info}, opts \\ []) do
-    Process.put(:live_update_many_preload_mode, opts[:live_update_many_preload_mode])
-    Process.put(:feed_live_update_many_preload_mode, opts[:feed_live_update_many_preload_mode])
+    Process.put([:bonfire, :live_update_many_preload_mode], opts[:live_update_many_preload_mode])
+    Process.put([:bonfire, :feed_live_update_many_preload_mode], opts[:feed_live_update_many_preload_mode])
 
     html =
       Bonfire.UI.Common.Testing.Helpers.render_stateful(
