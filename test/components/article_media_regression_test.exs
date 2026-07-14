@@ -147,7 +147,10 @@ defmodule Bonfire.UI.Social.ArticleMediaRegressionTest do
       |> visit("/write")
       |> upload("Upload an attachment", file)
       # the "Set as cover" toggle rendered by UploadPreviewsLive for image uploads
-      |> click_button("[phx-click='Bonfire.UI.Common.SmartInput:toggle-cover-image']", "Set as cover")
+      |> click_button(
+        "[phx-click='Bonfire.UI.Common.SmartInput:toggle-cover-image']",
+        "Set as cover"
+      )
       # submit the composer form as an article, letting the rendered hidden inputs
       # (upload_metadata[...][primary_image], etc) flow through like a real submit
       |> PhoenixTest.unwrap(fn view ->
