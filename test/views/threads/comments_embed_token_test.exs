@@ -5,10 +5,26 @@ defmodule Bonfire.UI.Social.CommentsEmbedTokenTest do
   # see also Bonfire.UI.Me.LoginController.Test
 
   alias Bonfire.Me.Accounts
+  alias Bonfire.UI.Common.Cache.HTTPPurge.StaticGenerator, as: PurgeAdapter
+  alias Bonfire.UI.Common.MaybeStaticGeneratorPlug
+  alias Bonfire.UI.Common.StaticGenerator
   alias Bonfire.UI.Me.LivePlugs.LoadCurrentUserFromEmbedToken
 
   @external_host "https://blog.example.com"
   @media_uri "#{@external_host}/my-article/"
+
+  defp query_cache_file(path, query_string) do
+    query_hash =
+      :crypto.hash(:sha256, query_string)
+      |> Base.encode16(case: :lower)
+      |> binary_part(0, 8)
+
+    Path.join([
+      StaticGenerator.dest_path(),
+      String.trim_leading(path <> "/_qs_" <> query_hash, "/"),
+      "index.html"
+    ])
+  end
 
   defp assert_iframe_shell(html) do
     assert html =~ ~s(id="iframe-resize-hook")
@@ -117,6 +133,40 @@ defmodule Bonfire.UI.Social.CommentsEmbedTokenTest do
 
       assert html =~ ~s(src='/assets/bonfire_live.js)
       refute html =~ ~s(data-live-socket="false")
+    end
+
+    test "with a valid embed token: authenticated HTML is not written to the static cache",
+         %{user: user, post: post} do
+      Process.put(
+        [:bonfire_common, Bonfire.Common.Cache.HTTPPurge, :adapters],
+        [PurgeAdapter]
+      )
+
+      Process.put(
+        [:bonfire_ui_common, MaybeStaticGeneratorPlug, :sync_static_write],
+        true
+      )
+
+      token = LoadCurrentUserFromEmbedToken.sign(@endpoint, user.id)
+      path = "/comments/embed/#{post.id}"
+      guest_query_string = "theme=static-cache-control"
+      query_string = "bonfire_embed_token=#{token}"
+      guest_cache_file = query_cache_file(path, guest_query_string)
+      cache_file = query_cache_file(path, query_string)
+
+      on_exit(fn ->
+        File.rm_rf!(Path.dirname(guest_cache_file))
+        File.rm_rf!(Path.dirname(cache_file))
+      end)
+
+      get(conn(), path <> "?" <> guest_query_string)
+      assert File.exists?(guest_cache_file)
+
+      conn = get(conn(), path <> "?" <> query_string)
+
+      assert html_response(conn, 200) =~ ~s(src='/assets/bonfire_live.js)
+      refute File.exists?(cache_file)
+      assert get_resp_header(conn, "cache-control") == ["private, no-store"]
     end
 
     test "without a token: live socket script is disabled", %{post: post} do
