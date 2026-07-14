@@ -7,5 +7,5 @@ defmodule Bonfire.UI.Social.Activity.CWLive do
 
   prop class, :css_class,
     default:
-      "flex w-full flex-1 items-start mb-2 gap-2 p-2 bg-base-content/5 border-hair border-dashed border-secondary rounded-box"
+      "flex w-full flex-1 items-start mb-2 gap-2 p-1 pl-3 border-hair border-primary rounded-full"
 end
