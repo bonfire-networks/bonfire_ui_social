@@ -1,4 +1,4 @@
-<div data-theme={@embed_theme || Bonfire.UI.Common.ThemeHelper.current_theme(assigns)}>
+<div class="bg-base-200" data-theme={@embed_theme || Bonfire.UI.Common.ThemeHelper.current_theme(assigns)}>
   {#if @thread_id}
     {!-- Default reply slot at top: composer lands here when replying to the root post.
          For guests (no live socket), portal teleportation can't run, so render the

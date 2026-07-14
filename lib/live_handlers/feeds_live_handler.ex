@@ -2256,7 +2256,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     standard_emoji =
       standard_emoji
-      |> repo().maybe_preload([emoji: [:extra_info]], skip_boundary_check: true)
+      |> repo().maybe_preload([emoji: [:extra_info]],
+        skip_boundary_check: true,
+        prune: true
+      )
 
     list_of_emoji =
       (standard_emoji ++ custom_emoji)
