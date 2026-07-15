@@ -2,8 +2,8 @@
   {#match suggested_profiles}
     <Bonfire.UI.Common.WidgetBlockLive
       :if={current_user_id(@__context__)}
-      class="w-full pt-4 flex-auto mx-auto border-y-hair border-secondary overflow-hidden"
-      title_class="flex items-center justify-between pb-card text-xs font-normal uppercase tracking-wide text-base-content px-card"
+      class="w-full pt-4 flex-auto mx-auto border-y-hair border-secondary overflow-hidden px-card"
+      title_class="flex items-center justify-between pb-card text-xs font-normal uppercase tracking-wide text-base-content"
       widget_title={e(@widget_title, l("Who to follow"))}
       reset_cache_event="Bonfire.UI.Social.WidgetSuggestedProfilesLive:reset_suggested_profiles"
       empty={suggested_profiles == []}

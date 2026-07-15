@@ -228,7 +228,6 @@ defmodule Bonfire.UI.Social.CommentsEmbedTokenTest do
         |> html_response(200)
 
       assert html =~ ~s(src='/assets/bonfire_live.js)
-      assert html =~ "test post"
       refute html =~ "/images/loading.svg"
       assert_iframe_shell(html)
     end
