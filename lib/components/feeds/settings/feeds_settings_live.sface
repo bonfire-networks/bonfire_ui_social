@@ -13,7 +13,7 @@
       x-bind:aria-expanded="open"
       role="button"
       tabindex="0"
-      class="p-4 text-lg font-bold flex items-center gap-4 border-b border-base-content/10 cursor-pointer select-none"
+      class="p-4 text-lg font-bold flex items-center gap-4 border-b border-secondary cursor-pointer select-none"
     >
       <#Icon iconify="ph:list-bullets-fill" class="w-6 h-6 text-primary" />
       <span class="flex-1">{l("Default settings")}</span>
@@ -184,7 +184,7 @@
             {!-- TODO? Draggable handle outside Alpine component --}
             {!-- <div
                 data-sortable-handler
-                class="absolute left-0 top-0 bottom-0 w-23 flex items-center place-content-center border-r border-base-content/10"
+                class="absolute left-0 top-0 bottom-0 w-23 flex items-center place-content-center border-r border-secondary"
               >
                 <#Icon iconify="ic:baseline-drag-indicator" class="w-5 h-5" />
               </div> --}
@@ -198,7 +198,7 @@
                       <div class="font-medium text-sm">{preset[:name] || preset[:description] || preset.id}</div>
                       <div class="text-xs text-base-content">{preset[:description]}</div>
                     </div>
-                    {!-- <div class="text-xs text-base-content/50 mt-1 flex gap-2 flex-wrap">
+                    {!-- <div class="text-xs text-muted mt-1 flex gap-2 flex-wrap">
                         {#if preset[:current_user_required]}
                           <span class="badge badge-info badge-soft badge-sm">{l("Requires login")}</span>
                         {/if}

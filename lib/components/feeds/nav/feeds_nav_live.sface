@@ -24,11 +24,12 @@
           @__context__[:instance_settings] || :instance
         )}
         <details open class="details-static w-full overflow-hidden">
-          <summary class="relative font-medium uppercase pl-4 text-xs text-base-content/50 list-none after:content-none [&::-webkit-details-marker]:hidden flex">
+          <summary class="relative font-medium uppercase pl-4 text-xs text-muted list-none after:content-none [&::-webkit-details-marker]:hidden flex">
             <span class="font-medium text-muted uppercase text-xs flex-1">{l("Feeds")}</span>
             {#if !Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
               <LinkLive
                 to={~p"/settings/user/feeds"}
+                label={l("Customize feeds")}
                 class="btn btn-circle btn-outline btn-xs border-secondary"
               ><#Icon iconify="ph:gear-six-fill" class="w-4 h-4" /></LinkLive>
             {/if}
@@ -52,13 +53,14 @@
         >
           <summary
             phx-click="Bonfire.Social.Feeds:toggle_feeds_nav_visibility"
-            class="relative font-medium uppercase pl-4 text-xs text-base-content/50 list-none after:content-none [&::-webkit-details-marker]:hidden flex"
+            class="relative font-medium uppercase pl-4 text-xs text-muted list-none after:content-none [&::-webkit-details-marker]:hidden flex"
           >
             <span class="flex-1 w-full">{l("Feeds")}</span>
             {#if !Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
               <div class="normal-case font-normal absolute right-2">
                 <LinkLive
                   to={~p"/settings/user/feeds"}
+                  label={l("Customize feeds")}
                   class="z-999 tooltip-button btn btn-circle border-hair btn-outline btn-xs border-secondary"
                 ><#Icon iconify="ph:gear-six-fill" class="w-4 h-4 text-primary" /></LinkLive>
               </div>

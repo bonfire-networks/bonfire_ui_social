@@ -1,7 +1,7 @@
 <section class="bonfire-wrapper flex flex-col !p-0 -mx-px">
   {!-- category filter bar: a horizontal, scrollable row of chips --}
   <div
-    class="flex items-center gap-2 overflow-x-auto p-4 border-b border-base-content/10"
+    class="flex items-center gap-2 overflow-x-auto p-4 border-b border-secondary"
     role="group"
     aria-label={l("Filter events by category")}
   >
@@ -12,7 +12,7 @@
       class={
         "shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm font-medium cursor-pointer transition-colors",
         "border-secondary bg-primary/10 text-base-content": is_nil(@selected_category),
-        "border-base-content/15 bg-base-200/40 text-base-content/70 hover:bg-base-200 hover:text-base-content":
+        "border-secondary bg-base-200/40 text-base-content/70 hover:bg-base-200 hover:text-base-content":
           not is_nil(@selected_category)
       }
     >
@@ -28,7 +28,7 @@
         class={
           "shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm font-medium cursor-pointer transition-colors",
           "border-secondary bg-primary/10 text-base-content": @selected_category == category,
-          "border-base-content/15 bg-base-200/40 text-base-content/70 hover:bg-base-200 hover:text-base-content":
+          "border-secondary bg-base-200/40 text-base-content/70 hover:bg-base-200 hover:text-base-content":
             @selected_category != category
         }
       >

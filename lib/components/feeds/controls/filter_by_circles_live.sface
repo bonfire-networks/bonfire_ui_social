@@ -9,7 +9,7 @@
       id={@container_id}
       position="bottom-end"
       wrapper_class="flex w-full"
-      trigger_class="btn btn-circle btn-outline border-base-content/10 btn-sm"
+      trigger_class="btn btn-circle btn-outline border-secondary btn-sm"
       panel_class="divide-hair divide-secondary"
     >
       <:trigger>

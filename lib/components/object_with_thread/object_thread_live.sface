@@ -21,7 +21,7 @@
               class="flex items-center justify-center w-16 h-16 rounded-full bg-base-content/5"
               aria-hidden="true"
             >
-              <#Icon iconify="ph:eye-slash-duotone" class="w-8 h-8 text-base-content/50" />
+              <#Icon iconify="ph:eye-slash-duotone" class="w-8 h-8 text-muted" />
             </div>
             <h2 class="mt-4 text-lg font-semibold text-base-content">{l("Sorry, you cannot view this.")}</h2>
             <p class="mt-1 text-sm text-base-content/80">{l("It may have been deleted, or you may not have permission to see it.")}</p>

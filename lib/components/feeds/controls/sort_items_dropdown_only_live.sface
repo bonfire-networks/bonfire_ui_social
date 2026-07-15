@@ -64,7 +64,7 @@
       class="flex gap-3 px-2 text-base-content justify-between items-center"
     >
       {l("Most recent")}
-      <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
+      <div class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full">
         {#if e(@feed_filters, :sort_by, :date_created) == :date_created and
             e(@feed_filters, :sort_order, :desc) == :desc}
           <span class="w-[14px] h-[14px] bg-primary rounded-full" />
@@ -81,7 +81,7 @@
       class="flex gap-3 justify-between items-center px-2 text-base-content"
     >
       {l("Least recent")}
-      <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
+      <div class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full">
         {#if e(@feed_filters, :sort_by, nil) == :date_created and e(@feed_filters, :sort_order, nil) == :asc}
           <span class="w-[14px] h-[14px] bg-primary rounded-full" />
         {/if}
@@ -98,7 +98,7 @@
       class="flex justify-between items-center gap-3 px-2 text-base-content"
     >
       {l("Most replied")}
-      <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
+      <div class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full">
         {#if e(@feed_filters, :sort_by, nil) == :reply_count and e(@feed_filters, :sort_order, nil) == :desc}
           <span class="w-[14px] h-[14px] bg-primary rounded-full" />
         {/if}
@@ -114,7 +114,7 @@
       class="flex gap-3 justify-between items-center px-2 text-base-content"
     >
       {l("Least replied")}
-      <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
+      <div class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full">
         {#if e(@feed_filters, :sort_by, nil) == :reply_count and e(@feed_filters, :sort_order, nil) == :asc}
           <span class="w-[14px] h-[14px] bg-primary rounded-full" />
         {/if}
@@ -132,7 +132,7 @@
         class="flex justify-between items-center gap-3 px-2 text-base-content"
       >
         {l("Most boosted")}
-        <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
+        <div class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full">
           {#if e(@feed_filters, :sort_by, nil) == :boost_count and e(@feed_filters, :sort_order, nil) == :desc}
             <span class="w-[14px] h-[14px] bg-primary rounded-full" />
           {/if}
@@ -148,7 +148,7 @@
         class="flex justify-between items-center gap-3 px-2 text-base-content"
       >
         {l("Least boosted")}
-        <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
+        <div class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full">
           {#if e(@feed_filters, :sort_by, nil) == :boost_count and e(@feed_filters, :sort_order, nil) == :asc}
             <span class="w-[14px] h-[14px] bg-primary rounded-full" />
           {/if}
@@ -165,7 +165,7 @@
         class="flex gap-3 px-2 justify-between items-center text-base-content"
       >
         {l("Most liked")}
-        <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
+        <div class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full">
           {#if e(@feed_filters, :sort_by, nil) == :like_count and e(@feed_filters, :sort_order, nil) == :desc}
             <span class="w-[14px] h-[14px] bg-primary rounded-full" />
           {/if}
@@ -181,7 +181,7 @@
         class="flex justify-between items-center gap-3 px-2 text-base-content"
       >
         {l("Least liked")}
-        <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
+        <div class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full">
           {#if e(@feed_filters, :sort_by, nil) == :like_count and e(@feed_filters, :sort_order, nil) == :asc}
             <span class="w-[14px] h-[14px] bg-primary rounded-full" />
           {/if}

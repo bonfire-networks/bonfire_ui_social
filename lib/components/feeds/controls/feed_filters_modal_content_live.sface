@@ -2,9 +2,9 @@
   {#case @active_filters}
     {#match []}
       {#if @user_activities_excluded?}
-        <div class="flex items-start gap-2 px-4 py-2.5 border-b border-base-content/10">
+        <div class="flex items-start gap-2 px-4 py-2.5 border-b border-secondary">
           <div class="flex-1 flex flex-wrap gap-1.5">
-            <span class="inline-flex items-center gap-1 h-7 px-2.5 rounded-full bg-base-100 border border-base-content/10 text-xs text-base-content/80">
+            <span class="inline-flex items-center gap-1 h-7 px-2.5 rounded-full bg-base-100 border border-secondary text-xs text-base-content/80">
               <#Icon iconify="ph:user-minus-fill" class="size-4 text-primary" />
               {l("Hiding my activity")}
             </span>
@@ -20,16 +20,16 @@
         </div>
       {/if}
     {#match active_filters}
-      <div class="flex items-start gap-2 px-4 py-2.5 border-b border-base-content/10">
+      <div class="flex items-start gap-2 px-4 py-2.5 border-b border-secondary">
         <div class="flex-1 flex flex-wrap gap-1.5">
           {#if @user_activities_excluded?}
-            <span class="inline-flex items-center gap-1 h-7 pl-2.5 pr-1 rounded-full bg-base-100 border border-base-content/10 text-xs text-base-content/80">
+            <span class="inline-flex items-center gap-1 h-7 pl-2.5 pr-1 rounded-full bg-base-100 border border-secondary text-xs text-base-content/80">
               <#Icon iconify="ph:user-minus-fill" class="size-4 text-primary" />
               {l("Hiding my activity")}
             </span>
           {/if}
           {#for {label, chip_icon, field, key} <- active_filters}
-            <span class="inline-flex items-center gap-1 h-7 pl-2.5 pr-1 rounded-full bg-base-100 border border-base-content/10 text-xs text-base-content/80">
+            <span class="inline-flex items-center gap-1 h-7 pl-2.5 pr-1 rounded-full bg-base-100 border border-secondary text-xs text-base-content/80">
               {#case chip_icon}
                 {#match :show}
                   <#Icon iconify="ph:target-fill" class="w-3.5 h-3.5 text-primary" />
@@ -131,7 +131,7 @@
           </span>
           <#Icon
             iconify="ph:caret-down-bold"
-            class="w-4 h-4 text-base-content/50 shrink-0 transition-transform duration-150 group-open:rotate-180"
+            class="w-4 h-4 text-muted shrink-0 transition-transform duration-150 group-open:rotate-180"
           />
         </div>
       </summary>
@@ -167,7 +167,7 @@
           </span>
           <#Icon
             iconify="ph:caret-down-bold"
-            class="w-4 h-4 text-base-content/50 shrink-0 transition-transform duration-150 group-open:rotate-180"
+            class="w-4 h-4 text-muted shrink-0 transition-transform duration-150 group-open:rotate-180"
           />
         </div>
       </summary>
@@ -213,7 +213,7 @@
           </span>
           <#Icon
             iconify="ph:caret-down-bold"
-            class="w-4 h-4 text-base-content/50 shrink-0 transition-transform duration-150 group-open:rotate-180"
+            class="w-4 h-4 text-muted shrink-0 transition-transform duration-150 group-open:rotate-180"
           />
         </div>
       </summary>
@@ -292,7 +292,7 @@
             </span>
             <#Icon
               iconify="ph:caret-down-bold"
-              class="w-4 h-4 text-base-content/50 shrink-0 transition-transform duration-150 group-open:rotate-180"
+              class="w-4 h-4 text-muted shrink-0 transition-transform duration-150 group-open:rotate-180"
             />
           </div>
         </summary>
@@ -361,7 +361,7 @@
           </span>
           <#Icon
             iconify="ph:caret-down-bold"
-            class="w-4 h-4 text-base-content/50 shrink-0 transition-transform duration-150 group-open:rotate-180"
+            class="w-4 h-4 text-muted shrink-0 transition-transform duration-150 group-open:rotate-180"
           />
         </div>
       </summary>
@@ -464,7 +464,7 @@
           </span>
           <#Icon
             iconify="ph:caret-down-bold"
-            class="w-4 h-4 text-base-content/50 shrink-0 transition-transform duration-150 group-open:rotate-180"
+            class="w-4 h-4 text-muted shrink-0 transition-transform duration-150 group-open:rotate-180"
           />
         </div>
       </summary>
@@ -542,7 +542,7 @@
     </details>
   </div>
 
-  <div class="flex items-center justify-end gap-2 p-4 border-t border-base-content/10 shrink-0 bg-base-100 sticky bottom-0">
+  <div class="flex items-center justify-end gap-2 p-4 border-t border-secondary shrink-0 bg-base-100 sticky bottom-0">
     <button
       type="button"
       phx-click="apply_filters"

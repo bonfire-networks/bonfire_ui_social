@@ -29,7 +29,7 @@
       >
         {l("Threaded replies")}
         <div
-          class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full"
+          class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
           aria-hidden="true"
         >
           {#if @thread_mode == :nested}
@@ -51,7 +51,7 @@
       >
         {l("Linear replies")}
         <div
-          class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full"
+          class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
           aria-hidden="true"
         >
           {#if @thread_mode != :nested}
@@ -124,7 +124,7 @@
       >
         {if @thread_mode != :flat, do: l("Thread order"), else: l("Oldest first")}
         <div
-          class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full"
+          class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
           aria-hidden="true"
         >
           {#if (is_nil(@sort_by) or @sort_by == :latest_reply) and @sort_order != :desc}
@@ -147,7 +147,7 @@
       >
         {l("Newest first")}
         <div
-          class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full"
+          class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
           aria-hidden="true"
         >
           {#if is_nil(@sort_by) and @sort_order == :desc}
@@ -172,7 +172,7 @@
         >
           {l("Recently active")}
           <div
-            class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full"
+            class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
             aria-hidden="true"
           >
             {#if @sort_by == :latest_reply}
@@ -197,7 +197,7 @@
       >
         {l("Most replies")}
         <div
-          class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full"
+          class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
           aria-hidden="true"
         >
           {#if @sort_by == :reply_count}
@@ -222,7 +222,7 @@
         >
           {l("Most boosts")}
           <div
-            class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full"
+            class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
             aria-hidden="true"
           >
             {#if @sort_by == :boost_count}
@@ -246,7 +246,7 @@
         >
           {l("Most liked")}
           <div
-            class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full"
+            class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
             aria-hidden="true"
           >
             {#if @sort_by == :like_count}
@@ -270,7 +270,7 @@
         >
           {l("Trending")}
           <div
-            class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full"
+            class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
             aria-hidden="true"
           >
             {#if @sort_by == :popularity_score}

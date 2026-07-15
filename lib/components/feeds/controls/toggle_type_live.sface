@@ -39,7 +39,7 @@
           phx-target={@event_target}
           class={
             "relative inline-flex items-center gap-1 px-2 py-1 rounded-full cursor-pointer transition-colors duration-150 before:absolute before:inset-x-0 before:-inset-y-2 before:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
-            "text-base-content/50 hover:text-base-content/80": state != :only,
+            "text-muted hover:text-base-content/80": state != :only,
             "bg-primary text-primary-content": state == :only
           }
         >
@@ -62,7 +62,7 @@
           phx-target={@event_target}
           class={
             "relative inline-flex items-center px-2 py-1 rounded-full cursor-pointer transition-colors duration-150 before:absolute before:inset-x-0 before:-inset-y-2 before:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
-            "text-base-content/50 hover:text-base-content/80": state != :default,
+            "text-muted hover:text-base-content/80": state != :default,
             "bg-base-100 text-base-content": state == :default
           }
         >
@@ -84,7 +84,7 @@
           phx-target={@event_target}
           class={
             "relative inline-flex items-center gap-1 px-2 py-1 rounded-full cursor-pointer transition-colors duration-150 before:absolute before:inset-x-0 before:-inset-y-2 before:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
-            "text-base-content/50 hover:text-base-content/80": state != :hide,
+            "text-muted hover:text-base-content/80": state != :hide,
             "bg-base-content/75 text-base-100": state == :hide
           }
         >

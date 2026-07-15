@@ -291,7 +291,7 @@
                               {#if @cw || @showing_within == :flags ||
                                   Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                                 <div class="absolute inset-0 flex items-center cursor-pointer place-content-center justify-center z-[60]">
-                                  <button class="btn btn-sm  normal-case btn-outline border-base-content/10 btn-active">{l("Media Hidden")}</button>
+                                  <button class="btn btn-sm  normal-case btn-outline border-secondary btn-active">{l("Media Hidden")}</button>
                                 </div>
                                 <div class="absolute inset-0 backdrop-blur-sm bg-black/50 z-40 cursor-pointer rounded-md" />
                               {/if}
@@ -389,7 +389,7 @@
   {/for}
 
   {#if @showing_within in [:feed, :profile] && length(@link_list) > 1}
-    <div class="text-xs text-base-content/50 flex items-center gap-1 px-2">
+    <div class="text-xs text-muted flex items-center gap-1 px-2">
       <#Icon iconify="ph:link-simple" class="w-3 h-3" />
       <span>{length(@link_list) - 1} {l("more link(s)")}</span>
     </div>

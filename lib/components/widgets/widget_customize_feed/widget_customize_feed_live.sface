@@ -18,7 +18,7 @@
       preset_role="feed_preset"
       class="border-b-hair border-secondary"
       options_class="flex flex-col divide-hair divide-secondary"
-      card_class="relative flex flex-wrap items-start gap-x-3 gap-y-2 p-3 cursor-pointer transition-colors hover:bg-base-content/5 has-[:checked]:bg-primary/10"
+      card_class="relative flex flex-wrap items-start gap-x-3 gap-y-2 p-3 cursor-pointer transition-colors hover:bg-base-content/5 has-[:checked]:bg-primary/10 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-inset"
     />
 
     {!-- Level 2: scope modifiers (origin / time window / own activity) — dimensions the cards above

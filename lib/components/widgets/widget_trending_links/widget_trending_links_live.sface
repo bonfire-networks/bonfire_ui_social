@@ -36,7 +36,7 @@
               {/case}
 
               {!-- Engagement metrics --}
-              <div class="flex items-center mt-1.5 gap-2 text-xs text-base-content/50">
+              <div class="flex items-center mt-1.5 gap-2 text-xs text-muted">
                 <Bonfire.UI.Social.TrendingMediaActionsLive media={media} />
               </div>
             </div>
@@ -52,7 +52,7 @@
                     <LazyImage
                       parent_id={deterministic_dom_id("trending_widget_thumb", media.path)}
                       class="w-16 h-16 rounded-lg object-cover transition-all"
-                      fallback_class="w-4 h-4 text-base-content/50"
+                      fallback_class="w-4 h-4 text-muted"
                       src={preview_img}
                       media={media}
                       fallback_icon="ion:newspaper-outline"

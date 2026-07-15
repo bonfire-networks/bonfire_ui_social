@@ -9,13 +9,13 @@
     </h2>
   </div>
 {#else}
-  <div class="rounded-box border border-base-content/10 bg-base-100 overflow-hidden">
+  <div class="rounded-box border border-secondary bg-base-100 overflow-hidden">
     {!-- Poster with calendar chip + Event badge --}
     <div class="relative">
       {#case poster_url(@json)}
         {#match nil}
           <div
-            class="flex items-center justify-center h-24 bg-base-200 border-b border-base-content/10"
+            class="flex items-center justify-center h-24 bg-base-200 border-b border-secondary"
             aria-hidden="true"
           >
             <#Icon iconify="ph:calendar-blank-bold" class="w-10 h-10 text-base-content/10" />

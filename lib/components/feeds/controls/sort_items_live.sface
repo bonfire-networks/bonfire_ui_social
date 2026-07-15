@@ -70,7 +70,7 @@
       data-tip={l("Chronological")}
       class={
         "lg:tooltip lg:tooltip-bottom flex gap-2 text-muted border ",
-        "border-base-content/5 active !text-base-content/100": is_nil(e(@feed_filters, :sort_by, nil))
+        "border-secondary active !text-base-content/100": is_nil(e(@feed_filters, :sort_by, nil))
       }
     >
       <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-muted" />
@@ -88,7 +88,7 @@
       data-tip={l("Most replied")}
       class={
         "lg:tooltip lg:tooltip-bottom flex gap-2 text-muted border ",
-        "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :reply_count
+        "border-secondary active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :reply_count
       }
     >
       <#Icon iconify="ph:chat-circle-fill" class="w-5 h-5 stroke-1 fill-base-content/50" />
@@ -107,7 +107,7 @@
       data-tip={l("Most boosted")}
       class={
         "lg:tooltip lg:tooltip-bottom flex gap-2 text-muted border ",
-        "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :boost_count
+        "border-secondary active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :boost_count
       }
     >
       <#Icon iconify="ph:rocket-launch" class="w-5 h-5 stroke-1 fill-base-content/50" />
@@ -126,7 +126,7 @@
       data-tip={l("Most liked")}
       class={
         "lg:tooltip lg:tooltip-bottom flex gap-2 text-muted border ",
-        "border-base-content/5 active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :like_count
+        "border-secondary active !text-base-content/100": e(@feed_filters, :sort_by, nil) == :like_count
       }
     >
       <#Icon iconify="ph:fire-fill" class="w-5 h-5" />

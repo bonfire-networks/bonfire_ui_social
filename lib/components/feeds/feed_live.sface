@@ -41,7 +41,7 @@
       :if={!@hide_filters}
       selected_tab={@selected_tab}
       selected_name={@feed_title || @page_title}
-      class="flex items-center gap-2 w-full tabs border-b border-base-content/20"
+      class="flex items-center gap-2 w-full tabs border-b border-secondary"
       tab_class={@tab_class}
       item_class={@item_class}
       tab_primary_class={@tab_primary_class}
@@ -56,21 +56,22 @@
 
       {!-- :if={@feed_name in [nil, :my, :local, :remote, :explore] and current_user_id(@__context__)} --}
 
-      <div
+      <button
         :if={@fresh_ids != nil and MapSet.size(@fresh_ids) > 0}
+        type="button"
         id="show_fresh"
         @click="window.scrollTo({top: 0, behavior: 'smooth'})"
         phx-click={JS.show(to: ".fresh_hidden")
         |> JS.push("show_fresh", target: @myself)
         |> JS.add_class("hidden")}
-        class="flex justify-center w-full mx-auto btn btn-ghost text-primary z-50 border-0 border-b border-base-content/20 rounded-none py-6 font-light"
+        class="flex justify-center w-full mx-auto btn btn-ghost text-primary z-50 border-0 border-b border-secondary rounded-none py-6 font-light"
         phx-show={JS.remove_class("hidden")}
       >
         <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
         {lp("Show %{count} new activity", "Show %{count} new activities", MapSet.size(@fresh_ids),
           count: MapSet.size(@fresh_ids)
         )}
-      </div>
+      </button>
 
       <div
         :if={@resumed_from_marker}
@@ -247,10 +248,10 @@
                                     {/if}
                                   {/if}
 
-                                  {#if !@loading |> debug("loaad") and time_limit != 0}
-                                    {#if user_socket_connected?(@__context__) |> debug("soo")}
-                                      {#if ((debug(end_cursor, "ecc") || previous_end_cursor |> debug("pec") || final_end_cursor)
-                                         |> debug("acc") && !debug(e(@feed_filters, :sort_by, nil), "sbb")) ||
+                                  {#if !@loading and time_limit != 0}
+                                    {#if user_socket_connected?(@__context__)}
+                                      {#if ((end_cursor || previous_end_cursor || final_end_cursor) &&
+                                          !e(@feed_filters, :sort_by, nil)) ||
                                           e(@feed_filters, :sort_by, nil) == :date_created}
                                         {!-- we are sorting by date and can simply continue paginating but with no limit --}
                                         {!-- TODO: instead of switching to infinity, switch 1 level up from current limit, eg. from 1 week to 1 month --}

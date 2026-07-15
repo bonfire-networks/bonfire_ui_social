@@ -2,7 +2,7 @@
   <div class="flex items-center justify-center size-14 rounded-full bg-base-content/5 ring-1 ring-base-content/10">
     <#Icon
       iconify="ph:chat-circle-dots-fill"
-      class="size-7 text-base-content/50"
+      class="size-7 text-muted"
       aria-hidden="true"
     />
   </div>

@@ -39,7 +39,7 @@
 
       <div class="flex items-center text-sm text-muted mt-1 gap-4">
         <div class="flex items-center gap-2">
-          <#Icon iconify="ph:chat-circle-fill" class="w-5 h-5 text-base-content/50" />
+          <#Icon iconify="ph:chat-circle-fill" class="w-5 h-5 text-muted" />
           <div class="text-sm">
             {@reply_count}
           </div>

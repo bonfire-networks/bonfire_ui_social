@@ -4,7 +4,7 @@
   class={
     "reply thread-level-#{@thread_level} flex relative",
     "": @thread_level == 1,
-    "border-b border-base-content/10": @thread_mode == :flat
+    "border-b border-secondary": @thread_mode == :flat
   }
 >
   <div class="relative flex-1 w-full">

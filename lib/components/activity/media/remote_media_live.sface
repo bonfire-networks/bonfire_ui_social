@@ -97,7 +97,7 @@
                         <div
                           data-role="media-fallback"
                           style="display: none;"
-                          class="relative aspect-video rounded-box overflow-hidden border border-base-content/10"
+                          class="relative aspect-video rounded-box overflow-hidden border border-secondary"
                         >
                           {#case MediaLive.preview_img(@media)}
                             {#match poster when is_binary(poster)}
@@ -170,10 +170,10 @@
                       <div
                         data-role="media-fallback"
                         style="display: none;"
-                        class="flex items-center gap-3 p-3 rounded-box border border-base-content/10 bg-base-200"
+                        class="flex items-center gap-3 p-3 rounded-box border border-secondary bg-base-200"
                       >
                         <div class="flex-shrink-0">
-                          <#Icon iconify="heroicons:musical-note" class="w-10 h-10 text-base-content/50" />
+                          <#Icon iconify="heroicons:musical-note" class="w-10 h-10 text-muted" />
                         </div>
                         <div class="flex-1 min-w-0">
                           <p class="text-sm text-muted">{l("This audio cannot be previewed")}</p>
@@ -191,7 +191,7 @@
                     </div>
                   {#elseif MediaLive.preview_img(@media)}
                     {!-- Handle media with preview images (like video.movie, video.other, etc.) --}
-                    <div class="rounded-box border border-base-content/10 overflow-hidden">
+                    <div class="rounded-box border border-secondary overflow-hidden">
                       {#case MediaLive.extract_oembed_url(e(@media, :metadata, "oembed", "html", nil)) ||
                           e(@media, :metadata, "facebook", "video", nil) ||
                           e(@media, :metadata, "twitter", "player", nil)}

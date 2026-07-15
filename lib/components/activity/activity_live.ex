@@ -818,7 +818,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       aria-label="user activity"
       tabIndex="0"
       class={[
-        "activity relative flex flex-col gap-3 touch-pan-y #{@class}",
+        "activity focus-ring relative flex flex-col gap-3 touch-pan-y #{@class}",
         "cursor-pointer":
           @showing_within not in [:thread, :thread_embed, :smart_input, :widget] &&
             (!@activity_inception || @showing_within == :quote_preview),

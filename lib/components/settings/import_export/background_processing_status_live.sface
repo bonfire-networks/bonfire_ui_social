@@ -2,7 +2,7 @@
   <div :if={@stats != %{}} class="mb-6">
     {!-- Overview Stats Grid with clickable filters --}
     <div class="flex flex-col gap-2">
-      <div class="stats bg-base-200 border-base-content/10 border w-full">
+      <div class="stats bg-base-200 border-secondary border w-full">
         {!-- Total Progress --}
         <div class="stat">
           <div class="stat-figure text-primary">
@@ -46,7 +46,7 @@
           <div class="stat-desc">{l("Running & queued")}</div>
         </div>
       </div>
-      <div class="stats bg-base-200 border-base-content/10 border w-full">
+      <div class="stats bg-base-200 border-secondary border w-full">
         {!-- Success Rate (clickable) --}
         <div
           class="stat cursor-pointer hover:bg-base-300/50"
@@ -84,7 +84,7 @@
     {!-- Operation Type Breakdown (clickable) --}
     <div :if={@stats.by_operation} class="my-6">
       {!-- <h3 class="text-sm font-medium text-muted mb-3">{l("Type")}</h3> --}
-      <div class="stats bg-base-200 border-base-content/10 border w-full">
+      <div class="stats bg-base-200 border-secondary border w-full">
         <div
           :for={{op_code, operation, count} <- @stats.by_operation}
           class={"stat cursor-pointer hover:bg-base-300/50 " <> if(count == 0, do: "opacity-70", else: "")}
@@ -139,7 +139,7 @@
       <button
         phx-target={@myself}
         phx-click="clear_filters"
-        class="btn btn-sm btn-outline border-base-content/30"
+        class="btn btn-sm btn-outline border-secondary"
       >{l("Clear all")}</button>
     </div>
   </div>
@@ -189,7 +189,7 @@
       {!-- Job List --}
       <div
         :for={job <- @jobs}
-        class={"card bg-base-100 border mb-2 border-base-content/10 shadow-sm " <> state_border_class(job.state)}
+        class={"card bg-base-100 border mb-2 border-secondary shadow-sm " <> state_border_class(job.state)}
         title={"Job ##{job.id}"}
       >
         <div class="p-4 flex items-start gap-3">
@@ -269,7 +269,7 @@
                 <div class={"text-xs font-medium " <> elem(format_state(job.state), 1)}>
                   {elem(format_state(job.state), 0)}
                 </div>
-                <div class="text-xs text-base-content/50 mt-0.5">
+                <div class="text-xs text-muted mt-0.5">
                   <time datetime={DatesTimes.format(job.inserted_at)}>{DatesTimes.date_from_now(job.inserted_at)}</time>
                 </div>
               </div>
@@ -289,7 +289,7 @@
             </div>
 
             {!-- Retry indicator --}
-            <p :if={job.attempt > 1} class="text-xs text-base-content/50 mt-2">
+            <p :if={job.attempt > 1} class="text-xs text-muted mt-2">
               {l("Attempt %{current} of %{max}", current: job.attempt, max: job.max_attempts)}
             </p>
 

@@ -32,7 +32,7 @@
   id="time_control_dropdown"
   position="bottom"
   wrapper_class="flex"
-  trigger_class="btn-outline rounded-full btn w-full btn-sm border-base-content/10 capitalize"
+  trigger_class="btn-outline rounded-full btn w-full btn-sm border-secondary capitalize"
   panel_class="!pt-0"
 >
   <:trigger>
@@ -56,7 +56,7 @@
         class="flex gap-3 px-2 text-base-content justify-between items-center"
       >
         {label}
-        <div class="w-5 h-5 flex items-center justify-center border border-base-content/10 rounded-full">
+        <div class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full">
           <span :if={@current_value == days} class="w-[14px] h-[14px] bg-primary rounded-full" />
         </div>
       </a>

@@ -144,7 +144,7 @@
                   </LinkLive>
               {/case}
 
-              <div :if={not step.done?} class="flex items-center justify-end text-xs text-base-content/50 pt-1">
+              <div :if={not step.done?} class="flex items-center justify-end text-xs text-muted pt-1">
                 <button
                   type="button"
                   data-id="widget_getting_started_mark_done"

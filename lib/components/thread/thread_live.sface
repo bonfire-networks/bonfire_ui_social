@@ -180,7 +180,7 @@
             <div class="flex flex-col items-center w-full place-content-center">
               {#if @loading && user_socket_connected?(@__context__)}
                 <div data-role="loading" class="flex items-center mt-8 place-content-center">
-                  <span class="loading loading-spinner loading-md text-base-content/50" />
+                  <span class="loading loading-spinner loading-md text-muted" />
                   <span class="sr-only">{l("Loading…")}</span>
                 </div>
               {#else}

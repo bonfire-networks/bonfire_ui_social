@@ -9,7 +9,7 @@
   </button>
 
   <div id="save_feed_preset_form" class="hidden">
-    <div class="border-t border-base-content/10 mt-3 pt-3">
+    <div class="border-t border-secondary mt-3 pt-3">
       <p class="text-sm text-muted mb-3">
         {l("Save this feed configuration as a preset to access it anytime from your feed navbar.")}
       </p>
