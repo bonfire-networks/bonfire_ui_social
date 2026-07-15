@@ -1,10 +1,6 @@
 <div data-id="thread_empty" class="flex flex-col items-center text-center py-10 px-4">
   <div class="flex items-center justify-center size-14 rounded-full bg-base-content/5 ring-1 ring-base-content/10">
-    <#Icon
-      iconify="ph:chat-circle-dots-fill"
-      class="size-7 text-muted"
-      aria-hidden="true"
-    />
+    <#Icon iconify="ph:chat-circle-dots-fill" class="size-7 text-muted" aria-hidden="true" />
   </div>
   {#case @showing_within}
     {#match :thread_embed}

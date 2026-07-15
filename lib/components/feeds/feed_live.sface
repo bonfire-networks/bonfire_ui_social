@@ -251,7 +251,7 @@
                                   {#if !@loading and time_limit != 0}
                                     {#if user_socket_connected?(@__context__)}
                                       {#if ((end_cursor || previous_end_cursor || final_end_cursor) &&
-                                          !e(@feed_filters, :sort_by, nil)) ||
+                                           !e(@feed_filters, :sort_by, nil)) ||
                                           e(@feed_filters, :sort_by, nil) == :date_created}
                                         {!-- we are sorting by date and can simply continue paginating but with no limit --}
                                         {!-- TODO: instead of switching to infinity, switch 1 level up from current limit, eg. from 1 week to 1 month --}
