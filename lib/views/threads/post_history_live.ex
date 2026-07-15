@@ -9,7 +9,7 @@ defmodule Bonfire.UI.Social.PostHistoryLive do
     {:ok,
      socket
      |> assign(
-       page_title: l("Post history"),
+       page_title: l("Version history"),
        page: "history",
        activity: nil,
        post: nil,
