@@ -53,10 +53,12 @@
                     <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-base-content/30 ml-auto" />
                   </button>
                 </li>
-              {#elseif Bonfire.Social.PostContents.versioning_enabled?(@__context__)}
+              {/if}
+
+              {#if Bonfire.Social.PostContents.versioning_enabled?(@__context__)}
                 <li>
                   <a
-                    href={"/post/#{id(@object)}/history/"}
+                    href={"/discussion/#{id(@object)}/history/"}
                     target="_top"
                     class="flex items-center gap-3 w-full text-base-content"
                   >

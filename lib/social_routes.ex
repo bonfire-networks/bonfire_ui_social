@@ -19,13 +19,14 @@ defmodule Bonfire.UI.Social.Routes do
 
         live("/bookmarks", FeedsLive, :bookmarks, as: :bookmarks)
 
+        live("/discussion/:id/history", PostHistoryLive)
+        live("/post/:id/history", PostHistoryLive)
+
         live("/discussion/:id", DiscussionLive, as: Needle.Pointer)
         live("/discussion/as/:id", DiscussionLive, as: Bonfire.Data.Social.APActivity)
         live("/discussion/:type/:id", DiscussionLive, as: Needle.Pointer)
         live("/discussion/:id/reply/:reply_id", DiscussionLive, as: Needle.Pointer)
         live("/discussion/:id/reply/:level/:reply_id", DiscussionLive, as: Needle.Pointer)
-
-        live("/post/:id/history", PostHistoryLive)
 
         live("/discuss/:id", DiscussionLive, as: Bonfire.Data.Social.PostContent)
       end
