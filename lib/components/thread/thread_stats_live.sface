@@ -1,6 +1,6 @@
 <div>
   <div
-    class="relative feed_control_wrapper bg-base-300 rounded-field border-hair border-secondary border w-[calc(100%+2px)] max-w-[calc(100%+2px)] p-1 -my-[0.5px]"
+    class="relative feed_control_wrapper bg-base-200 rounded-field border-hair border-secondary border w-[calc(100%)] max-w-[calc(100px)] p-1 -my-[0.5px]"
     role="region"
     aria-label={l("Thread stats and actions")}
   >
