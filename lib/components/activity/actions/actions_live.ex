@@ -35,6 +35,11 @@ defmodule Bonfire.UI.Social.Activity.ActionsLive do
   prop my_boost, :any, default: nil
   prop my_like, :any, default: nil
   prop my_bookmark, :any, default: nil
+  # counts assigned by `update_many` batch preloads (when activity counts are enabled)
+  prop boost_count, :any, default: nil
+  prop like_count, :any, default: nil
+  # the [:ui, :show_activity_counts] setting resolved once per `update_many` batch (nil = children look it up themselves)
+  prop show_counts, :any, default: nil
 
   def update_many(assigns_sockets) do
     assigns_sockets

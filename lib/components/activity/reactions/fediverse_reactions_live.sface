@@ -1,5 +1,5 @@
 <div
-  :if={(@boost_count || 0) > 0}
+  :if={(@boost_count || 0) > 0 or (@reply_count || 0) > 0}
   id={deterministic_dom_id(__MODULE__, id(@object), "fediverse_reactions", @parent_id)}
   data-role="fediverse_reactions"
   role="region"

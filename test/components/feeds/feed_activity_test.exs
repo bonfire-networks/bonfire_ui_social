@@ -20,56 +20,52 @@ defmodule Bonfire.UI.Social.Feeds.FeedActivityTest do
     account2 = fake_account!()
     bob = fake_user!(account2)
 
-    if Bonfire.Common.Settings.get([:ui, :show_activity_counts], nil,
-         current_user: bob,
-         current_account: account2
-       ) do
-      carl = fake_user!(account2)
-      demetrius = fake_user!(account)
-      eve = fake_user!(account)
-      # bob follows alice
-      Follows.follow(bob, alice)
+    bob =
+      Bonfire.Common.Utils.current_user(
+        Bonfire.Common.Settings.put([:ui, :show_activity_counts], true, current_user: bob)
+      )
 
-      attrs = %{
-        post_content: %{summary: "summary", html_body: "first post"}
-      }
+    carl = fake_user!(account2)
+    demetrius = fake_user!(account)
+    eve = fake_user!(account)
+    # bob follows alice
+    Follows.follow(bob, alice)
 
-      assert {:ok, post} =
-               Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+    attrs = %{
+      post_content: %{summary: "summary", html_body: "first post"}
+    }
 
-      # Reply to the original post
-      attrs_reply = %{
-        post_content: %{summary: "summary", html_body: "reply to post"},
-        reply_to_id: post.id
-      }
+    assert {:ok, post} =
+             Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
 
-      assert {:ok, post_reply} =
-               Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
+    # Reply to the original post
+    attrs_reply = %{
+      post_content: %{summary: "summary", html_body: "reply to post"},
+      reply_to_id: post.id
+    }
 
-      assert {:ok, post_reply} =
-               Posts.publish(current_user: carl, post_attrs: attrs_reply, boundary: "public")
+    assert {:ok, post_reply} =
+             Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
 
-      assert {:ok, post_reply} =
-               Posts.publish(current_user: demetrius, post_attrs: attrs_reply, boundary: "public")
+    assert {:ok, post_reply} =
+             Posts.publish(current_user: carl, post_attrs: attrs_reply, boundary: "public")
 
-      assert {:ok, post_reply} =
-               Posts.publish(current_user: eve, post_attrs: attrs_reply, boundary: "public")
+    assert {:ok, post_reply} =
+             Posts.publish(current_user: demetrius, post_attrs: attrs_reply, boundary: "public")
 
-      feed = Bonfire.Social.FeedActivities.my_feed(bob)
-      # |> IO.inspect
-      fp = feed.edges |> List.last()
+    assert {:ok, post_reply} =
+             Posts.publish(current_user: eve, post_attrs: attrs_reply, boundary: "public")
 
-      assert doc =
-               render_stateful(Bonfire.UI.Social.ActivityLive, %{
-                 id: "activity",
-                 activity: fp.activity
-               })
+    # the main object of a thread should show the total reply count in its actions
+    conn(user: bob, account: account2)
+    |> visit("/post/#{post.id}")
+    |> assert_has("[data-role=reply_count]", text: "4")
 
-      assert doc
-             |> Floki.parse_fragment()
-             |> elem(1)
-             |> Floki.text() =~ "Reply (4)"
-    end
+    # while a user who kept the default (counts off) should not see it
+    conn(user: carl, account: account2)
+    |> visit("/post/#{post.id}")
+    |> assert_has("[data-id=action_reply]")
+    |> refute_has("[data-role=reply_count]")
   end
 
   test "As a user, when I create a new post, I want to see my generated avatar image in the activity subject" do

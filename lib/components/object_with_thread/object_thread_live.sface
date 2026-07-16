@@ -59,7 +59,8 @@
           :if={@thread_id && !@object_not_permitted}
           module={maybe_component(Bonfire.UI.Social.Activity.FediverseReactionsLive, @__context__)}
           object={@object}
-          reply_count={length(e(@replies, []))}
+          reply_count={e(@activity, :replied, :total_replies_count, nil) ||
+            e(@object, :replied, :total_replies_count, nil) || length(e(@replies, []))}
           boosters={@root_boosters}
           boost_count={@root_boost_count}
         />

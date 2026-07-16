@@ -82,7 +82,8 @@
           creator={@creator}
           permalink={@permalink}
           thread_mode={@thread_mode}
-          reply_count={if @showing_within == :thread and @thread_mode != :flat,
+          reply_count={if @showing_within == :thread and @thread_mode != :flat and
+              !@viewing_main_object,
             do:
               e(@activity, :replied, :direct_replies_count, nil) ||
                 e(@object, :replied, :direct_replies_count, 0),
@@ -92,6 +93,7 @@
           viewing_main_object={@viewing_main_object}
           activity_component_id={@activity_component_id}
           event_target={@myself}
+          show_counts={@show_counts}
           class="!flex btn lg:tooltip lg:tooltip-top btn-sm btn-ghost btn-circle group hover:bg-primary/10 transition-transform duration-150 ease-out hover:scale-105 active:scale-95 hover:-translate-y-0.5"
         />
 
@@ -110,12 +112,14 @@
             object_boundary={@object_boundary}
             showing_within={@showing_within}
             my_boost={@my_boost}
-            boost_count={e(
-              the_activity(@activity, @object),
-              :boost_count,
-              :object_count,
-              nil
-            )}
+            show_counts={@show_counts}
+            boost_count={@boost_count ||
+              e(
+                the_activity(@activity, @object),
+                :boost_count,
+                :object_count,
+                nil
+              )}
           />
 
           <StatelessComponent
@@ -127,12 +131,14 @@
             creator={@creator}
             object_boundary={@object_boundary}
             my_like={@my_like}
-            like_count={e(
-              the_activity(@activity, @object),
-              :like_count,
-              :object_count,
-              nil
-            )}
+            show_counts={@show_counts}
+            like_count={@like_count ||
+              e(
+                the_activity(@activity, @object),
+                :like_count,
+                :object_count,
+                nil
+              )}
           />
 
           <StatelessComponent
@@ -184,12 +190,13 @@
             object_type={@object_type}
             object_boundary={@object_boundary}
             showing_within={@showing_within}
-            boost_count={e(
-              Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object),
-              :boost_count,
-              :object_count,
-              nil
-            )}
+            boost_count={@boost_count ||
+              e(
+                Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object),
+                :boost_count,
+                :object_count,
+                nil
+              )}
           />
 
           <StatefulComponent
@@ -202,12 +209,13 @@
             object_id={id(@object)}
             creator={@creator}
             object_boundary={@object_boundary}
-            like_count={e(
-              Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object),
-              :like_count,
-              :object_count,
-              nil
-            )}
+            like_count={@like_count ||
+              e(
+                Bonfire.UI.Social.Activity.ActionsLive.the_activity(@activity, @object),
+                :like_count,
+                :object_count,
+                nil
+              )}
           />
 
           <StatefulComponent

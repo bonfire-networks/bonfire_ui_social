@@ -1979,40 +1979,53 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # |> debug("opts_for_update_many_async")
 
       # |> debug("ccccccc")
-      batch_update_many_async(
-        current_user,
-        assigns_sockets,
-        if(opts[:showing_within] != :messages,
-          do: [
-            # NOTE: boundary verb preloading skipped for feed performance
-            Utils.maybe_apply(
-              Bonfire.Social.Boosts.LiveHandler,
-              :update_many_opts,
-              [opts]
-            )
-          ],
-          else: []
-        ) ++
-          [
-            Utils.maybe_apply(
-              Bonfire.Social.Likes.LiveHandler,
-              :update_many_opts,
-              [opts]
-            ),
-            if(
-              module_enabled?(Bonfire.UI.Reactions.BookmarkActionLive,
-                current_user: current_user
+      result =
+        batch_update_many_async(
+          current_user,
+          assigns_sockets,
+          if(opts[:showing_within] != :messages,
+            do: [
+              # NOTE: boundary verb preloading skipped for feed performance
+              Utils.maybe_apply(
+                Bonfire.Social.Boosts.LiveHandler,
+                :update_many_opts,
+                [opts]
+              )
+            ],
+            else: []
+          ) ++
+            [
+              Utils.maybe_apply(
+                Bonfire.Social.Likes.LiveHandler,
+                :update_many_opts,
+                [opts]
               ),
-              do:
-                Utils.maybe_apply(
-                  Bonfire.Social.Bookmarks.LiveHandler,
-                  :update_many_opts,
-                  [opts]
-                )
-            )
-          ],
-        opts
-      ) || assigns_sockets
+              if(
+                module_enabled?(Bonfire.UI.Reactions.BookmarkActionLive,
+                  current_user: current_user
+                ),
+                do:
+                  Utils.maybe_apply(
+                    Bonfire.Social.Bookmarks.LiveHandler,
+                    :update_many_opts,
+                    [opts]
+                  )
+              )
+            ],
+          opts
+        ) || assigns_sockets
+
+      # resolve the counts-visibility setting once per batch (instead of once per count badge
+      # per render) and assign it synchronously so the first render already has it
+      show_counts? =
+        !!Bonfire.Common.Settings.get([:ui, :show_activity_counts], false,
+          current_user: current_user
+        )
+
+      Enum.map(result, fn
+        {assigns, socket} -> {Map.put(assigns, :show_counts, show_counts?), socket}
+        socket -> Phoenix.Component.assign(socket, :show_counts, show_counts?)
+      end)
 
       # |> debug
     else
