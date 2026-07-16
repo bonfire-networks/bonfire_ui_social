@@ -1,5 +1,6 @@
 defmodule Bonfire.UI.Social.ExportImportBoostsTest do
-  use Bonfire.UI.Social.ConnCase, async: System.get_env("TEST_UI_ASYNC") != "no"
+  # async: false — see export_test.exs: export preloads race under the concurrent ui battery
+  use Bonfire.UI.Social.ConnCase, async: false
 
   alias Bonfire.Common.URIs
   alias Bonfire.Social.Import
