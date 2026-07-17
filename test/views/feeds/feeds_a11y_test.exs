@@ -60,6 +60,10 @@ defmodule Bonfire.UI.Social.Feeds.A11y.Test do
     alice: alice,
     me: me
   } do
+    # load the viewer's own reaction state (`my_boost`) inline so the trigger renders the
+    # boosted accessible name synchronously (otherwise it loads async and the assert races)
+    Process.put([:bonfire, :feed_live_update_many_preload_mode], :inline)
+
     {:ok, post} =
       Posts.publish(
         current_user: alice,

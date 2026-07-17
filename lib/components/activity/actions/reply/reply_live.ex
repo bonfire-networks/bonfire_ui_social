@@ -5,6 +5,7 @@ defmodule Bonfire.UI.Social.Activity.ReplyLive do
   prop object_type, :any, default: nil
   prop permalink, :string, default: nil
   prop reply_count, :any, default: nil
+
   # nil = look up the setting; a boolean skips the per-render settings lookup (see `show_activity_counts?/2`)
   prop show_counts, :any, default: nil
   prop showing_within, :atom, default: nil

@@ -13,7 +13,10 @@ defmodule Bonfire.UI.Social.LoadObjectTest do
       module, not on `{:error, _}`.
   """
 
-  use Bonfire.UI.Social.ConnCase, async: System.get_env("TEST_UI_ASYNC") != "no"
+  # async: false — Media-rooted-thread render preloads the actor's `:peered` locality; under the
+  # concurrent ui battery that preload races (shared-cache/connection churn), tripping
+  # `AdapterUtils.maybe_preload_peered/2`'s guard. Passes 8/8 in isolation; run serially.
+  use Bonfire.UI.Social.ConnCase, async: false
   @moduletag :ui
 
   alias Bonfire.Posts

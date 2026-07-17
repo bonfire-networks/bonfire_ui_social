@@ -6,8 +6,8 @@ defmodule Bonfire.Social.Threads.RepliesTest do
   alias Bonfire.Social.Likes
   alias Bonfire.Social.Graph.Follows
   alias Bonfire.Posts
+  alias Bonfire.Common.Settings
 
-  # when we enable counts
   test "As a user I want to see the activity total replies" do
     # Create alice user
     account = fake_account!()
@@ -31,11 +31,19 @@ defmodule Bonfire.Social.Threads.RepliesTest do
     assert {:ok, post_reply} =
              Posts.publish(current_user: bob, post_attrs: attrs_reply, boundary: "public")
 
+    # the reply-action count (`data-role=reply_count`) is gated behind this setting (off by
+    # default); enable it for the viewer so the count renders. (`data-id=reply_count` is a
+    # different element — the fediverse-reactions summary — which only shows once boosted.)
+    alice =
+      current_user(
+        Settings.put([:ui, :show_activity_counts], true, current_user: alice, scope: :user)
+      )
+
     conn = conn(user: alice, account: account)
 
     conn
     |> visit("/post/#{op.id}")
     # |> PhoenixTest.open_browser()
-    |> assert_has_or_open_browser("[data-id=reply_count]", text: "1")
+    |> assert_has_or_open_browser("[data-role=reply_count]", text: "1")
   end
 end

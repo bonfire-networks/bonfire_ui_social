@@ -1,5 +1,9 @@
 defmodule Bonfire.UI.Social.ExportTest do
-  use Bonfire.UI.Social.ConnCase, async: System.get_env("TEST_UI_ASYNC") != "no"
+  # async: false — the export path preloads locality assocs (`:peered`/`created:[:peered]`) across
+  # many mixed-type records; under the concurrent ui battery those preloads intermittently race
+  # (a concurrent test's shared-cache/connection churn leaves an assoc NotLoaded), tripping
+  # `canonical_url`'s preload-at-source guard. Passes in isolation; run serially to avoid the flake.
+  use Bonfire.UI.Social.ConnCase, async: false
   import Bonfire.Common.Simulation
   import Bonfire.Files.Simulation
   alias Bonfire.Social.Graph.Follows

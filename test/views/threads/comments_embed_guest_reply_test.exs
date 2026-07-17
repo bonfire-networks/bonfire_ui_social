@@ -53,8 +53,10 @@ defmodule Bonfire.UI.Social.CommentsEmbedGuestReplyTest do
       # Initially the guest composer falls back to the thread root.
       assert assigns(view).reply_to_id == nil
 
-      root_url = URIs.canonical_url(root)
-      reply_url = URIs.canonical_url(reply)
+      # `root`/`reply` are fresh `Posts.publish` results without `:peered`; this test only needs
+      # their canonical URLs as expected values, so opt into the lazy preload (a legit lazy caller)
+      root_url = URIs.canonical_url(root, preload_if_needed: true)
+      reply_url = URIs.canonical_url(reply, preload_if_needed: true)
       refute root_url == reply_url
 
       html = render(view)

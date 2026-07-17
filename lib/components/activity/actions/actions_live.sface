@@ -83,11 +83,11 @@
           permalink={@permalink}
           thread_mode={@thread_mode}
           reply_count={if @showing_within == :thread and @thread_mode != :flat and
-              !@viewing_main_object,
-            do:
-              e(@activity, :replied, :direct_replies_count, nil) ||
-                e(@object, :replied, :direct_replies_count, 0),
-            else: @reply_count}
+               !@viewing_main_object,
+             do:
+               e(@activity, :replied, :direct_replies_count, nil) ||
+                 e(@object, :replied, :direct_replies_count, 0),
+             else: @reply_count}
           showing_within={@showing_within}
           hide_reply={@hide_reply}
           viewing_main_object={@viewing_main_object}
