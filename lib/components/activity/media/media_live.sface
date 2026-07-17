@@ -164,7 +164,7 @@
                                     to: "#" <> deterministic_dom_id("hide-sensitive-content", id(m), "media", @parent_id),
                                     transition: "fade-in"
                                   )}
-                                  class="btn z-50 btn-secondary btn-soft btn-sm"
+                                  class="btn z-50 btn-primary btn-sm"
                                 >
                                   {l("Sensitive content")}
                                 </button>
