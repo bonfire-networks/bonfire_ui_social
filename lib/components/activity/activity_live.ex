@@ -962,8 +962,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
           {!-- "Published in <group>" as a standalone top-line, rendered once per
                activity card (not per subject component, so group boosts don't double it). --}
           <Bonfire.UI.Social.Activity.PublishedInLive
-            :if={@published_in && id(@published_in) != @feed_id && @showing_within != :topic &&
-              !@viewing_main_object}
+            :if={@published_in && id(@published_in) != @feed_id &&
+              @showing_within not in [:topic, :thread] &&
+              !@viewing_main_object && !@activity_inception}
             context={@published_in}
             showing_within={@showing_within}
           />

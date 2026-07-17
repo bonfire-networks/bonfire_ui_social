@@ -383,7 +383,10 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("reply"), reply_to),
          # TODO: can we use the preloaded object_boundaries rather than making an extra query
          true <- Bonfire.Boundaries.can?(current_user, :reply, reply_to_id) do
-      published_in = e(assigns(socket), :published_in, nil)
+      published_in =
+        e(assigns(socket), :published_in, nil) ||
+          maybe_load_published_in(activity, e(assigns(socket), :verb, nil))
+
       published_in_id = id(published_in)
 
       create_object_type = if(object_type == Bonfire.Data.Social.Message, do: :message)
@@ -475,6 +478,20 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       ]
     end
   end
+
+  # The context (group/topic) an activity was published in comes from `activity.tree.parent`,
+  # which feed pages preload in the `feed_postload` phase — surfaces that render activities
+  # without that phase (e.g. the dashboard trending-discussions widget) don't have it, so
+  # without this the reply would lose the `{:clone_context, ...}` boundary. Load it on
+  # demand, same as `object_boundary` above.
+  defp maybe_load_published_in(%{} = activity, verb) do
+    if Bonfire.Common.Extend.module_enabled?(Bonfire.Classify.Tree) do
+      repo().maybe_preload(activity, tree: [parent: [:profile, character: [:peered]]])
+      |> Bonfire.UI.Social.ActivityLive.maybe_published_in(verb)
+    end
+  end
+
+  defp maybe_load_published_in(_, _), do: nil
 
   defp thread_root_audience(thread_id, current_user) do
     case Bonfire.Common.Needles.get(thread_id,
