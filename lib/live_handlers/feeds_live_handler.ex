@@ -1502,6 +1502,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           is_nil(subject_id) or to_string(subject_id) not in Enum.map(excluded, &to_string/1)
       end
 
+    # `:subjects` IS verifiable in memory (the activity carries its subject), so check it here rather than treating it as an unverifiable deviation below, otherwise a profile feed (which filters by its owner via `subjects: [owner_id]`) would skip EVERY live insert, even the owner's own activity.
+    passes_subjects? =
+      case List.wrap(e(filters, :subjects, nil) || []) do
+        [] ->
+          true
+
+        subjects ->
+          is_binary(subject_id) and subject_id in Enums.ids(subjects)
+      end
+
     preset_filters = preset_canonical_filters(e(filters, :feed_name, nil), opts)
 
     # dimensions we can't verify in memory: skip live inserts only when they deviate from
@@ -1513,7 +1523,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           :media_types,
           :exclude_media_types,
           :origin,
-          :subjects,
           :subject_types,
           :exclude_subject_types,
           :subject_circles,
@@ -1528,7 +1537,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       )
 
     passes_verb_exclude? and passes_verb_include? and passes_object_types? and
-      passes_subject_exclude? and not unverifiable_deviates?
+      passes_subject_exclude? and passes_subjects? and not unverifiable_deviates?
   end
 
   defp custom_filters_active?(filters, feed_atom, opts) do
