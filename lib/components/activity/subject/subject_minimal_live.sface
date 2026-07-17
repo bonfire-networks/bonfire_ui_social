@@ -1,4 +1,13 @@
-<div data-role="subject" data-id={@subject_id}>
+<div
+  data-role="subject"
+  data-id={@subject_id}
+  class={
+    "hidden":
+      @verb == "Boost" and
+        (not is_nil(@published_in) or @showing_within in [:group, :topic]) and
+        @showing_within not in [:widget, :notifications]
+  }
+>
   {!-- TODO: can we simplify and remove the cases here, having just one definition per type and using conditional classes if needed? --}
   {#case @showing_within}
     {#match :thread}
