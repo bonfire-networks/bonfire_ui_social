@@ -2,7 +2,7 @@
   data-role="subject"
   data-id={@subject_id}
   class={
-    "hidden":
+    hidden:
       @verb == "Boost" and
         (not is_nil(@published_in) or @showing_within in [:group, :topic]) and
         @showing_within not in [:widget, :notifications]

@@ -637,11 +637,11 @@ defmodule Bonfire.Social.Threads.LiveHandler do
                 limit: 20
               )
 
+            # NOTE: derives from `activity.tree.parent`, which only feed pages preload
+            # (feed_postload). The preview modal loads activities without that phase, so
+            # load it on demand here — otherwise the thread-context widget only shows on
+            # the full discussion/post page and not in the preview.
             thread_context_widget =
-              # NOTE: derives from `activity.tree.parent`, which only feed pages preload
-              # (feed_postload). The preview modal loads activities without that phase, so
-              # load it on demand here — otherwise the thread-context widget only shows on
-              # the full discussion/post page and not in the preview.
               case maybe_load_published_in(activity, nil) do
                 %{id: _} = parent ->
                   [{Bonfire.UI.Social.WidgetThreadContextLive, [category: parent]}]
