@@ -1,6 +1,7 @@
 <div
   class="bg-base-200"
   data-theme={@embed_theme || Bonfire.UI.Common.ThemeHelper.current_theme(assigns)}
+  data-embed-links="_blank"
 >
   {#if @thread_id}
     {!-- Default reply slot at top: composer lands here when replying to the root post.

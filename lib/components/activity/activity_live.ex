@@ -392,8 +392,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
       e(assigns, :thread_object, nil) || e(replied, :thread, nil) || e(replied, :thread_id, nil) ||
         e(assigns, :thread_id, nil)
 
-    reply_to = if verb in @reply_verbs, do: prepare_reply_to(replied || activity)
-    thread_start = if verb in @reply_verbs, do: prepare_thread_start(replied || activity)
+    reply_to = if show_reply_to?(verb, activity), do: prepare_reply_to(replied || activity)
+
+    thread_start =
+      if show_reply_to?(verb, activity), do: prepare_thread_start(replied || activity)
 
     verb_display = Activities.verb_display(verb)
 
@@ -592,6 +594,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
     end
   end
 
+  # Reply context is computed for reply verbs, but also when a group/topic boosts a reply
+  # into feeds (posts in groups reach feeds as the category's auto-boost, verb "Boost" with
+  # the category as subject) — otherwise a boosted reply renders with no parent at all.
+  defp show_reply_to?(verb, _activity) when verb in @reply_verbs, do: true
+
+  defp show_reply_to?("Boost", %{subject: %{table_id: "2AGSCANBECATEG0RY0RHASHTAG"}}),
+    do: true
+
+  defp show_reply_to?(_, _), do: false
+
   def maybe_published_in(%{subject: %{table_id: "2AGSCANBECATEG0RY0RHASHTAG"} = subject}, "Boost") do
     subject
   end
@@ -643,7 +655,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     thread =
       e(replied, :thread, nil) || e(replied, :thread_id, nil)
 
-    reply_to = if verb in @reply_verbs, do: prepare_reply_to(replied || activity)
+    reply_to = if show_reply_to?(verb, activity), do: prepare_reply_to(replied || activity)
 
     activity_components(
       activity,
@@ -802,7 +814,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
         else:
           if(
             !@viewing_main_object and
-              @showing_within not in [:thread, :smart_input, :widget, :nested_preview],
+              @showing_within not in [
+                :thread,
+                :thread_embed,
+                :smart_input,
+                :widget,
+                :nested_preview
+              ],
             do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"
           )}
       role="article"
@@ -963,7 +981,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                activity card (not per subject component, so group boosts don't double it). --}
           <Bonfire.UI.Social.Activity.PublishedInLive
             :if={@published_in && id(@published_in) != @feed_id &&
-              @showing_within not in [:topic, :thread] &&
+              @showing_within not in [:group, :topic, :thread, :thread_embed] &&
               !@viewing_main_object && !@activity_inception}
             context={@published_in}
             showing_within={@showing_within}

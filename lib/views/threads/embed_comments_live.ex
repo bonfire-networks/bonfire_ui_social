@@ -98,6 +98,7 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
        loading: false
      )
      |> assign_global(:go, e(params, "embed_parent", nil))
+     |> assign_global(:link_target, "_blank")
      |> then(fn socket ->
        with {:noreply, socket} <- load_params(params, nil, socket) do
          socket

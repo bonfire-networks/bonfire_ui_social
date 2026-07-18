@@ -87,6 +87,49 @@ defmodule Bonfire.UI.Social.CommentsEmbedTokenTest do
       assert has_element?(view, "#inline-reply-portal")
     end
 
+    test "authenticated links escape the iframe without making the comment body a link", %{
+      user: user
+    } do
+      {:ok, post} =
+        Bonfire.Posts.publish(
+          current_user: user,
+          post_attrs: %{post_content: %{html_body: "embed link root"}},
+          boundary: "public"
+        )
+
+      {:ok, _reply} =
+        Bonfire.Posts.publish(
+          current_user: user,
+          post_attrs: %{
+            post_content: %{html_body: "mention @#{user.character.username}"},
+            reply_to_id: post.id
+          },
+          boundary: "public"
+        )
+
+      token = LoadCurrentUserFromEmbedToken.sign(@endpoint, user.id)
+
+      {:ok, view, _html} =
+        live(conn(), "/comments/embed/#{post.id}?bonfire_embed_token=#{token}")
+
+      html = render(view)
+      assert html =~ ~s(data-embed-links="_blank")
+      refute html =~ "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"
+
+      profile_links =
+        html
+        |> Floki.parse_document!()
+        |> Floki.find("[data-id=subject_avatar], [data-id=subject_name]")
+
+      assert profile_links != []
+
+      assert Enum.all?(profile_links, fn link ->
+               Floki.attribute(link, "target") == ["_blank"] and
+                 Floki.attribute(link, "rel") == ["noopener"] and
+                 Floki.attribute(link, "data-phx-link") == []
+             end)
+    end
+
     test "visiting /comments/embed/:id with an invalid token does not render the reply composer",
          %{user: user} do
       {:ok, post} =
@@ -208,6 +251,14 @@ defmodule Bonfire.UI.Social.CommentsEmbedTokenTest do
         |> html_response(200)
 
       assert html =~ "inline_composer_login_"
+
+      [login_link] =
+        html
+        |> Floki.parse_document!()
+        |> Floki.find(~s(a[id^="inline_composer_login_"]))
+
+      assert Floki.attribute(login_link, "target") == ["_top"]
+      assert Floki.attribute(login_link, "data-phx-link") == []
     end
 
     test "without a token via the controller GET: renders iframe shell without app sidebars",
