@@ -391,9 +391,17 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
       create_object_type = if(object_type == Bonfire.Data.Social.Message, do: :message)
 
+      # `replied` isn't preloaded on every surface (and `reply_to` may be a bare id),
+      # so fall back to fetching it — this becomes the composer's `context_id`, and a
+      # `{:clone_context, ...}` boundary submitted without it fails closed at publish
+      # time, silently dropping the group/thread audience. The thread root always has
+      # a `Replied` row (created by `start_new_thread`), but if all else fails treat
+      # the object being replied to as the context itself.
       thread_id =
         e(activity, :replied, :thread_id, nil) ||
-          e(reply_to, :replied, :thread_id, nil)
+          e(reply_to, :replied, :thread_id, nil) ||
+          Threads.fetch_thread_id(reply_to_id) ||
+          reply_to_id
 
       # DMs re-address the whole thread audience so the original recipients
       # stay in the loop on every reply. TODO: extend to "mentions"-boundary
