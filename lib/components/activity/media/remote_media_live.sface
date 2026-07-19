@@ -189,10 +189,11 @@
                         </div>
                       </div>
                     </div>
-                  {#elseif MediaLive.preview_img(@media)}
+                  {#elseif MediaLive.preview_img(@media) || MediaLive.peertube_embed_url(@media)}
                     {!-- Handle media with preview images (like video.movie, video.other, etc.) --}
                     <div class="rounded-box border border-secondary overflow-hidden">
-                      {#case MediaLive.extract_oembed_url(e(@media, :metadata, "oembed", "html", nil)) ||
+                      {#case MediaLive.peertube_embed_url(@media) ||
+                          MediaLive.extract_oembed_url(e(@media, :metadata, "oembed", "html", nil)) ||
                           e(@media, :metadata, "facebook", "video", nil) ||
                           e(@media, :metadata, "twitter", "player", nil)}
                         {#match embed_url when is_binary(embed_url)}

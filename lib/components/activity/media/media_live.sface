@@ -198,7 +198,7 @@
 
                           {#if is_gif?(m.path, m.media_type, m)}
                             {#if is_video?(m.path, m.media_type)}
-                              <div class="w-full h-full [&_video]:w-full [&_video]:h-full [&_video]:object-cover [&_video]:rounded-none [&_video]:border-0">
+                              <div class="w-full h-full bg-black [&_video]:w-full [&_video]:h-full [&_video]:object-contain [&_video]:rounded-none [&_video]:border-0">
                                 <Bonfire.UI.Social.Activity.RemoteMediaLive
                                   id={deterministic_dom_id(__MODULE__, id(m), "gif", @parent_id)}
                                   media={m}
@@ -217,7 +217,7 @@
                               GIF
                             </div>
                           {#elseif is_video?(m.path, m.media_type)}
-                            <div class="w-full h-full [&_video]:w-full [&_video]:h-full [&_video]:object-cover [&_video]:rounded-none [&_video]:border-0 [&_iframe]:w-full [&_iframe]:h-full">
+                            <div class="w-full h-full bg-black [&_video]:w-full [&_video]:h-full [&_video]:object-contain [&_video]:rounded-none [&_video]:border-0 [&_iframe]:w-full [&_iframe]:h-full">
                               <Bonfire.UI.Social.Activity.VideoLinkLive
                                 media={m}
                                 media_label={media_label}
@@ -257,7 +257,7 @@
                         {#else}
                           {#if is_gif?(m.path, m.media_type, m)}
                             {#if is_video?(m.path, m.media_type)}
-                              <div class="w-full h-full [&_video]:w-full [&_video]:h-full [&_video]:object-cover [&_video]:rounded-none [&_video]:border-0">
+                              <div class="w-full h-full bg-black [&_video]:w-full [&_video]:h-full [&_video]:object-contain [&_video]:rounded-none [&_video]:border-0">
                                 <Bonfire.UI.Social.Activity.RemoteMediaLive
                                   id={deterministic_dom_id(__MODULE__, id(m), "gif", @parent_id)}
                                   media={m}
@@ -277,7 +277,7 @@
                               GIF
                             </div>
                           {#elseif is_video?(m.path, m.media_type)}
-                            <div class="w-full h-full [&_video]:w-full [&_video]:h-full [&_video]:object-cover [&_video]:rounded-none [&_video]:border-0 [&_iframe]:w-full [&_iframe]:h-full">
+                            <div class="w-full h-full bg-black [&_video]:w-full [&_video]:h-full [&_video]:object-contain [&_video]:rounded-none [&_video]:border-0 [&_iframe]:w-full [&_iframe]:h-full">
                               <Bonfire.UI.Social.Activity.VideoLinkLive
                                 media={m}
                                 media_label={media_label}

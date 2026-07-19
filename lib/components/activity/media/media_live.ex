@@ -58,7 +58,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
               Files.has_extension?(m.path || "", @image_exts) ->
             {[m | image_list], video_list, gif_list, audio_embed_list, link_list}
 
-          # Embeds (YouTube, Vimeo, etc.) - check BEFORE video files since embeds
+          # Embeds (YouTube, Vimeo, PeerTube, etc.) - check BEFORE video files since embeds
           # may have video/* media_type but should render with 16:9 aspect ratio
           has_video_page_metadata?(m) ->
             {image_list, video_list, gif_list, [m | audio_embed_list], link_list}
@@ -200,14 +200,41 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   end
 
   @doc """
-  Checks if a media item is a video page link based on oEmbed or OG metadata.
+  Checks if a media item is a video page link (rather than a raw video file),
+  based on oEmbed/OG metadata or a federated PeerTube video object.
   """
-  def has_video_page_metadata?(%{metadata: metadata}) when is_map(metadata) do
+  def has_video_page_metadata?(%{metadata: metadata} = media) when is_map(metadata) do
     e(metadata, "oembed", "type", nil) == "video" or
-      String.starts_with?(e(metadata, "facebook", "type", nil) || "", "video")
+      String.starts_with?(e(metadata, "facebook", "type", nil) || "", "video") or
+      is_binary(peertube_embed_url(media))
   end
 
   def has_video_page_metadata?(_), do: false
+
+  @doc """
+  Returns the PeerTube embed-player URL for a federated PeerTube video, or nil.
+
+  Detected from the ActivityPub object stored in `metadata.json_ld`: a `Video`
+  whose canonical id matches PeerTube's `/videos/watch/<id>` or `/w/<id>`
+  routes. The origin instance serves its own player at `/videos/embed/<id>`,
+  which we embed (like Mastodon does) so viewers get the full upstream player
+  (quality selection, captions, chapters, P2P) instead of our generic one.
+  """
+  def peertube_embed_url(%{metadata: metadata}) when is_map(metadata) do
+    json_ld = e(metadata, "json_ld", nil)
+
+    with "Video" <- e(json_ld, "type", nil),
+         page_url when is_binary(page_url) <- e(json_ld, "id", nil),
+         %URI{host: host, path: path} = uri when is_binary(host) and is_binary(path) <-
+           URI.parse(page_url),
+         [_, video_id] <- Regex.run(~r{^/(?:videos/watch|w)/([\w-]+)/?$}, path) do
+      URI.to_string(%{uri | path: "/videos/embed/#{video_id}", query: nil, fragment: nil})
+    else
+      _ -> nil
+    end
+  end
+
+  def peertube_embed_url(_), do: nil
 
   @doc """
   Extract the embed URL from oEmbed HTML iframe src attribute.

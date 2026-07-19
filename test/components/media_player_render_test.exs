@@ -78,6 +78,57 @@ defmodule Bonfire.UI.Social.Activity.MediaPlayerRenderTest do
     refute html =~ "data-vidstack"
   end
 
+  describe "PeerTube embeds" do
+    # A federated PeerTube video (AP object in metadata.json_ld) must render the
+    # origin instance's own player iframe (/videos/embed/<id>) — like Mastodon —
+    # instead of playing the HLS stream in vidstack.
+    @peertube_json_ld %{
+      "type" => "Video",
+      "id" => "https://peertube.example/videos/watch/abece3c3-b9c6-47f4-8040-f3eed8c602e6",
+      "uuid" => "abece3c3-b9c6-47f4-8040-f3eed8c602e6"
+    }
+
+    test "peertube_embed_url/1 derives the embed URL from the watch-page id" do
+      assert Bonfire.UI.Social.Activity.MediaLive.peertube_embed_url(%{
+               metadata: %{"json_ld" => @peertube_json_ld}
+             }) ==
+               "https://peertube.example/videos/embed/abece3c3-b9c6-47f4-8040-f3eed8c602e6"
+    end
+
+    test "peertube_embed_url/1 handles /w/ short URLs" do
+      assert Bonfire.UI.Social.Activity.MediaLive.peertube_embed_url(%{
+               metadata: %{
+                 "json_ld" => %{"type" => "Video", "id" => "https://peertube.example/w/sXDmBvDpgwKFWXLKEihJBT"}
+               }
+             }) == "https://peertube.example/videos/embed/sXDmBvDpgwKFWXLKEihJBT"
+    end
+
+    test "peertube_embed_url/1 is nil for non-PeerTube media" do
+      refute Bonfire.UI.Social.Activity.MediaLive.peertube_embed_url(%{metadata: %{}})
+
+      refute Bonfire.UI.Social.Activity.MediaLive.peertube_embed_url(%{
+               metadata: %{
+                 "json_ld" => %{"type" => "Video", "id" => "https://example.com/some/other/page"}
+               }
+             })
+    end
+
+    test "a PeerTube HLS video renders the PeerTube player iframe, NOT vidstack" do
+      html =
+        render_media(
+          media(
+            path: "https://peertube.example/static/streaming-playlists/hls/abc/master.m3u8",
+            media_type: "application/x-mpegURL",
+            metadata: %{"json_ld" => @peertube_json_ld}
+          )
+        )
+
+      assert html =~ "<iframe"
+      assert html =~ "https://peertube.example/videos/embed/abece3c3-b9c6-47f4-8040-f3eed8c602e6"
+      refute html =~ "data-vidstack"
+    end
+  end
+
   test "a GIF-marked mp4 stays a native looping <video> (no player chrome)" do
     url = "https://mastodon.example/media/reaction.mp4"
 
