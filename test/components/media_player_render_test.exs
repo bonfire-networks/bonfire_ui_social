@@ -98,7 +98,10 @@ defmodule Bonfire.UI.Social.Activity.MediaPlayerRenderTest do
     test "peertube_embed_url/1 handles /w/ short URLs" do
       assert Bonfire.UI.Social.Activity.MediaLive.peertube_embed_url(%{
                metadata: %{
-                 "json_ld" => %{"type" => "Video", "id" => "https://peertube.example/w/sXDmBvDpgwKFWXLKEihJBT"}
+                 "json_ld" => %{
+                   "type" => "Video",
+                   "id" => "https://peertube.example/w/sXDmBvDpgwKFWXLKEihJBT"
+                 }
                }
              }) == "https://peertube.example/videos/embed/sXDmBvDpgwKFWXLKEihJBT"
     end
