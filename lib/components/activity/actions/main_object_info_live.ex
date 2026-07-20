@@ -9,7 +9,7 @@ defmodule Bonfire.UI.Social.Activity.MainObjectInfoLive do
   prop object_type_readable, :any
   prop showing_within, :atom, default: nil
   prop hide_reply, :boolean
-  prop viewing_main_object, :boolean
+  prop viewing_main_object, :boolean, default: true
   prop flagged, :any
   prop participants, :any, default: nil
   prop object_boundary, :any, default: nil
