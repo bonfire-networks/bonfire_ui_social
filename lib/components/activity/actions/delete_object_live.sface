@@ -26,6 +26,13 @@ TODO: use preloaded boundaries for can? when available
         placeholder={l("Type here")}
         class="input input-bordered w-full"
       />
+      {!-- covers passwordless/magic-link accounts (no password to enter) and anyone who forgot theirs; returns here via `go` --}
+      <a
+        href={"/account/password/change?go=" <> URI.encode_www_form(current_url(@__context__) || "/")}
+        class="link link-primary text-xs mt-2 inline-block"
+      >
+        {l("Reset password")}
+      </a>
     </div>
   {/if}
 
