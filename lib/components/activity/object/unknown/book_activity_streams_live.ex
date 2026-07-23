@@ -4,6 +4,7 @@ defmodule Bonfire.UI.Social.Activity.BookActivityStreamsLive do
   prop json, :any, default: nil
   # prop object_type, :any, default: nil
   prop object_type_readable, :any, default: nil
+  prop viewing_main_object, :boolean, default: false
 
   defp object_field(json, field) do
     e(json, "object", field, nil) || e(json, field, nil)
