@@ -29,6 +29,7 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
   | `data-sort-by` | thread default | Initial comment sort: `latest_reply`, `reply_count`, `boost_count`, `like_count`, `popularity_score`, `newest`. |
   | `data-sort-order` | per sort type | Sort direction for `data-sort-by`: `asc` or `desc`. |
   | `data-mode` | instance/user setting | Initial thread display mode: `flat` or `nested`. |
+  | `data-published-at` | — | Article publication date (ISO 8601 or `YYYY-MM-DD`). Backdates a newly-created thread so importing an old article doesn't jump to the top of feeds. Ignored if in the future; a Ghost article is already backdated from its own published date. |
   | `data-theme` | — | DaisyUI theme to apply inside the iframe (e.g. `dark`, `light`). |
   | `data-token-max-age` | `720` (hours ≈ 30 days) | JS-only: hours before the stored auth token is treated as stale and re-auth is prompted. The server still enforces a hard cap of 1 year. |
 
@@ -40,6 +41,10 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
   This LiveView is unauthenticated and its params come from a third-party page, so it accepts nothing that chooses a created post's author, audience or destination: `data-creator`, `data-boundary`, `data-group-id`, `data-to-circles` and `data-require-topic` are parsed-and-ignored (old snippets keep working; a warning is logged). They previously let any visitor forge a post's author, place it in an arbitrary group, or publish a paid Ghost article publicly via `data-boundary=public`.
 
   Instead a thread is attributed to the signed-in viewer, else to the instance's configured import author (`Bonfire.Ghost.auto_import_as/0`), and a Ghost article's audience is derived from its Ghost `visibility`/tiers. Set the author and destination group in the instance's Ghost settings.
+
+  ## Dev/preview safety
+
+  When the embedding page is served from a loopback host (`localhost`, `127.0.0.0/8`, `[::1]`) — i.e. a local dev/preview of a site — any thread this embed CREATES is forced to a local-only boundary, so testing the widget can't accidentally publish public/federated content. Detected from the `embed_parent` (the page URL, always sent by the loader) or the `media_uri`. A localhost page carries a localhost URL, which is its own dedup key, so a preview never touches the production thread.
   """
 
   use Bonfire.UI.Common.Web,
@@ -178,9 +183,14 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
            Bonfire.Files.Media.get_or_add_media_by_uri(
              creator,
              uri,
-             "public",
+             # a preview loaded from a localhost/loopback page is kept local-only so dev
+             # testing can't publish public/federated content
+             embed_boundary(params),
              nil,
-             update_existing: false
+             # backdate the anchor to the article's publication date (if given & in the past), so
+             # importing an old article doesn't jump to the top of feeds
+             update_existing: false,
+             id: embed_published_id(params)
            ) do
       load_params(%{"id" => id}, nil, socket)
     else
@@ -224,17 +234,53 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
     current_user(socket) || maybe_apply(Bonfire.Ghost, :auto_import_as, [], fallback_return: nil)
   end
 
+  # the boundary to give an anchor CREATED by this embed: local-only when the embedding page is a
+  # localhost/loopback origin (dev preview), so testing can't publish public/federated content
+  defp embed_boundary(params), do: if(loopback_origin?(params), do: "local", else: "public")
+
+  # a backdated id from the `published_at` param (nil when absent, unparseable, or in the future —
+  # `generate_ulid_if_past/1` only ever moves a post EARLIER), so importing an old article doesn't
+  # surface as freshly posted
+  defp embed_published_id(params) do
+    case e(params, "published_at", nil) do
+      date when is_binary(date) and date != "" ->
+        Bonfire.Common.DatesTimes.generate_ulid_if_past(date)
+
+      _ ->
+        nil
+    end
+  end
+
+  # is the embedding page (or the media URI it points at) served from a loopback host?
+  defp loopback_origin?(params) do
+    loopback_host?(e(params, "embed_parent", nil) || e(params, "media_uri", nil))
+  end
+
+  defp loopback_host?(url) when is_binary(url) do
+    case URI.parse(url).host do
+      nil -> false
+      host -> host in ~w(localhost 0.0.0.0 ::1 [::1]) or String.starts_with?(host, "127.")
+    end
+  end
+
+  defp loopback_host?(_), do: false
+
   defp handle_ghost_params(slug_or_id, params, _url, socket) do
     socket = assign_global(socket, :go, e(params, "embed_parent", nil))
     url = e(params, "media_uri", nil) || e(params, "embed_parent", nil)
     warn_ignored_params(params)
 
-    # deliberately passes no opts from `params` — see the moduledoc (EmbedHelper also drops them)
+    # `restrict_to_local` (dev-preview local-only) is the only opt passed — it only ever REDUCES
+    # what a created post exposes, so it's safe from the public route (EmbedHelper drops the
+    # untrusted author/audience opts anyway) — see the moduledoc.
     with {:ok, %{id: id}} <-
            maybe_apply(Bonfire.Ghost.EmbedHelper, :get_or_create_post_for_article, [
              slug_or_id,
              url,
-             []
+             [
+               restrict_to_local: loopback_origin?(params),
+               published_at: e(params, "published_at", nil)
+             ]
            ]) do
       load_params(%{"id" => id}, nil, socket)
     else
