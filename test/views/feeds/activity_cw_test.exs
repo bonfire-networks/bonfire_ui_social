@@ -133,6 +133,31 @@ defmodule Bonfire.UI.Social.ActivityCW.Test do
     |> assert_has("div.hidden .quote-preview")
   end
 
+  test "a quoted post shows its author's subject",
+       %{conn: conn, me: me} do
+    {:ok, original} =
+      Posts.publish(
+        current_user: me,
+        post_attrs: %{post_content: %{html_body: "original post"}},
+        boundary: "public"
+      )
+
+    original_url = Bonfire.Common.URIs.canonical_url(original, preload_if_needed: true)
+
+    {:ok, _quote_post} =
+      Posts.publish(
+        current_user: me,
+        post_attrs: %{post_content: %{html_body: "quoting #{original_url}"}},
+        boundary: "public"
+      )
+
+    conn
+    |> visit("/feed/local")
+    |> assert_has(".quote-preview")
+    |> assert_has(".quote-preview [data-role=subject]", text: me.profile.name)
+    |> refute_has(".quote-preview [data-role=no_subject]")
+  end
+
   test "a quoted post with CW shows its own CW overlay",
        %{conn: conn, me: me} do
     # Create a post with CW
