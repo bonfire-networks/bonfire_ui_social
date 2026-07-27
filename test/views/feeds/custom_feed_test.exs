@@ -76,8 +76,29 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
     # The editor stays open after applying — save as preset directly
     |> fill_in("Feed title", with: preset_name)
     |> click_button("Save feed")
+    |> assert_has("[data-id=flash_info]", text: "Feed created successfully")
 
     # The feed should be saved and appear in the navigation
+    |> visit("/settings/user/feeds")
+    |> assert_has_or_open_browser("div", text: preset_name)
+  end
+
+  test "create custom feed when an existing preset has an atom name", %{conn: conn, me: me} do
+    assert {:ok, _settings} =
+             Bonfire.Common.Settings.put(
+               [:bonfire_social, Bonfire.Social.Feeds, :feed_presets, :test],
+               %{name: :test, filters: %{}},
+               current_user: me
+             )
+
+    preset_name = "cavolofresco"
+
+    conn
+    |> visit("/feed")
+    |> wait_async()
+    |> click_button("[data-role=open_modal]", "Advanced filters")
+    |> fill_in("Feed title", with: preset_name)
+    |> click_button("Save feed")
     |> visit("/settings/user/feeds")
     |> assert_has_or_open_browser("div", text: preset_name)
   end

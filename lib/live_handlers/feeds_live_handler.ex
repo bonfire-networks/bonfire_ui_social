@@ -2829,7 +2829,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
       {
         :noreply,
-        socket |> maybe_assign_context(settings)
+        socket
+        |> maybe_assign_context(settings)
+        |> assign_flash(:info, l("Feed created successfully"))
       }
     else
       {:error, :duplicate_name} ->
@@ -2896,13 +2898,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     all_presets = Bonfire.Social.Feeds.feed_presets(current_user: current_user)
 
     # Normalize the name for comparison
-    normalized_name = String.downcase(String.trim(name))
+    normalized_name = Bonfire.Social.Feeds.normalize_feed_name(name)
 
     # Check if any existing preset has the same name (case-insensitive)
     duplicate_exists? =
       Enum.any?(all_presets, fn {_key, preset} ->
         existing_name = preset[:name] || ""
-        String.downcase(String.trim(existing_name)) == normalized_name
+        Bonfire.Social.Feeds.normalize_feed_name(existing_name) == normalized_name
       end)
 
     if duplicate_exists? do
