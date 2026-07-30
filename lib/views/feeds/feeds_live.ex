@@ -291,16 +291,10 @@ defmodule Bonfire.UI.Social.FeedsLive do
   end
 
   defp maybe_rss_or_atom(session) do
-    case Map.get(session, "accept_header") do
-      accept_header when is_binary(accept_header) ->
-        cond do
-          String.contains?(accept_header, "application/rss+xml") -> "rss"
-          String.contains?(accept_header, "application/atom+xml") -> "atom"
-          true -> nil
-        end
-
-      _ ->
-        nil
+    cond do
+      http_accepts?(session, "application/rss+xml") -> "rss"
+      http_accepts?(session, "application/atom+xml") -> "atom"
+      true -> nil
     end
   end
 end

@@ -230,8 +230,9 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
   end
 
   # server-decided: the signed-in viewer, else the instance's configured import author
-  defp embed_anchor_creator(socket) do
-    current_user(socket) || maybe_apply(Bonfire.Ghost, :auto_import_as, [], fallback_return: nil)
+  def embed_anchor_creator(socket) do
+    current_user(socket) || maybe_apply(Bonfire.Ghost, :auto_import_as, [], fallback_return: nil) ||
+      Config.get([:bonfire_ghost, :auto_import_as], nil)
   end
 
   # the boundary to give an anchor CREATED by this embed: local-only when the embedding page is a

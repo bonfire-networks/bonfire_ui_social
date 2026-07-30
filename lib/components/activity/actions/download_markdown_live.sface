@@ -1,0 +1,45 @@
+<div class="flex">
+  <Bonfire.UI.Common.OpenModalLive id={@id} title_text={l("Download as Markdown")} no_actions>
+    <div
+      class="flex flex-col gap-4 py-4"
+      x-data={"{
+         frontmatter: Boolean(#{@include_frontmatter}),
+         replies: Boolean(#{@include_replies}),
+         get downloadUrl() {
+           return `/discussion/markdown/#{@object_id}?frontmatter=${this.frontmatter}&replies=${this.replies}`;
+         }
+       }"}
+    >
+      <div class="text-base text-base-content/80">
+        {l("Download this post as a Markdown file. You can choose to include frontmatter and replies.")}
+      </div>
+      <!-- <form phx-change="update_download_options" phx-target={@myself}> -->
+      <form @change.prevent>
+        <div class="form-control">
+          <label class="label cursor-pointer">
+            <input type="checkbox" class="toggle toggle-primary" x-model="frontmatter">
+            <span class="label-text">{l("Include frontmatter")}</span>
+          </label>
+        </div>
+        <div class="form-control">
+          <label class="label cursor-pointer">
+            <input type="checkbox" class="toggle toggle-primary" x-model="replies">
+            <span class="label-text">{l("Include replies")}</span>
+          </label>
+        </div>
+      </form>
+      <div class="flex justify-end">
+        <a :href="downloadUrl" class="btn btn-primary btn-sm" download target="_blank">
+          <#Icon iconify="mdi:download" class="w-4 h-4" />
+          <span>{l("Download Markdown")}</span>
+        </a>
+      </div>
+    </div>
+    <:open_btn>
+      <div class="flex items-center w-full gap-2 cursor-pointer justify-between text-sm text-base-content">
+        <span class={"text-sm font-medium", "sr-only": @as_icon}>{l("Download as Markdown")}</span>
+        <#Icon iconify="ph:download-simple" class="w-5 h-5 shrink-0" />
+      </div>
+    </:open_btn>
+  </Bonfire.UI.Common.OpenModalLive>
+</div>
