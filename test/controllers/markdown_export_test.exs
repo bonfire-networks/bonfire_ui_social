@@ -27,8 +27,7 @@ defmodule Bonfire.UI.Social.MarkdownExportTest do
     })
   end
 
-  # `canonical_url/1` refuses to lazy-load `:peered` (it must be preloaded at the source), so
-  # preload it here rather than in the assertion
+  # `canonical_url/1` refuses to lazy-load `:peered` (it must be preloaded at the source), so preload it here rather than in the assertion
   defp canonical_url!(object) do
     object
     |> Bonfire.Common.Repo.Preload.maybe_preload(:peered)

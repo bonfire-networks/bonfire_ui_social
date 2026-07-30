@@ -74,8 +74,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
 
     reply_id = e(params, "reply_id", nil)
 
-    # a `.md` suffix on the URL, or an `Accept: text/markdown` request, serves the markdown
-    # download of this object instead of the HTML view (same as `Bonfire.UI.Posts.PostLive`)
+    # a `.md` suffix on the URL, or an `Accept: text/markdown` request, serves the markdown download of this object instead of the HTML view (same as `Bonfire.UI.Posts.PostLive`)
     maybe_md_id = String.replace_suffix(reply_id || id, ".md", "")
 
     if (maybe_md_id != id and maybe_md_id != reply_id) or assigns(socket)[:accepts_markdown?] do
