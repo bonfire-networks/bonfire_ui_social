@@ -36,6 +36,6 @@
       </span>
     </Bonfire.UI.Social.Activity.LinkToActivityLive>
 
-    <Bonfire.UI.Social.Activity.InstanceIconLive object={@object} />
+    <Bonfire.UI.Common.Icons.InstanceIconLive object={@object} />
   </div>
 {/if}
