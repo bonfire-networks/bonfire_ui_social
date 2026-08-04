@@ -4,7 +4,7 @@
     id={ComponentID.new(Bonfire.UI.Reactions.LikeActionLive, id(@activity), __MODULE__)}
     object={@activity}
   />
-  <Bonfire.UI.Social.Activity.InstanceIconLive peered={e(@activity, :peered, nil)} />
+  <Bonfire.UI.Common.Icons.InstanceIconLive peered={e(@activity, :peered, nil)} />
   <Bonfire.UI.Boundaries.BoundaryIconLive
     with_label
     id={"boundary_#{id(@thread_id)}"}

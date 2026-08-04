@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
 
   on_mount {LivePlugs, [Bonfire.UI.Me.LivePlugs.LoadCurrentUser]}
 
-  def mount(params, _session, socket) do
+  def mount(params, session, socket) do
     # is_guest? = is_nil(current_user_id(socket))
 
     {:ok,
@@ -45,7 +45,8 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        #  url: nil,
        search_placeholder: nil,
        #  to_boundaries: nil,
-       loading: false
+       loading: false,
+       accepts_markdown?: http_accepts?(session, "text/markdown")
      )}
   end
 
@@ -73,6 +74,17 @@ defmodule Bonfire.UI.Social.DiscussionLive do
 
     reply_id = e(params, "reply_id", nil)
 
+    # a `.md` suffix on the URL, or an `Accept: text/markdown` request, serves the markdown download of this object instead of the HTML view (same as `Bonfire.UI.Posts.PostLive`)
+    maybe_md_id = String.replace_suffix(reply_id || id, ".md", "")
+
+    if (maybe_md_id != id and maybe_md_id != reply_id) or assigns(socket)[:accepts_markdown?] do
+      {:noreply, redirect_to(socket, "/discussion/markdown/#{maybe_md_id}")}
+    else
+      do_handle_params(params, id, reply_id, socket)
+    end
+  end
+
+  defp do_handle_params(params, id, reply_id, socket) do
     socket =
       socket
       |> assign(

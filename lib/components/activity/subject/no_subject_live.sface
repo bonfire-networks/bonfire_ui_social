@@ -18,5 +18,5 @@
     </span>
   </Bonfire.UI.Social.Activity.LinkToActivityLive>
 
-  <Bonfire.UI.Social.Activity.InstanceIconLive peered={@peered} />
+  <Bonfire.UI.Common.Icons.InstanceIconLive peered={@peered} />
 </div>

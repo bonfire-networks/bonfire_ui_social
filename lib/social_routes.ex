@@ -22,6 +22,10 @@ defmodule Bonfire.UI.Social.Routes do
         live("/discussion/:id/history", PostHistoryLive)
         live("/post/:id/history", PostHistoryLive)
 
+        # markdown download of any object with a post content (a Post, an Article, etc). NOTE: must come before `/discussion/:type/:id` below, which would otherwise shadow it
+        get("/discussion/markdown/:id", MarkdownController, :download_markdown)
+        get("/post/markdown/:id", MarkdownController, :download_markdown)
+
         live("/discussion/:id", DiscussionLive, as: Needle.Pointer)
         live("/discussion/as/:id", DiscussionLive, as: Bonfire.Data.Social.APActivity)
         live("/discussion/:type/:id", DiscussionLive, as: Needle.Pointer)

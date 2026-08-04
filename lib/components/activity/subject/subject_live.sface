@@ -88,7 +88,7 @@
           parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
         />
       </Bonfire.UI.Social.Activity.LinkToActivityLive>
-      <Bonfire.UI.Social.Activity.InstanceIconLive :if={@is_remote} peered={@peered} />
+      <Bonfire.UI.Common.Icons.InstanceIconLive :if={@is_remote} peered={@peered} />
     </span>
   </div>
 </div>
