@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.WidgetTrendingDiscussionsLive do
   @moduledoc """
-  Widget rendering the most replied discussions of the last 7 days
+  Widget rendering the most replied discussions of the last day
   (`:trending_discussions` preset). Each row uses `DiscussionPreviewLive`.
   Results are cached per user and limit for 1 hour to avoid reloading on
   every LiveView render.
