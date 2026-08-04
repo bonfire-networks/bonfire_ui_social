@@ -156,6 +156,26 @@ defmodule Bonfire.UI.Social.ActivityLive do
     |> assign(prepare_mutable_assigns(socket, assigns, extras) |> assigns_clean())
   end
 
+  @doc """
+  Gets the actor represented by an activity for display and locality checks.
+
+  Quote requests store the quote post as their activity subject, so their actor is the creator of that post.
+
+  ## Examples
+
+      iex> activity = %{edge: %{subject: %{created: %{creator: %{id: "quoter"}}}}}
+      iex> Bonfire.UI.Social.ActivityLive.get_activity_actor("Request to Quote", activity)
+      %{id: "quoter"}
+
+      iex> Bonfire.UI.Social.ActivityLive.get_activity_actor("Like", %{subject: %{id: "liker"}})
+      %{id: "liker"}
+  """
+  def get_activity_actor("Request to Quote", activity) do
+    e(activity, :edge, :subject, :created, :creator, nil) || e(activity, :subject, nil)
+  end
+
+  def get_activity_actor(_verb, activity), do: e(activity, :subject, nil)
+
   defp prepare_mutable_assigns(socket \\ %{}, assigns, extras)
 
   defp prepare_mutable_assigns(
@@ -179,6 +199,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       end || :feed
 
     verb = extras[:verb] || prepare_verb(activity, e(assigns, :verb_default, nil) || "Create")
+    activity_actor = get_activity_actor(verb, activity)
 
     created =
       e(object, :created, nil) ||
@@ -190,9 +211,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         if id(object) == id(activity) do
           e(activity, :peered, nil)
         end ||
-        if is_nil(created) or e(created, :creator_id, nil) == e(activity, :subject_id, nil) do
-          e(activity, :subject, :character, :peered, nil)
-        end
+        e(activity_actor, :character, :peered, nil)
 
     # |> debug("peeeered")
 
@@ -214,7 +233,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         (assigns[:is_remote] ||| socket_assigns[:is_remote] |||
            !Bonfire.Social.is_local?(
              peered ||
-               e(activity, :subject, nil) ||
+               activity_actor ||
                e(assigns, :subject_user, nil) ||
                e(socket_assigns, :subject_user, nil),
              false
@@ -1352,7 +1371,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         activity_inception,
         _
       ) do
-    quoter = e(activity, :subject, nil)
+    quoter = get_activity_actor(verb, activity)
     quoter_profile = e(quoter, :profile, nil)
     quoter_character = e(quoter, :character, nil)
     quote_post = e(activity, :edge, :subject, nil)
@@ -1367,7 +1386,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       {Bonfire.UI.Social.Activity.SubjectMinimalLive,
        %{
          verb: verb,
-         subject_id: e(activity, :subject_id, nil) || id(quoter),
+         subject_id: id(quoter),
          subjects_more: e(activity, :subjects_more, []),
          profile: quoter_profile,
          character: quoter_character

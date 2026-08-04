@@ -4,6 +4,7 @@ defmodule Bonfire.UI.Social.Notifications.Test do
   alias Bonfire.Social.Fake
   alias Bonfire.Posts
   alias Bonfire.Social.Graph.Follows
+  alias Bonfire.Social.Quotes
 
   describe "show" do
     # test "with account" do
@@ -38,6 +39,36 @@ defmodule Bonfire.UI.Social.Notifications.Test do
     #   {view, doc} = floki_live(conn, next) #|> IO.inspect
     #   assert [] == Floki.find(doc, "[data-id=feed]") # TODO: what to show in this case?
     # end
+  end
+
+  describe "quote request notifications" do
+    test "shows who wants to quote the post" do
+      quoted_author = fake_user!("quoted_author")
+      quoter = fake_user!("quoter")
+
+      {:ok, original_post} =
+        Posts.publish(
+          current_user: quoted_author,
+          post_attrs: %{post_content: %{html_body: "Original post being quoted"}},
+          boundary: "public"
+        )
+
+      {:ok, quote_post} =
+        Posts.publish(
+          current_user: quoter,
+          post_attrs: %{post_content: %{html_body: "Quote request post"}},
+          boundary: "public"
+        )
+
+      assert [_request] = Quotes.create_quote_requests(quoter, [original_post], quote_post)
+
+      conn(user: quoted_author, account: quoted_author.account)
+      |> visit("/notifications")
+      |> assert_has(
+        "[data-role=notification_subject][data-verb='Request to Quote'] [data-id=subject_name]",
+        text: quoter.profile.name
+      )
+    end
   end
 
   describe "PubSub real-time notifications" do
