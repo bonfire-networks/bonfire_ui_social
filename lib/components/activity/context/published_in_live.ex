@@ -8,6 +8,6 @@ defmodule Bonfire.UI.Social.Activity.PublishedInLive do
 
   prop class, :css_class,
     default: [
-      "flex items-center justify-start border-b-hair border-secondary pb-2 -mx-card px-card -mt-1.5"
+      "flex items-center justify-start border-b-hair border-secondary pb-2 -mx-card px-card -mt-1.5 gap-3"
     ]
 end

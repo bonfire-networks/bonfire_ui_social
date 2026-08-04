@@ -1,4 +1,4 @@
-<div class={
+<div data-role="object-thread" class={
   "flex flex-col flex-1 -mx-px",
   "!max-w-[720px] mx-auto w-full": !current_user_id(@__context__)
 }>

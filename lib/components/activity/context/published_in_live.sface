@@ -5,7 +5,7 @@
     data-role="published_in"
     class="inline-flex items-center gap-1.5 shrink-0 text-body leading-tight"
   >
-    <span class="text-muted">{l("In")}</span>
+    <span class="text-muted">{l("Posted in")}</span>
     <#Icon iconify="ph:users-three-fill" class="size-5 text-primary shrink-0" />
     <LinkLive class="link link-hover text-primary truncate max-w-[160px]" to={path(@context)}>
       {e(@context, :profile, :name, nil) || e(@context, :character, :username, nil)}
@@ -14,9 +14,9 @@
 {#else}
   <div data-role="published_in" class={@class}>
     <#Icon iconify="ph:users-three-fill" class="w-5 h-5 text-primary" />
-    <div class="flex-1 ml-3">
+    <div class="flex-1">
       <div class="text-sm text-muted">
-        {l("In")}
+        {l("Posted in")}
         <LinkLive class="font-medium text-primary" to={path(@context)}>
           {e(@context, :profile, :name, nil) || e(@context, :character, :username, nil)}
         </LinkLive>
