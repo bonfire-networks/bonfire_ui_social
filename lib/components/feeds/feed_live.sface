@@ -73,90 +73,87 @@
         )}
       </button>
 
-      <div
-        :if={@resumed_from_marker}
-        id={"feed_resumed_banner_#{@feed_name || @feed_id || @id}"}
-        data-feed-resume-actions
-        class="pointer-events-none sticky top-0 z-40 -mb-14 flex h-14 w-full items-start justify-center pt-2 [overflow-anchor:none]"
-      >
-        <div
-          role="status"
-          class="pointer-events-auto flex min-h-8 items-center gap-2 rounded-full border-hair border-secondary bg-base-200 pl-3 pr-1 py-1 text-xs"
-        >
-          <span class="flex items-center gap-1.5 font-light">
-            <#Icon iconify="ph:bookmark-simple-fill" class="w-3.5 h-3.5" />
-            {l("Resumed where you left off")}
-          </span>
-          <button
-            id={"jump_to_top_btn_#{@feed_name || @feed_id || @id}"}
-            class="flex min-h-6 items-center gap-1 rounded-full px-2.5 py-0.5 font-medium text-primary transition-colors hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
-            :on-click="jump_to_newest"
-            phx-value-feed_name={@feed_name}
-            disabled={@jumping_to_newest}
-          >
-            <span :if={@jumping_to_newest} class="loading loading-spinner loading-xs" />
-            <#Icon :if={!@jumping_to_newest} iconify="ph:arrow-up" class="w-3.5 h-3.5" />
-            {l("Jump to top")}
-          </button>
-        </div>
-      </div>
-
       {#if is_map(@streams) and is_struct(@streams.feed)}
         <div
-          id={"feed_#{@feed_name || @feed_id || @id}"}
-          data-id="feed_activity_list"
+          id={"feed_scroll_tracker_#{@feed_name || @feed_id || @id}"}
           data-feed-name={@feed_name}
+          data-resume-cursor={@resumed_from_marker}
+          data-has-newer={to_string(not is_nil(LoadMoreLive.start_cursor(@newer_page_info)))}
           data-save-position={to_string(
             @enable_marker and e(@feed_filters, :sort_by, nil) in [:date_created, nil] and
               e(@feed_filters, :sort_order, nil) in [:desc, nil]
           )}
           :hook="FeedScrollTracker"
           phx-target={@myself}
-          role="feed"
-          aria-busy={to_string(@loading || @reloading || false)}
-          phx-update="stream"
-          class="flex flex-col flex-1 h-full grow gap-[7px]"
+          class="contents"
         >
-          {#for {entry_id, entry} <- @streams.feed}
-            <div
-              id={entry_id}
-              :if={@hide_activities != "component"}
-              role="article"
-              class={
-                "activity_wrapper relative w-[calc(100%+2px)] max-w-[calc(100%+2px)] -ml-px rounded-box border-hair bg-base-100 border-secondary p-card",
-                "infinite_scroll_hidden hidden": @hide_activities == "infinite_scroll",
-                "fresh_hidden hidden": fresh_entry?(@fresh_ids, entry)
-              }
-            >
-              {#case entry}
-                {#match %Bonfire.Files.Media{}}
-                  <Bonfire.UI.Social.TopLevelMediaLive
-                    link={entry}
-                    show_thumbnail
-                    featured={e(entry, :featured, false)}
-                  />
-                {#match _}
-                  <ActivityLive
-                    id={ActivityLive.component_id(
-                      id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
-                        e(entry, :edge, :id, nil),
-                      "s_activity_#{entry_id}"
-                    )}
-                    activity={get_activity(entry)}
-                    custom_preview={e(@custom_preview, nil)}
-                    showing_within={@showing_within}
-                    hide_actions={@hide_actions}
-                    verb_default={@verb_default}
-                    feed_name={@feed_name}
-                    feed_id={@feed_id || @feed_ids}
-                    class={@activity_class}
-                    hide_activity={@hide_activities}
-                    subject_user={@subject_user}
-                    activity_preloads={@activity_preloads}
-                  />
-              {/case}
+          <div
+            id={"feed_newer_loading_#{@feed_name || @feed_id || @id}"}
+            data-id="feed_newer_loading"
+            class="pointer-events-none sticky top-16 z-20 h-0 hidden max-w-full items-start justify-center px-4 break-normal feed-newer-loading:flex"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <div class="flex max-w-full items-center gap-2 rounded-full bg-base-100 px-3 py-2 shadow-md">
+              <span
+                class="loading loading-spinner loading-sm shrink-0 text-primary motion-reduce:animate-none"
+                aria-hidden="true"
+              />
+              <span class="text-center text-sm font-medium text-base-content">{l("Loading newer activities...")}</span>
             </div>
-          {/for}
+          </div>
+
+          <div
+            id={"feed_#{@feed_name || @feed_id || @id}"}
+            data-id="feed_activity_list"
+            phx-target={@myself}
+            role="feed"
+            aria-busy={to_string(@loading || @reloading || false)}
+            phx-update="stream"
+            class="flex flex-col flex-1 h-full grow gap-(--feed-gap)"
+          >
+            {#for {entry_id, entry} <- @streams.feed}
+              <div
+                id={entry_id}
+                :if={@hide_activities != "component"}
+                role="article"
+                class={
+                  "activity_wrapper",
+                  "infinite_scroll_hidden hidden": @hide_activities == "infinite_scroll",
+                  "fresh_hidden hidden": fresh_entry?(@fresh_ids, entry)
+                }
+              >
+                {#case entry}
+                  {#match %Bonfire.Files.Media{}}
+                    <Bonfire.UI.Social.TopLevelMediaLive
+                      link={entry}
+                      show_thumbnail
+                      featured={e(entry, :featured, false)}
+                    />
+                  {#match _}
+                    <ActivityLive
+                      id={ActivityLive.component_id(
+                        id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
+                          e(entry, :edge, :id, nil),
+                        "s_activity_#{entry_id}"
+                      )}
+                      activity={get_activity(entry)}
+                      custom_preview={e(@custom_preview, nil)}
+                      showing_within={@showing_within}
+                      hide_actions={@hide_actions}
+                      verb_default={@verb_default}
+                      feed_name={@feed_name}
+                      feed_id={@feed_id || @feed_ids}
+                      class={@activity_class}
+                      hide_activity={@hide_activities}
+                      subject_user={@subject_user}
+                      activity_preloads={@activity_preloads}
+                    />
+                {/case}
+              </div>
+            {/for}
+          </div>
         </div>
       {/if}
 

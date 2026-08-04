@@ -8,8 +8,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   alias Bonfire.Social.FeedLoader
   alias Bonfire.Common.PubSub
 
-  @resume_max_age_days_default 3
-
   @spec handle_params(any(), any(), any()) :: {:noreply, any()}
   def handle_params(
         %{"after" => _cursor_after} = attrs,
@@ -37,6 +35,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     if reading_position_update_allowed?(socket, feed_name, cursor) do
       Bonfire.Social.Markers.save_reading_position(current_user(socket), feed_name, cursor)
     end
+
+    {:noreply, socket}
+  end
+
+  def handle_event("reading_position_cleared", %{"feed_name" => feed_name}, socket) do
+    socket =
+      if reading_position_clear_allowed?(socket, feed_name) do
+        Bonfire.Social.Markers.clear_reading_position(current_user(socket), feed_name)
+        assign_generic(socket, resumed_from_marker: nil, newer_page_info: nil)
+      else
+        socket
+      end
 
     {:noreply, socket}
   end
@@ -521,6 +531,35 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # end
   end
 
+  @doc """
+  Loads the page immediately newer than the current restored feed window.
+
+  The domain query returns reverse-chronological edges. They are reversed before insertion because LiveView inserts a list at position zero one item at a time, which reverses the list in the rendered stream.
+  """
+  def paginate_newer_feed(feed_id, cursor, socket)
+      when is_binary(cursor) and cursor != "" do
+    opts = to_options(socket)
+    filters = e(opts, :feed_filters, %{})
+    preloads = e(opts, :activity_preloads, {[], []})
+
+    case FeedLoader.feed_newer(
+           feed_id || :default,
+           filters,
+           cursor,
+           Keyword.put(opts, :preload, elem(preloads, 0))
+         ) do
+      %{edges: edges, page_info: page_info} when is_list(edges) ->
+        {:noreply,
+         socket
+         |> assign_generic(newer_page_info: page_info)
+         |> insert_feed(Enum.reverse(edges), at: 0)}
+
+      other ->
+        error(other, "Could not load newer feed activities")
+        {:noreply, socket}
+    end
+  end
+
   # def paginate_default_feed(attrs, socket, opts \\ []) do
   #   debug("Feeds - paginate - there's no feed_id, so load the default")
 
@@ -610,6 +649,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      |> assign_generic(
        hide_activities: opts[:hide_activities],
        time_limit: opts[:time_limit],
+       feed_filters: opts[:feed_filters],
        deferred_join_multiply_limit: opts[:deferred_join_multiply_limit],
        previous_page_info: e(opts, :page_info, nil),
        feed_count: e(opts, :page_info, :page_count, nil) || Enum.count(entries || []),
@@ -644,6 +684,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        hide_activities: opts[:hide_activities],
        feed_count: e(page_info, :page_count, nil) || Enum.count(e(feed, :edges, [])),
        time_limit: opts[:time_limit],
+       feed_filters: opts[:feed_filters],
        deferred_join_multiply_limit: opts[:deferred_join_multiply_limit],
        loading: true,
        activity_preloads: preloads,
@@ -1146,7 +1187,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
          %Phoenix.LiveView.Socket{} = socket,
          reset_stream
        ) do
-    opts =
+    base_opts =
       to_options(socket)
       |> maybe_surface_enable_marker(assigns)
 
@@ -1155,14 +1196,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # |> debug("user_connected?")
 
     # FIXME: should not depend on env
-    if (user_connected || (current_user_id(opts) && !force_static?(opts))) &&
+    if (user_connected || (current_user_id(base_opts) && !force_static?(base_opts))) &&
          Config.env() != :test do
       debug("socket connected or logged in (and not in test env)")
 
       # Check for a reading position cursor before spawning async
       # (must run in the parent process where Process dict is available)
       {opts, saved_cursor} =
-        maybe_apply_reading_position(feed_name_id_or_tuple, opts, reset_stream)
+        maybe_apply_reading_position(feed_name_id_or_tuple, base_opts, reset_stream)
 
       if user_connected do
         debug("load feed async")
@@ -1176,10 +1217,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
               with {entries, new_assigns} when is_list(new_assigns) <-
                      feed_assigns(feed_name_id_or_tuple, opts) do
-                new_assigns =
-                  if is_binary(saved_cursor) and entries != [],
-                    do: Keyword.put(new_assigns, :resumed_from_marker, saved_cursor),
-                    else: new_assigns
+                {entries, new_assigns} =
+                  maybe_restore_reading_position(
+                    feed_name_id_or_tuple,
+                    entries,
+                    new_assigns,
+                    saved_cursor,
+                    base_opts,
+                    opts
+                  )
 
                 send_feed_updates(
                   pid,
@@ -1264,7 +1310,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           e(assigns, :feed_filters, nil) || e(assigns(socket), :feed_filters, %{}),
           feed_filters_only(feed_name_id_or_tuple)
         ),
-        opts
+        base_opts
       )
     end
   end
@@ -1308,30 +1354,145 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       e(opts, :assigns, :__context__, :force_static, nil)
   end
 
+  @doc """
+  Joins the newer and older sides of a restored feed after confirming the saved activity is still present.
+
+  ## Examples
+
+      iex> Bonfire.Social.Feeds.LiveHandler.merge_restored_entries([%{id: "new"}], [%{id: "marker"}, %{id: "old"}], "marker")
+      {:ok, [%{id: "new"}, %{id: "marker"}, %{id: "old"}]}
+
+      iex> Bonfire.Social.Feeds.LiveHandler.merge_restored_entries([], [%{id: "old"}], "missing")
+      {:error, :marker_missing}
+  """
+  @spec merge_restored_entries(list(), list(), String.t()) ::
+          {:ok, list()} | {:error, :marker_missing}
+  def merge_restored_entries(newer_entries, marker_and_older_entries, saved_cursor)
+      when is_list(newer_entries) and is_list(marker_and_older_entries) and
+             is_binary(saved_cursor) do
+    if Enum.any?(marker_and_older_entries, &(feed_entry_cursor(&1) == saved_cursor)) do
+      {:ok, newer_entries ++ marker_and_older_entries}
+    else
+      {:error, :marker_missing}
+    end
+  end
+
+  defp maybe_restore_reading_position(
+         _feed_name_id_or_tuple,
+         entries,
+         new_assigns,
+         nil,
+         _base_opts,
+         _resume_opts
+       ) do
+    {entries,
+     Keyword.merge(new_assigns,
+       resumed_from_marker: nil,
+       newer_page_info: nil,
+       invalid_reading_position: nil
+     )}
+  end
+
+  defp maybe_restore_reading_position(
+         feed_name_id_or_tuple,
+         entries,
+         new_assigns,
+         saved_cursor,
+         base_opts,
+         resume_opts
+       )
+       when is_binary(saved_cursor) do
+    if match?({:ok, _}, merge_restored_entries([], entries, saved_cursor)) do
+      preloads = e(new_assigns, :activity_preloads, {[], []})
+      filters = e(new_assigns, :feed_filters, %{})
+
+      case FeedLoader.feed_newer(
+             feed_name_atom(feed_name_id_or_tuple),
+             filters,
+             saved_cursor,
+             Keyword.put(resume_opts, :preload, elem(preloads, 0))
+           ) do
+        %{edges: newer_entries, page_info: newer_page_info} when is_list(newer_entries) ->
+          {:ok, restored_entries} =
+            merge_restored_entries(newer_entries, entries, saved_cursor)
+
+          {restored_entries,
+           Keyword.merge(new_assigns,
+             resumed_from_marker: saved_cursor,
+             newer_page_info: newer_page_info,
+             invalid_reading_position: nil
+           )}
+
+        other ->
+          error(other, "Could not load the newer side of a restored feed")
+          load_feed_from_top(feed_name_id_or_tuple, entries, new_assigns, base_opts, nil)
+      end
+    else
+      feed_name = feed_name_atom(feed_name_id_or_tuple)
+      Bonfire.Social.Markers.clear_reading_position(current_user(base_opts), feed_name)
+      load_feed_from_top(feed_name_id_or_tuple, entries, new_assigns, base_opts, feed_name)
+    end
+  end
+
+  defp load_feed_from_top(
+         feed_name_id_or_tuple,
+         _resumed_entries,
+         resumed_assigns,
+         base_opts,
+         invalid_feed_name
+       ) do
+    case feed_assigns(feed_name_id_or_tuple, base_opts) do
+      {entries, new_assigns} when is_list(entries) and is_list(new_assigns) ->
+        {entries,
+         Keyword.merge(new_assigns,
+           resumed_from_marker: nil,
+           newer_page_info: nil,
+           invalid_reading_position:
+             if(invalid_feed_name, do: to_string(invalid_feed_name))
+         )}
+
+      other ->
+        error(other, "Could not reload an unrestorable feed from the top")
+
+        {[],
+         Keyword.merge(resumed_assigns,
+           resumed_from_marker: nil,
+           newer_page_info: nil,
+           invalid_reading_position:
+             if(invalid_feed_name, do: to_string(invalid_feed_name))
+         )}
+    end
+  end
+
+  defp feed_entry_cursor(entry) do
+    id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
+      e(entry, :edge, :id, nil)
+  end
+
   # Client-pushed cursors are untrusted. Cheap assign checks run before the
   # settings lookup, since this gate fires on every scroll-pause.
   defp reading_position_update_allowed?(socket, feed_name, cursor)
        when is_binary(feed_name) and is_binary(cursor) do
     current_user_id(socket) &&
-      assigns(socket)[:enable_marker] != false &&
+      assigns(socket)[:enable_marker] == true &&
       to_string(assigns(socket)[:feed_name]) == feed_name &&
       chronological_desc_feed?(assigns(socket)[:feed_filters]) &&
-      Bonfire.Common.Types.is_ulid?(cursor) &&
-      markers_enabled?(assigns(socket))
+      Bonfire.Common.Types.is_ulid?(cursor)
   end
 
   defp reading_position_update_allowed?(_socket, _feed_name, _cursor), do: false
 
-  defp markers_enabled?(context) do
-    e(marker_settings(current_user(context)), :enabled, true)
+  defp reading_position_clear_allowed?(socket, feed_name) when is_binary(feed_name) do
+    current_user_id(socket) &&
+      assigns(socket)[:enable_marker] == true &&
+      to_string(assigns(socket)[:feed_name]) == feed_name &&
+      chronological_desc_feed?(assigns(socket)[:feed_filters]) &&
+      is_nil(
+        Bonfire.UI.Common.LoadMoreLive.start_cursor(assigns(socket)[:newer_page_info])
+      )
   end
 
-  # Positions that haven't moved in this many days don't hijack the feed on
-  # open (the marker is kept, e.g. for Mastodon clients).
-  defp resume_max_age_days(marker_settings) do
-    e(marker_settings, :resume_max_age_days, @resume_max_age_days_default)
-    |> Types.maybe_to_integer(@resume_max_age_days_default)
-  end
+  defp reading_position_clear_allowed?(_socket, _feed_name), do: false
 
   defp chronological_desc_feed?(filters) do
     sort_by = e(filters, :sort_by, nil)
@@ -1356,20 +1517,17 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       reset_stream == true or opts[:paginate] != nil ->
         {opts, nil}
 
-      # presets can opt out of resuming entirely (e.g. notifications, profile feeds
-      # always start at the top) - same flag that gates saving in `reading_position_update_allowed?`
-      opts[:enable_marker] == false ->
+      # Only explicitly-enabled presets resume; notifications, profile feeds, and
+      # arbitrary component feeds always start at the top.
+      opts[:enable_marker] != true ->
         {opts, nil}
 
       is_atom(feed_atom) and not is_nil(feed_atom) ->
         feed_name = to_string(feed_atom)
         user = current_user(opts)
-        marker_settings = marker_settings(user)
-        max_age_days = resume_max_age_days(marker_settings)
 
         # Saved cursors live in the chronological keyset space, so resume is
-        # gated on the same chronological-desc check as saving; expiry 0 means
-        # the user disabled resuming entirely (including same-browser cursors).
+        # gated on the same chronological-desc check as saving.
         filters =
           Map.merge(
             e(opts, :feed_filters, nil) || %{},
@@ -1377,15 +1535,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           )
 
         cursor =
-          if e(marker_settings, :enabled, true) and max_age_days != 0 and
-               chronological_desc_feed?(filters) and
+          if chronological_desc_feed?(filters) and
                not custom_filters_active?(filters, feed_atom, opts) do
             client_reading_position(opts, feed_name) ||
               if(user,
                 do:
-                  Bonfire.Social.Markers.get_reading_position(user, feed_name,
-                    max_age_days: max_age_days
-                  )
+                  Bonfire.Social.Markers.get_resumable_reading_position(user, feed_name)
               )
           end
 
@@ -1405,12 +1560,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       true ->
         {opts, nil}
     end
-  end
-
-  # Single read of the markers settings subtree, instead of one full
-  # config+account+user merge per key on every feed mount.
-  defp marker_settings(user) do
-    Bonfire.Common.Settings.get([Bonfire.Social.Markers], nil, current_user: user) || %{}
   end
 
   # Saved reading positions are recorded against a feed's default view; when the current
@@ -1582,7 +1731,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     with %{} <- positions,
          cursor when is_binary(cursor) <-
            Map.get(positions, feed_name),
-         true <- Bonfire.Common.Types.is_uid?(cursor) do
+         true <- Bonfire.Common.Types.is_ulid?(cursor) do
       cursor
     else
       _ -> nil

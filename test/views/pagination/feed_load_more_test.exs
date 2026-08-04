@@ -68,6 +68,23 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
       :ok
     end
 
+    test "reading-position tracking owns upward preloading without a viewport-boundary hook" do
+      account = fake_account!()
+      me = fake_user!(account)
+
+      conn(user: me, account: account)
+      |> visit("/feed/local")
+      |> assert_has(
+        "[id^=feed_scroll_tracker_][phx-hook$=FeedScrollTracker]:not([phx-viewport-top])"
+      )
+      |> assert_has(
+        "[id^=feed_scroll_tracker_] > [data-id=feed_newer_loading][role=status]",
+        text: "Loading newer activities..."
+      )
+      |> refute_has("[data-id=feed_activity_list][phx-viewport-top]")
+      |> refute_has("[data-id=feed_activity_list][phx-hook$=FeedScrollTracker]")
+    end
+
     test "As a user, I don't want to see the load more button if there are the same number of activities as the pagination limit" do
       # make sure we start with a blank slate:
       repo().delete_all(Bonfire.Data.Social.FeedPublish)

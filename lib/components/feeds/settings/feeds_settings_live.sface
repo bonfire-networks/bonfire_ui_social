@@ -23,20 +23,6 @@
     </div>
 
     <div x-show="open" x-cloak x-collapse class="bg-base-100   divide-hair divide-secondary">
-      <form data-scope="time_limit" class="p-4" phx-change="Bonfire.Common.Settings:set">
-        <label for="set_default_time_limit" class="sr-only">{l("Set default time limit")}</label>
-        <Bonfire.UI.Common.SettingsSelectLive
-          keys={[Bonfire.UI.Social.FeedLive, :time_limit]}
-          options={%{1 => l("Day"), 7 => l("Week"), 30 => l("Month"), 365 => l("Year"), 0 => l("All time")}}
-          default_value={nil}
-          name={l("Time limit")}
-          description={l(
-            "Select the time limit you want to use by default (can always change in the feed controls options)"
-          )}
-          scope={@scope}
-        />
-      </form>
-
       {!-- <div class="p-4 flex flex-col lg:flex-row lg:items-center gap-4 justify-between"> -->
       <!-- <div class="flex items-center justify-between gap-4">
         <div class="flex flex-col gap-1">
@@ -140,29 +126,6 @@
         />
       </form>
 
-      <form class="p-4" data-scope="markers_enabled" phx-change="Bonfire.Common.Settings:set">
-        <Bonfire.UI.Common.SettingsToggleLive
-          id="markers_toggle"
-          name={l("Remember reading position")}
-          description={l(
-            "When enabled, feeds will resume from where you left off. When disabled, feeds always start from the newest."
-          )}
-          keys={[Bonfire.Social.Markers, :enabled]}
-          enabled_value
-          default_value
-          scope={@scope}
-        />
-      </form>
-
-      <form class="p-4" data-scope="markers_resume_max_age" phx-change="Bonfire.Common.Settings:set">
-        <Bonfire.UI.Common.Settings.NumberLive
-          scope={@scope}
-          name={l("Reading position expiry")}
-          description={l("Positions older than this are not resumed from (feeds open at the top instead).")}
-          keys={[Bonfire.Social.Markers, :resume_max_age_days]}
-          unit={l("days")}
-        />
-      </form>
     </div>
   </div>
   {#if @scope == :instance or

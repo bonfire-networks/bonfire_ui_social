@@ -72,7 +72,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop fresh_ids, :any, default: nil
   prop feed_count, :any, default: nil
   prop resumed_from_marker, :any, default: nil
-  data jumping_to_newest, :boolean, default: false
+  prop newer_page_info, :any, default: nil
   prop deferred_join_multiply_limit, :any, default: nil
   prop cute_gif, :any, default: nil
   prop custom_preview, :any, default: nil
@@ -211,27 +211,30 @@ defmodule Bonfire.UI.Social.FeedLive do
     debug("feed stream is being poured into")
 
     markers_enabled =
-      assigns[:enable_marker] != false and
-        Bonfire.Common.Settings.get([Bonfire.Social.Markers, :enabled], true,
-          context: assigns(socket)[:__context__]
-        )
+      Map.get(assigns, :enable_marker, assigns(socket)[:enable_marker]) == true
 
-    socket
-    |> assign(Map.drop(assigns, [:insert_stream]))
-    |> assign(enable_marker: markers_enabled)
-    |> assign(
-      resumed_from_marker:
-        if(markers_enabled,
-          do: assign_or_existing(assigns, socket, :resumed_from_marker)
-        )
-    )
-    |> assign(jumping_to_newest: false)
-    |> LiveHandler.insert_feed(entries, reset: assigns[:reset_stream])
-    |> ok_socket()
-  end
+    socket =
+      socket
+      |> assign(Map.drop(assigns, [:insert_stream]))
+      |> assign(enable_marker: markers_enabled)
+      |> assign(
+        resumed_from_marker:
+          if(markers_enabled, do: assigns[:resumed_from_marker]),
+        newer_page_info:
+          if(markers_enabled, do: assigns[:newer_page_info])
+      )
+      |> LiveHandler.insert_feed(entries, reset: assigns[:reset_stream])
 
-  defp assign_or_existing(assigns, socket, key) do
-    if Map.has_key?(assigns, key), do: assigns[key], else: assigns(socket)[key]
+    socket =
+      case assigns[:invalid_reading_position] do
+        feed_name when is_binary(feed_name) ->
+          push_event(socket, "clear_reading_position", %{feed_name: feed_name})
+
+        _ ->
+          socket
+      end
+
+    ok_socket(socket)
   end
 
   # adding new feed item
@@ -1164,6 +1167,8 @@ defmodule Bonfire.UI.Social.FeedLive do
         reloading: !reset,
         page_info: nil,
         previous_page_info: nil,
+        newer_page_info: nil,
+        resumed_from_marker: nil,
         feed_filters: feed_filters
       )
 
@@ -1289,46 +1294,12 @@ defmodule Bonfire.UI.Social.FeedLive do
     {:noreply, assign(socket, fresh_ids: nil)}
   end
 
-  def handle_event("Bonfire.Social.Feeds:reading_position_updated", attrs, socket) do
-    LiveHandler.handle_event("reading_position_updated", attrs, socket)
-  end
+  def handle_event("load_newer", _attrs, socket) do
+    case LoadMoreLive.start_cursor(assigns(socket)[:newer_page_info]) do
+      cursor when is_binary(cursor) and cursor != "" ->
+        LiveHandler.paginate_newer_feed(feed_name(assigns(socket)), cursor, socket)
 
-  def handle_event("reading_position_updated", attrs, socket) do
-    LiveHandler.handle_event("reading_position_updated", attrs, socket)
-  end
-
-  def handle_event("jump_to_newest", %{"feed_name" => feed_name}, %{assigns: assigns} = socket) do
-    feed_id = e(assigns, :feed_name, nil) || e(assigns, :feed_id, nil)
-
-    Bonfire.Social.Markers.clear_reading_position(current_user(socket), feed_name)
-
-    socket =
-      socket
-      |> push_event("clear_reading_position", %{feed_name: feed_name})
-      |> assign(jumping_to_newest: true, resumed_from_marker: nil)
-
-    # keep any active custom filters when jumping back to the top (but pass a bare
-    # feed_id when there are none — {feed_id, %{}} would fall through to catch-all clauses)
-    feed =
-      case e(assigns, :feed_filters, nil) || %{} do
-        empty when empty == %{} -> feed_id
-        feed_filters -> {feed_id, feed_filters}
-      end
-
-    result =
-      LiveHandler.feed_assigns_maybe_async(
-        feed,
-        socket,
-        true,
-        true
-      )
-
-    case result do
-      new_assigns when is_list(new_assigns) ->
-        {:noreply, assign(socket, new_assigns)}
-
-      other ->
-        error(other, "jump_to_newest: unexpected result from feed_assigns_maybe_async")
+      _ ->
         {:noreply, socket}
     end
   end
