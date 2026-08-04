@@ -20,6 +20,11 @@ defmodule Bonfire.UI.Social.CommentsEmbedPublishedAtTest do
 
     bot = fake_user!()
     Process.put([:bonfire_ghost, :auto_import_as], bot.id)
+
+    # guest-loaded creation requires the URI's origin to be allowlisted
+    System.put_env("IFRAME_ALLOWED_ORIGINS", "https://blog.example.com")
+    on_exit(fn -> System.delete_env("IFRAME_ALLOWED_ORIGINS") end)
+
     {:ok, bot: bot}
   end
 

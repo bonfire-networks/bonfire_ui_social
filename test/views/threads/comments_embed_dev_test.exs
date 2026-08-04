@@ -56,6 +56,11 @@ defmodule Bonfire.UI.Social.CommentsEmbedDevTest do
   end
 
   test "a production-origin embed still creates a publicly-readable anchor (control)" do
+    # guest-loaded creation requires the URI's origin to be allowlisted (loopback previews are
+    # exempt, which is what the tests above exercise)
+    System.put_env("IFRAME_ALLOWED_ORIGINS", "https://blog.example.com")
+    on_exit(fn -> System.delete_env("IFRAME_ALLOWED_ORIGINS") end)
+
     uri = "https://blog.example.com/prod-public/"
     parent = "https://blog.example.com/prod-public/"
 

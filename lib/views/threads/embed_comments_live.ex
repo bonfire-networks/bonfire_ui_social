@@ -22,9 +22,9 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
   | Attribute | Default | Purpose |
   |---|---|---|
   | `data-post-id` | — | Explicit Bonfire post/thread ID. When set, skips the `media-uri` lookup and renders this thread directly. |
-  | `data-media-uri` | current page URL | URL to find or create the thread for. The canonical URI is used as the dedup key. |
-  | `data-canonical-slug` | — | Ghost post slug to find/create a thread for. |
-  | `data-canonical-id` | — | Ghost post ID (alternative to slug; prefixed `id:` server-side). |
+  | `data-media-uri` | current page URL | URL to find (or, when creation is allowed — see below — create) the thread for. The canonical URI is used as the dedup key. |
+  | `data-canonical-slug` | — | Ghost post slug used to find its already-imported thread. Page navigation never imports the article. |
+  | `data-canonical-id` | — | Ghost post ID used to find its already-imported thread (alternative to slug; prefixed `id:` server-side). |
   | `data-auth-mode` | `local` | How logged-out visitors authenticate: `local` shows Login/Register for this instance; `remote` shows a single button to the remote-interaction page so they can reply from any fediverse server (that page also offers local log in / sign up). |
   | `data-sort-by` | thread default | Initial comment sort: `latest_reply`, `reply_count`, `boost_count`, `like_count`, `popularity_score`, `newest`. |
   | `data-sort-order` | per sort type | Sort direction for `data-sort-by`: `asc` or `desc`. |
@@ -40,7 +40,13 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
 
   This LiveView is unauthenticated and its params come from a third-party page, so it accepts nothing that chooses a created post's author, audience or destination: `data-creator`, `data-boundary`, `data-group-id`, `data-to-circles` and `data-require-topic` are parsed-and-ignored (old snippets keep working; a warning is logged). They previously let any visitor forge a post's author, place it in an arbitrary group, or publish a paid Ghost article publicly via `data-boundary=public`.
 
-  Instead a thread is attributed to the signed-in viewer, else to the instance's configured import author (`Bonfire.Ghost.auto_import_as/0`), and a Ghost article's audience is derived from its Ghost `visibility`/tiers. Set the author and destination group in the instance's Ghost settings.
+  A generic media thread is attributed to the signed-in viewer, else to the instance's configured import author (`Bonfire.Ghost.auto_import_as/0`). Ghost articles are never created by this view: webhooks and the explicit historical backfill own imports, including their author, destination and audience.
+
+  Reading an existing thread is always allowed, but a missing one is only *created* when all of these hold (see `maybe_create_anchor/3`):
+
+    * the LiveView is on its connected (websocket) mount — plain HTTP fetches and crawlers never create content;
+    * a creator can be resolved (signed-in viewer, else the configured import author);
+    * for guests, the URI's origin is allowlisted in `IFRAME_ALLOWED_ORIGINS` (strict origin match; CSP-only values like `*` or `'self'` never authorize creation) — or the embed is a loopback dev preview, whose anchor is local-only anyway. A signed-in viewer may anchor any URI, since it's attributed to them.
 
   ## Dev/preview safety
 
@@ -177,34 +183,14 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
 
     warn_ignored_params(params)
 
-    # TODO: cache result
-    with creator when not is_nil(creator) <- embed_anchor_creator(socket),
-         {:ok, %{id: id} = _media} <-
-           Bonfire.Files.Media.get_or_add_media_by_uri(
-             creator,
-             uri,
-             # a preview loaded from a localhost/loopback page is kept local-only so dev
-             # testing can't publish public/federated content
-             embed_boundary(params),
-             nil,
-             # backdate the anchor to the article's publication date (if given & in the past), so
-             # importing an old article doesn't jump to the top of feeds
-             update_existing: false,
-             id: embed_published_id(params)
-           ) do
-      load_params(%{"id" => id}, nil, socket)
-    else
-      nil ->
-        error(
-          uri,
-          "No embed creator configured — set an import author in the instance's Ghost settings (or sign in) to create thread anchors from embeds"
-        )
+    # read first (same lookup `get_or_add_media_by_uri` dedups with), so displaying an existing
+    # thread needs no creator and no creation privileges. TODO: cache result
+    case Bonfire.Files.Media.get_by_path(uri) do
+      {:ok, %{id: id}} ->
+        load_params(%{"id" => id}, nil, socket)
 
-        {:noreply, assign_error(socket, l("No comments available here."))}
-
-      other ->
-        error(other, "Could not resolve media_uri to a thread")
-        {:noreply, assign_error(socket, l("No comments available here."))}
+      _ ->
+        maybe_create_anchor(uri, params, socket)
     end
   end
 
@@ -226,6 +212,64 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
           ignored,
           "Ignoring embed-supplied params — a thread's author and audience are decided by instance settings, not by the embedding page"
         )
+    end
+  end
+
+  # Creation (as opposed to reading) is gated: this LiveView is loaded unauthenticated with
+  # caller-chosen params, and a guest-created anchor is published under the instance's configured
+  # import author — so mere navigation (or a crawler, or a forged iframe URL) must not mint posts.
+  #   * never during the static render — only the connected (websocket) mount creates, which
+  #     plain HTTP fetches and crawlers don't reach;
+  #   * a signed-in viewer may anchor any URI (it's attributed to them);
+  #   * a guest-loaded embed may only anchor URIs on origins the operator allowlisted in
+  #     `IFRAME_ALLOWED_ORIGINS` (strict origin match — CSP-only values like `*` or `'self'`
+  #     never qualify, see `Bonfire.UI.Common.EmbedOrigins.allowed?/1`); a loopback dev preview
+  #     is exempt since its anchor is forced local-only anyway (see `embed_boundary/1`).
+  defp maybe_create_anchor(uri, params, socket) do
+    creator = embed_anchor_creator(socket)
+
+    cond do
+      not socket_connected?(socket) ->
+        # quiet: the connected mount runs next and may create the anchor
+        {:noreply, assign_error(socket, l("No comments available here."))}
+
+      is_nil(creator) ->
+        error(
+          uri,
+          "No embed creator configured — set an import author in the instance's Ghost settings (or sign in) to create thread anchors from embeds"
+        )
+
+        {:noreply, assign_error(socket, l("No comments available here."))}
+
+      is_nil(current_user(socket)) and
+          not (loopback_origin?(params) or Bonfire.UI.Common.EmbedOrigins.allowed?(uri)) ->
+        warn(
+          uri,
+          "Refusing to create a thread anchor for a guest-loaded embed — the URI's origin is not allowlisted in IFRAME_ALLOWED_ORIGINS"
+        )
+
+        {:noreply, assign_error(socket, l("No comments available here."))}
+
+      true ->
+        case Bonfire.Files.Media.get_or_add_media_by_uri(
+               creator,
+               uri,
+               # a preview loaded from a localhost/loopback page is kept local-only so dev
+               # testing can't publish public/federated content
+               embed_boundary(params),
+               nil,
+               # backdate the anchor to the article's publication date (if given & in the past), so
+               # importing an old article doesn't jump to the top of feeds
+               update_existing: false,
+               id: embed_published_id(params)
+             ) do
+          {:ok, %{id: id}} ->
+            load_params(%{"id" => id}, nil, socket)
+
+          other ->
+            error(other, "Could not resolve media_uri to a thread")
+            {:noreply, assign_error(socket, l("No comments available here."))}
+        end
     end
   end
 
@@ -270,42 +314,13 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
     url = e(params, "media_uri", nil) || e(params, "embed_parent", nil)
     warn_ignored_params(params)
 
-    # `restrict_to_local` (dev-preview local-only) is the only opt passed — it only ever REDUCES
-    # what a created post exposes, so it's safe from the public route (EmbedHelper drops the
-    # untrusted author/audience opts anyway) — see the moduledoc.
     with {:ok, %{id: id}} <-
-           maybe_apply(Bonfire.Ghost.EmbedHelper, :get_or_create_post_for_article, [
+           maybe_apply(Bonfire.Ghost.EmbedHelper, :get_post_for_article, [
              slug_or_id,
-             url,
-             [
-               restrict_to_local: loopback_origin?(params),
-               published_at: e(params, "published_at", nil)
-             ]
+             url
            ]) do
       load_params(%{"id" => id}, nil, socket)
     else
-      {:error, :ghost_not_configured} ->
-        uri = e(params, "media_uri", nil) || e(params, "embed_parent", nil)
-
-        if uri,
-          do:
-            load_params(
-              params
-              |> Map.delete("canonical_slug")
-              |> Map.delete("canonical_id")
-              |> Map.put("media_uri", uri),
-              nil,
-              socket
-            ),
-          else: {:noreply, assign_error(socket, l("Could not find article"))}
-
-      {:error, :topic_required} ->
-        {:noreply,
-         assign_error(
-           socket,
-           l("This article is not associated with a topic on this Bonfire instance")
-         )}
-
       error ->
         debug(error, "Ghost article lookup failed")
         {:noreply, assign_error(socket, l("Could not find article"))}

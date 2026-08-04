@@ -3,13 +3,14 @@ defmodule Bonfire.UI.Social.CommentsEmbedGhostParamsTest do
   Covers the Ghost/CMS canonical-* param routing in `EmbedCommentsLive`:
 
     * `?canonical_slug=` and `?canonical_id=` reach `handle_ghost_params/4`;
-    * when Ghost isn't configured (the default in test), the lookup returns
-      `{:error, :ghost_not_configured}` and the view must degrade gracefully —
-      falling back to `media_uri` when present, or the empty state otherwise —
-      never a 500.
+    * navigation only looks up articles imported by webhooks/backfill;
+    * when Ghost isn't configured (the default in test), the view degrades to the empty state
+      without creating a generic media anchor or returning a 500.
   """
   use Bonfire.UI.Social.ConnCase, async: false
   @moduletag :ui
+
+  alias Bonfire.Files.Media
 
   describe "canonical_* (Ghost) params" do
     test "canonical_slug with no resolvable article → empty state, no crash" do
@@ -26,16 +27,19 @@ defmodule Bonfire.UI.Social.CommentsEmbedGhostParamsTest do
       assert render(view) =~ "No comments"
     end
 
-    test "canonical_slug falls back to media_uri when Ghost is unconfigured" do
-      # ghost_not_configured → retries with the media_uri clause; an invalid
-      # URI then degrades to the empty state rather than crashing.
+    test "canonical_slug with media_uri does not create a generic anchor" do
+      bot = fake_user!()
+      Process.put([:bonfire_ghost, :auto_import_as], bot.id)
+      uri = "https://blog.example.com/not-imported/"
+
       {:ok, view, _html} =
         live(
           conn(),
-          "/comments/embed?canonical_slug=some-ghost-post&media_uri=not-a-valid-url"
+          "/comments/embed?canonical_slug=some-ghost-post&media_uri=#{URI.encode_www_form(uri)}"
         )
 
       assert render(view) =~ "No comments"
+      assert {:error, :not_found} = Media.get_by_path(uri)
     end
   end
 end
