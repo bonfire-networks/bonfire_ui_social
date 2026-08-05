@@ -404,7 +404,7 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
       cursor = cursor_id()
 
       {:ok, _} = Markers.save_reading_position(me, "my", cursor)
-      backdate_markers(11)
+      backdate_markers(31, :minute)
 
       assert {_opts, nil} =
                LiveHandler.maybe_apply_reading_position(:my, resume_opts(me, []), false)
@@ -417,7 +417,7 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
       cursor = cursor_id()
 
       {:ok, _} = Markers.save_reading_position(me, "my", cursor)
-      backdate_markers(1)
+      backdate_markers(29, :minute)
 
       assert {opts, ^cursor} =
                LiveHandler.maybe_apply_reading_position(:my, resume_opts(me, []), false)
@@ -429,7 +429,7 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
       cursor = cursor_id()
 
       {:ok, _} = Markers.save_reading_position(me, "my", cursor)
-      backdate_markers(5)
+      backdate_markers(5, :day)
 
       refute Markers.get_reading_position(me, "my", max_age_days: 3)
       assert Markers.get_reading_position(me, "my", max_age_days: 30) == cursor
@@ -487,9 +487,9 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
       e(entry, :edge, :id, nil)
   end
 
-  defp backdate_markers(days_ago) do
+  defp backdate_markers(amount, unit) do
     Bonfire.Common.Repo.update_all(Bonfire.Social.Marker,
-      set: [updated_at: Bonfire.Common.DatesTimes.past(days_ago, :day)]
+      set: [updated_at: Bonfire.Common.DatesTimes.past(amount, unit)]
     )
   end
 end
