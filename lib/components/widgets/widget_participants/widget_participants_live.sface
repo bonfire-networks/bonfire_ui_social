@@ -6,7 +6,7 @@
           {#match total}
             <Bonfire.UI.Common.WidgetBlockLive
               class="border-y-hair border-secondary pt-card"
-              title_class="flex px-card items-center justify-between pb-card text-xs font-normal uppercase tracking-wide text-base-content"
+              title_class="flex items-center justify-between pb-card px-card text-xs font-normal uppercase tracking-wide text-base-content"
               widget_title={e(assigns, :widget_title, l("Top participants"))}
             >
               {!-- top 5 by reply count, with a reveal-the-rest control (#1988) --}
@@ -15,7 +15,7 @@
                 participants={Enum.sort_by(participants, &Map.get(reply_counts, id(&1), 0), :desc)}
                 limit={5}
                 item_class="p-1"
-                list_class="divide-hair border-t-hair border-secondary flex flex-col divide-secondary"
+                list_class="divide-hair flex flex-col divide-secondary"
                 :let={participant: participant}
               >
                 {#case Map.get(reply_counts, id(participant), 0)}

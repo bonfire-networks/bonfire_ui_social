@@ -1,7 +1,7 @@
 <div
   data-avatar-hidden={Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
   id={"cc_#{id(@activity)}"}
-  style={"padding-left: #{if(@visual_level > 0, do: 4 + (@visual_level - 1) * 34, else: 0)}px"}
+  style={"padding-left: calc(var(--comment-base-indent, 0px) + #{if(@visual_level > 0, do: 4 + (@visual_level - 1) * 34, else: 0)}px)"}
   data-id="comment"
   class="flex flex-1 w-full relative items-top"
 >
