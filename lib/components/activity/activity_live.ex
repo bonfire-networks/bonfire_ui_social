@@ -45,6 +45,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop current_url, :string, default: nil
   prop permalink, :string, default: nil
   prop participants, :any, default: nil
+  prop participants_more_count, :integer, default: 0
   prop object_boundary, :any, default: :skip_boundary_preload
   prop cw, :any, default: nil
   prop emoji, :any, default: nil
@@ -837,9 +838,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 :thread,
                 :thread_embed,
                 :smart_input,
-                :widget,
                 :nested_preview
-              ],
+              ] and
+              (@showing_within != :widget or @custom_preview),
             do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"
           )}
       role="article"
@@ -853,7 +854,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       data-reply-context={not is_nil(@reply_to) and is_nil(@activity_inception) and
         @showing_within in [nil, :feed, :profile]}
       aria-label="user activity"
-      tabIndex="0"
+      tabIndex={if @custom_preview && @showing_within == :widget, do: nil, else: "0"}
       class={[
         "activity focus-ring relative flex flex-col gap-3 touch-pan-y #{@class}",
         "cursor-pointer":
@@ -899,9 +900,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
       {!-- Preview click trigger (hidden `.open_preview_link`) — rendered alongside
            both the default activity content and any `@custom_preview`, so that
-           clicking the article opens the PreviewContentLive modal in either case. --}
+           clicking the article opens the PreviewContentLive modal in either case.
+           Custom widget previews opt in while other widget activities remain inert. --}
       {#if @hide_activity != "all" and not is_nil(current_user_id(@__context__)) and
-          @showing_within not in [:smart_input, :thread, :widget, :nested_preview]}
+          @showing_within not in [:smart_input, :thread, :nested_preview] and
+          (@showing_within != :widget or @custom_preview)}
         <div class="contents">
           {!-- TODO: make the list of preview paths/components/views configurable/hookable, and derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") --}
           {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/", "/discuss/"])}
@@ -970,7 +973,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
           object={@object}
           activity={@activity}
           activity_component_id={@activity_component_id}
-          is_remote={@is_remote}
+          cw={@cw}
+          participants={@participants}
+          participants_more_count={@participants_more_count}
+          rank={@i}
           module={maybe_component(@custom_preview, @__context__)}
         />
       {#else}
