@@ -198,7 +198,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       {:ok, boost} = Boosts.boost(user, post)
       # check the feed
       conn(user: user)
-      |> visit("/feed/explore")
+      |> visit("/feed/my")
       |> wait_async()
       |> click_button("[data-role=open_modal]", "Advanced filters")
       |> click_button("[data-toggle='boost'] button", "Only")

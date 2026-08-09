@@ -58,12 +58,16 @@ defmodule Bonfire.UI.Social.Threads.NestedLoadMoreRepliesTest do
       # |> PhoenixTest.open_browser()
       |> assert_has("[data-id='comment']", count: max_depth)
       |> assert_has("[data-id='load_more_replies']")
-      |> click_button("[data-id='load_more_replies']", "more replies")
+      # match the "more repl" stem so it works whether the button reads "N more replies" (plural) or
+      # "1 more reply" (singular — as on the final click, when only one reply remains beyond the depth)
+      |> click_button("[data-id='load_more_replies']", "more repl")
       # |> PhoenixTest.open_browser()
       #  NOTE: it seems to load one more than max_depth in load_more_replies 
       |> assert_has("[data-id='comment']", count: max_depth + load_more_replies_step + 1)
       # |> PhoenixTest.open_browser()
-      |> click_button("[data-id='load_more_replies']", "more replies")
+      # match the "more repl" stem so it works whether the button reads "N more replies" (plural) or
+      # "1 more reply" (singular — as on the final click, when only one reply remains beyond the depth)
+      |> click_button("[data-id='load_more_replies']", "more repl")
       |> assert_has("[data-id='comment']", count: depth)
     end
 

@@ -962,23 +962,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     )
   end
 
-  def feed_default_assigns(:explore = feed_name, socket) do
-    # legacy ∪ bucket feed ids (composition lives in the Feeds context)
-    feed_ids = Bonfire.Social.Feeds.named_feed_ids(:explore)
-    feed_id = Bonfire.Social.Feeds.named_feed_id(:guest)
-
-    component_id =
-      component_id(
-        feed_ids,
-        assigns(socket)
-      )
+  def feed_default_assigns(feed_name, socket)
+      when feed_name in [:local, :remote, :public, :custom_boundaries, :explore] do
+    feed_ids = Bonfire.Social.Feeds.named_feed_ids(feed_name)
+    # primary singular id for display/back-compat: the concept's own legacy id where it has one
+    feed_id = Bonfire.Social.Feeds.named_feed_id(feed_name) || List.first(feed_ids)
 
     Keyword.merge(
       [
         feed_name: feed_name,
         feed_id: feed_id,
-        # feed_ids: feed_ids,
-        feed_component_id: component_id,
+        feed_ids: feed_ids,
+        feed_component_id: component_id(feed_ids, assigns(socket)),
         feed_count: nil
       ],
       feed_default_assigns_from_preset(feed_name, socket)

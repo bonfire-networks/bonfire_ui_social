@@ -486,32 +486,45 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def maybe_subscribe(socket) do
-    case e(assigns(socket), :feed_ids, nil) |> Enums.filter_empty(nil) ||
-           e(assigns(socket), :feed_filters, :feed_ids, nil) |> Enums.filter_empty(nil) ||
-           e(assigns(socket), :feed_id, nil) do
-      nil ->
-        debug("no feed_id known, not subscribing to live updates")
-        socket
+    feed_name =
+      e(assigns(socket), :feed_name, nil) || e(assigns(socket), :feed_filters, :feed_name, nil)
 
-      :user_activities ->
-        do_maybe_subscribe(
-          socket,
-          Bonfire.Social.Feeds.feed_id(:outbox, e(assigns(socket), :subject_user, nil))
-        )
+    if feed_name in [:local, :remote, :public, :custom_boundaries, :explore] do
+      # A concept feed (:local/:remote/:public/…) must subscribe to its bucket LIST — the SAME ids the
+      # query reads (`Feeds.named_feed_ids`) — so addressed activities, broadcast to their origin×boundary
+      # buckets, reach the page. assigns[:feed_id] holds only the legacy SINGULAR id, which misses them.
+      do_maybe_subscribe(
+        socket,
+        Bonfire.Social.Feeds.named_feed_ids(feed_name, current_user: current_user(socket))
+      )
+    else
+      case e(assigns(socket), :feed_ids, nil) |> Enums.filter_empty(nil) ||
+             e(assigns(socket), :feed_filters, :feed_ids, nil) |> Enums.filter_empty(nil) ||
+             e(assigns(socket), :feed_id, nil) do
+        nil ->
+          debug("no feed_id known, not subscribing to live updates")
+          socket
 
-      feed when is_atom(feed) ->
-        debug(feed, "lookup feed")
-
-        do_maybe_subscribe(
-          socket,
-          Bonfire.Social.Feeds.user_named_or_feed_id(
-            feed,
-            debug(e(assigns(socket), :subject_user, nil) || current_user(socket), "agent")
+        :user_activities ->
+          do_maybe_subscribe(
+            socket,
+            Bonfire.Social.Feeds.feed_id(:outbox, e(assigns(socket), :subject_user, nil))
           )
-        )
 
-      feed_or_feeds ->
-        do_maybe_subscribe(socket, feed_or_feeds)
+        feed when is_atom(feed) ->
+          debug(feed, "lookup feed")
+
+          do_maybe_subscribe(
+            socket,
+            Bonfire.Social.Feeds.user_named_or_feed_id(
+              feed,
+              e(assigns(socket), :subject_user, nil) || current_user(socket)
+            )
+          )
+
+        feed_or_feeds ->
+          do_maybe_subscribe(socket, feed_or_feeds)
+      end
     end
   end
 

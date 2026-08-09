@@ -54,6 +54,10 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
                :trending,
                :research,
                :local_media,
+               # #1586 bucket presets: need write-addressing + specific viewers: covered by feed_addressing_presets_test
+               :public,
+               :local_instance_only,
+               :custom_boundaries,
                nil
              ] <-
           feed_preset_test_params() do

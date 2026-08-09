@@ -62,7 +62,8 @@
                     comment={reply}
                     index={0}
                     time_gap_before={ThreadBranchLive.time_gap_before(nil, @threaded_replies, index)}
-                    thread_reply_count={@reply_count || e(@activity, :replied, :total_replies_count, nil) || e(@object, :replied, :total_replies_count, nil)}
+                    thread_reply_count={@reply_count || e(@activity, :replied, :total_replies_count, nil) ||
+                      e(@object, :replied, :total_replies_count, nil)}
                     threaded_replies={child_replies}
                     thread_id={@thread_id}
                     highlight_reply_id={@highlight_reply_id}
@@ -87,7 +88,8 @@
                     comment={reply}
                     index={0}
                     time_gap_before={e(@time_gaps, id(reply), nil)}
-                    thread_reply_count={@reply_count || e(@activity, :replied, :total_replies_count, nil) || e(@object, :replied, :total_replies_count, nil)}
+                    thread_reply_count={@reply_count || e(@activity, :replied, :total_replies_count, nil) ||
+                      e(@object, :replied, :total_replies_count, nil)}
                     threaded_replies={child_replies}
                     thread_id={@thread_id}
                     highlight_reply_id={@highlight_reply_id}

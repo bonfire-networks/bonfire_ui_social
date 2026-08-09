@@ -39,7 +39,9 @@ defmodule Bonfire.UI.Social.Threads.ContextHeaderTest do
     |> assert_has("#thread_main_object")
     # zero-height sticky wrapper + hidden bar the hook reveals (the "_page" suffix
     # distinguishes it from a preview-modal instance of the same thread)
-    |> assert_has("#thread_context_header_#{id(op)}_page [data-role='thread-context-bar'][aria-hidden='true']")
+    |> assert_has(
+      "#thread_context_header_#{id(op)}_page [data-role='thread-context-bar'][aria-hidden='true']"
+    )
     |> assert_has("[data-role='thread-context-bar']", text: name)
   end
 end
