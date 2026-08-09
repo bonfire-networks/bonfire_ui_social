@@ -2,11 +2,6 @@
   "flex flex-col flex-1 -mx-px",
   "!max-w-[720px] mx-auto w-full": !current_user_id(@__context__)
 }>
-  {!-- Morphing context header: a zero-height sticky wrapper (so revealing it never
-       shifts the layout) whose inner bar the ThreadContextHeader hook shows once the
-       main object scrolls out of view. Also rendered in the preview modal — the
-       `@activity_inception` id suffix keeps the DOM id unique when a thread page and
-       a preview of the same thread coexist. --}
   {#case e(@activity, :subject, nil) || e(@object, :created, :creator, nil)}
     {#match nil}
     {#match subject}

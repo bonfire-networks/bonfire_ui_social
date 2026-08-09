@@ -218,10 +218,8 @@ defmodule Bonfire.UI.Social.FeedLive do
       |> assign(Map.drop(assigns, [:insert_stream]))
       |> assign(enable_marker: markers_enabled)
       |> assign(
-        resumed_from_marker:
-          if(markers_enabled, do: assigns[:resumed_from_marker]),
-        newer_page_info:
-          if(markers_enabled, do: assigns[:newer_page_info])
+        resumed_from_marker: if(markers_enabled, do: assigns[:resumed_from_marker]),
+        newer_page_info: if(markers_enabled, do: assigns[:newer_page_info])
       )
       |> LiveHandler.insert_feed(entries, reset: assigns[:reset_stream])
 
