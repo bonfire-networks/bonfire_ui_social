@@ -1,8 +1,7 @@
 defmodule Bonfire.UI.Social.WidgetTrendingReplyBoundaryTest do
   @moduledoc """
-  Repro: clicking Reply on an activity in the dashboard "Top discussions"
-  widget should carry the post's boundary (e.g. "local") into the composer's
-  `to_boundaries`, same as clicking Reply in a regular feed.
+  Covers the compact dashboard "Top discussions" preview and keeps the regular
+  feed reply-boundary behavior as a control.
 
   The sticky-composer delivery (PersistentLive presence lookup) doesn't run in
   the LiveViewTest harness, so instead of asserting on the composer DOM we
@@ -12,6 +11,8 @@ defmodule Bonfire.UI.Social.WidgetTrendingReplyBoundaryTest do
   @moduletag :ui
 
   setup do
+    Process.put([:bonfire, :feed_live_update_many_preload_mode], :inline)
+
     account = fake_account!()
     me = fake_user!(account)
     other = fake_user!()
@@ -66,9 +67,6 @@ defmodule Bonfire.UI.Social.WidgetTrendingReplyBoundaryTest do
 
     assert render(view) =~ "group trending post"
 
-    Process.sleep(1000)
-    render(view)
-
     view
     |> element("[data-id=action_reply][phx-value-id='#{id(group_post)}']")
     |> render_click()
@@ -79,7 +77,7 @@ defmodule Bonfire.UI.Social.WidgetTrendingReplyBoundaryTest do
            "expected clone_context boundary, got: #{inspect(assigns[:to_boundaries])}"
   end
 
-  test "reply from the WIDGET to a post published in a group carries the group context boundary",
+  test "widget renders a compact linked preview for a post published in a group",
        %{conn: conn, other: other} do
     group = Bonfire.Classify.Simulate.fake_group!(other, %{name: "reply boundary group"})
 
@@ -94,17 +92,22 @@ defmodule Bonfire.UI.Social.WidgetTrendingReplyBoundaryTest do
 
     assert render(view) =~ "group trending post"
 
-    Process.sleep(1000)
-    render(view)
+    assert has_element?(
+             view,
+             "[data-id=trending_discussions] [data-role=trending-discussion-link][href*='#{id(group_post)}']"
+           )
 
-    view
-    |> element("[data-id=action_reply][phx-value-id='#{id(group_post)}']")
-    |> render_click()
+    assert has_element?(
+             view,
+             "[data-id=trending_discussions] [data-role=trending-discussion-rank]"
+           )
 
-    assert_receive {:composer_opened, assigns}, 2000
+    assert has_element?(
+             view,
+             "[data-id=trending_discussions] [data-role=trending-discussion-link][aria-labelledby]"
+           )
 
-    assert [{:clone_context, _}] = assigns[:to_boundaries],
-           "expected clone_context boundary, got: #{inspect(assigns[:to_boundaries])}"
+    refute has_element?(view, "[data-id=trending_discussions] [data-id=action_reply]")
   end
 
   test "reply from a regular feed carries the post's boundary into the composer (control)",
@@ -113,10 +116,6 @@ defmodule Bonfire.UI.Social.WidgetTrendingReplyBoundaryTest do
 
     assert render(view) =~ "trending boundary post"
 
-    # let async (:async_actions-mode) update_many preloads land, as they would in dev
-    Process.sleep(1000)
-    render(view)
-
     view
     |> element("[data-id=action_reply]")
     |> render_click()
@@ -129,25 +128,22 @@ defmodule Bonfire.UI.Social.WidgetTrendingReplyBoundaryTest do
            "expected local boundary in composer, got: #{inspect(assigns[:to_boundaries])}"
   end
 
-  test "reply from the trending discussions widget carries the post's boundary into the composer",
+  test "trending discussions widget opens the discussion preview with a navigation fallback",
        %{conn: conn, post: post} do
     {:ok, view, _html} = live(conn, "/dashboard")
 
     assert render(view) =~ "trending boundary post"
 
-    # let async (:async_actions-mode) update_many preloads land, as they would in dev
-    Process.sleep(1000)
-    render(view)
+    assert has_element?(
+             view,
+             "[data-id=trending_discussions] [data-role=trending-discussion-link].preview_activity_link[href*='#{id(post)}']"
+           )
 
-    view
-    |> element("[data-id=action_reply]")
-    |> render_click()
+    assert has_element?(
+             view,
+             "[data-id=trending_discussions] article[phx-hook='Bonfire.UI.Common.PreviewContentLive#PreviewActivity'] .open_preview_link[href*='#{id(post)}']"
+           )
 
-    assert_receive {:composer_opened, assigns}, 2000
-
-    assert assigns[:reply_to_id] == id(post)
-
-    assert "local" in boundary_slugs(assigns),
-           "expected local boundary in composer, got: #{inspect(assigns[:to_boundaries])}"
+    refute has_element?(view, "[data-id=trending_discussions] [data-id=action_reply]")
   end
 end

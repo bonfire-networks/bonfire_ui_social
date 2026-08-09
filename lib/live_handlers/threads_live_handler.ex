@@ -70,7 +70,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       thread_mode: thread_mode,
       sort_by: e(assigns, :sort_by, nil),
       sort_order: e(assigns, :sort_order, nil),
-      preload: preloads
+      preload: preloads,
+      # the query root: `rescue_orphaned_replies` must not stub this comment's own ancestors
+      thread_id: id
     ]
 
     %{edges: replies, page_info: _page_info} =
@@ -292,7 +294,10 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       sort_by: e(assigns, :sort_by, nil),
       max_depth: e(assigns, :max_depth, nil),
       sort_order: e(assigns, :sort_order, nil),
-      preload: preloads
+      preload: preloads,
+      thread_id: thread_id,
+      # lets small threads take the single-query path, where orphan rescue has full coverage
+      total_replies_count: e(assigns, :object, :replied, :total_replies_count, nil)
     ]
 
     with %{edges: replies, page_info: page_info} <-
@@ -333,7 +338,10 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       sort_by: e(assigns, :sort_by, nil),
       max_depth: e(assigns, :max_depth, nil),
       sort_order: e(assigns, :sort_order, nil),
-      preload: preloads
+      preload: preloads,
+      thread_id: thread_id,
+      # lets small threads take the single-query path, where orphan rescue has full coverage
+      total_replies_count: e(assigns, :object, :replied, :total_replies_count, nil)
     ]
 
     # `before:` paginates earlier items, so prepend to the stream instead of appending
@@ -758,6 +766,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
              thread_mode: thread_mode,
              sort_by: e(assigns, :sort_by, nil),
              sort_order: e(assigns, :sort_order, nil),
+             thread_id: e(assigns, :thread_id, nil),
              current_user: current_user(assigns) || current_user(socket)
            )}
         )
@@ -905,7 +914,8 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         Keyword.merge(opts,
           thread_mode: thread_mode,
           sort_by: e(assigns, :sort_by, nil),
-          sort_order: e(assigns, :sort_order, nil)
+          sort_order: e(assigns, :sort_order, nil),
+          thread_id: e(assigns, :thread_id, nil)
         )
       )
       |> {:threaded_replies, ...}
@@ -975,12 +985,18 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
   def insert_comments(socket, {:threaded_replies, replies}, opts) do
     debug(replies, "insert threaded replies into stream")
-    maybe_stream_insert(socket, :threaded_replies, replies, opts)
+
+    socket
+    |> maybe_track_time_gaps(replies, opts)
+    |> maybe_stream_insert(:threaded_replies, replies, opts)
   end
 
   def insert_comments(socket, {:threaded_replies, replies, at}, opts) do
     debug(replies, "insert threaded replies into stream")
-    maybe_stream_insert(socket, :threaded_replies, replies, opts ++ [at: at])
+
+    socket
+    |> maybe_track_time_gaps(replies, opts ++ [at: at])
+    |> maybe_stream_insert(:threaded_replies, replies, opts ++ [at: at])
   end
 
   def insert_comments(socket, {replies, assigns}, opts)
@@ -1006,6 +1022,50 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         :replies
       end
       |> insert_comments(socket, {..., replies}, opts)
+    end
+  end
+
+  # Time-gap divider labels for top-level entries, computed as they're inserted into
+  # the `:threaded_replies` stream (stream items render independently, so the template
+  # can't compare an entry to its predecessor) and stored in `:time_gaps` keyed by
+  # reply id; `:last_top_reply_date` carries the comparison across paginated batches.
+  # Skipped for branch sockets (no stream — their plain lists get gaps in the
+  # template), custom sorts, and `at: 0` prepends (live-pushed replies are new).
+  defp maybe_track_time_gaps(socket, entries, opts) do
+    assigns = assigns(socket)
+
+    if is_list(entries) and entries != [] and
+         match?(%{threaded_replies: _}, e(assigns, :streams, nil)) and
+         is_nil(e(assigns, :sort_by, nil)) and
+         opts[:at] != 0 do
+      reset? = opts[:reset] == true
+
+      {gaps, last_date} =
+        Enum.reduce(
+          entries,
+          {%{}, if(reset?, do: nil, else: e(assigns, :last_top_reply_date, nil))},
+          fn entry, {gaps, prev_date} ->
+            reply =
+              case entry do
+                {reply, _children} -> reply
+                reply -> reply
+              end
+
+            date = DatesTimes.date_from_pointer(reply)
+
+            case Bonfire.UI.Social.ThreadBranchLive.time_gap_label(prev_date, date) do
+              nil -> {gaps, date || prev_date}
+              label -> {Map.put(gaps, id(reply), label), date || prev_date}
+            end
+          end
+        )
+
+      assign_generic(socket,
+        time_gaps: Map.merge(if(reset?, do: %{}, else: e(assigns, :time_gaps, %{})), gaps),
+        last_top_reply_date: last_date
+      )
+    else
+      socket
     end
   end
 

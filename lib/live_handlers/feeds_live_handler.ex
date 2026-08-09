@@ -8,6 +8,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   alias Bonfire.Social.FeedLoader
   alias Bonfire.Common.PubSub
 
+  # A restored feed only needs a small strip of (already-read) context above the
+  # marker for the first paint — a full page in each direction would double the
+  # query cost of every resume. Scrolling up loads full-size newer pages.
+  @resume_newer_limit 5
+
   @spec handle_params(any(), any(), any()) :: {:noreply, any()}
   def handle_params(
         %{"after" => _cursor_after} = attrs,
@@ -1410,7 +1415,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
              feed_name_atom(feed_name_id_or_tuple),
              filters,
              saved_cursor,
-             Keyword.put(resume_opts, :preload, elem(preloads, 0))
+             resume_opts
+             |> Keyword.put(:preload, elem(preloads, 0))
+             |> Keyword.put(:paginate, limit: @resume_newer_limit)
            ) do
         %{edges: newer_entries, page_info: newer_page_info} when is_list(newer_entries) ->
           {:ok, restored_entries} =
