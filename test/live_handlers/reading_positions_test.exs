@@ -234,9 +234,7 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
       entries = [%{id: cursor_id()}]
 
       assert {^entries, assigns} =
-               LiveHandler.maybe_restore_reading_position(:my, entries, [], nil,
-                 current_user: me
-               )
+               LiveHandler.maybe_restore_reading_position(:my, entries, [], nil, current_user: me)
 
       assert assigns[:resumed_from_marker] == nil
       assert assigns[:newer_page_info] == nil
