@@ -2,6 +2,46 @@
   "flex flex-col flex-1 -mx-px",
   "!max-w-[720px] mx-auto w-full": !current_user_id(@__context__)
 }>
+  {!-- Morphing context header: a zero-height sticky wrapper (so revealing it never
+       shifts the layout) whose inner bar the ThreadContextHeader hook shows once the
+       main object scrolls out of view. Also rendered in the preview modal — the
+       `@activity_inception` id suffix keeps the DOM id unique when a thread page and
+       a preview of the same thread coexist. --}
+  {#case e(@activity, :subject, nil) || e(@object, :created, :creator, nil)}
+    {#match nil}
+    {#match subject}
+      <div
+        :if={@thread_id && !@object_not_permitted &&
+          @showing_within not in [:thread_embed, :messages]}
+        id={"thread_context_header_#{@thread_id}_#{@activity_inception || "page"}"}
+        :hook="ThreadContextHeader"
+        class="sticky z-[999]"
+        style="top: var(--spacing-page-header, 64px); height: 0"
+      >
+        <button
+          type="button"
+          data-role="thread-context-bar"
+          aria-hidden="true"
+          tabindex="-1"
+          aria-label={l("Back to the top of the thread")}
+          class="w-full flex items-center gap-2 px-3 py-1.5 text-left border-b-hair border-secondary bg-base-100/95 backdrop-blur-sm cursor-pointer opacity-0 -translate-y-1 pointer-events-none transition-all duration-150 ease-out"
+        >
+          <#Icon iconify="ph:arrow-up-bold" class="w-4 h-4 text-base-content/60 shrink-0" />
+          <Bonfire.UI.Common.AvatarLive
+            parent_id={"thread_ctx_#{@thread_id}_#{@activity_inception || "page"}"}
+            user_id={id(subject)}
+            src={Media.avatar_url(subject)}
+            title={e(subject, :profile, :name, nil) || e(subject, :character, :username, nil)}
+            wrapper_class="shrink-0 !w-6 !h-6 avatar border-0"
+            bg_class="rounded-full"
+            class="w-6 h-6 rounded-full"
+          />
+          <span class="text-sm font-medium truncate">{e(subject, :profile, :name, nil) || e(subject, :character, :username, nil)}</span>
+          <span class="text-xs text-base-content/60 shrink-0">{DatesTimes.date_from_now(id(@object) || @object_id || @thread_id)}</span>
+          <span class="ml-auto text-xs text-base-content/60 shrink-0">{l("Back to post")}</span>
+        </button>
+      </div>
+  {/case}
   <div class="flex-1">
     {!-- INITIAL POST --}
     <div class="relative">
