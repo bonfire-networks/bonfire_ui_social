@@ -45,49 +45,20 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   end
 
   def handle_event("share", %{"boundary" => boundary} = params, socket) do
-    current_user = current_user(socket)
+    # thin handler: resolve the object from socket assigns, delegate the permission + publish logic
+    # to the context (Bonfire.Social.Objects.share/3), keep only the socket flash + redirect here.
+    thing = ed(assigns(socket), params["object_assign"] || :object, nil)
 
-    thing =
-      ed(assigns(socket), params["object_assign"] || :object, nil)
-      |> debug()
-
-    creator =
-      if not is_nil(thing),
-        do:
-          e(thing, :creator, nil) || e(thing, :created, :creator, nil) ||
-            e(thing, :created, :creator_id, nil) || e(thing, :caretaker, :caretaker, nil) ||
-            e(thing, :caretaker, :caretaker_id, nil) || e(thing, :provider, nil)
-
-    cond do
-      is_nil(creator) ->
-        error("Oops, the system could not find what you are trying to share")
-
-      is_nil(creator) ->
-        error(
-          "Could not share because the system did not know if you are the creator or caretaker"
-        )
-
-      id(creator) != id(current_user) ->
-        error(creator, "Not allowed")
-
-      is_struct(thing) ->
-        # TODO: check permission
-        with {:ok, _} <-
-               Objects.publish(current_user, :boost, thing,
-                 to_boundaries: boundary,
-                 to_circles: params["to"]
-               ) do
-          {:noreply,
-           socket
-           |> assign_flash(:info, l("Shared!"))
-           |> maybe_redirect_to(
-             e(params, "go", nil),
-             fallback: current_url(socket)
-           )}
-        end
-
-      true ->
-        error("No object to share")
+    with {:ok, _} <-
+           Objects.share(current_user(socket), thing,
+             to_boundaries: boundary,
+             to_circles: params["to"],
+             notify_to_circles: true
+           ) do
+      {:noreply,
+       socket
+       |> assign_flash(:info, l("Shared!"))
+       |> maybe_redirect_to(e(params, "go", nil), fallback: current_url(socket))}
     end
   end
 

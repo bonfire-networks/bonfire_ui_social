@@ -125,7 +125,6 @@
           scope={@scope}
         />
       </form>
-
     </div>
   </div>
   {#if @scope == :instance or

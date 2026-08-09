@@ -1,7 +1,10 @@
-<div data-role="object-thread" class={
-  "flex flex-col flex-1 -mx-px",
-  "!max-w-[720px] mx-auto w-full": !current_user_id(@__context__)
-}>
+<div
+  data-role="object-thread"
+  class={
+    "flex flex-col flex-1 -mx-px",
+    "!max-w-[720px] mx-auto w-full": !current_user_id(@__context__)
+  }
+>
   <div class="flex-1">
     {!-- INITIAL POST --}
     <div class="relative">

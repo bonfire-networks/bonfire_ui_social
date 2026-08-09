@@ -963,14 +963,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def feed_default_assigns(:explore = feed_name, socket) do
-    feed_id = "0AND0MSTRANGERS0FF1NTERNET"
-
-    feed_ids = [
-      feed_id,
-      # both local and remote
-      Bonfire.Social.Feeds.named_feed_id(:activity_pub),
-      Bonfire.Social.Feeds.named_feed_id(:local)
-    ]
+    # legacy ∪ bucket feed ids (composition lives in the Feeds context)
+    feed_ids = Bonfire.Social.Feeds.named_feed_ids(:explore)
+    feed_id = Bonfire.Social.Feeds.named_feed_id(:guest)
 
     component_id =
       component_id(
@@ -1447,8 +1442,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
          Keyword.merge(new_assigns,
            resumed_from_marker: nil,
            newer_page_info: nil,
-           invalid_reading_position:
-             if(invalid_feed_name, do: to_string(invalid_feed_name))
+           invalid_reading_position: if(invalid_feed_name, do: to_string(invalid_feed_name))
          )}
 
       other ->
@@ -1458,8 +1452,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
          Keyword.merge(resumed_assigns,
            resumed_from_marker: nil,
            newer_page_info: nil,
-           invalid_reading_position:
-             if(invalid_feed_name, do: to_string(invalid_feed_name))
+           invalid_reading_position: if(invalid_feed_name, do: to_string(invalid_feed_name))
          )}
     end
   end
@@ -1487,9 +1480,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       assigns(socket)[:enable_marker] == true &&
       to_string(assigns(socket)[:feed_name]) == feed_name &&
       chronological_desc_feed?(assigns(socket)[:feed_filters]) &&
-      is_nil(
-        Bonfire.UI.Common.LoadMoreLive.start_cursor(assigns(socket)[:newer_page_info])
-      )
+      is_nil(Bonfire.UI.Common.LoadMoreLive.start_cursor(assigns(socket)[:newer_page_info]))
   end
 
   defp reading_position_clear_allowed?(_socket, _feed_name), do: false
@@ -1539,8 +1530,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                not custom_filters_active?(filters, feed_atom, opts) do
             client_reading_position(opts, feed_name) ||
               if(user,
-                do:
-                  Bonfire.Social.Markers.get_resumable_reading_position(user, feed_name)
+                do: Bonfire.Social.Markers.get_resumable_reading_position(user, feed_name)
               )
           end
 
