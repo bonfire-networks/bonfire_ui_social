@@ -1,8 +1,8 @@
 {#case load(current_user(@__context__), @limit)}
   {#match discussions}
     <Bonfire.UI.Common.WidgetBlockLive
-      class="w-full pt-card pb-2 flex-auto mx-auto border-y-hair border-secondary overflow-hidden"
-      title_class="pb-card text-xs px-4 uppercase tracking-wide text-base-content"
+      class="w-full flex-auto mx-auto border-y-hair border-secondary overflow-hidden"
+      title_class="px-4 py-card text-xs uppercase tracking-wide text-base-content sm:px-5"
       widget_title={@widget_title || l("Top discussions")}
       reset_cache_event="Bonfire.UI.Social.WidgetTrendingDiscussionsLive:reset_trending_discussions"
       reset_cache_values={%{limit: @limit}}
@@ -21,45 +21,26 @@
         </LinkLive>
       </:action>
 
-      <ul class="flex -mx-px flex-col gap-2" role="list" data-id="trending_discussions">
-        {#for fp <- discussions}
-          <li class="bonfire-wrapper">
+      <ul class="flex flex-col" role="list" data-id="trending_discussions">
+        {#for {fp, rank} <- Enum.with_index(discussions, 1)}
+          <li
+            id={"trending_discussion_#{id(fp.activity) || id(fp.activity.object)}"}
+            class="border-t-hair border-secondary first:border-t-hair"
+          >
             <Bonfire.UI.Social.ActivityLive
               id={Bonfire.UI.Social.ActivityLive.component_id(
                 id(fp.activity) || id(fp.activity.object),
                 "trending_discussion"
               )}
               activity={fp.activity}
+              class="!gap-0"
+              showing_within={:widget}
+              custom_preview={Bonfire.UI.Social.Activity.DiscussionPreviewLive}
+              i={rank}
+              participants={e(fp, :participants, [])}
+              participants_more_count={e(fp, :participants_more_count, 0)}
+              hide_actions
             />
-            {#case e(fp, :participants, [])}
-              {#match []}
-              {#match participants}
-                <div
-                  data-role="thread_participants"
-                  class="flex items-center gap-2 mt-2"
-                  title={l("Also in this discussion: %{names}",
-                    names: Bonfire.Social.Threads.participants_names(participants, ", ")
-                  )}
-                >
-                  <div class="flex -space-x-1.5">
-                    {#for p <- participants}
-                      <Bonfire.UI.Common.AvatarLive
-                        parent_id={deterministic_dom_id(
-                          __MODULE__,
-                          id(p),
-                          "trending_participant",
-                          id(fp.activity)
-                        )}
-                        user_id={id(p)}
-                        src={Media.avatar_url(p)}
-                        title={e(p, :profile, :name, nil) || e(p, :character, :username, nil)}
-                        bg_class="rounded-full"
-                        class="w-6 h-6 rounded-full ring-2 ring-base-100"
-                      />
-                    {/for}
-                  </div>
-                </div>
-            {/case}
           </li>
         {/for}
       </ul>

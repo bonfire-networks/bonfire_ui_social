@@ -32,6 +32,7 @@
                     >
                       <div
                         :if={count > 0 and total > 0}
+                        data-role="reply_share"
                         class="shrink-0 mr-[20px] w-[60px] h-2 rounded-full bg-secondary overflow-hidden"
                         title={"#{count} " <> l("replies")}
                       >
