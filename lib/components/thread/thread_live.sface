@@ -56,11 +56,13 @@
                 data-role="threaded_replies_assigned"
                 class=""
               >
-                {#for {reply, child_replies} <- @threaded_replies}
+                {#for {{reply, child_replies}, index} <- Enum.with_index(@threaded_replies)}
                   <ThreadBranchLive
                     id={LiveHandler.component_id(id(reply), "flat")}
                     comment={reply}
                     index={0}
+                    time_gap_before={ThreadBranchLive.time_gap_before(nil, @threaded_replies, index)}
+                    thread_reply_count={@reply_count || e(@activity, :replied, :total_replies_count, nil) || e(@object, :replied, :total_replies_count, nil)}
                     threaded_replies={child_replies}
                     thread_id={@thread_id}
                     highlight_reply_id={@highlight_reply_id}
@@ -84,6 +86,8 @@
                     id={entry_id}
                     comment={reply}
                     index={0}
+                    time_gap_before={e(@time_gaps, id(reply), nil)}
+                    thread_reply_count={@reply_count || e(@activity, :replied, :total_replies_count, nil) || e(@object, :replied, :total_replies_count, nil)}
                     threaded_replies={child_replies}
                     thread_id={@thread_id}
                     highlight_reply_id={@highlight_reply_id}
