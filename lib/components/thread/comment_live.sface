@@ -1,6 +1,6 @@
 <div
   data-avatar-hidden={Settings.get([Bonfire.UI.Common.AvatarLive, :hide_avatars], false, @__context__)}
-  id={"cc_#{id(@activity)}"}
+  id={"cc_#{id(@activity) || id(@comment)}"}
   style={"padding-left: calc(var(--comment-base-indent, 0px) + #{if(@visual_level > 0, do: 4 + (@visual_level - 1) * 34, else: 0)}px)"}
   data-id="comment"
   class="flex flex-1 w-full relative items-top"
@@ -53,12 +53,16 @@
   </div> --}
   <div data-role="comment-activity" class="flex-1 w-full" x-data="{reply: false, show: true}">
     {#if is_nil(@activity)}
-      {!-- <div class="mx-4 my-2">
-        <div class="alert alert-info alert-soft" role="alert">
-          <#Icon solid="InformationCircle" class="w-5 h-5 shrink-0" />
-          <span class="">{l("This comment was deleted.")}</span>
-        </div>
-      </div> --}
+      {!-- Stub from `Threads.rescue_orphaned_replies/1`: the parent of the replies below is deleted or boundary-hidden — the placeholder keeps the chain intact without leaking which of the two it is. --}
+      <div
+        :if={e(@comment, :stub, nil)}
+        data-role="comment-unavailable"
+        role="note"
+        class="mx-4 my-2 flex items-center gap-2 text-sm text-base-content/70"
+      >
+        <#Icon iconify="ph:eye-slash-duotone" class="w-4 h-4 shrink-0" />
+        <span>{l("This comment is unavailable — it may have been deleted or is not visible to you.")}</span>
+      </div>
     {#else}
       <ActivityLive
         id={ActivityLive.component_id(

@@ -51,6 +51,11 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
   data has_replies, :boolean, default: false
 
+  # time-gap divider labels for top-level stream entries, keyed by reply id
+  # (computed at insert time — stream items can't see their predecessor at render)
+  data time_gaps, :map, default: %{}
+  data last_top_reply_date, :any, default: nil
+
   def mount(socket) do
     {
       :ok,
