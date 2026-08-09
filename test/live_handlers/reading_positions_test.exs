@@ -10,7 +10,7 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
 
   import Bonfire.Posts.Fake
 
-  doctest Bonfire.Social.Feeds.LiveHandler, only: [merge_restored_entries: 3]
+  doctest Bonfire.Social.Feeds.LiveHandler, only: [restored_marker_present?: 2]
 
   setup do
     account = fake_account!()
@@ -212,23 +212,55 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
   end
 
   describe "reading position resume" do
-    test "places newer entries above the marker while preserving older entries below" do
-      newer = [%{id: "newest"}, %{id: "newer"}]
-      marker_and_older = [%{id: "marker"}, %{id: "older"}]
+    test "defers the newer side by seeding pagination with the saved cursor", %{me: me} do
+      cursor = cursor_id()
+      entries = [%{id: cursor}, %{id: cursor_id()}]
 
-      assert {:ok, expected} =
-               LiveHandler.merge_restored_entries(newer, marker_and_older, "marker")
+      assert {^entries, assigns} =
+               LiveHandler.maybe_restore_reading_position(
+                 :my,
+                 entries,
+                 [],
+                 cursor,
+                 current_user: me
+               )
 
-      assert expected == newer ++ marker_and_older
+      assert assigns[:resumed_from_marker] == cursor
+      assert assigns[:newer_page_info] == %{start_cursor: cursor}
+      assert assigns[:invalid_reading_position] == nil
     end
 
-    test "rejects a resume window when the marker is no longer available" do
-      assert {:error, :marker_missing} =
-               LiveHandler.merge_restored_entries(
-                 [%{id: "newer"}],
-                 [%{id: "older"}],
-                 "missing"
+    test "leaves the feed untouched when there is no saved cursor", %{me: me} do
+      entries = [%{id: cursor_id()}]
+
+      assert {^entries, assigns} =
+               LiveHandler.maybe_restore_reading_position(:my, entries, [], nil,
+                 current_user: me
                )
+
+      assert assigns[:resumed_from_marker] == nil
+      assert assigns[:newer_page_info] == nil
+      assert assigns[:invalid_reading_position] == nil
+    end
+
+    test "clears the marker and reloads from the top when the marker is gone", %{me: me} do
+      missing_cursor = cursor_id()
+      Markers.save_reading_position(me, "my", missing_cursor)
+
+      assert {entries, assigns} =
+               LiveHandler.maybe_restore_reading_position(
+                 :my,
+                 [%{id: cursor_id()}],
+                 [],
+                 missing_cursor,
+                 current_user: me
+               )
+
+      assert is_list(entries)
+      assert assigns[:resumed_from_marker] == nil
+      assert assigns[:newer_page_info] == nil
+      assert assigns[:invalid_reading_position] == "my"
+      refute Markers.get_reading_position(me, "my")
     end
 
     test "prefers a valid client cursor over the stored marker", %{me: me} do

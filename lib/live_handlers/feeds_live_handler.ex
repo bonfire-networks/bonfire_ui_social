@@ -8,11 +8,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   alias Bonfire.Social.FeedLoader
   alias Bonfire.Common.PubSub
 
-  # A restored feed only needs a small strip of (already-read) context above the
-  # marker for the first paint — a full page in each direction would double the
-  # query cost of every resume. Scrolling up loads full-size newer pages.
-  @resume_newer_limit 5
-
   @spec handle_params(any(), any(), any()) :: {:noreply, any()}
   def handle_params(
         %{"after" => _cursor_after} = attrs,
@@ -1223,8 +1218,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                     entries,
                     new_assigns,
                     saved_cursor,
-                    base_opts,
-                    opts
+                    base_opts
                   )
 
                 send_feed_updates(
@@ -1355,36 +1349,30 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   @doc """
-  Joins the newer and older sides of a restored feed after confirming the saved activity is still present.
+  Checks whether the saved reading-position marker is still present among the restored entries.
 
   ## Examples
 
-      iex> Bonfire.Social.Feeds.LiveHandler.merge_restored_entries([%{id: "new"}], [%{id: "marker"}, %{id: "old"}], "marker")
-      {:ok, [%{id: "new"}, %{id: "marker"}, %{id: "old"}]}
+      iex> Bonfire.Social.Feeds.LiveHandler.restored_marker_present?([%{id: "marker"}, %{id: "old"}], "marker")
+      true
 
-      iex> Bonfire.Social.Feeds.LiveHandler.merge_restored_entries([], [%{id: "old"}], "missing")
-      {:error, :marker_missing}
+      iex> Bonfire.Social.Feeds.LiveHandler.restored_marker_present?([%{id: "old"}], "missing")
+      false
   """
-  @spec merge_restored_entries(list(), list(), String.t()) ::
-          {:ok, list()} | {:error, :marker_missing}
-  def merge_restored_entries(newer_entries, marker_and_older_entries, saved_cursor)
-      when is_list(newer_entries) and is_list(marker_and_older_entries) and
-             is_binary(saved_cursor) do
-    if Enum.any?(marker_and_older_entries, &(feed_entry_cursor(&1) == saved_cursor)) do
-      {:ok, newer_entries ++ marker_and_older_entries}
-    else
-      {:error, :marker_missing}
-    end
+  @spec restored_marker_present?(list(), String.t()) :: boolean()
+  def restored_marker_present?(entries, saved_cursor)
+      when is_list(entries) and is_binary(saved_cursor) do
+    Enum.any?(entries, &(feed_entry_cursor(&1) == saved_cursor))
   end
 
-  defp maybe_restore_reading_position(
-         _feed_name_id_or_tuple,
-         entries,
-         new_assigns,
-         nil,
-         _base_opts,
-         _resume_opts
-       ) do
+  @doc false
+  def maybe_restore_reading_position(
+        _feed_name_id_or_tuple,
+        entries,
+        new_assigns,
+        nil,
+        _base_opts
+      ) do
     {entries,
      Keyword.merge(new_assigns,
        resumed_from_marker: nil,
@@ -1393,42 +1381,22 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      )}
   end
 
-  defp maybe_restore_reading_position(
-         feed_name_id_or_tuple,
-         entries,
-         new_assigns,
-         saved_cursor,
-         base_opts,
-         resume_opts
-       )
-       when is_binary(saved_cursor) do
-    if match?({:ok, _}, merge_restored_entries([], entries, saved_cursor)) do
-      preloads = e(new_assigns, :activity_preloads, {[], []})
-      filters = e(new_assigns, :feed_filters, %{})
-
-      case FeedLoader.feed_newer(
-             feed_name_atom(feed_name_id_or_tuple),
-             filters,
-             saved_cursor,
-             resume_opts
-             |> Keyword.put(:preload, elem(preloads, 0))
-             |> Keyword.put(:paginate, limit: @resume_newer_limit)
-           ) do
-        %{edges: newer_entries, page_info: newer_page_info} when is_list(newer_entries) ->
-          {:ok, restored_entries} =
-            merge_restored_entries(newer_entries, entries, saved_cursor)
-
-          {restored_entries,
-           Keyword.merge(new_assigns,
-             resumed_from_marker: saved_cursor,
-             newer_page_info: newer_page_info,
-             invalid_reading_position: nil
-           )}
-
-        other ->
-          error(other, "Could not load the newer side of a restored feed")
-          load_feed_from_top(feed_name_id_or_tuple, entries, new_assigns, base_opts, nil)
-      end
+  def maybe_restore_reading_position(
+        feed_name_id_or_tuple,
+        entries,
+        new_assigns,
+        saved_cursor,
+        base_opts
+      )
+      when is_binary(saved_cursor) do
+    if restored_marker_present?(entries, saved_cursor) do
+      {entries,
+       Keyword.merge(new_assigns,
+         resumed_from_marker: saved_cursor,
+         # Avoid blocking first paint on a second permission-heavy feed query.
+         newer_page_info: %{start_cursor: saved_cursor},
+         invalid_reading_position: nil
+       )}
     else
       feed_name = feed_name_atom(feed_name_id_or_tuple)
       Bonfire.Social.Markers.clear_reading_position(current_user(base_opts), feed_name)

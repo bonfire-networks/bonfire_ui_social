@@ -123,8 +123,9 @@ function loadTracker({
       callback();
     },
     scrollTo({ top }) {
-      this.scrollY = top;
-      scrollCalls.push(top);
+      // browsers clamp the scroll position at the top of the document
+      this.scrollY = Math.max(0, top);
+      scrollCalls.push(this.scrollY);
     },
   };
 
@@ -249,6 +250,90 @@ test("can restore the same cursor again after it was cleared", () => {
 
   assert.equal(state.scrollCalls.length, 2);
   assert.equal(state.tracker.restoredCursor, marker);
+});
+
+test("waits for upward scroll before loading newer entries after restoring", () => {
+  const marker = "01KTEST0000000000000000000";
+  const anchor = activity(marker, -100, 250);
+  const state = loadTracker({
+    activities: [anchor],
+    hasNewer: true,
+    initialScrollY: 1000,
+    resumedCursor: marker,
+    storedOffset: { cursor: marker, offset: -100 },
+  });
+
+  state.tracker.mounted();
+
+  assert.equal(state.pushedEvents.some(({ name }) => name === "load_newer"), false);
+
+  state.window.scrollY = 900;
+  state.listeners.get("scroll")();
+
+  assert.equal(state.pushedEvents.filter(({ name }) => name === "load_newer").length, 1);
+});
+
+test("loads newer entries immediately when restoring lands pinned at the top", () => {
+  const marker = "01KTEST0000000000000000000";
+  // Restore target clamps to 0 (stored offset larger than the marker's current
+  // document position), so no upward-scroll event could ever fire.
+  const anchor = activity(marker, 100, 400);
+  const state = loadTracker({
+    activities: [anchor],
+    hasNewer: true,
+    initialScrollY: 0,
+    resumedCursor: marker,
+    storedOffset: { cursor: marker, offset: 400 },
+  });
+
+  state.tracker.mounted();
+
+  assert.equal(state.window.scrollY, 0);
+  assert.equal(state.pushedEvents.filter(({ name }) => name === "load_newer").length, 1);
+});
+
+test("keeps loading newer pages after restore while the document stays unscrollable", async () => {
+  const marker = "01KTEST0000000000000000000";
+  const anchor = activity(marker, 100, 400);
+  const state = loadTracker({
+    activities: [anchor],
+    hasNewer: true,
+    initialScrollY: 0,
+    resumedCursor: marker,
+    storedOffset: { cursor: marker, offset: 400 },
+  });
+
+  state.tracker.mounted();
+
+  const firstLoad = state.pushedEvents.find(({ name }) => name === "load_newer");
+  assert.ok(firstLoad);
+
+  // The inserted page is too short to give the viewport any scroll room: the
+  // anchor's rect is unchanged, so the viewport stays pinned at the top.
+  state.prependActivities(activity("01KNEWER100000000000000000", 0, 0, { hidden: true }));
+  state.tracker.updated();
+  firstLoad.resolve();
+  await flushPromises();
+
+  const minimumVisibilityTimer = [...state.timers].find(
+    ([, { delay }]) => delay > 0 && delay <= 500,
+  );
+  assert.ok(minimumVisibilityTimer);
+  state.runTimer(minimumVisibilityTimer[0]);
+
+  assert.equal(state.pushedEvents.filter(({ name }) => name === "load_newer").length, 2);
+
+  // Once the server reports nothing newer remains, the chain stops.
+  const secondLoad = state.pushedEvents.filter(({ name }) => name === "load_newer")[1];
+  state.el.dataset.hasNewer = "false";
+  state.tracker.updated();
+  secondLoad.resolve();
+  await flushPromises();
+  const nextTimer = [...state.timers].find(([, { delay }]) => delay > 0 && delay <= 500);
+  assert.ok(nextTimer);
+  state.runTimer(nextTimer[0]);
+
+  assert.equal(state.pushedEvents.filter(({ name }) => name === "load_newer").length, 2);
 });
 
 test("saves the first visible activity and clears only at the true feed top", () => {
