@@ -2,21 +2,19 @@
   :if={(@boost_count || 0) > 0 or (@reply_count || 0) > 0}
   id={deterministic_dom_id(__MODULE__, id(@object), "fediverse_reactions", @parent_id)}
   data-role="fediverse_reactions"
-  role="region"
-  aria-label={l("Fediverse reactions")}
-  class="flex flex-col gap-2 pt-3 border-t-hair border-secondary mt-2"
+  role="group"
+  aria-label={l("Thread stats")}
+  class="flex items-center gap-3 px-2"
 >
-  <div class="flex items-center gap-3" role="group" aria-label={l("Thread stats")}>
-    <div class="text-sm text-base-content" aria-label={l("Replies")} title={l("Replies")}>
-      <span data-id="reply_count" class="text-sm tabular-nums font-medium text-base-content">{@reply_count || 0}</span>
-      <span class="">{l("Replies")}</span>
-    </div>
-    <span class="text-primary font-bold">
-      ·
-    </span>
-    <div data-role="boosts_summary" class="text-sm text-base-content">
-      <span data-id="boosts_count" class="text-sm tabular-nums font-medium text-base-content">{@boost_count || 0}</span>
-      <span class="">{l("Boosts")}</span>
-    </div>
+  <div data-role="replies_summary" class="text-sm text-base-content">
+    <span data-id="reply_count" class="text-sm tabular-nums font-medium text-base-content">{@reply_count || 0}</span>
+    <span class="">{lp("Reply", "Replies", @reply_count || 0)}</span>
+  </div>
+  <span class="text-primary font-bold" aria-hidden="true">
+    ·
+  </span>
+  <div data-role="boosts_summary" class="text-sm text-base-content">
+    <span data-id="boosts_count" class="text-sm tabular-nums font-medium text-base-content">{@boost_count || 0}</span>
+    <span class="">{lp("Boost", "Boosts", @boost_count || 0)}</span>
   </div>
 </div>

@@ -1,14 +1,23 @@
 <div>
   <div
-    class="relative feed_control_wrapper min-w-full bg-base-200 rounded-field border-hair border-secondary border w-[calc(100%)] max-w-[calc(100px)] p-1 -my-[0.5px]"
+    class="relative feed_control_wrapper min-w-full bg-base-200 rounded-field border-hair border-secondary border w-[calc(100%)] max-w-[calc(100px)] p-1 -my-[0.5px] flex items-center gap-3"
     role="region"
     aria-label={l("Thread stats and actions")}
   >
+    {!-- Left: reply/boost counts, folded into this row so the thread has one
+         metadata band rather than a separate bordered one above it --}
+    <StatelessComponent
+      module={maybe_component(Bonfire.UI.Social.Activity.FediverseReactionsLive, @__context__)}
+      object={@object}
+      reply_count={@reply_count}
+      boost_count={@thread_boost_count}
+    />
+
     {!-- Right: thread controls + remote actions, unified into one segmented toolbar --}
     <div
       :if={socket_connected?(@__context__) and
         (current_user_id(@__context__) || e(@object, :peered, :canonical_uri, nil) || @is_remote)}
-      class="flex items-center gap-1"
+      class="flex items-center gap-1 ml-auto"
       role="group"
       aria-label={l("Thread controls")}
     >

@@ -303,8 +303,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
     if connected?(socket) and e(assigns, :showing_within, nil) != :messages and
          is_struct(object) do
-      {boosters, boost_count} = list_thread_boosters(object, current_user(socket))
-      assign(socket, root_boosters: boosters, root_boost_count: boost_count)
+      assign(socket, root_boost_count: count_thread_boosts(object, current_user(socket)))
     else
       socket
     end
@@ -312,29 +311,31 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
   def load_thread_reactions_assigns(socket), do: socket
 
-  defp list_thread_boosters(object, current_user, limit \\ 6) do
-    boosters =
+  # Counts the edges directly up to `limit` and only falls back to the
+  # denormalized `boost_count` counter above it — the counter has been
+  # unreliable historically, so small counts (the common case) stay exact.
+  #
+  # Only the number is rendered, in the thread's metadata row, so the edges are
+  # fetched with `preload: :skip`. If a boosters facepile is added back, this
+  # wants `preload: :subject_character_peered` so the avatars come from this
+  # same query rather than a second round trip.
+  defp count_thread_boosts(object, current_user, limit \\ 6) do
+    boosts =
       Bonfire.Social.Boosts.list_of(object,
         current_user: current_user,
         paginate?: true,
         limit: limit,
-        # JOIN booster's character.peered in the list query (facepile locality), no extra query
-        preload: :subject_character_peered
+        preload: :skip
       )
       |> e(:edges, [])
-      |> Enum.map(&e(&1, :edge, :subject, nil))
-      |> Enum.reject(&is_nil/1)
 
-    count =
-      if length(boosters) < limit,
-        do: length(boosters),
-        else: Bonfire.Social.Boosts.count(object, [])
-
-    {boosters, count}
+    if length(boosts) < limit,
+      do: length(boosts),
+      else: Bonfire.Social.Boosts.count(object, [])
   rescue
     e ->
-      error(e, "Could not load thread boosters")
-      {[], 0}
+      error(e, "Could not count thread boosts")
+      0
   end
 
   def load_object_assigns(%{assigns: assigns} = socket), do: load_object_assigns(assigns, socket)

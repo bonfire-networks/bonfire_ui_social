@@ -878,9 +878,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
             @showing_within not in [:smart_input, :pinned] and @viewing_main_object == false
       ]}
     >
+      {!-- hidden when the shown parent IS the thread root: nothing is elided
+           above the pair, so there's no fuller thread to point to --}
       <div
         :if={not is_nil(@reply_to) and is_nil(@activity_inception) and
-          @showing_within in [nil, :feed, :profile]}
+          @showing_within in [nil, :feed, :profile] and
+          e(@reply_to, :object, :id, nil) != @thread_id}
         data-role="thread_header"
         class="-mx-card -mt-[16px] mb-2 px-card py-2 bg-base-200 border-b-hair border-secondary rounded-t-[var(--radius-box)] flex items-center justify-end"
       >

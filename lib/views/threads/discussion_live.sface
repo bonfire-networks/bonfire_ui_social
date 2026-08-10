@@ -11,7 +11,6 @@
     showing_within={:thread}
     thread_id={@thread_id}
     reply_id={@reply_id}
-    root_boosters={@root_boosters}
     root_boost_count={@root_boost_count}
     include_path_ids={@include_path_ids}
     participants={@participants}

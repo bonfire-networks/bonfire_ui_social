@@ -26,7 +26,6 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        post_id: nil,
        reply_id: nil,
        thread_id: nil,
-       root_boosters: [],
        root_boost_count: 0,
        back: true,
        #  reply_id: nil,

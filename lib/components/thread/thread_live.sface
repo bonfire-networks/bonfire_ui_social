@@ -13,6 +13,9 @@
     showing_within={@showing_within}
     object={@object}
     activity={@activity}
+    reply_count={@reply_count || e(@activity, :replied, :total_replies_count, nil) ||
+      e(@object, :replied, :total_replies_count, nil)}
+    thread_boost_count={@thread_boost_count}
     is_remote={e(@object, :peered, :canonical_uri, nil) != nil}
   >
     <Bonfire.UI.Social.ThreadControlsLive
@@ -50,60 +53,74 @@
           ) && "until_hovered"}
           {#match hide_actions}
             {#if @thread_mode != :flat}
-              {!-- manually assigned threaded_replies (without using stream) --}
-              <div
-                :if={is_list(@threaded_replies) and @threaded_replies != []}
-                data-role="threaded_replies_assigned"
-                class=""
-              >
-                {#for {{reply, child_replies}, index} <- Enum.with_index(@threaded_replies)}
-                  <ThreadBranchLive
-                    id={LiveHandler.component_id(id(reply), "flat")}
-                    comment={reply}
-                    index={0}
-                    time_gap_before={ThreadBranchLive.time_gap_before(nil, @threaded_replies, index)}
-                    thread_reply_count={@reply_count || e(@activity, :replied, :total_replies_count, nil) ||
-                      e(@object, :replied, :total_replies_count, nil)}
-                    threaded_replies={child_replies}
-                    thread_id={@thread_id}
-                    highlight_reply_id={@highlight_reply_id}
-                    feed_id={@feed_id || @thread_id}
-                    current_url={@current_url}
-                    thread_object={@object}
-                    thread_mode={@thread_mode}
-                    showing_within={@showing_within || :thread}
-                    hide_actions={hide_actions}
-                    activity_inception={@activity_inception}
-                    activity_preloads={@activity_preloads}
-                    depth_loaded={@depth_loaded}
-                  />
-                {/for}
-              </div>
+              {!-- Shared spine for the top-level replies. Each branch already draws
+                   its own trunk at this same x (see thread_branch_live.sface), so this
+                   only fills the gaps between siblings and gives childless ones a line
+                   to sit on. Behind the avatars (z-0) and click-through, so the
+                   collapse toggles on top of it keep working. --}
+              <div class="relative">
+                <div
+                  :if={@showing_within != :messages}
+                  data-role="thread-spine"
+                  aria-hidden="true"
+                  style="left: calc(var(--comment-base-indent, 0px) + 20px)"
+                  class="absolute top-0 bottom-0 z-0 border-l-hair border-secondary pointer-events-none"
+                />
+                {!-- manually assigned threaded_replies (without using stream) --}
+                <div
+                  :if={is_list(@threaded_replies) and @threaded_replies != []}
+                  data-role="threaded_replies_assigned"
+                  class=""
+                >
+                  {#for {{reply, child_replies}, index} <- Enum.with_index(@threaded_replies)}
+                    <ThreadBranchLive
+                      id={LiveHandler.component_id(id(reply), "flat")}
+                      comment={reply}
+                      index={0}
+                      time_gap_before={ThreadBranchLive.time_gap_before(nil, @threaded_replies, index)}
+                      thread_reply_count={@reply_count || e(@activity, :replied, :total_replies_count, nil) ||
+                        e(@object, :replied, :total_replies_count, nil)}
+                      threaded_replies={child_replies}
+                      thread_id={@thread_id}
+                      highlight_reply_id={@highlight_reply_id}
+                      feed_id={@feed_id || @thread_id}
+                      current_url={@current_url}
+                      thread_object={@object}
+                      thread_mode={@thread_mode}
+                      showing_within={@showing_within || :thread}
+                      hide_actions={hide_actions}
+                      activity_inception={@activity_inception}
+                      activity_preloads={@activity_preloads}
+                      depth_loaded={@depth_loaded}
+                    />
+                  {/for}
+                </div>
 
-              {!-- nested mode stream --}
-              <div class="flex flex-col gap-4" id={"stream_#{@id}"} phx-update="stream">
-                {#for {entry_id, {reply, child_replies}} <- @streams.threaded_replies}
-                  <ThreadBranchLive
-                    id={entry_id}
-                    comment={reply}
-                    index={0}
-                    time_gap_before={e(@time_gaps, id(reply), nil)}
-                    thread_reply_count={@reply_count || e(@activity, :replied, :total_replies_count, nil) ||
-                      e(@object, :replied, :total_replies_count, nil)}
-                    threaded_replies={child_replies}
-                    thread_id={@thread_id}
-                    highlight_reply_id={@highlight_reply_id}
-                    feed_id={@feed_id || @thread_id}
-                    current_url={@current_url}
-                    thread_object={@object}
-                    thread_mode={@thread_mode}
-                    showing_within={@showing_within || :thread}
-                    hide_actions={hide_actions}
-                    activity_inception={@activity_inception}
-                    activity_preloads={@activity_preloads}
-                    depth_loaded={@depth_loaded}
-                  />
-                {/for}
+                {!-- nested mode stream --}
+                <div class="flex flex-col gap-4" id={"stream_#{@id}"} phx-update="stream">
+                  {#for {entry_id, {reply, child_replies}} <- @streams.threaded_replies}
+                    <ThreadBranchLive
+                      id={entry_id}
+                      comment={reply}
+                      index={0}
+                      time_gap_before={e(@time_gaps, id(reply), nil)}
+                      thread_reply_count={@reply_count || e(@activity, :replied, :total_replies_count, nil) ||
+                        e(@object, :replied, :total_replies_count, nil)}
+                      threaded_replies={child_replies}
+                      thread_id={@thread_id}
+                      highlight_reply_id={@highlight_reply_id}
+                      feed_id={@feed_id || @thread_id}
+                      current_url={@current_url}
+                      thread_object={@object}
+                      thread_mode={@thread_mode}
+                      showing_within={@showing_within || :thread}
+                      hide_actions={hide_actions}
+                      activity_inception={@activity_inception}
+                      activity_preloads={@activity_preloads}
+                      depth_loaded={@depth_loaded}
+                    />
+                  {/for}
+                </div>
               </div>
             {#else}
               {!-- manually assigned replies (without using stream) --}
