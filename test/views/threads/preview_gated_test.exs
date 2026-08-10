@@ -111,7 +111,7 @@ defmodule Bonfire.UI.Social.PreviewGatedTest do
     viewer: viewer,
     viewer_account: viewer_account
   } do
-    {:ok, _article} =
+    {:ok, article} =
       Posts.publish(
         current_user: author,
         # render as an Article → feed shows the preview card (truncated, no full body)
@@ -124,6 +124,11 @@ defmodule Bonfire.UI.Social.PreviewGatedTest do
         },
         boundary: "local:preview"
       )
+
+    # assert the precondition separately, so a failure names the cause: distinguishes the article
+    # never reaching the feed from the preview card failing to render
+    assert Bonfire.Social.FeedLoader.feed_contains?(:local, article, current_user: viewer),
+           "the see-only article is missing from the :local feed, so the feed data is at fault rather than the preview rendering"
 
     conn(user: viewer, account: viewer_account)
     |> visit("/feed/local")
@@ -138,7 +143,7 @@ defmodule Bonfire.UI.Social.PreviewGatedTest do
     viewer: viewer,
     viewer_account: viewer_account
   } do
-    {:ok, _article} =
+    {:ok, article} =
       Posts.publish(
         current_user: author,
         schema: Bonfire.Articles.Article,
@@ -157,6 +162,10 @@ defmodule Bonfire.UI.Social.PreviewGatedTest do
         },
         boundary: "local:preview"
       )
+
+    # assert the precondition separately (see the sibling test): feed data vs preview rendering
+    assert Bonfire.Social.FeedLoader.feed_contains?(:local, article, current_user: viewer),
+           "the see-only article is missing from the :local feed, so the feed data is at fault rather than the preview rendering"
 
     conn(user: viewer, account: viewer_account)
     |> visit("/feed/local")

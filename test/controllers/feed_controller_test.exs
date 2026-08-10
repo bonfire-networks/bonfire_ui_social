@@ -6,12 +6,16 @@ defmodule Bonfire.UI.Social.FeedControllerTest do
   test "serves the local feed as atom" do
     user = fake_user!()
 
-    {:ok, _post} =
+    {:ok, post} =
       Posts.publish(
         current_user: user,
         post_attrs: %{post_content: %{html_body: "an atom feed entry"}},
         boundary: "public"
       )
+
+    # assert the precondition separately: if the activity never reached the :local feed, fail here (naming the cause) rather than further down on an empty XML document, which can't tell a publishing/boundary problem apart from a rendering one
+    assert Bonfire.Social.FeedLoader.feed_contains?(:local, post),
+           "the published post is missing from the :local feed, so the feed data is at fault rather than the atom rendering"
 
     conn = get(conn(), "/feed/local/feed.atom")
 

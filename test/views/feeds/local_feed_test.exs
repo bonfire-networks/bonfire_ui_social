@@ -138,6 +138,11 @@ defmodule Bonfire.Social.Feeds.LocalFeed.Test do
     publish_multiple_times(admin_attrs, carl, total_posts, "admins")
     assert {:ok, boost} = Boosts.boost(alice, public_post)
 
+    # assert the precondition separately, so a failure names the cause: the public post must have
+    # reached the :local feed at all before we can meaningfully assert on what a guest sees
+    assert Bonfire.Social.FeedLoader.feed_contains?(:local, public_post),
+           "the public post is missing from the :local feed, so the feed data is at fault rather than the guest rendering"
+
     conn()
     |> visit("/feed/local")
     |> assert_has("article", text: "post with guest_attrs")
