@@ -15,8 +15,10 @@ defmodule Bonfire.UI.Social.FeedController do
     with {:ok, feed_data} <- fetch_feed_data(feed_name, params) do
       render_feed(conn, format, feed_data)
     else
-      _ ->
-        throw(:not_found)
+      e ->
+        debug(e, "no such feed, or feed not permitted")
+        # renders a 404 via Bonfire.Fail's Plug.Exception 
+        raise Bonfire.Fail, :not_found
     end
   end
 
@@ -39,6 +41,19 @@ defmodule Bonfire.UI.Social.FeedController do
            Map.merge(preset_filters, extract_param_filters(params, opts)),
          %{edges: activities, page_info: page_info} <-
            FeedLoader.feed(feed_name, merged_filters, opts) do
+      # the atom/rss views call `URIs.canonical_url/1` on the object and author, which needs
+      # :peered (locality) and :shared_user (org vs person actor URL) — batch-preload here
+      # (one query per assoc per page) rather than lazily per entry
+      author_assocs = [:shared_user, character: [:peered]]
+
+      activities =
+        repo().maybe_preload(activities,
+          activity: [
+            subject: author_assocs,
+            object: [:peered, created: [creator: author_assocs]]
+          ]
+        )
+
       feed_data =
         %{
           activities: activities,
