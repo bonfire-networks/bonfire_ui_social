@@ -438,7 +438,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             l("comment")
 
           object_type == :article ->
-            l("article")
+            lc("object", "article", [], :bonfire_articles)
 
           true ->
             Types.object_type_display(object_type)

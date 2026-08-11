@@ -91,7 +91,7 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
       |> assign(
         object_not_permitted:
           Bonfire.Common.Types.object_type_display(Bonfire.Common.Types.object_type(object)) ||
-            l("post"),
+            lc("object", "post", [], :bonfire_posts),
         object: nil,
         activity: nil
       )

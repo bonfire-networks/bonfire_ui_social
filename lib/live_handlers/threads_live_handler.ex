@@ -388,7 +388,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
     reply_to_id = Enums.id(reply_to)
 
-    with {:ok, current_user} <- current_user_or_remote_interaction(socket, l("reply"), reply_to),
+    with {:ok, current_user} <- current_user_or_remote_interaction(socket, "reply", reply_to),
          # TODO: can we use the preloaded object_boundaries rather than making an extra query
          true <- Bonfire.Boundaries.can?(current_user, :reply, reply_to_id) do
       published_in =

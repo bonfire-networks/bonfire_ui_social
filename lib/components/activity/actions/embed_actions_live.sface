@@ -39,7 +39,7 @@
       data-role="reply_enabled"
       data-id="action_reply"
     >
-      {l("Reply")}
+      {lc("verb: action", "Reply", [], :bonfire_social)}
     </button>
 
     <!-- <div

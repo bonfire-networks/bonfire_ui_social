@@ -7,10 +7,10 @@
       <.icon_button
         icon="ph:chat-circle-fill"
         icon_class="w-[18px] h-[18px]"
-        aria_label={l("Reply")}
+        aria_label={lc("verb: action", "Reply", [], :bonfire_social)}
         variant="ghost"
         size="sm"
-        tooltip={l("Reply")}
+        tooltip={lc("verb: action", "Reply", [], :bonfire_social)}
         tooltip_position="top"
         phx_click={if @event_target || @activity_component_id,
           do:
