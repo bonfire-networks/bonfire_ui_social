@@ -21,7 +21,8 @@ defmodule Bonfire.UI.Social.WidgetTrendingDiscussionsLive do
      assign_flash(
        socket,
        :info,
-       l("Top discussions have been reset.") <> l(" You need to reload to see updates, if any.")
+       l("Top discussions have been reset.") <>
+         " " <> l("You need to reload to see updates, if any.")
      )}
   end
 

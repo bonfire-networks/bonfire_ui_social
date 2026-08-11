@@ -19,7 +19,7 @@ defmodule Bonfire.UI.Social.WidgetSuggestedProfilesLive do
        socket,
        :info,
        l("Suggested profiles have been reset.") <>
-         l(" You need to reload to see updates, if any.")
+         " " <> l("You need to reload to see updates, if any.")
      )}
   end
 end
