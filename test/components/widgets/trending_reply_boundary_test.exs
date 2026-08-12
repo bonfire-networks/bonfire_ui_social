@@ -94,17 +94,12 @@ defmodule Bonfire.UI.Social.WidgetTrendingReplyBoundaryTest do
 
     assert has_element?(
              view,
-             "[data-id=trending_discussions] [data-role=trending-discussion-link][href*='#{id(group_post)}']"
+             "[data-id=trending_discussions] article[data-rendered=widget] .open_preview_link[href*='#{id(group_post)}']"
            )
 
     assert has_element?(
              view,
-             "[data-id=trending_discussions] [data-role=trending-discussion-rank]"
-           )
-
-    assert has_element?(
-             view,
-             "[data-id=trending_discussions] [data-role=trending-discussion-link][aria-labelledby]"
+             "[data-id=trending_discussions] [data-role=discussion_preview_actions] [data-role=reply_count]"
            )
 
     refute has_element?(view, "[data-id=trending_discussions] [data-id=action_reply]")
@@ -136,12 +131,12 @@ defmodule Bonfire.UI.Social.WidgetTrendingReplyBoundaryTest do
 
     assert has_element?(
              view,
-             "[data-id=trending_discussions] [data-role=trending-discussion-link].preview_activity_link[href*='#{id(post)}']"
+             "[data-id=trending_discussions] article[phx-hook='Bonfire.UI.Common.PreviewContentLive#PreviewActivity'] .open_preview_link[href*='#{id(post)}']"
            )
 
     assert has_element?(
              view,
-             "[data-id=trending_discussions] article[phx-hook='Bonfire.UI.Common.PreviewContentLive#PreviewActivity'] .open_preview_link[href*='#{id(post)}']"
+             "[data-id=trending_discussions] [data-role=discussion_preview_actions]"
            )
 
     refute has_element?(view, "[data-id=trending_discussions] [data-id=action_reply]")

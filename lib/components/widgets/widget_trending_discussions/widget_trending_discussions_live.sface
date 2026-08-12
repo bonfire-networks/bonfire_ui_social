@@ -2,7 +2,7 @@
   {#match discussions}
     <Bonfire.UI.Common.WidgetBlockLive
       class="w-full flex-auto mx-auto border-y-hair border-secondary overflow-hidden"
-      title_class="px-4 py-card text-xs uppercase tracking-wide text-base-content sm:px-5"
+      title_class="px-card py-card text-xs font-semibold uppercase tracking-[0.06em] text-base-content/80"
       widget_title={@widget_title || l("Top discussions")}
       reset_cache_event="Bonfire.UI.Social.WidgetTrendingDiscussionsLive:reset_trending_discussions"
       reset_cache_values={%{limit: @limit}}
@@ -22,7 +22,7 @@
       </:action>
 
       <ul class="flex flex-col" role="list" data-id="trending_discussions">
-        {#for {fp, rank} <- Enum.with_index(discussions, 1)}
+        {#for fp <- discussions}
           <li
             id={"trending_discussion_#{id(fp.activity) || id(fp.activity.object)}"}
             class="border-t-hair border-secondary first:border-t-hair"
@@ -33,13 +33,11 @@
                 "trending_discussion"
               )}
               activity={fp.activity}
-              class="!gap-0"
+              class="px-card py-4 sm:py-5 transition-colors hover:bg-base-content/[0.035]"
               showing_within={:widget}
-              custom_preview={Bonfire.UI.Social.Activity.DiscussionPreviewLive}
-              i={rank}
+              custom_actions={Bonfire.UI.Social.Activity.DiscussionPreviewActionsLive}
               participants={e(fp, :participants, [])}
               participants_more_count={e(fp, :participants_more_count, 0)}
-              hide_actions
             />
           </li>
         {/for}

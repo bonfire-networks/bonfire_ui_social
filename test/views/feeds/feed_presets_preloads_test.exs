@@ -136,8 +136,8 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
   end
 
   defp verify_preloads_in_html(conn, preset, expected, object, activity) do
-    # Presets that use a custom_preview (e.g. DiscussionPreviewLive) render the thread root
-    # instead of the default activity + article.replied structure, so reply_to DOM assertions don't apply.
+    # Presets that use a custom_preview render their own markup instead of the default
+    # activity + article.replied structure, so reply_to DOM assertions don't apply.
     has_custom_preview? =
       preset &&
         (Application.get_env(:bonfire_social, Bonfire.Social.Feeds)[:feed_presets] || [])

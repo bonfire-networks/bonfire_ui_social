@@ -1,0 +1,50 @@
+<div
+  data-role="discussion_preview_actions"
+  class="flex min-w-0 flex-wrap items-center justify-between gap-x-4 gap-y-2 pt-0.5 text-xs text-muted sm:text-sm"
+>
+  <span data-role="reply_count" class="flex items-center gap-1.5">
+    <#Icon iconify="ph:chat-circle" class="h-4 w-4" />
+    {#case display_reply_count(@activity, @reply_count)}
+      {#match 1}
+        <span>{l("1 reply")}</span>
+      {#match count}
+        <span>{l("%{count} replies", count: count)}</span>
+    {/case}
+  </span>
+
+  <span
+    :if={@participants != [] || @participants_more_count > 0}
+    data-role="thread_participants"
+    class="flex min-w-0 items-center gap-2"
+    title={if @participants != [],
+      do:
+        l("Also in this discussion: %{names}",
+          names: Bonfire.Social.Threads.participants_names(@participants, ", ")
+        )}
+  >
+    <span :if={@participants != []} class="flex shrink-0 -space-x-1.5">
+      {#for participant <- @participants}
+        <Bonfire.UI.Common.AvatarLive
+          parent_id={deterministic_dom_id(
+            __MODULE__,
+            id(participant),
+            "trending_participant",
+            id(@activity)
+          )}
+          user_id={id(participant)}
+          src={Media.avatar_url(participant)}
+          title={e(participant, :profile, :name, nil) ||
+            e(participant, :character, :username, nil)}
+          showing_within={:widget}
+          wrapper_class="h-6 w-6 border-0 avatar !flex"
+          class="h-6 w-6 rounded-full bg-base-100 ring-2 ring-base-100"
+          bg_class="h-full w-full overflow-hidden rounded-full"
+        />
+      {/for}
+    </span>
+    <span :if={@participants_more_count == 1}>{l("1 other")}</span>
+    <span :if={@participants_more_count > 1}>
+      {l("%{count} others", count: @participants_more_count)}
+    </span>
+  </span>
+</div>
