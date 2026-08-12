@@ -329,7 +329,9 @@
         <div class="gap-2 mt-1">
           <div class="flex items-center gap-2">
             <#Icon iconify="ph:paperclip-bold" class="w-5 h-5 text-primary" />
-            <span class="text-sm text-muted">{lp("%{count} media file", "%{count} media files", length(@visual_list), count: length(@visual_list))}</span>
+            <span class="text-sm text-muted">{lp("%{count} media file", "%{count} media files", length(@visual_list),
+                count: length(@visual_list)
+              )}</span>
           </div>
         </div>
       {/if}

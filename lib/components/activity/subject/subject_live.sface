@@ -52,7 +52,7 @@
     <span
       :if={@showing_within not in [:smart_input, :pinned]}
       data-id="subject_secondary"
-      class="flex items-center gap-1 text-body text-muted leading-tight"
+      class="flex items-center gap-1 text-sm text-muted leading-tight"
     >
       <LinkLive
         :if={@character_username && @showing_within not in [:smart_input, :pinned]}

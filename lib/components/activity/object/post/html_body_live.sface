@@ -16,8 +16,10 @@
     previewable_truncate:
       !@viewing_main_object &&
         @showing_within not in [:smart_input, :pinned],
-    # the thread root is the subject of the page, so it reads a step larger than the replies below it
-    "!text-[1.125rem] leading-relaxed": @viewing_main_object && @showing_within == :thread,
+    # microblog posts read as one block: paragraph breaks cost ~half a line, not article-style margins
+    "prose-p:!my-1": e(@object_type, nil) != :article,
+    # the thread root is the subject of the page, so it reads a step larger (but tighter) than the replies below it
+    "!text-[17px] !leading-[1.45]": @viewing_main_object && @showing_within == :thread,
     "!text-sm !text-muted": e(@object_type, nil) == :article && @showing_within != :thread
   }
 >

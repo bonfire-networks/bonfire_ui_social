@@ -42,7 +42,7 @@ defmodule Bonfire.UI.Social.Notifications.Test do
   end
 
   describe "quote request notifications" do
-    test "shows who wants to quote the post" do
+    test "shows who wants to quote the post and their comment" do
       quoted_author = fake_user!("quoted_author")
       quoter = fake_user!("quoter")
 
@@ -68,6 +68,7 @@ defmodule Bonfire.UI.Social.Notifications.Test do
         "[data-role=notification_subject][data-verb='Request to Quote'] [data-id=subject_name]",
         text: quoter.profile.name
       )
+      |> assert_has("article[data-verb='Request to Quote']", text: "Quote request post")
     end
   end
 

@@ -8,6 +8,7 @@
     {#match post_locale}
       <span
         :if={to_string(post_locale) != to_string(Bonfire.Common.Localise.get_locale_id())}
+        data-role="post_language"
         class="text-caption text-muted uppercase"
         title={l("This post was written in %{language}", language: post_locale)}
       >

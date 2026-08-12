@@ -472,7 +472,10 @@ defmodule Bonfire.Social.Objects.LiveHandler do
             type when is_binary(type) or (is_atom(type) and not is_nil(type)) ->
               # Note: this leaks the existence and type of the object, a privacy
               # concern for some threat models.
-              thing = Bonfire.Common.Types.object_type_display(type) || lc("object", "post", [], :bonfire_posts)
+              thing =
+                Bonfire.Common.Types.object_type_display(type) ||
+                  lc("object", "post", [], :bonfire_posts)
+
               msg = l("Sorry, you can't view this %{thing}", thing: thing)
 
               cond do
