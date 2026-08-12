@@ -1,34 +1,98 @@
 <Bonfire.UI.Common.WidgetBlockLive
   widget_title={@widget_title || l("Customize this feed")}
-  title_class="flex items-center justify-between p-card text-xs font-normal uppercase tracking-wide text-base-content border-b-hair border-secondary"
-  class="w-full flex-auto mx-auto border-y-hair border-secondary"
+  title_class="flex items-center justify-between text-base font-semibold text-base-content"
+  class="w-full flex-auto mx-auto p-card border-y-hair border-secondary"
 >
   <div class="flex flex-col" data-id="widget_customize_feed">
-    {!-- Level 1: a handful of simple presets that cover most users --}
-    <Bonfire.UI.Common.Settings.Calm.PresetCardsLive
-      scope={nil}
-      event_name="set_filter_preset"
-      event_target={@event_target}
-      form_name="feed_preset"
-      legend={l("Feed preset")}
-      field_name="feed_preset"
-      current={Bonfire.UI.Social.WidgetCustomizeFeedLive.current_preset(@feed_filters)}
-      cards={Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_cards()}
-      options_id={"feed_preset_options_#{@feed_name}"}
-      preset_role="feed_preset"
-      class="border-b-hair border-secondary"
-      options_class="flex flex-col divide-hair divide-secondary"
-      card_class="relative flex flex-wrap items-start gap-x-3 gap-y-2 p-3 cursor-pointer transition-colors hover:bg-base-content/5 has-[:checked]:bg-primary/10 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-inset"
-    />
+    {!-- Level 1 stays compact at rest: the current outcome remains legible and the complete,
+      explained preset list appears only while the user is changing it. --}
+    <form
+      id={"feed_preset_form_#{@feed_name || "default"}"}
+      data-scope="feed_preset"
+      phx-change="set_filter_preset"
+      phx-target={@event_target}
+    >
+      <!-- <div class="px-1 text-sm font-normal text-base-content" data-role="feed_preset_title">{l("Feed mode")}</div> -->
+      <details
+        id={"feed_preset_disclosure_#{@feed_name || "default"}"}
+        class="group mt-1"
+        data-role="feed_preset_disclosure"
+      >
+        {!-- matching the current preset walks every bundle's signature, so compute it once
+          per render and reuse it for the summary and each radio's checked state --}
+        {#case Bonfire.UI.Social.WidgetCustomizeFeedLive.current_preset_card(
+            @feed_filters,
+            @feed_baseline_filters
+          )}
+          {#match current_card}
+            {!-- a full-width section under the title: the top hairline bleeds
+              through the widget's p-card inset (-mx-card) so it spans the
+              whole widget, and px-card keeps the content on the shared left
+              edge. Stream restores its contained rounded fill instead. --}
+            <summary
+              class="focus-ring flex min-h-14 cursor-pointer list-none items-center gap-2 -mx-card px-card py-1.5 bg-base-100 border-t-hair border-b-hair border-secondary text-base-content transition-colors duration-150 ease-out active:bg-base-content/10 [&::-webkit-details-marker]:hidden mt-4"
+              data-role="feed_preset_current"
+            >
+              <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <Iconify.iconify icon={current_card.icon} class="size-4" />
+              </span>
+              <span class="flex min-w-0 flex-1 flex-col">
+                <span class="text-sm font-medium leading-5">
+                  {current_card.name}
+                </span>
+                <span class="truncate text-xs leading-4 text-muted">
+                  {current_card.description}
+                </span>
+              </span>
+              <#Icon
+                iconify="ph:caret-down"
+                class="size-4 shrink-0 text-muted transition-transform duration-150 ease-out group-open:rotate-180 motion-reduce:transition-none"
+              />
+            </summary>
 
-    {!-- Level 2: scope modifiers (origin / time window / own activity) — dimensions the cards above
-      never touch, so these compose with any preset instead of un-matching it --}
+            <fieldset class="mt-1">
+              <legend class="sr-only">{l("Feed preset")}</legend>
+              <div id={"feed_preset_options_#{@feed_name}"} class="flex flex-col gap-0.5">
+                {#for card <- Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_cards()}
+                  <label class="relative flex min-h-12 cursor-pointer items-center gap-2 rounded-selector px-2 py-1 has-[:checked]:bg-primary/10 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-base-content has-[:focus-visible]:ring-inset">
+                    <input
+                      type="radio"
+                      name="feed_preset"
+                      value={card.value}
+                      checked={current_card.value == card.value}
+                      class="peer sr-only"
+                    />
+                    <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-base-content/5 text-muted peer-checked:bg-primary/10 peer-checked:text-primary">
+                      <Iconify.iconify icon={card.icon} class="size-3.5" />
+                    </span>
+                    <span class="flex min-w-0 flex-1 flex-col">
+                      <span class="text-sm font-medium leading-5 text-base-content" data-role="feed_preset">{card.name}</span>
+                      <span class="truncate text-xs leading-4 text-muted">{card.description}</span>
+                    </span>
+                    <#Icon
+                      iconify="ph:check-circle-fill"
+                      class="hidden size-4 shrink-0 text-primary peer-checked:block"
+                    />
+                  </label>
+                {/for}
+              </div>
+            </fieldset>
+        {/case}
+      </details>
+    </form>
+
+    {!-- Level 2: frequent feed adjustments. These compose with the selected mode; changing
+      replies or boosts intentionally makes the content mix custom. --}
     <Bonfire.UI.Common.Settings.Calm.OverrideTogglesLive
       scope={nil}
       event_name="set_filter_overrides"
+      event_mode={:click}
       event_target={@event_target}
       form_name="feed_overrides"
+      form_id={"feed_overrides_form_#{@feed_name || "default"}"}
       form_role="feed_override_toggles"
+      form_class="flex flex-col gap-0 pt-2 pb-1"
+      title_class="text-sm font-normal text-base-content"
       rows={Bonfire.UI.Social.WidgetCustomizeFeedLive.override_rows(@feed_filters, @feed_name, @__context__)}
       field_prefix="scope"
       toggle_role="feed_override_toggle"
@@ -42,9 +106,13 @@
         <Bonfire.UI.Common.OpenExpanderLive
           parent_id={"feed_filters_#{@feed_name}"}
           modal_assigns={Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}
+          open_btn_wrapper_class="rounded-selector focus-ring"
+          open_btn_class="min-h-11 w-full py-2 text-sm font-medium text-base-content/80 flex items-center gap-2 cursor-pointer transition-colors duration-150 ease-out hover:bg-base-content/5 hover:text-base-content active:bg-base-content/10"
+          caret_class="w-4 h-4 text-base-content/70 transition-transform duration-150 ease-out motion-reduce:transition-none"
         >
           <:open_btn>
-            <Iconify.iconify icon="ph:sliders-horizontal-duotone" class="w-4 h-4 text-muted" />
+            {!-- text-led like the toggle rows above so all rows share one left
+              edge, with the caret on the same right-hand axis as the toggles --}
             <span class="flex-1 text-left" data-role="feed_advanced_filters">{l("Advanced filters")}</span>
             {#if active_filters != []}
               <span

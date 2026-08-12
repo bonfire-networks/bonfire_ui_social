@@ -586,15 +586,21 @@ defmodule Bonfire.UI.Social.FeedLive do
       #     # ]
       #   ]
 
-      match?({:ok, _}, Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, assigns)) ->
-        widgets(assigns)
-
       true ->
-        [
-          # page_header_aside: [
-          #   {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: feed_name]}
-          # ]
-        ]
+        # bind the preset here rather than re-resolving it in widgets/2 — each resolution
+        # costs a Settings read, a possible boundary check and a localise_tree walk, and
+        # this runs on every feed mount/navigation
+        case Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, assigns) do
+          {:ok, preset} ->
+            widgets(assigns, e(preset, :filters, %{}) || %{})
+
+          _ ->
+            [
+              # page_header_aside: [
+              #   {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: feed_name]}
+              # ]
+            ]
+        end
     end
   end
 
@@ -618,7 +624,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     ]
   end
 
-  def widgets(assigns) do
+  def widgets(assigns, feed_baseline_filters) do
     feed_name = e(assigns, :feed_name, nil)
 
     customize_feed_widget =
@@ -630,6 +636,7 @@ defmodule Bonfire.UI.Social.FeedLive do
              feed_id: e(assigns, :feed_id, nil),
              feed_name: feed_name,
              feed_filters: e(assigns, :feed_filters, nil),
+             feed_baseline_filters: feed_baseline_filters,
              showing_within: e(assigns, :showing_within, nil)
            ]}
         ],
@@ -886,89 +893,66 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   # Level 1 of the customize-feed widget: a preset card was picked
   def handle_event("set_filter_preset", params, socket) do
-    case Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_filters(params["feed_preset"]) do
+    feed_name = e(assigns(socket), :feed_name, nil)
+    baseline_filters = LiveHandler.preset_canonical_filters(feed_name, assigns(socket))
+
+    case Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_filters(
+           params["feed_preset"],
+           baseline_filters
+         ) do
       nil -> {:noreply, socket}
       filters -> set_filters(filters, socket, true)
     end
   end
 
-  # Level 2 of the customize-feed widget: the most common adjustments. NB the form posts
-  # ALL of its toggles on each change, so each toggle is applied only when its posted
-  # value differs from the current effective state — otherwise flipping one toggle would
-  # re-apply the others as commands (e.g. clobbering a preset's reply exclusion or a
-  # custom time_limit set in the modal).
-  def handle_event("set_filter_overrides", %{"scope" => scope}, socket) do
+  # Level 2 of the customize-feed widget: each common adjustment posts its key and desired
+  # state independently, so changing one toggle never re-applies the others as commands.
+  # Toggles that already match the requested state no-op; unknown keys are ignored, so
+  # adding a widget row can't crash the handler.
+  def handle_event("set_filter_overrides", %{"key" => key, "on" => on}, socket)
+      when on in ["true", "false"] do
     filters = assigns(socket)[:feed_filters] || %{}
+    on? = on == "true"
 
-    replies_hidden? = Bonfire.UI.Social.FeedExtraControlsLive.replies_excluded?(filters)
-
-    attrs =
-      case scope["replies"] do
-        "true" when not replies_hidden? ->
-          toggle_exclude_activity_type(%{}, filters, :reply, true)
-
-        "false" when replies_hidden? ->
-          toggle_exclude_activity_type(%{}, filters, :reply, false)
-
-        _ ->
-          %{}
-      end
-
-    boosts_hidden? = Bonfire.UI.Social.FeedExtraControlsLive.boosts_excluded?(filters)
-
-    attrs =
-      case scope["boosts"] do
-        "true" when not boosts_hidden? ->
-          toggle_exclude_activity_type(attrs, filters, :boost, true)
-
-        "false" when boosts_hidden? ->
-          toggle_exclude_activity_type(attrs, filters, :boost, false)
-
-        _ ->
-          attrs
-      end
-
-    groups_included? =
-      Bonfire.UI.Social.WidgetCustomizeFeedLive.group_activities_included?(filters)
-
-    attrs =
-      case scope["group_activity"] do
-        "true" when not groups_included? ->
-          Map.put(
-            attrs,
-            :exclude_subject_types,
-            Bonfire.UI.Social.WidgetCustomizeFeedLive.exclude_subject_types_toggling_groups(
-              filters,
-              true
-            )
-          )
-
-        "false" when groups_included? ->
-          Map.put(
-            attrs,
-            :exclude_subject_types,
-            Bonfire.UI.Social.WidgetCustomizeFeedLive.exclude_subject_types_toggling_groups(
-              filters,
-              false
-            )
-          )
-
-        _ ->
-          attrs
-      end
-
-    # source switch: swap between the Following feed and everything known to the instance,
-    # in place, carrying over only the filters that deviate from the source feed's preset
     {socket, attrs} =
-      case {scope["following"], e(assigns(socket), :feed_name, nil)} do
-        {"true", current} when current not in [:my, nil] ->
-          switch_feed_source(socket, attrs, current, :my)
+      case key do
+        "replies" ->
+          if on? == Bonfire.UI.Social.FeedExtraControlsLive.replies_excluded?(filters),
+            do: {socket, toggle_exclude_activity_type(%{}, filters, :reply, not on?)},
+            else: {socket, %{}}
 
-        {"false", current} when current not in [:explore, nil] ->
-          switch_feed_source(socket, attrs, current, :explore)
+        "boosts" ->
+          if on? == Bonfire.UI.Social.FeedExtraControlsLive.boosts_excluded?(filters),
+            do: {socket, toggle_exclude_activity_type(%{}, filters, :boost, not on?)},
+            else: {socket, %{}}
+
+        "group_activity" ->
+          if on? ==
+               Bonfire.UI.Social.WidgetCustomizeFeedLive.group_activities_included?(filters),
+             do: {socket, %{}},
+             else:
+               {socket,
+                Bonfire.UI.Social.WidgetCustomizeFeedLive.group_activities_toggle_filters(
+                  filters,
+                  on?
+                )}
+
+        "following" ->
+          # source switch: swap between the Following feed and everything known to the
+          # instance, in place, carrying over only filters deviating from the source preset
+          case {on?, e(assigns(socket), :feed_name, nil)} do
+            {true, current} when current not in [:my, nil] ->
+              switch_feed_source(socket, %{}, current, :my)
+
+            {false, current} when current not in [:explore, nil] ->
+              switch_feed_source(socket, %{}, current, :explore)
+
+            _ ->
+              {socket, %{}}
+          end
 
         _ ->
-          {socket, attrs}
+          {socket, %{}}
       end
 
     if attrs == %{} do
@@ -985,17 +969,20 @@ defmodule Bonfire.UI.Social.FeedLive do
     # modal edits) travel along, as do scope filters like time_limit/exclude_subjects.
     filters = Enums.maybe_to_map(e(assigns(socket), :feed_filters, nil) || %{})
     source_preset = LiveHandler.preset_canonical_filters(source_feed_name, assigns(socket))
+    target_preset = LiveHandler.preset_canonical_filters(target_feed_name, assigns(socket))
 
-    pruned =
-      Enum.reduce(
-        Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_owned_keys(),
-        filters,
-        fn key, acc ->
-          if LiveHandler.filter_value_matches?(e(filters, key, nil), e(source_preset, key, nil)),
-            do: Map.delete(acc, key),
-            else: acc
-        end
-      )
+    rebased_filters =
+      case Bonfire.UI.Social.WidgetCustomizeFeedLive.current_preset(filters, source_preset) do
+        "custom" ->
+          prune_source_baseline(filters, source_preset)
+
+        preset ->
+          filters
+          |> Map.drop(Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_owned_keys())
+          |> Map.merge(
+            Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_filters(preset, target_preset)
+          )
+      end
 
     # keep the parent view's feed_name in sync: its re-renders pass feed_name back down as
     # a prop, and a stale one would read as a navigation to another feed (bypassing the
@@ -1003,9 +990,21 @@ defmodule Bonfire.UI.Social.FeedLive do
     send_self(feed_name: target_feed_name)
 
     {
-      socket |> assign(feed_name: target_feed_name, feed_filters: pruned),
+      socket |> assign(feed_name: target_feed_name, feed_filters: rebased_filters),
       Map.put(attrs, :feed_name, target_feed_name)
     }
+  end
+
+  defp prune_source_baseline(filters, source_preset) do
+    Enum.reduce(
+      Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_owned_keys(),
+      filters,
+      fn key, acc ->
+        if LiveHandler.filter_value_matches?(e(filters, key, nil), e(source_preset, key, nil)),
+          do: Map.delete(acc, key),
+          else: acc
+      end
+    )
   end
 
   # Level 3 of the customize-feed widget: advanced knobs (also posts all knobs on each change)
@@ -1090,7 +1089,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   def set_filters(
         attrs,
         socket,
-        _replace_lists \\ false
+        replace_lists \\ false
       ) do
     # debug(attrs, "set_filter")
 
@@ -1116,6 +1115,13 @@ defmodule Bonfire.UI.Social.FeedLive do
       {:ok, filters} ->
         existing_filters = assigns(socket)[:feed_filters] || %{}
 
+        explicit_filter_replacements =
+          if replace_lists do
+            explicit_filter_replacements(attrs, filters)
+          else
+            %{}
+          end
+
         # If we need to clear origin, remove it from existing filters
         existing_filters =
           if should_clear_origin do
@@ -1138,8 +1144,8 @@ defmodule Bonfire.UI.Social.FeedLive do
             debug(existing_filters, "existing filters"),
             filters
             |> debug("validated")
-            # replace_lists: replace_lists
           )
+          |> Map.merge(explicit_filter_replacements)
           |> debug("merged"),
           socket,
           Config.env() == :test
@@ -1148,6 +1154,24 @@ defmodule Bonfire.UI.Social.FeedLive do
       e ->
         error(e)
     end
+  end
+
+  defp explicit_filter_replacements(attrs, filters) do
+    Enum.reduce(FeedFilters.supported_filters(), %{}, fn key, replacements ->
+      raw_value =
+        if Map.has_key?(attrs, key),
+          do: Map.get(attrs, key),
+          else: Map.get(attrs, to_string(key), :not_set)
+
+      value = Map.get(filters, key)
+
+      cond do
+        raw_value == [] -> Map.put(replacements, key, [])
+        raw_value != :not_set and is_list(value) -> Map.put(replacements, key, value)
+        raw_value != :not_set and value in [false, 0] -> Map.put(replacements, key, value)
+        true -> replacements
+      end
+    end)
   end
 
   def reload(
@@ -1167,9 +1191,15 @@ defmodule Bonfire.UI.Social.FeedLive do
     # (NB: don't send_self(feed_filters: ...) — the parent re-passes stale feed/loading props down)
     assigns = Map.put(assigns, :feed_filters, feed_filters)
 
+    baseline_filters =
+      case Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, assigns) do
+        {:ok, preset} -> e(preset, :filters, %{}) || %{}
+        _ -> nil
+      end
+
     if is_nil(feed_name) or feed_name in [:my, :explore, :remote, :local, :custom] or
-         match?({:ok, _}, Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, assigns)),
-       do: send_self(widgets(assigns))
+         not is_nil(baseline_filters),
+       do: send_self(widgets(assigns, baseline_filters || %{}))
 
     socket =
       socket

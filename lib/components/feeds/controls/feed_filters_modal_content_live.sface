@@ -119,6 +119,23 @@
       </div>
     </section>
 
+    <section :if={current_user_id(@__context__)}>
+      <label class="flex min-h-11 cursor-pointer items-center justify-between gap-3 px-4 py-1.5">
+        <span class="text-sm text-base-content">{l("Hide my own activities")}</span>
+        <input
+          id={"feed_filter_hide_own_activities_#{@feed_name || "custom"}"}
+          type="checkbox"
+          checked={@user_activities_excluded?}
+          class="toggle toggle-primary toggle-sm"
+          phx-click="set_filter"
+          phx-value-toggle="subjects"
+          phx-value-toggle_type={current_user_id(@__context__)}
+          phx-value-toggle_value={if @user_activities_excluded?, do: "default", else: "false"}
+          phx-target={@myself}
+        />
+      </label>
+    </section>
+
     <details class="group">
       <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
         <div class="flex items-center gap-3">

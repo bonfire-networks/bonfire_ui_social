@@ -51,6 +51,8 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
     {:noreply, update_pending(socket, :origin, maybe_to_atom(origin))}
   end
 
+  # NB: also drives the "Hide my own activities" checkbox (toggle=subjects with the current
+  # user's id as toggle_type), so there's a single write path for include/exclude lists
   def handle_event(
         "set_filter",
         %{"toggle" => field, "toggle_type" => type} = params,
@@ -70,19 +72,25 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
          "true" ->
            filters
            |> Map.put(include_field, Enum.uniq(already_selected ++ [type_atom]))
-           |> Map.put(exclude_field, Enum.reject(already_excluded, &(&1 == type_atom)))
+           |> Map.put(exclude_field, Enum.reject(already_excluded, &same_type?(&1, type_atom)))
 
          "false" ->
            filters
-           |> Map.put(include_field, Enum.reject(already_selected, &(&1 == type_atom)))
+           |> Map.put(include_field, Enum.reject(already_selected, &same_type?(&1, type_atom)))
            |> Map.put(exclude_field, Enum.uniq(already_excluded ++ [type_atom]))
 
          _ ->
            filters
-           |> Map.put(include_field, Enum.reject(already_selected, &(&1 == type_atom)))
-           |> Map.put(exclude_field, Enum.reject(already_excluded, &(&1 == type_atom)))
+           |> Map.put(include_field, Enum.reject(already_selected, &same_type?(&1, type_atom)))
+           |> Map.put(exclude_field, Enum.reject(already_excluded, &same_type?(&1, type_atom)))
        end
      end)}
+  end
+
+  # list entries may be atoms, strings, ids, or loaded objects (e.g. exclude_subjects can
+  # hold user structs from a saved feed) — compare their normalized string forms
+  defp same_type?(entry, type) do
+    to_string(Enums.id(entry) || entry) == to_string(Enums.id(type) || type)
   end
 
   def handle_event("set_filter", %{"subject_circles" => circle_id}, socket) do

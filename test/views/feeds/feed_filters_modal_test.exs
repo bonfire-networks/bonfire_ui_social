@@ -1,30 +1,5 @@
 defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
-  @moduledoc """
-  Why the `@tag :fixme`s below (filters-in-widget move):
-
-  These tests were written when the feed filters UI (the "Filters" modal + active-filters badge)
-  was rendered by `FeedLive` itself, in its own header/controls. Applying a filter went
-  apply_filters → set_filters → reload, which updated FeedLive's OWN `feed_filters` assign in place;
-  the badge and active chips were rendered by FeedLive reading that same live assign — one update,
-  one process, no prop threading.
-
-  Commit c5369de ("feed filters and theme") moved the whole filters UI into a separate sidebar
-  widget (`WidgetCustomizeFeedLive`), and 2f4b903 hid the old header controls. The editor and its
-  badge now live in that widget and receive `feed_filters` as a PROP threaded FeedLive → widget →
-  expander → editor. This surfaced two gaps the in-place design hid, which the three @tag :fixme tests
-  now (correctly) catch:
-
-    1. Widget prop staleness — after apply, FeedLive's own filters update (sort-order reorder test
-       passes), but the widget's `feed_filters` prop stays stale, so the count badge never renders.
-    2. Reload merge drops applied values — `time_limit: 0` and `exclude_activity_types` set via the
-       editor don't survive the apply→set_filters→reload merge into the effective feed_filters
-       (validate + FeedLoader respect them when called directly). `time_limit: 0` in particular looks
-       like it's treated as "empty" and replaced by the default 7.
-
-  Each @tag :fixme test carries a specific FIXME with the confirmed behaviour and a suggested possible fix. This
-  test move (stale trigger → widget expander) is unrelated to the OpenExpanderLive change itself,
-  which works; these are pre-existing regressions from the widget move, now exposed.
-  """
+  @moduledoc "Integration coverage for the inline feed-customization widget and advanced editor."
   use Bonfire.UI.Social.ConnCase, async: false
   @moduletag :ui
 
@@ -57,6 +32,17 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
     session
     |> click_button("Apply filters")
     |> wait_async()
+  end
+
+  # PhoenixTest deliberately excludes controls inside a closed native <details> element.
+  # Submit the preset form directly here; the disclosure interaction itself is covered by
+  # accessibility assertions, while this test is concerned with state surviving a source switch.
+  defp select_feed_preset(session, preset) do
+    session.view
+    |> element("form[data-scope=feed_preset]")
+    |> render_change(%{"feed_preset" => preset})
+
+    session
   end
 
   describe "filter modal opens and displays sections" do
@@ -196,13 +182,92 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
   end
 
   describe "scope override toggles" do
-    # the quick hide-replies/hide-boosts filters moved from the editor to the customize widget's Level-2 override toggles
-    test "customize widget renders Hide replies and Hide boosts toggles", %{conn: conn} do
+    test "feed modes layer over the feed's canonical content exclusions" do
+      baseline = %{
+        object_types: ["article"],
+        exclude_activity_types: [:like, :vote, :follow, :request],
+        time_limit: 0
+      }
+
+      assert %{exclude_activity_types: default_exclusions} =
+               Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_filters("default", baseline)
+
+      assert Enum.sort(default_exclusions) == Enum.sort(baseline.exclude_activity_types)
+
+      assert %{exclude_activity_types: focus_exclusions} =
+               Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_filters("focus", baseline)
+
+      assert Enum.sort(focus_exclusions) ==
+               Enum.sort(baseline.exclude_activity_types ++ [:reply, :boost])
+
+      assert Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_filters("focus", baseline).object_types ==
+               baseline.object_types
+
+      # the popularity cards force a 7-day window: count-ranking the whole history is an
+      # expensive query and would surface ancient greatest hits
+      assert Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_filters(
+               "discussions",
+               baseline
+             ).time_limit == 7
+
+      assert Bonfire.UI.Social.WidgetCustomizeFeedLive.current_preset(baseline, baseline) ==
+               "default"
+    end
+
+    test "customize widget uses positive inclusion toggles", %{conn: conn} do
       conn
       |> visit("/feed/local")
       |> wait_async()
-      |> assert_has("[data-role=calm_override_group]", text: "Hide replies")
-      |> assert_has("[data-role=calm_override_group]", text: "Hide boosts")
+      |> assert_has("[data-role=calm_override_group]", text: "Group activities")
+      |> assert_has("[data-role=calm_override_group]", text: "Replies")
+      |> assert_has("[data-role=calm_override_group]", text: "Boosts")
+      |> assert_has("input[name='scope[replies]'][type=checkbox]:checked")
+      |> assert_has("input[name='scope[boosts]'][type=checkbox]:checked")
+    end
+
+    test "group activities can be excluded and restored", %{conn: conn} do
+      conn
+      |> visit("/feed/my")
+      |> wait_async()
+      |> assert_has("input[name='scope[group_activity]'][type=checkbox]:checked")
+      |> uncheck("Group activities")
+      |> wait_async()
+      |> assert_has("input[name='scope[group_activity]'][type=checkbox]:not(:checked)")
+      |> check("Group activities")
+      |> wait_async()
+      |> assert_has("input[name='scope[group_activity]'][type=checkbox]:checked")
+    end
+
+    test "fine-tuning a preset exposes and clears the custom state", %{conn: conn} do
+      conn
+      |> visit("/feed/local")
+      |> wait_async()
+      |> assert_has("input[name=feed_preset][value=default]:checked")
+      |> assert_has("[data-role=feed_preset_current]", text: "Everything")
+      |> assert_has(
+        "input[name='scope[replies]'][phx-click='set_filter_overrides'][phx-value-on='false'][phx-target]"
+      )
+      |> uncheck("Replies")
+      |> wait_async()
+      |> assert_has("[data-role=feed_preset_current]", text: "Custom")
+      |> refute_has("input[name=feed_preset]:checked")
+      |> check("Replies")
+      |> wait_async()
+      |> assert_has("[data-role=feed_preset_current]", text: "Everything")
+      |> assert_has("input[name=feed_preset][value=default]:checked")
+    end
+
+    test "switching feed source rebases the selected mode", %{conn: conn} do
+      conn
+      |> visit("/feed/explore")
+      |> wait_async()
+      |> select_feed_preset("focus")
+      |> wait_async()
+      |> assert_has("[data-role=feed_preset_current]", text: "Focus")
+      |> check("Only people I follow")
+      |> wait_async()
+      |> assert_has("[data-role=feed_preset_current]", text: "Focus")
+      |> assert_has("input[name=feed_preset][value=focus]:checked")
     end
   end
 
@@ -371,8 +436,6 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
   end
 
   describe "Hide my own activities quick toggle" do
-    # SKIPPED: the "Hide my own activities" checkbox only exists in FeedExtraControlsLive, which is no longer rendered anywhere since feed controls moved to the customize widget — the editor shows the "Hiding my activity" chip when the filter is set but currently offers no control to set it. Needs a product decision (e.g. an "own activity" override row in the widget) before this can be re-enabled.
-    @tag :fixme
     test "checking the toggle surfaces the 'Hiding my activity' chip", %{conn: conn} do
       conn
       |> visit("/feed/local")
