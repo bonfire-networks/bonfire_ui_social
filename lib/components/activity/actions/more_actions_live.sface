@@ -3,6 +3,7 @@
   id={deterministic_dom_id(__MODULE__, id(@activity), "more_menu", @parent_id)}
   position="bottom-end"
   wrapper_class="feed_activity"
+  expanded_touch_target
   trigger_class="btn btn-ghost group hover:bg-primary/10 btn-circle btn-sm"
   label={l("More actions")}
   wrapper_opts={["data-id": "more_menu", "data-rendered": @showing_within]}

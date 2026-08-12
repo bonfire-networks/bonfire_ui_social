@@ -30,8 +30,8 @@
               <LinkLive
                 to={~p"/settings/user/feeds"}
                 label={l("Customize feeds")}
-                class="btn btn-circle btn-outline btn-xs border-secondary"
-              ><#Icon iconify="ph:gear-six-fill" class="w-4 h-4" /></LinkLive>
+                class="btn btn-circle touch-target-expanded size-8 min-h-8 min-w-8 p-0 btn-outline border-secondary touch-manipulation"
+              ><span class="touch-target-hit-area" aria-hidden="true" /><#Icon iconify="ph:gear-six-fill" class="w-4 h-4" /></LinkLive>
             {/if}
           </summary>
 
@@ -61,8 +61,8 @@
                 <LinkLive
                   to={~p"/settings/user/feeds"}
                   label={l("Customize feeds")}
-                  class="z-999 tooltip-button btn btn-circle border-hair btn-outline btn-xs border-secondary"
-                ><#Icon iconify="ph:gear-six-fill" class="w-4 h-4 text-primary" /></LinkLive>
+                  class="z-999 tooltip-button btn btn-circle touch-target-expanded size-8 min-h-8 min-w-8 p-0 border-hair btn-outline border-secondary touch-manipulation"
+                ><span class="touch-target-hit-area" aria-hidden="true" /><#Icon iconify="ph:gear-six-fill" class="w-4 h-4 text-primary" /></LinkLive>
               </div>
             {/if}
           </summary>

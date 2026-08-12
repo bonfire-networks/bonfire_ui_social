@@ -55,6 +55,54 @@ defmodule Bonfire.UI.Social.Feeds.A11y.Test do
     |> assert_has("[role=heading][aria-level='2']")
   end
 
+  test "each feed entry exposes one activity landmark", %{conn: conn, alice: alice} do
+    {:ok, _post} =
+      Posts.publish(
+        current_user: alice,
+        post_attrs: %{post_content: %{html_body: "one semantic activity"}},
+        boundary: "public"
+      )
+
+    conn
+    |> visit("/feed/local")
+    |> assert_has_or_open_browser("[data-id=object_body]", text: "one semantic activity")
+    |> assert_has(".activity_wrapper > article[data-id=activity]:not([aria-label])")
+    |> refute_has("[data-id=feed_activity_list] > [role=article]")
+  end
+
+  test "compact feed actions keep a 44px hit area without growing visually", %{
+    conn: conn,
+    alice: alice
+  } do
+    {:ok, _post} =
+      Posts.publish(
+        current_user: alice,
+        post_attrs: %{post_content: %{html_body: "compact actions"}},
+        boundary: "public"
+      )
+
+    conn
+    |> visit("/feed/local")
+    |> assert_has_or_open_browser("[data-id=object_body]", text: "compact actions")
+    |> assert_has("button[aria-label='Reply'].btn-sm > .touch-target-hit-area")
+    |> assert_has("button[aria-label^='Boost'].btn-sm > .touch-target-hit-area")
+    |> assert_has("button[aria-label='Like'].btn-sm > .touch-target-hit-area")
+    |> assert_has("button[aria-label='Bookmark'].btn-sm > .touch-target-hit-area")
+    |> assert_has("button[aria-label='More actions'].btn-sm > .touch-target-hit-area")
+  end
+
+  test "feed customization forms and toggle rows are accessible targets", %{conn: conn} do
+    conn
+    |> visit("/feed/local")
+    |> assert_has("form#feed_preset_form_local")
+    |> assert_has("form#feed_overrides_form_local.border-y-hair")
+    |> assert_has("[data-role=feed_preset_title]", text: "Feed mode")
+    |> assert_has("summary[data-role=feed_preset_current].focus-ring")
+    |> assert_has("[data-role=calm_override_title].font-normal", text: "Fine-tune")
+    |> assert_has("form#feed_overrides_form_local label.min-h-11")
+    |> assert_has("[data-role=open_modal].focus-ring", text: "Advanced filters")
+  end
+
   test "a boosted activity reflects the boost state in the trigger's accessible name", %{
     conn: conn,
     alice: alice,

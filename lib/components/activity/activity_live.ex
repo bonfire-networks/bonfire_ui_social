@@ -67,6 +67,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop hide_actions, :any, default: false
   prop activity_preloads, :tuple, default: {nil, nil}
   prop custom_preview, :any, default: nil
+  prop custom_actions, :any, default: nil
   prop quotes, :list, default: []
   prop hashtags, :list, default: []
   prop autoplay, :any, default: nil
@@ -523,7 +524,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           e(assigns[:__context], :ui_compact, nil) &&
             Bonfire.Common.Localise.get_locale_id() not in [:fr],
           do: DatesTimes.date_from_now(object_id, format: :narrow),
-          else: DatesTimes.date_from_now(object_id)
+          else: DatesTimes.date_from_now(object_id, format: :short)
         ),
       verb: verb,
       verb_display: verb_display,
@@ -822,6 +823,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
         do: maybe_prepare(assigns),
         else: assigns
 
+    # widget rows are inert unless they opt into interactivity via a custom preview or
+    # custom actions — computed once so the preview hook and click trigger share one rule
+    assigns =
+      assign(
+        assigns,
+        :widget_interactive?,
+        assigns[:showing_within] != :widget or not is_nil(assigns[:custom_preview]) or
+          not is_nil(assigns[:custom_actions])
+      )
+
     ~F"""
     <article
       id={@activity_component_id || "activity-unprepared-#{@activity_id || Text.random_string()}"}
@@ -839,11 +850,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 :thread_embed,
                 :smart_input,
                 :nested_preview
-              ] and
-              (@showing_within != :widget or @custom_preview),
+              ] and @widget_interactive?,
             do: "Bonfire.UI.Common.PreviewContentLive#PreviewActivity"
           )}
-      role="article"
       data-id="activity"
       data-rendered={@showing_within}
       data-avatar-hidden={Media.hide_avatars?(@__context__, @showing_within)}
@@ -853,12 +862,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
       data-verb={@verb}
       data-reply-context={not is_nil(@reply_to) and is_nil(@activity_inception) and
         @showing_within in [nil, :feed, :profile]}
-      aria-label="user activity"
       tabIndex={if @custom_preview && @showing_within == :widget, do: nil, else: "0"}
       class={[
         "activity focus-ring relative flex flex-col gap-3 touch-pan-y #{@class}",
         "cursor-pointer":
-          @showing_within not in [:thread, :thread_embed, :smart_input, :widget] &&
+          (@showing_within not in [:thread, :thread_embed, :smart_input, :widget] ||
+             (@showing_within == :widget && !is_nil(@custom_actions))) &&
             (!@activity_inception || @showing_within == :quote_preview),
         "replied !p-0 mb-8":
           @activity_inception &&
@@ -907,7 +916,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
            Custom widget previews opt in while other widget activities remain inert. --}
       {#if @hide_activity != "all" and not is_nil(current_user_id(@__context__)) and
           @showing_within not in [:smart_input, :thread, :nested_preview] and
-          (@showing_within != :widget or @custom_preview)}
+          @widget_interactive?}
         <div class="contents">
           {!-- TODO: make the list of preview paths/components/views configurable/hookable, and derive the view from object_type? and compute object_type not just based on schema, but also with some logic looking at fields (eg. action=="work") --}
           {#if String.starts_with?(@permalink || "", ["/post/", "/discussion/", "/discuss/"])}
@@ -1176,7 +1185,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                        Bonfire.UI.Social.Activity.ActionsLive,
                        Bonfire.UI.Moderation.FlaggedActionsLive
                      ]}
-                {#if @hide_activity != "actions" and @hide_actions != true}
+                {#if @hide_activity != "actions" and @hide_actions != true and !@custom_actions}
                   {#if user_socket_connected?(@__context__) &&
                       LiveHandler.feed_live_update_many_preload_mode() in [:async_actions, :inline]}
                     <StatefulComponent
@@ -1293,6 +1302,22 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 />
             {/case}
           {/for}
+
+          {!-- Caller-provided replacement for `ActionsLive` (rendered outside the
+               component loop so it applies to any object type, since
+               `actions_for_object_type` only yields actions for some types) --}
+          <StatelessComponent
+            :if={@custom_actions && @hide_activity != "actions"}
+            module={maybe_component(@custom_actions, @__context__)}
+            activity={@activity}
+            object={@object}
+            permalink={@permalink}
+            reply_count={@reply_count}
+            participants={@participants}
+            participants_more_count={@participants_more_count}
+            activity_component_id={@activity_component_id}
+            showing_within={@showing_within}
+          />
         {/if}
       {/if}
     </article>
