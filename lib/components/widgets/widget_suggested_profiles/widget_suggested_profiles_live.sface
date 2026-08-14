@@ -13,36 +13,29 @@
       {!-- Carousel navigation arrows, shown in the header to the right of the title --}
       <:action :if={length(suggested_profiles) > 1}>
         <div class="flex items-center gap-1.5">
-          <button
-            type="button"
-            aria-label={l("Scroll left")}
-            class="w-7 h-7 rounded-full bg-primary text-primary-content flex items-center justify-center shrink-0 disabled:opacity-30 transition-opacity cursor-pointer cursor-pointer"
-            phx-click={JS.dispatch("scroll-left", to: "#suggested-profiles-carousel")}
-          >
-            <#Icon iconify="ph:caret-left" class="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            aria-label={l("Scroll right")}
-            class="w-7 h-7 rounded-full bg-primary text-primary-content flex items-center justify-center shrink-0 disabled:opacity-30 transition-opacity cursor-pointer cursor-pointer"
-            phx-click={JS.dispatch("scroll-right", to: "#suggested-profiles-carousel")}
-          >
-            <#Icon iconify="ph:caret-right" class="w-4 h-4" />
-          </button>
+          <.icon_button
+            icon="ph:caret-left"
+            aria_label={l("Scroll left")}
+            variant="outline"
+            size="sm"
+            class="border-secondary"
+            phx_click={JS.dispatch("scroll-left", to: "#suggested-profiles-carousel")}
+          />
+          <.icon_button
+            icon="ph:caret-right"
+            aria_label={l("Scroll right")}
+            variant="outline"
+            size="sm"
+            class="border-secondary"
+            phx_click={JS.dispatch("scroll-right", to: "#suggested-profiles-carousel")}
+          />
         </div>
       </:action>
 
       <div class="grid grid-cols-1 overflow-hidden">
-        <div
-          id="suggested-profiles-carousel"
-          class="flex gap-3 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2"
-          phx-hook="CarouselScroll"
-        >
+        <div id="suggested-profiles-carousel" class="carousel-scroll pb-2" phx-hook="CarouselScroll">
           {#for user <- suggested_profiles}
-            <div
-              class="flex-shrink-0 snap-start rounded-box bg-base-200 overflow-hidden"
-              style="width: calc(80% - 8px);"
-            >
+            <div class="rounded-box bg-base-200 overflow-hidden" style="width: calc(80% - 8px);">
               <StatelessComponent
                 module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
                 character={e(user, :character, nil) || e(user, :activity, :subject, :character, nil)}

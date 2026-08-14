@@ -57,12 +57,12 @@
           >
             <span class="flex-1 w-full">{l("Feeds")}</span>
             {#if !Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
-              <div class="normal-case font-normal absolute right-2">
+              <div class="normal-case font-normal absolute right-0">
                 <LinkLive
                   to={~p"/settings/user/feeds"}
                   label={l("Customize feeds")}
-                  class="z-999 tooltip-button btn btn-circle touch-target-expanded size-8 min-h-8 min-w-8 p-0 border-hair btn-outline border-secondary touch-manipulation"
-                ><span class="touch-target-hit-area" aria-hidden="true" /><#Icon iconify="ph:gear-six-fill" class="w-4 h-4 text-primary" /></LinkLive>
+                  class="z-999 tooltip-button btn btn-circle touch-target-expanded btn-ghost btn-sm touch-manipulation"
+                ><span class="touch-target-hit-area" aria-hidden="true" /><#Icon iconify="ph:gear-six-fill" class="w-4 h-4 text-muted" /></LinkLive>
               </div>
             {/if}
           </summary>
