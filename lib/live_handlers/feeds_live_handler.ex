@@ -41,12 +41,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   def handle_event("reading_position_cleared", %{"feed_name" => feed_name}, socket) do
     socket =
-      if reading_position_clear_allowed?(socket, feed_name) do
-        Bonfire.Social.Markers.clear_reading_position(current_user(socket), feed_name)
-        assign_generic(socket, resumed_from_marker: nil, newer_page_info: nil)
-      else
-        socket
-      end
+      if reading_position_clear_allowed?(socket, feed_name),
+        do: clear_reading_position(socket, feed_name),
+        else: socket
 
     {:noreply, socket}
   end
@@ -1454,6 +1451,20 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp reading_position_clear_allowed?(_socket, _feed_name), do: false
+
+  @doc """
+  Forgets a feed's saved reading position: the stored marker, and the assigns that drive
+  resuming from it.
+
+  Callers own the policy of *when* that is allowed, because the gates legitimately differ: the
+  browser only reports a cleared position once nothing newer remains above it, whereas an
+  explicit jump to the top clears precisely because newer activities do remain.
+  """
+  def clear_reading_position(socket, feed_name) do
+    Bonfire.Social.Markers.clear_reading_position(current_user(socket), feed_name)
+
+    assign_generic(socket, resumed_from_marker: nil, newer_page_info: nil)
+  end
 
   defp chronological_desc_feed?(filters) do
     sort_by = e(filters, :sort_by, nil)

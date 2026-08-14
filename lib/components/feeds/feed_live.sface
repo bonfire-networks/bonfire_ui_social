@@ -59,19 +59,19 @@
       {!-- :if={@feed_name in [nil, :my, :local, :remote, :explore] and current_user_id(@__context__)} --}
 
       <button
-        :if={@fresh_ids != nil and MapSet.size(@fresh_ids) > 0}
+        :if={fresh_count(@fresh_ids) > 0}
         type="button"
         id="show_fresh"
         @click="window.scrollTo({top: 0, behavior: 'smooth'})"
         phx-click={JS.show(to: ".fresh_hidden")
         |> JS.push("show_fresh", target: @myself)
         |> JS.add_class("hidden")}
-        class="flex justify-center w-full mx-auto btn btn-ghost text-primary z-50 border-0 border-b border-secondary rounded-none py-6 font-light"
+        class="flex justify-center w-full mx-auto btn btn-ghost text-primary z-50 border-0 border-b border-(color:--divider-color) rounded-none py-6 font-light"
         phx-show={JS.remove_class("hidden")}
       >
         <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
-        {lp("Show %{count} new activity", "Show %{count} new activities", MapSet.size(@fresh_ids),
-          count: MapSet.size(@fresh_ids)
+        {lp("Show %{count} new activity", "Show %{count} new activities", fresh_count(@fresh_ids),
+          count: fresh_count(@fresh_ids)
         )}
       </button>
 
@@ -313,6 +313,42 @@
               {/case}
           {/case}
       {/case}
+
+      {!-- Shortcut back to the top, revealed by its hook once the reader has scrolled a viewport
+        away. It is STICKY at the foot of the feed column rather than fixed to the window: that
+        keeps it inside the column at every breakpoint and window height (a window-anchored
+        button lands on the nav rail or the sticky user menu depending on how tall the viewport
+        is), and it settles under the load-more button once the reader reaches the end. The
+        h-14/-mb-14 pair gives the row zero net height, so it costs the feed no layout space.
+        The bottom inset matches the left one (0.5rem), plus the dock's height on mobile.
+        Gated on `enable_marker`, which is what marks a feed as the page's own scrollable
+        timeline — widget and thread feeds must not add a second floating button.
+        It ships `inert` because it ships invisible: the hook lifts that (and the class) together
+        once scrolled, so it is never a focus stop nobody can see — including without JS. --}
+      <div
+        :if={@enable_marker == true}
+        class="sticky z-fixed -mb-14 flex h-14 items-center justify-start pl-2 bottom-[calc(var(--mobile-dock-offset)+0.5rem)] lg:bottom-2 pointer-events-none"
+      >
+        <button
+          type="button"
+          id={"feed_jump_to_top_#{@feed_name || @feed_id || @id}"}
+          data-id="jump_to_top"
+          inert
+          :hook="FeedJumpToTop"
+          phx-target={@myself}
+          phx-click={JS.show(to: ".fresh_hidden") |> JS.push("jump_to_top", target: @myself)}
+          title={jump_to_top_label(@fresh_ids)}
+          class="btn btn-circle bg-base-100 border-hair border-secondary shadow-lg translate-y-2 opacity-0 pointer-events-none transition duration-200 ease-out motion-reduce:transition-none feed-jump-visible:translate-y-0 feed-jump-visible:opacity-100 feed-jump-visible:pointer-events-auto"
+        >
+          <#Icon iconify="ph:arrow-up" class="size-5 text-base-content" />
+          <span
+            :if={fresh_count(@fresh_ids) > 0}
+            class="absolute -top-0.5 -right-0.5 size-3 rounded-full bg-primary ring-2 ring-base-100"
+            aria-hidden="true"
+          />
+          <span class="sr-only">{jump_to_top_label(@fresh_ids)}</span>
+        </button>
+      </div>
     </div>
   </div>
 </div>

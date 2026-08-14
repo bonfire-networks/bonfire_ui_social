@@ -211,6 +211,41 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
     end
   end
 
+  describe "jump to top" do
+    test "discards the reading position when overriding newly arrived activities", %{
+      account: account,
+      me: me
+    } do
+      Markers.save_reading_position(me, "my", cursor_id())
+
+      socket =
+        socket(account, me,
+          feed_name: :my,
+          feed_filters: %{},
+          fresh_ids: MapSet.new([cursor_id()])
+        )
+
+      assert {:noreply, _socket} = FeedLive.handle_event("jump_to_top", %{}, socket)
+
+      refute Markers.get_reading_position(me, "my")
+    end
+
+    test "keeps the reading position when there was nothing newer to override", %{
+      account: account,
+      me: me
+    } do
+      cursor = cursor_id()
+      Markers.save_reading_position(me, "my", cursor)
+
+      socket = socket(account, me, feed_name: :my, feed_filters: %{}, fresh_ids: nil)
+
+      assert {:noreply, _socket} = FeedLive.handle_event("jump_to_top", %{}, socket)
+
+      # a plain trip back up is not a decision to give up the resume point
+      assert Markers.get_reading_position(me, "my") == cursor
+    end
+  end
+
   describe "reading position resume" do
     test "defers the newer side by seeding pagination with the saved cursor", %{me: me} do
       cursor = cursor_id()

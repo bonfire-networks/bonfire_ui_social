@@ -132,6 +132,23 @@ defmodule Bonfire.UI.Social.FeedLive do
   defp get_activity(%{edge: %{id: _} = activity}), do: activity
   defp get_activity(activity), do: activity
 
+  @doc "How many activities arrived via PubSub since the feed was last rendered from the top"
+  def fresh_count(nil), do: 0
+  def fresh_count(fresh_ids), do: MapSet.size(fresh_ids)
+
+  @doc "Label for the floating jump-to-top control, naming the new activities when we know of any"
+  def jump_to_top_label(fresh_ids) do
+    case fresh_count(fresh_ids) do
+      0 ->
+        l("Back to the top of the feed")
+
+      count ->
+        lp("Jump to %{count} new activity", "Jump to %{count} new activities", count,
+          count: count
+        )
+    end
+  end
+
   @doc "Check if a feed entry is in the fresh_ids set (newly arrived via PubSub)"
   def fresh_entry?(nil, _entry), do: false
 
@@ -1335,13 +1352,56 @@ defmodule Bonfire.UI.Social.FeedLive do
     {:noreply, assign(socket, fresh_ids: nil)}
   end
 
-  def handle_event("load_newer", _attrs, socket) do
-    case LoadMoreLive.start_cursor(assigns(socket)[:newer_page_info]) do
-      cursor when is_binary(cursor) and cursor != "" ->
-        LiveHandler.paginate_newer_feed(feed_name(assigns(socket)), cursor, socket)
+  def handle_event("jump_to_top", _attrs, socket) do
+    assigns = assigns(socket)
 
-      _ ->
-        {:noreply, socket}
+    # only an unloaded gap above a resumed reading position needs the feed re-queried from the
+    # top — activities that arrived live are already sitting at the top of the stream (the
+    # client revealed them on click), so revealing them is the whole job
+    needs_reload? = not is_nil(newer_cursor(assigns))
+
+    # only overriding newer content justifies discarding the reading position — a plain trip
+    # back up leaves it be (and the tracker clears it itself once it lands at the true top)
+    overriding_newer? = needs_reload? or fresh_count(assigns[:fresh_ids]) > 0
+
+    socket =
+      socket
+      |> assign(fresh_ids: nil)
+      |> maybe_forget_reading_position(overriding_newer?)
+
+    if needs_reload?, do: reload(nil, socket, true), else: {:noreply, socket}
+  end
+
+  def handle_event("load_newer", _attrs, socket) do
+    case newer_cursor(assigns(socket)) do
+      nil -> {:noreply, socket}
+      cursor -> LiveHandler.paginate_newer_feed(feed_name(assigns(socket)), cursor, socket)
     end
   end
+
+  # The cursor of the not-yet-loaded page above a resumed reading position, or nil once
+  # exhausted (the fork sets start_cursor nil on the first page — see FeedLoader.feed_newer/4).
+  defp newer_cursor(assigns) do
+    case LoadMoreLive.start_cursor(assigns[:newer_page_info]) do
+      cursor when is_binary(cursor) and cursor != "" -> cursor
+      _ -> nil
+    end
+  end
+
+  # The reader asked for the newest activities, so the saved position is no longer where they
+  # want to resume. The server side is shared with the browser-driven clear; the client also
+  # needs telling, or its localStorage copy would resume from it on the next mount.
+  defp maybe_forget_reading_position(socket, true = _overriding_newer?) do
+    feed_name = assigns(socket)[:feed_name]
+
+    if assigns(socket)[:enable_marker] == true and is_atom(feed_name) and not is_nil(feed_name) do
+      socket
+      |> LiveHandler.clear_reading_position(feed_name)
+      |> push_event("clear_reading_position", %{feed_name: to_string(feed_name)})
+    else
+      socket
+    end
+  end
+
+  defp maybe_forget_reading_position(socket, _overriding_newer?), do: socket
 end

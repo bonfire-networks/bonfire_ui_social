@@ -5,6 +5,7 @@ defmodule Bonfire.UI.Social.Feeds.PubSub.Test do
   alias Bonfire.Social.Boosts
   alias Bonfire.Social.Likes
   alias Bonfire.Social.Graph.Follows
+  alias Bonfire.Social.Markers
   alias Bonfire.Posts
 
   setup do
@@ -109,6 +110,44 @@ defmodule Bonfire.UI.Social.Feeds.PubSub.Test do
     conn
     |> assert_has_or_open_browser("[data-id=object_body]", text: new_post_content, timeout: 3000)
     |> refute_has("[id=show_fresh]")
+  end
+
+  test "jumping back to the top drops any saved reading position", %{
+    conn: conn,
+    alice: alice,
+    me: me
+  } do
+    stale_cursor = Needle.ULID.generate()
+    Markers.save_reading_position(me, "local", stale_cursor)
+
+    # the shortcut is always rendered on a page feed — its hook decides when to reveal it, and
+    # until then it stays `inert` so it is never a focus stop nobody can see
+    conn = visit(conn, "/feed/local") |> assert_has("[data-id=jump_to_top][inert]")
+
+    new_post_content = "A live post worth jumping back up for"
+
+    Task.start(fn ->
+      Posts.publish(
+        current_user: alice,
+        post_attrs: %{post_content: %{html_body: new_post_content}},
+        boundary: "public"
+      )
+    end)
+
+    conn =
+      conn
+      |> assert_has_or_open_browser("[data-id=jump_to_top]",
+        text: "Jump to 1 new activity",
+        timeout: 3000
+      )
+      |> click_button("[data-id=jump_to_top]", "Jump to")
+
+    # the reader asked for the newest activities, so resuming from the old position is over
+    refute Markers.get_reading_position(me, "local")
+
+    conn
+    |> assert_has("[data-id=object_body]", text: new_post_content)
+    |> assert_has("[data-id=jump_to_top]", text: "Back to the top")
   end
 
   test "new boost appears in the local feed in real time with both booster and original creator",

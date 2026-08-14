@@ -23,6 +23,14 @@ function activity(id, top, bottom, { hidden = false, fresh = false } = {}) {
   };
 }
 
+// the hooks are ES modules, so swap the export for globals the sandbox can hand back
+function runnableSource() {
+  return hookSource.replace(
+    /export\s+\{[^}]+\};\s*$/,
+    "globalThis.__FeedScrollTracker = FeedScrollTracker; globalThis.__FeedJumpToTop = FeedJumpToTop;",
+  );
+}
+
 function flushPromises() {
   return new Promise((resolve) => setImmediate(resolve));
 }
@@ -145,12 +153,7 @@ function loadTracker({
   };
   context.globalThis = context;
 
-  const runnableSource = hookSource.replace(
-    /export\s+\{[^}]+\};\s*$/,
-    "globalThis.__FeedScrollTracker = FeedScrollTracker;",
-  );
-
-  vm.runInNewContext(runnableSource, context, { filename: hookUrl.pathname });
+  vm.runInNewContext(runnableSource(), context, { filename: hookUrl.pathname });
 
   const tracker = {
     ...context.__FeedScrollTracker,
@@ -512,4 +515,199 @@ test("does not preload before the threshold or when no newer page remains", () =
   state.window.scrollY = 1800;
   state.listeners.get("scroll")();
   assert.equal(state.pushedEvents.some(({ name }) => name === "load_newer"), false);
+});
+
+function loadJumpToTop({ initialScrollY = 0, reducedMotion = null } = {}) {
+  const listeners = new Map();
+  const elementListeners = new Map();
+  const scrollCalls = [];
+  // frames are driven by the test with explicit timestamps, so the scroll animation is
+  // deterministic instead of racing a real clock
+  const frames = new Map();
+  let lastFrameId = 0;
+
+  const el = {
+    classList: mutableClassList(),
+    inert: true,
+    tabIndex: -1,
+    addEventListener(name, handler) {
+      elementListeners.set(name, handler);
+    },
+    removeEventListener(name, handler) {
+      if (elementListeners.get(name) === handler) elementListeners.delete(name);
+    },
+  };
+
+  const window = {
+    innerHeight: 800,
+    scrollY: initialScrollY,
+    addEventListener(name, handler) {
+      listeners.set(name, handler);
+    },
+    removeEventListener(name, handler) {
+      if (listeners.get(name) === handler) listeners.delete(name);
+    },
+    cancelAnimationFrame(id) {
+      frames.delete(id);
+    },
+    requestAnimationFrame(callback) {
+      frames.set(++lastFrameId, callback);
+      return lastFrameId;
+    },
+    scrollTo({ top }) {
+      this.scrollY = Math.max(0, top);
+      scrollCalls.push(this.scrollY);
+      // browsers fire scroll events for programmatic scrolling too
+      listeners.get("scroll")?.();
+    },
+  };
+
+  // left undefined unless the test asks for it, so the no-matchMedia fallback gets exercised
+  if (reducedMotion !== null) {
+    window.matchMedia = () => ({ matches: reducedMotion });
+  }
+
+  const context = {
+    clearTimeout() {},
+    Date,
+    document: { getElementById: () => null },
+    Number,
+    setTimeout() {},
+    window,
+  };
+  context.globalThis = context;
+
+  vm.runInNewContext(runnableSource(), context, { filename: hookUrl.pathname });
+
+  return {
+    el,
+    elementListeners,
+    listeners,
+    scrollCalls,
+    window,
+    hook: { ...context.__FeedJumpToTop, el },
+    pendingFrames: () => frames.size,
+    runFrame(timestamp) {
+      const [id, callback] = frames.entries().next().value ?? [];
+      if (id === undefined) return;
+
+      frames.delete(id);
+      callback(timestamp);
+    },
+  };
+}
+
+test("the jump-to-top shortcut shows once scrolled past the opening viewport", () => {
+  // the fake window is 800px tall
+  const state = loadJumpToTop();
+
+  state.hook.mounted();
+  assert.equal(state.el.classList.contains("feed-jump-visible"), false);
+
+  state.window.scrollY = 700;
+  state.listeners.get("scroll")();
+  assert.equal(state.el.classList.contains("feed-jump-visible"), false);
+
+  state.window.scrollY = 900;
+  state.listeners.get("scroll")();
+  assert.equal(state.el.classList.contains("feed-jump-visible"), true);
+
+  state.window.scrollY = 120;
+  state.listeners.get("scroll")();
+  assert.equal(state.el.classList.contains("feed-jump-visible"), false);
+});
+
+test("the jump-to-top shortcut leaves the tab order while it is invisible", () => {
+  const state = loadJumpToTop();
+
+  state.hook.mounted();
+  assert.equal(state.el.inert, true);
+  assert.equal(state.el.tabIndex, -1);
+
+  state.window.scrollY = 900;
+  state.listeners.get("scroll")();
+  assert.equal(state.el.inert, false);
+  assert.equal(state.el.tabIndex, 0);
+
+  state.window.scrollY = 0;
+  state.listeners.get("scroll")();
+  assert.equal(state.el.inert, true);
+  assert.equal(state.el.tabIndex, -1);
+});
+
+test("clicking the jump-to-top shortcut eases the page back to the top", () => {
+  const state = loadJumpToTop({ initialScrollY: 4000 });
+
+  state.hook.mounted();
+  assert.equal(state.el.classList.contains("feed-jump-visible"), true);
+
+  state.elementListeners.get("click")();
+  assert.deepEqual(state.scrollCalls, [], "the animation waits for the first frame");
+
+  state.runFrame(1000);
+  assert.equal(state.window.scrollY, 4000, "the first frame starts the clock, it doesn't jump");
+
+  // ease-out: most of the distance is covered in the first half of the animation
+  state.runFrame(1225);
+  assert.ok(state.window.scrollY < 4000 / 2, `covered less than half: ${state.window.scrollY}`);
+
+  state.runFrame(1450);
+  assert.equal(state.window.scrollY, 0);
+  assert.equal(state.pendingFrames(), 0, "the animation stops once it arrives");
+  // it faded out on the way up, from the scroll events its own animation emits
+  assert.equal(state.el.classList.contains("feed-jump-visible"), false);
+});
+
+test("the scroll animation gives way as soon as the reader scrolls against it", () => {
+  const state = loadJumpToTop({ initialScrollY: 4000 });
+
+  state.hook.mounted();
+  state.elementListeners.get("click")();
+  state.runFrame(1000);
+  state.runFrame(1100);
+
+  const interrupted = state.window.scrollY;
+  // the reader flicks the page themselves mid-animation
+  state.window.scrollY = interrupted + 500;
+  state.runFrame(1200);
+
+  assert.equal(state.window.scrollY, interrupted + 500, "the animation let go");
+  assert.equal(state.pendingFrames(), 0, "and stopped asking for frames");
+});
+
+test("the jump-to-top shortcut skips the animation under reduced motion", () => {
+  const state = loadJumpToTop({ initialScrollY: 4000, reducedMotion: true });
+
+  state.hook.mounted();
+  state.elementListeners.get("click")();
+
+  assert.deepEqual(state.scrollCalls, [0]);
+  assert.equal(state.pendingFrames(), 0, "no animation was scheduled");
+});
+
+test("the jump-to-top shortcut does nothing when already at the top", () => {
+  const state = loadJumpToTop();
+
+  state.hook.mounted();
+  state.elementListeners.get("click")();
+
+  assert.deepEqual(state.scrollCalls, []);
+  assert.equal(state.pendingFrames(), 0);
+});
+
+test("the jump-to-top shortcut drops its listeners and pending frames when destroyed", () => {
+  const state = loadJumpToTop({ initialScrollY: 4000 });
+
+  state.hook.mounted();
+  assert.deepEqual([...state.listeners.keys()], ["scroll"]);
+  assert.deepEqual([...state.elementListeners.keys()], ["click"]);
+
+  state.elementListeners.get("click")();
+  assert.equal(state.pendingFrames(), 1);
+
+  state.hook.destroyed();
+  assert.deepEqual([...state.listeners.keys()], []);
+  assert.deepEqual([...state.elementListeners.keys()], []);
+  // a queued frame would scroll a page this hook no longer belongs to
+  assert.equal(state.pendingFrames(), 0);
 });
