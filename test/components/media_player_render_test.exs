@@ -30,9 +30,10 @@ defmodule Bonfire.UI.Social.Activity.MediaPlayerRenderTest do
     assert html =~ ~s(<source src="#{url}")
     # the hook MUST be attached or vidstack never mounts (empty rectangle bug)
     assert html =~ "phx-hook=\"Bonfire.UI.Social.Activity.RemoteMediaLive#default\""
-    # the lazy player bundle URL is rendered server-side (digest-aware via static_path)
+    # the lazy player bundle URL is rendered server-side (digest-aware via static_path), and
+    # carries a version outside prod, where there is no digest to bust a cached ES module
     assert html =~ "data-player-bundle="
-    assert html =~ "/assets/vidstack_player.js"
+    assert html =~ ~r"/assets/vidstack_player\.js\?v=\d+"
     # autoplay must be OFF unless explicitly enabled — Surface omits the boolean
     # attribute entirely when false, so it must not appear at all
     refute html =~ "autoplay"

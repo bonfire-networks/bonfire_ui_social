@@ -75,7 +75,7 @@
                         <video
                           id={"#{@id}_player"}
                           data-vidstack
-                          data-player-bundle={Bonfire.Common.URIs.static_path("/assets/vidstack_player.js")}
+                          data-player-bundle={Bonfire.Common.URIs.versioned_static_path("/assets/vidstack_player.js")}
                           poster={MediaLive.preview_img(@media)}
                           title={Bonfire.Files.Media.media_alt(@media)}
                           playsinline
@@ -154,7 +154,7 @@
                         <audio
                           id={"#{@id}_audio_player"}
                           data-vidstack
-                          data-player-bundle={Bonfire.Common.URIs.static_path("/assets/vidstack_player.js")}
+                          data-player-bundle={Bonfire.Common.URIs.versioned_static_path("/assets/vidstack_player.js")}
                           title={Bonfire.Files.Media.media_alt(@media)}
                           autoplay={@autoplay}
                           muted={@autoplay}
