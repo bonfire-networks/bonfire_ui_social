@@ -22,6 +22,7 @@ defmodule Bonfire.UI.Social.ProfileTimelineLive do
   prop hide_filters, :boolean, default: false
   prop feed_component_id, :any, default: nil
   prop custom_preview, :any, default: nil
+  prop custom_actions, :any, default: nil
 
   slot header
   slot widget

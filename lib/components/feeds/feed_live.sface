@@ -141,6 +141,9 @@
                       )}
                       activity={get_activity(entry)}
                       custom_preview={e(@custom_preview, nil)}
+                      custom_actions={e(@custom_actions, nil)}
+                      participants={e(entry, :participants, [])}
+                      participants_more_count={e(entry, :participants_more_count, 0)}
                       showing_within={@showing_within}
                       hide_actions={@hide_actions}
                       verb_default={@verb_default}

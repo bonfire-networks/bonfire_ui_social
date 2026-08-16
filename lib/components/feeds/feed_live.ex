@@ -76,6 +76,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop deferred_join_multiply_limit, :any, default: nil
   prop cute_gif, :any, default: nil
   prop custom_preview, :any, default: nil
+  prop custom_actions, :any, default: nil
 
   slot bottom_or_empty_feed
 
