@@ -1,5 +1,6 @@
 <div
   data-role="thread"
+  data-ptr-refresh="set"
   data-sorted={Settings.get([Bonfire.UI.Social.ThreadLive, :sort_by], nil,
     context: @__context__,
     name: l("Thread Sort Order"),

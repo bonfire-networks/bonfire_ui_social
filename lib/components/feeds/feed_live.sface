@@ -1,6 +1,6 @@
 {!-- Keep the public component id on the LiveComponent root. External controls use it as a
   phx-target selector, which only resolves a component CID on the root node. --}
-<div id={@id}>
+<div id={@id} data-ptr-refresh="refresh">
   <div
     id={"#{@id}_main"}
     data-id="feed"

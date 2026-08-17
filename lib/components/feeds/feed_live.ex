@@ -1042,6 +1042,11 @@ defmodule Bonfire.UI.Social.FeedLive do
     )
   end
 
+  # Pull-to-refresh: unlike "set" this also discards the fresh set and reading position
+  def handle_event("refresh", _attrs, socket) do
+    reset_to_newest(socket)
+  end
+
   # def handle_event(
   #       "live_select_change",
   #       %{"text" => text, "id" => live_select_id, "field" => field},
@@ -1359,18 +1364,16 @@ defmodule Bonfire.UI.Social.FeedLive do
     # only an unloaded gap above a resumed reading position needs the feed re-queried from the
     # top — activities that arrived live are already sitting at the top of the stream (the
     # client revealed them on click), so revealing them is the whole job
-    needs_reload? = not is_nil(newer_cursor(assigns))
-
-    # only overriding newer content justifies discarding the reading position — a plain trip
-    # back up leaves it be (and the tracker clears it itself once it lands at the true top)
-    overriding_newer? = needs_reload? or fresh_count(assigns[:fresh_ids]) > 0
-
-    socket =
-      socket
-      |> assign(fresh_ids: nil)
-      |> maybe_forget_reading_position(overriding_newer?)
-
-    if needs_reload?, do: reload(nil, socket, true), else: {:noreply, socket}
+    if is_nil(newer_cursor(assigns)) do
+      # only overriding newer content justifies discarding the reading position — a plain trip
+      # back up leaves it be (and the tracker clears it itself once it lands at the true top)
+      {:noreply,
+       socket
+       |> assign(fresh_ids: nil)
+       |> maybe_forget_reading_position(fresh_count(assigns[:fresh_ids]) > 0)}
+    else
+      reset_to_newest(socket)
+    end
   end
 
   def handle_event("load_newer", _attrs, socket) do
@@ -1387,6 +1390,11 @@ defmodule Bonfire.UI.Social.FeedLive do
       cursor when is_binary(cursor) and cursor != "" -> cursor
       _ -> nil
     end
+  end
+
+  # Shared "show newest" reset: drop the fresh set and reading position, re-query from the top.
+  defp reset_to_newest(socket) do
+    reload(nil, socket |> assign(fresh_ids: nil) |> maybe_forget_reading_position(true), true)
   end
 
   # The reader asked for the newest activities, so the saved position is no longer where they
