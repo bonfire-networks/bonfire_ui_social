@@ -330,7 +330,7 @@
         once scrolled, so it is never a focus stop nobody can see — including without JS. --}
       <div
         :if={@enable_marker == true}
-        class="sticky z-fixed -mb-14 flex h-14 items-center justify-start pl-2 bottom-[calc(var(--mobile-dock-offset)+0.5rem)] lg:bottom-2 pointer-events-none"
+        class="sticky z-fixed -mb-14 flex h-14 items-center justify-start pl-2 dock-safe-bottom [--dock-safe-gap:0.5rem] pointer-events-none"
       >
         <button
           type="button"
