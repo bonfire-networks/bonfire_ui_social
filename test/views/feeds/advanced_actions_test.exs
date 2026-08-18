@@ -174,7 +174,9 @@ defmodule Bonfire.UI.Social.AdvancedActions.Test do
           boundary: "public"
         )
 
-      permalink = Bonfire.Common.URIs.canonical_url(post, preload_if_needed: false)
+      permalink =
+        "/post/#{post.id}#"
+        |> Bonfire.Common.URIs.canonical_url(preload_if_needed: false)
 
       conn
       |> visit("/feed/local")
@@ -185,6 +187,56 @@ defmodule Bonfire.UI.Social.AdvancedActions.Test do
         ~s(button[phx-hook="Copy"][data-clipboard-text="#{permalink}"]),
         text: "Copy link"
       )
+    end
+
+    test "Copy link button keeps the explicit permalink in the inline actions render" do
+      Process.put([:bonfire, :feed_live_update_many_preload_mode], :inline)
+
+      permalink = "https://example.test/discussion/previewed-post"
+
+      html =
+        render_component(Bonfire.UI.Social.Activity.ActionsLive, %{
+          id: "preview-actions",
+          activity: %{id: "preview-activity"},
+          creator: nil,
+          subject_user: nil,
+          object: %{},
+          object_type: Bonfire.Data.Social.Post,
+          object_type_readable: "post",
+          verb: "Create",
+          thread_id: "preview-thread",
+          permalink: permalink,
+          showing_within: :thread,
+          reply_count: nil,
+          activity_component_id: nil,
+          thread_title: nil,
+          feed_name: nil,
+          feed_id: nil,
+          hide_reply: false,
+          viewing_main_object: false,
+          flagged: nil,
+          thread_mode: nil,
+          object_boundary: :skip_boundary_preload,
+          is_remote: false,
+          hide_more_actions: false,
+          parent_id: nil,
+          published_in: nil,
+          labelled: nil,
+          hide_actions: false,
+          is_answer: false,
+          participants: nil,
+          quotes: [],
+          my_boost: nil,
+          my_like: nil,
+          my_bookmark: nil,
+          boost_count: nil,
+          like_count: nil,
+          show_counts: nil,
+          __context__: %{}
+        })
+
+      assert html =~ ~s(phx-hook="Copy")
+      assert html =~ ~s(data-clipboard-text="#{permalink}")
     end
   end
 
