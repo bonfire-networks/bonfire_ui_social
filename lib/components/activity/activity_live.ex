@@ -473,8 +473,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       (assigns[:current_url] || current_url(assigns[:__context__]))
       |> debug("activity_current_url")
 
-    # permalink = path(object, [], preload_if_needed: false)
-    permalink =
+    object_permalink =
       cond do
         thread_url && thread_id != o_id &&
             (is_nil(activity_thread_id) || activity_thread_id == thread_id) ->
@@ -485,9 +484,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
           end
 
         true ->
-          "#{path(object, [], preload_if_needed: false)}#"
+          path(object, [], preload_if_needed: false)
       end
-      |> String.trim_leading("#{current_url || "#"}#")
+
+    permalink = if object_permalink == current_url, do: "", else: object_permalink
 
     # |> debug()
 

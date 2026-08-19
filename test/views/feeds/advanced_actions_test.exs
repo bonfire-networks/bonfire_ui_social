@@ -175,7 +175,7 @@ defmodule Bonfire.UI.Social.AdvancedActions.Test do
         )
 
       permalink =
-        "/post/#{post.id}#"
+        "/post/#{post.id}"
         |> Bonfire.Common.URIs.canonical_url(preload_if_needed: false)
 
       conn
