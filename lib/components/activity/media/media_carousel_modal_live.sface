@@ -6,9 +6,10 @@
         totalImages: #{length(@media_list)},
         get atBeginning() { return this.currentIndex === 0 },
         get atEnd() { return this.currentIndex === this.totalImages - 1 },
-        next() { this.animated = true; if (!this.atEnd) this.currentIndex++ },
-        prev() { this.animated = true; if (!this.atBeginning) this.currentIndex-- },
-        goTo(i) { this.animated = true; this.currentIndex = Math.max(0, Math.min(i, this.totalImages - 1)) },
+        captionExpanded: false,
+        next() { this.animated = true; if (!this.atEnd) { this.currentIndex++; this.captionExpanded = false } },
+        prev() { this.animated = true; if (!this.atBeginning) { this.currentIndex--; this.captionExpanded = false } },
+        goTo(i) { this.animated = true; this.captionExpanded = false; this.currentIndex = Math.max(0, Math.min(i, this.totalImages - 1)) },
         startX: 0,
         startY: 0,
         onTouchStart(e) { this.startX = e.touches[0].clientX; this.startY = e.touches[0].clientY },
@@ -19,7 +20,7 @@
             if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) { dx < 0 ? this.next() : this.prev() }
         }
     }"}
-    x-on:carousel-goto.window="animated = false; currentIndex = Math.max(0, Math.min($event.detail.index, totalImages - 1))"
+    x-on:carousel-goto.window="animated = false; captionExpanded = false; currentIndex = Math.max(0, Math.min($event.detail.index, totalImages - 1))"
     x-init="delete window.__carouselStartIndex; $el.focus()"
     x-on:keydown.right.prevent="next()"
     x-on:keydown.left.prevent="prev()"
@@ -196,34 +197,47 @@
       </button>
     </div>
 
-    {!-- Bottom bar: caption + dots --}
-    <div class="relative z-30">
-      <div class="bg-gradient-to-t from-black/70 via-black/40 to-transparent pt-12">
+    <div class="absolute inset-x-0 bottom-0 z-30">
+      <div class="bg-gradient-to-t from-black/80 via-black/40 to-transparent pt-12 pb-safe">
         {!-- Caption (switches per slide) --}
-        <div class="text-center px-6 pb-2 min-h-[2.5rem]">
+        <div class="text-center px-6 pb-2">
           {#for {%{} = m, counter} <- Enum.with_index(@media_list)}
             {#case Bonfire.Files.Media.media_label(m)}
               {#match label}
                 <div x-show={"currentIndex === #{counter}"} x-cloak>
-                  <p :if={label not in [nil, ""]} class="text-white/90 text-sm leading-relaxed">{rich(label)}</p>
-                  {#case Bonfire.Files.Media.media_alt(m.metadata, false)}
-                    {#match media_alt}
-                      {!-- only show the alt text when it isn't a duplicate of the label above (#2005) --}
-                      <p
-                        :if={media_alt not in [nil, ""] and
-                          media_alt !=
-                            label}
-                        class="text-white/75 text-xs mt-1"
-                      >
-                        {media_alt}
-                      </p>
-                  {/case}
-                  {#case Bonfire.Files.Media.description(m.metadata)}
-                    {#match description}
-                      <p :if={description not in [nil, ""]} class="text-white/60 text-xs mt-1">
-                        {description}
-                      </p>
-                  {/case}
+                  <div
+                    :if={label not in [nil, ""] or
+                      Bonfire.Files.Media.media_alt(m.metadata, false) not in [nil, ""] or
+                      Bonfire.Files.Media.description(m.metadata) not in [nil, ""]}
+                    x-on:click="captionExpanded = !captionExpanded"
+                    x-on:keydown.enter.prevent="captionExpanded = !captionExpanded"
+                    tabindex="0"
+                    role="button"
+                    x-bind:aria-expanded="captionExpanded"
+                    aria-label={l("Toggle full image description")}
+                    x-bind:class="captionExpanded ? 'max-h-[45vh] overflow-y-auto overscroll-contain text-left bg-black/70 backdrop-blur-md rounded-xl p-4' : 'line-clamp-3'"
+                    class="cursor-pointer rounded focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/80"
+                  >
+                    <p :if={label not in [nil, ""]} class="text-white/90 text-sm leading-relaxed">{rich(label)}</p>
+                    {#case Bonfire.Files.Media.media_alt(m.metadata, false)}
+                      {#match media_alt}
+                        {!-- only show the alt text when it isn't a duplicate of the label above (#2005) --}
+                        <p
+                          :if={media_alt not in [nil, ""] and
+                            media_alt !=
+                              label}
+                          class="text-white/75 text-xs mt-1"
+                        >
+                          {media_alt}
+                        </p>
+                    {/case}
+                    {#case Bonfire.Files.Media.description(m.metadata)}
+                      {#match description}
+                        <p :if={description not in [nil, ""]} class="text-white/60 text-xs mt-1">
+                          {description}
+                        </p>
+                    {/case}
+                  </div>
                 </div>
             {/case}
           {/for}
