@@ -150,6 +150,34 @@ defmodule Bonfire.UI.Social.FeedLive do
     end
   end
 
+  @doc """
+  Resolves the deferred-join multiplier from component state or namespaced URL parameters.
+
+  The URL fallback matters during disconnected pagination renders, where the feed query receives the multiplier before the stateful component has retained it.
+
+  ## Examples
+
+      iex> Bonfire.UI.Social.FeedLive.resolve_pagination_multiply_limit(nil, %{
+      ...>   current_params: %{
+      ...>     "Elixir.Bonfire.Social.Feeds" => %{"multiply_limit" => "4"}
+      ...>   }
+      ...> })
+      4
+
+      iex> Bonfire.UI.Social.FeedLive.resolve_pagination_multiply_limit(8, %{current_params: %{}})
+      8
+  """
+  def resolve_pagination_multiply_limit(multiply_limit, context) do
+    params = e(context, :current_params, %{})
+
+    Types.maybe_to_integer(multiply_limit, nil) ||
+      Types.maybe_to_integer(
+        e(params, "#{Bonfire.Social.Feeds}", "multiply_limit", nil),
+        nil
+      ) ||
+      Types.maybe_to_integer(e(params, "multiply_limit", nil), nil)
+  end
+
   @doc "Check if a feed entry is in the fresh_ids set (newly arrived via PubSub)"
   def fresh_entry?(nil, _entry), do: false
 
