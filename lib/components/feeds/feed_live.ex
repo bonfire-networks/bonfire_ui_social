@@ -1387,18 +1387,14 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def handle_event("jump_to_top", _attrs, socket) do
-    assigns = assigns(socket)
-
     # only an unloaded gap above a resumed reading position needs the feed re-queried from the
     # top — activities that arrived live are already sitting at the top of the stream (the
     # client revealed them on click), so revealing them is the whole job
-    if is_nil(newer_cursor(assigns)) do
-      # only overriding newer content justifies discarding the reading position — a plain trip
-      # back up leaves it be (and the tracker clears it itself once it lands at the true top)
+    if is_nil(newer_cursor(assigns(socket))) do
       {:noreply,
        socket
        |> assign(fresh_ids: nil)
-       |> maybe_forget_reading_position(fresh_count(assigns[:fresh_ids]) > 0)}
+       |> forget_reading_position()}
     else
       reset_to_newest(socket)
     end
@@ -1422,13 +1418,14 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   # Shared "show newest" reset: drop the fresh set and reading position, re-query from the top.
   defp reset_to_newest(socket) do
-    reload(nil, socket |> assign(fresh_ids: nil) |> maybe_forget_reading_position(true), true)
+    reload(nil, socket |> assign(fresh_ids: nil) |> forget_reading_position(), true)
   end
 
-  # The reader asked for the newest activities, so the saved position is no longer where they
-  # want to resume. The server side is shared with the browser-driven clear; the client also
-  # needs telling, or its localStorage copy would resume from it on the next mount.
-  defp maybe_forget_reading_position(socket, true = _overriding_newer?) do
+  # Jumping to the top is an explicit "take me back to the newest", so the saved position is no
+  # longer where the reader wants to resume. The server side is shared with the browser-driven
+  # clear; the client also needs telling, or its localStorage copy would resume from it on the
+  # next mount.
+  defp forget_reading_position(socket) do
     feed_name = assigns(socket)[:feed_name]
 
     if assigns(socket)[:enable_marker] == true and is_atom(feed_name) and not is_nil(feed_name) do
@@ -1439,6 +1436,4 @@ defmodule Bonfire.UI.Social.FeedLive do
       socket
     end
   end
-
-  defp maybe_forget_reading_position(socket, _overriding_newer?), do: socket
 end
