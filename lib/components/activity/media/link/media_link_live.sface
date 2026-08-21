@@ -47,41 +47,50 @@
               </div>
             </div>
           {/if}
-        {#else}
-          <div class="flex place-content-center items-center w-[120px] h-[120px]">
-            {#case e(@media, :metadata, "favicon", nil) ||
-                Bonfire.Files.FaviconStore.favicon_url(@media_url)}
-              {#match favicon_url when is_binary(favicon_url)}
-                <LazyImage
-                  parent_id={deterministic_dom_id(__MODULE__, id(@media), "icon", @parent_id)}
-                  class="rounded-none object-cover rounded-l-lg cursor-pointer m-image min-w-8 max-w-[120px] w-full h-full"
-                  fallback_class="w-8 h-8 text-muted"
-                  src={favicon_url}
-                  media={@media}
-                  fallback_icon="ion:newspaper-outline"
-                />
-              {#match _}
-                <#Icon iconify="ion:newspaper-outline" class="w-8 h-8 text-muted" />
-            {/case}
-          </div>
         {/if}
       {/if}
-      <div class="p-card flex flex-col w-full flex-1 gap-content">
+      <div class="p-card flex flex-col w-full flex-1 min-w-0 gap-content">
         {#case Bonfire.Files.Media.media_label_and_alt(@media)}
           {#match media_label}
             {!-- publisher eyebrow + headline as one tight group (gap-based, so no leading
                  space when the publisher is absent) --}
             <div class="flex flex-col gap-half">
-              {#case MediaLive.provider(@media)}
-                {#match provider when is_binary(provider) and provider != media_label}
-                  <div
-                    data-id="media_author"
-                    class="text-caption uppercase tracking-[0.04em] text-base-content font-medium truncate"
-                  >
-                    {provider}
+              <div
+                :if={(!is_binary(@preview_img) && !@no_cover) ||
+                  (is_binary(MediaLive.provider(@media)) && MediaLive.provider(@media) != media_label)}
+                data-id="media_identity"
+                class="flex items-center gap-3 min-w-0"
+              >
+                {#if !is_binary(@preview_img) && !@no_cover}
+                  <div data-id="media_favicon" class="w-10 h-10 shrink-0">
+                    {#case e(@media, :metadata, "favicon", nil) ||
+                        Bonfire.Files.FaviconStore.favicon_url(@media_url)}
+                      {#match favicon_url when is_binary(favicon_url)}
+                        <LazyImage
+                          parent_id={deterministic_dom_id(__MODULE__, id(@media), "icon", @parent_id)}
+                          class="w-full h-full rounded-md object-contain cursor-pointer m-image bg-base-200"
+                          fallback_class="w-8 h-8 text-muted"
+                          src={favicon_url}
+                          media={@media}
+                          fallback_icon="ion:newspaper-outline"
+                        />
+                      {#match _}
+                        <#Icon iconify="ion:newspaper-outline" class="w-8 h-8 text-muted" />
+                    {/case}
                   </div>
-                {#match _}
-              {/case}
+                {/if}
+
+                {#case MediaLive.provider(@media)}
+                  {#match provider when is_binary(provider) and provider != media_label}
+                    <div
+                      data-id="media_author"
+                      class="text-caption uppercase tracking-[0.04em] text-base-content font-medium truncate"
+                    >
+                      {provider}
+                    </div>
+                  {#match _}
+                {/case}
+              </div>
               {!-- full column unfurl → text-display (Figma headline); compact/row → text-body --}
               <div
                 data-id="media_title"
@@ -97,7 +106,10 @@
               </div>
             </div>
 
-            <div class="text-body break-words text-muted line-clamp-2 text-pretty">
+            <div
+              data-id="media_description"
+              class="text-body break-words text-muted line-clamp-2 text-pretty max-w-prose"
+            >
               {raw(Text.maybe_sane_html(Bonfire.Files.Media.description(@media)))}
             </div>
         {/case}

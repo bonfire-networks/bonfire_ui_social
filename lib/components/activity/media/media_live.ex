@@ -459,8 +459,22 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
       preview ||
         if is_image_media_type?(e(media, :media_type, nil)), do: media_img(media), else: nil
 
-    preview |> unwrap()
+    preview
+    |> unwrap()
+    |> reject_site_icon_preview(media)
   end
+
+  # Some sites publish their favicon as `og:image`; preserving the semantic distinction here lets link cards use the compact favicon layout without changing genuine cover images.
+  defp reject_site_icon_preview(preview, media) when is_binary(preview) do
+    favicon =
+      media
+      |> e(:metadata, "favicon", nil)
+      |> unwrap()
+
+    if preview == favicon, do: nil, else: preview
+  end
+
+  defp reject_site_icon_preview(preview, _media), do: preview
 
   # Extract URL from ActivityPub icon (handles both single object and array)
   defp extract_ap_icon_url(nil), do: nil

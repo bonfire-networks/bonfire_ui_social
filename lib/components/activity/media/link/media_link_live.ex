@@ -5,13 +5,13 @@ defmodule Bonfire.UI.Social.Activity.MediaLinkLive do
   ## Display Modes:
   - Full cover: Large preview image with vertical layout (default for single links with preview)
   - Small icon: 130x130 compact preview with horizontal layout (for multiple links or widgets)
-  - No preview: Text-only with optional favicon fallback when no preview image is available
+  - No preview: Text-led layout with an optional compact favicon when no preview image is available
 
   ## Layout Logic:
   - `small_icon` or `activity_inception` → horizontal layout with small preview (if available)
   - Single link with preview → vertical layout with full cover
   - Multiple links → automatically use small icon mode for compact display
-  - No preview image → text-only display with favicon fallback in dedicated section
+  - No preview image → text-led display with a compact favicon beside the publisher
   """
   use Bonfire.UI.Common.Web, :stateless_component
   alias Bonfire.UI.Social.Activity.MediaLive
