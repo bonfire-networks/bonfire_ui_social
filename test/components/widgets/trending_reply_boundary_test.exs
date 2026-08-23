@@ -1,11 +1,8 @@
 defmodule Bonfire.UI.Social.WidgetTrendingReplyBoundaryTest do
   @moduledoc """
-  Covers the compact dashboard "Top discussions" preview and keeps the regular
-  feed reply-boundary behavior as a control.
+  Covers the compact dashboard "Top discussions" preview and keeps the regular feed reply-boundary behavior as a control.
 
-  The sticky-composer delivery (PersistentLive presence lookup) doesn't run in
-  the LiveViewTest harness, so instead of asserting on the composer DOM we
-  intercept the assigns the reply handler sends to the composer.
+  The sticky-composer delivery (PersistentLive presence lookup) doesn't run in the LiveViewTest harness, so instead of asserting on the composer DOM we intercept the assigns the reply handler sends to the composer.
   """
   use Bonfire.UI.Social.ConnCase, async: false
   @moduletag :ui

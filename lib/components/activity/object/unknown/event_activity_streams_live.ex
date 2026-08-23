@@ -13,6 +13,7 @@ defmodule Bonfire.UI.Social.Activity.EventActivityStreamsLive do
   # delegates keep the template call-sites terse and the parsing single-sourced.
   defdelegate object_field(json, field), to: Events
   defdelegate poster_url(json), to: Events
+  defdelegate source_url(json), to: Events
   defdelegate source_host(url), to: Events
   defdelegate event_time(iso), to: Events, as: :parse_time
   defdelegate event_end_time(json), to: Events, as: :end_time

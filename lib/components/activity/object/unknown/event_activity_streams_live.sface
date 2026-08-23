@@ -51,7 +51,7 @@
     </div>
 
     <div class="p-4">
-      <a href={object_field(@json, "id")} target="_blank" rel="noopener noreferrer">
+      <a href={source_url(@json)} target="_blank" rel="noopener noreferrer">
         <h2 class={
           "font-medium text-base-content text-balance leading-snug hover:underline",
           "text-xl": @viewing_main_object,
@@ -127,18 +127,22 @@
         {/case}
       {/if}
 
-      {#case source_host(object_field(@json, "id"))}
+      {#case source_url(@json)}
         {#match nil}
-        {#match host}
-          <a
-            href={object_field(@json, "id")}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-1.5 mt-4 text-sm font-medium text-primary hover:underline transition-colors"
-          >
-            {l("View on %{instance}", instance: host)}
-            <#Icon iconify="ph:arrow-square-out-bold" class="w-4 h-4" />
-          </a>
+        {#match url}
+          {#case source_host(url)}
+            {#match nil}
+            {#match host}
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 mt-4 text-sm font-medium text-primary hover:underline transition-colors"
+              >
+                {l("View on %{instance}", instance: host)}
+                <#Icon iconify="ph:arrow-square-out-bold" class="w-4 h-4" />
+              </a>
+          {/case}
       {/case}
     </div>
   </div>
