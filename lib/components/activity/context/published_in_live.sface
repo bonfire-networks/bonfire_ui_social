@@ -1,14 +1,14 @@
 {!-- Something published in a Category / Topic --}
 {#if @compact}
-  {!-- inline byline-end variant (right side of SubjectLive's byline row) --}
+  {!-- The separator lives inside this node rather than at the call site, so presets hiding the whole chip (see `[data-role="boosted_by"] [data-role="published_in"]` in stream.css) don't strand a "·". --}
   <div
     data-role="published_in"
-    class="inline-flex items-center gap-1.5 shrink-0 text-body leading-tight"
+    class="inline-flex items-baseline gap-1 min-w-0 max-w-full text-body leading-snug align-baseline"
   >
+    <span aria-hidden="true" class="mx-1 text-muted">·</span>
     <span class="text-muted">{l("Posted in")}</span>
-    <#Icon iconify="ph:users-three-fill" class="size-5 text-primary shrink-0" />
-    <LinkLive class="link link-hover text-primary truncate max-w-[160px]" to={path(@context)}>
-      {e(@context, :profile, :name, nil) || e(@context, :character, :username, nil)}
+    <LinkLive class="link link-hover text-primary truncate max-w-[160px]" to={@to}>
+      {context_label(@context)}
     </LinkLive>
   </div>
 {#else}
@@ -17,8 +17,8 @@
     <div class="flex-1">
       <div class="text-sm text-muted">
         {l("Posted in")}
-        <LinkLive class="font-medium text-primary" to={path(@context)}>
-          {e(@context, :profile, :name, nil) || e(@context, :character, :username, nil)}
+        <LinkLive class="font-medium text-primary" to={@to}>
+          {context_label(@context)}
         </LinkLive>
       </div>
     </div>

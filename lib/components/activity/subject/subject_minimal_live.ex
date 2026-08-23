@@ -23,6 +23,10 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   prop thread_id, :string, default: nil
   prop thread_title, :any, default: nil
   prop published_in, :any, default: nil
+
+  # decided by `Bonfire.UI.Social.ActivityLive.published_in_placement/2`, never re-derived here, so the card and its subject line can't disagree
+  prop published_in_placement, :atom, default: :hidden
+  prop published_in_path, :any, default: nil
   prop subject_id, :any, default: nil
   # prop subject_user, :any, default: nil
   prop subjects_more, :list, default: []
@@ -70,6 +74,15 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   @doc false
   def subject_minimal_icon_box_class,
     do: "flex-shrink-0 w-[18px] flex items-start justify-center mt-px"
+
+  @doc "Whether a boost's attribution line is redundant here: the group or topic auto-boosted its own content (the publication context row already says so), or we're viewing inside it. A person's manual boost still needs attribution, and notification/widget rows always keep the line since they exist to say who acted."
+  def hide_boost_reason?("Boost", subject_id, published_in, showing_within)
+      when showing_within not in [:widget, :notifications] do
+    Bonfire.UI.Social.Activity.PublishedInLive.published_in_implied_by_context?(showing_within) or
+      (not is_nil(published_in) and subject_id == id(published_in))
+  end
+
+  def hide_boost_reason?(_verb, _subject_id, _published_in, _showing_within), do: false
 
   @doc """
   The notification verb phrase ("liked your activity", "voted on your poll", …).

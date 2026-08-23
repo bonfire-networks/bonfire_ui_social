@@ -1,14 +1,10 @@
 <div
   data-role="subject"
   data-id={@subject_id}
-  class={
-    hidden:
-      @verb == "Boost" and
-        (not is_nil(@published_in) or @showing_within in [:group, :topic]) and
-        @showing_within not in [:widget, :notifications]
-  }
+  class={hidden: hide_boost_reason?(@verb, @subject_id, @published_in, @showing_within)}
 >
   {!-- TODO: can we simplify and remove the cases here, having just one definition per type and using conditional classes if needed? --}
+  {!-- a new non-default arm must also be excluded by PublishedInLive.chainable_context?/1 --}
   {#case @showing_within}
     {#match :thread}
       <div />
@@ -236,10 +232,8 @@
             <span :if={@object_id == current_user_id(@__context__)}>{!-- current_user is the one being followed --}{l("you")}</span>
           </div>
         </div>
-      {#elseif @verb == "Boost" and (not is_nil(@published_in) or @showing_within in [:group, :topic])}
-        {!-- Boost reason-line suppressed as redundant: either it's a group boost (the
-             "In <group>" top-line rendered by ActivityLive already conveys it), or we're
-             already viewing inside the group/topic the post was boosted into. --}
+      {#elseif hide_boost_reason?(@verb, @subject_id, @published_in, @showing_within)}
+        {!-- Boost reason-line suppressed as redundant: the group/topic itself auto-boosted the post, or we're already viewing inside it. --}
       {#elseif @verb == "Boost"}
         <div data-role="boosted_by" class={subject_minimal_line_class()}>
           <div class={subject_minimal_icon_box_class()}>
@@ -273,6 +267,12 @@
               />
             {/if}
             {raw(@verb_display)}
+            <Bonfire.UI.Social.Activity.PublishedInLive
+              :if={@published_in_placement == :chained}
+              context={@published_in}
+              to={@published_in_path}
+              compact
+            />
           </div>
         </div>
       {#elseif @verb in ["Reply", "Respond"]}

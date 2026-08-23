@@ -95,10 +95,11 @@ defmodule Bonfire.UI.Social.Feeds.A11y.Test do
     conn
     |> visit("/feed/local")
     |> assert_has("form#feed_preset_form_local")
-    |> assert_has("form#feed_overrides_form_local.border-y-hair")
-    |> assert_has("[data-role=feed_preset_title]", text: "Feed mode")
+    |> assert_has("aside.border-y-hair [data-id=widget_customize_feed]")
+    |> assert_has("form#feed_overrides_form_local")
+    |> assert_has("[data-role=widget-heading]", text: "Customize this feed")
     |> assert_has("summary[data-role=feed_preset_current].focus-ring")
-    |> assert_has("[data-role=calm_override_title].font-normal", text: "Fine-tune")
+    |> assert_has("[data-role=calm_override_name].font-normal", text: "Replies")
     |> assert_has("form#feed_overrides_form_local label.min-h-11")
     |> assert_has("[data-role=open_modal].focus-ring", text: "Advanced filters")
   end

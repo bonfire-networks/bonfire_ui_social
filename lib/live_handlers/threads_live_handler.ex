@@ -477,7 +477,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           if(published_in_id,
             do:
               {:clone_context,
-               e(published_in, :profile, :name, nil) || e(published_in, :named, :name, nil) ||
+               Bonfire.UI.Social.Activity.PublishedInLive.context_label(published_in) ||
                  e(published_in, :name, nil)},
             else:
               Bonfire.Boundaries.Presets.preset_boundary_tuple_from_acl(

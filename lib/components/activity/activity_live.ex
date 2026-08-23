@@ -72,6 +72,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop hashtags, :list, default: []
   prop autoplay, :any, default: nil
 
+  data widget_interactive?, :boolean, default: false
+  data published_in_placement, :atom, default: :hidden
+  data published_in_path, :any, default: nil
+  data reply_context?, :boolean, default: false
+
   def update_many(assigns_sockets) do
     assigns_sockets
     |> LiveHandler.activity_update_many(caller_module: __MODULE__)
@@ -217,6 +222,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     # |> debug("peeeered")
 
+    published_in =
+      if(showing_within not in [:smart_input, :pinned],
+        do: maybe_published_in(debug(activity, "accct"), verb) |> debug("maybppp")
+      )
+
     [
       showing_within: showing_within,
       verb: verb,
@@ -225,9 +235,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
           nil -> e(socket_assigns, :thread_mode, nil)
           existing -> existing
         end,
-      published_in:
-        if(showing_within not in [:smart_input, :pinned],
-          do: maybe_published_in(debug(activity, "accct"), verb) |> debug("maybppp")
+      published_in: published_in,
+      # resolved once here, since live-pushed activities can arrive without `:character` and `path/1` would then preload it on every re-render
+      published_in_path:
+        if(Bonfire.UI.Social.Activity.PublishedInLive.context_label(published_in),
+          do: path(published_in)
         ),
       labelled: maybe_labelled(activity, verb),
       peered: peered,
@@ -644,6 +656,51 @@ defmodule Bonfire.UI.Social.ActivityLive do
     nil
   end
 
+  @doc """
+  Where an activity card renders its publication context ("Posted in <group>"): `:chained` onto a person's boost attribution, `:standalone` as its own top-line row, or `:hidden`.
+
+  Decided once per card and passed down to `Bonfire.UI.Social.Activity.SubjectMinimalLive`, so the two render sites can never both fire or both skip. Only a person's boost chains — a group auto-boosting its own content keeps the standalone row and drops its attribution line instead. `:chained` needs a subject line to attach to, so a card that renders none falls back rather than losing the context.
+  """
+  def published_in_placement(assigns, subject_id) do
+    published_in = assigns[:published_in]
+
+    cond do
+      is_nil(published_in) ->
+        :hidden
+
+      assigns[:viewing_main_object] || assigns[:activity_inception] ->
+        :hidden
+
+      # the card renders no body of its own, so there's nowhere for the context to sit
+      not is_nil(assigns[:custom_preview]) or assigns[:hide_activity] == "all" ->
+        :hidden
+
+      Bonfire.UI.Social.Activity.PublishedInLive.published_in_implied_by_context?(
+        assigns[:showing_within]
+      ) ->
+        :hidden
+
+      # already the feed we're looking at
+      id(published_in) == assigns[:feed_id] ->
+        :hidden
+
+      is_nil(Bonfire.UI.Social.Activity.PublishedInLive.context_label(published_in)) ->
+        :hidden
+
+      chain_published_in?(assigns, published_in, subject_id) ->
+        :chained
+
+      true ->
+        :standalone
+    end
+  end
+
+  defp chain_published_in?(assigns, published_in, subject_id) do
+    assigns[:verb] == "Boost" and id(published_in) != subject_id and
+      Bonfire.UI.Social.Activity.PublishedInLive.chainable_context?(assigns[:showing_within]) and
+      assigns[:hide_activity] != "subject"
+  end
+
   def maybe_labelled(%{labelled: %{subject: %{} = label} = _labelled}, _) do
     label
   end
@@ -833,6 +890,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
           not is_nil(assigns[:custom_actions])
       )
 
+    assigns =
+      assign(assigns, %{
+        published_in_placement:
+          published_in_placement(assigns, e(assigns[:activity], :subject_id, nil)),
+        reply_context?:
+          not is_nil(assigns[:reply_to]) and is_nil(assigns[:activity_inception]) and
+            assigns[:showing_within] in [nil, :feed, :profile]
+      })
+
     ~F"""
     <article
       id={@activity_component_id || "activity-unprepared-#{@activity_id || Text.random_string()}"}
@@ -860,8 +926,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       data-compact={@__context__[:ui_compact]}
       data-answer={not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil))}
       data-verb={@verb}
-      data-reply-context={not is_nil(@reply_to) and is_nil(@activity_inception) and
-        @showing_within in [nil, :feed, :profile]}
+      data-reply-context={@reply_context?}
       tabIndex={if @custom_preview && @showing_within == :widget, do: nil, else: "0"}
       class={[
         "activity focus-ring relative flex flex-col gap-3 touch-pan-y #{@class}",
@@ -890,9 +955,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       {!-- hidden when the shown parent IS the thread root: nothing is elided
            above the pair, so there's no fuller thread to point to --}
       <div
-        :if={not is_nil(@reply_to) and is_nil(@activity_inception) and
-          @showing_within in [nil, :feed, :profile] and
-          e(@reply_to, :object, :id, nil) != @thread_id}
+        :if={@reply_context? and e(@reply_to, :object, :id, nil) != @thread_id}
         data-role="thread_header"
         class="-mx-card -mt-[16px] mb-2 px-card py-2 bg-base-200 border-b-hair border-secondary rounded-t-[var(--radius-box)] flex items-center justify-end"
       >
@@ -1014,14 +1077,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
             <input type="hidden" name="activity_id" value={@activity_id}>
           </form>
 
-          {!-- "Published in <group>" as a standalone top-line, rendered once per
-               activity card (not per subject component, so group boosts don't double it). --}
+          {!-- "Published in <group>" as a standalone top-line, rendered once per activity card (not per subject component, so group boosts don't double it). Stream lifts it above the reply context with `order: -1` in stream.css, since the preset can change client-side. --}
           <Bonfire.UI.Social.Activity.PublishedInLive
-            :if={@published_in && id(@published_in) != @feed_id &&
-              @showing_within not in [:group, :topic, :thread, :thread_embed] &&
-              !@viewing_main_object && !@activity_inception}
+            :if={@published_in_placement == :standalone}
             context={@published_in}
-            showing_within={@showing_within}
+            to={@published_in_path}
           />
 
           {#for {component, component_assigns} when is_atom(component) <-
@@ -1103,6 +1163,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   parent_id={@activity_component_id}
                   thread_id={@thread_id}
                   published_in={@published_in}
+                  published_in_placement={@published_in_placement}
+                  published_in_path={@published_in_path}
                   feed_id={@feed_id}
                   verb={maybe_get(component_assigns, :verb, @verb)}
                   verb_display={maybe_get(component_assigns, :verb_display, @verb_display)}

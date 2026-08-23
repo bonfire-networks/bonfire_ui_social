@@ -26,12 +26,9 @@ defmodule Bonfire.UI.Social.WidgetThreadContextLive do
     end
   end
 
-  @doc "Display name for the category, with sensible fallbacks."
+  @doc "Display name for the category — delegates to `Bonfire.UI.Social.Activity.PublishedInLive.context_label/1` so the sidebar and the feed's \"Posted in\" chip can't resolve the same category differently."
   def category_name(category) do
-    e(category, :profile, :name, nil) ||
-      e(category, :named, :name, nil) ||
-      e(category, :character, :username, nil) ||
-      l("Untitled")
+    Bonfire.UI.Social.Activity.PublishedInLive.context_label(category) || l("Untitled")
   end
 
   def members_count(category) do

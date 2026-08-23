@@ -188,7 +188,13 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
     end
 
     test "As a guest user with no socket, I can use the load_all_time link to remove time limits",
-         %{total_posts: total_posts, limit: limit} do
+         %{
+           total_posts: total_posts,
+           limit: limit,
+           week_old_post: week_old_post,
+           month_old_post: month_old_post,
+           old_post: old_post
+         } do
       # Use a guest connection (no user)
       conn = conn()
 
@@ -218,14 +224,20 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       |> click_link("a[data-id=next_page]", "Next page")
       |> wait_async()
       |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
-      |> assert_has_or_open_browser("[data-id=feed] article", text: "last week")
-      |> assert_has_or_open_browser("[data-id=feed] article", text: "4 weeks ago")
+      |> assert_has_or_open_browser("[data-id=feed] article",
+        text: DatesTimes.date_from_now(week_old_post, format: :short)
+      )
+      |> assert_has_or_open_browser("[data-id=feed] article",
+        text: DatesTimes.date_from_now(month_old_post, format: :short)
+      )
 
       # Continue pagination to see all posts
       |> click_link("a[data-id=next_page]", "Next page")
       |> wait_async()
       # |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
-      |> assert_has_or_open_browser("[data-id=feed] article", text: "months ago")
+      |> assert_has_or_open_browser("[data-id=feed] article",
+        text: DatesTimes.date_from_now(old_post, format: :short)
+      )
     end
   end
 end

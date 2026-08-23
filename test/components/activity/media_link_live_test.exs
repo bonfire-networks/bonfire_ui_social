@@ -1,6 +1,9 @@
 defmodule Bonfire.UI.Social.Activity.MediaLinkLiveTest do
   use ExUnit.Case, async: true
 
+  # bare `ExUnit.Case` skips the tag the extension case templates apply, so without this it also runs in the federation CI leg
+  @moduletag :ui
+
   import Phoenix.LiveViewTest
 
   alias Bonfire.UI.Social.Activity.MediaLinkLive
