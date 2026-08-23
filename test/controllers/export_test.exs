@@ -10,6 +10,9 @@ defmodule Bonfire.UI.Social.ExportTest do
   alias Bonfire.Social.Import
 
   setup do
+    # Keep federation scoped to this test process so publishing always creates the ActivityPub objects required by the outbox export.
+    Process.put(:federating, true)
+
     account = fake_account!()
 
     %{user: me, upload: profile_media, path: path, url: url} =

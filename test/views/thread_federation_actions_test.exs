@@ -12,18 +12,9 @@ defmodule Bonfire.UI.Social.Threads.FederationActionsTest do
   setup do
     Tesla.Mock.mock_global(fn env -> ActivityPub.Test.HttpRequestMock.request(env) end)
 
-    # create the remote actor + post under OPEN federation (avoids leaked-mode failures), then
-    # each test sets the mode it needs
-    Bonfire.Federate.ActivityPub.set_federating(:instance, true)
-
-    on_exit(fn ->
-      parent = self()
-
-      Task.start(fn ->
-        Ecto.Adapters.SQL.Sandbox.allow(Bonfire.Common.Repo, parent, self())
-        Bonfire.Federate.ActivityPub.set_federating(:instance, true)
-      end)
-    end)
+    # Scope the federation mode to this test process. ProcessTree propagates it to the LiveView
+    # processes without changing the instance setting for other tests.
+    Process.put(:federating, true)
 
     account = fake_account!()
     alice = fake_user!(account)
@@ -51,7 +42,7 @@ defmodule Bonfire.UI.Social.Threads.FederationActionsTest do
     conn: conn,
     post: post
   } do
-    Bonfire.Federate.ActivityPub.set_federating(:instance, false)
+    Process.put(:federating, false)
 
     conn
     |> visit("/discussion/#{post.id}")
@@ -63,7 +54,7 @@ defmodule Bonfire.UI.Social.Threads.FederationActionsTest do
 
   test "like, reply & quote are DISABLED on a remote post in archipelago (allowlist-only) mode",
        %{conn: conn, post: post} do
-    Bonfire.Federate.ActivityPub.set_allowlist_only(:instance, true)
+    Process.put(:federating, :allowlist_only)
 
     conn
     |> visit("/discussion/#{post.id}")
