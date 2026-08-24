@@ -416,15 +416,18 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       # posts once `object_boundary` is reliably preloaded for non-preset ACLs.
       preserve_thread_audience? = create_object_type == :message
 
-      # TODO: skip this lookup when assigns already has the full thread participants
       participants =
-        e(assigns(socket), :participants, nil) ||
-          Bonfire.Social.Threads.list_participants(
-            Map.put(activity, :object, reply_to),
-            if(preserve_thread_audience?, do: thread_id || :skip, else: :skip),
-            current_user: current_user
-          ) ||
-          []
+        case e(assigns(socket), :participants, nil) do
+          preloaded when is_list(preloaded) and preloaded != [] ->
+            preloaded
+
+          _ ->
+            Bonfire.Social.Threads.list_participants(
+              Map.put(activity, :object, reply_to),
+              if(preserve_thread_audience?, do: thread_id || :skip, else: :skip),
+              current_user: current_user
+            ) || []
+        end
 
       # `list_participants/3` doesn't read tags off the thread root, so DM
       # recipients drop out when an intermediate reply tags only a subset.
@@ -435,7 +438,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         else
           participants
         end
-        |> Enum.reject(&(e(&1, :character, :id, nil) in [id(current_user), published_in_id]))
+        |> reject_ids([id(current_user), published_in_id])
 
       to_circles =
         if participants != [],
@@ -443,8 +446,15 @@ defmodule Bonfire.Social.Threads.LiveHandler do
             Enum.map(participants, &{e(&1, :id, nil), e(&1, :character, :username, l("someone"))})
 
       mention_text =
-        if create_object_type != :message and participants != [],
-          do: Enum.map_join(participants, " ", &("@" <> e(&1, :character, :username, ""))) <> " "
+        if create_object_type != :message do
+          participants
+          |> Enum.map(&e(&1, :character, :username, nil))
+          |> Enum.reject(&(&1 in [nil, ""]))
+          |> case do
+            [] -> nil
+            usernames -> Enum.map_join(usernames, " ", &("@" <> &1)) <> " "
+          end
+        end
 
       # workaround for mobilizon not supported mentions
 
@@ -508,6 +518,15 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   end
 
   defp maybe_load_published_in(_, _), do: nil
+
+  # Excluding by `character.id` alone drops everyone when the character isn't preloaded
+  # (`nil in [_, nil]` is true whenever there's no group context), so fall back to the
+  # pointer id and never match on a nil exclusion.
+  defp reject_ids(participants, exclude_ids) do
+    exclude_ids = Enum.reject(exclude_ids, &is_nil/1)
+
+    Enum.reject(participants, &((e(&1, :character, :id, nil) || Enums.id(&1)) in exclude_ids))
+  end
 
   defp thread_root_audience(thread_id, current_user) do
     case Bonfire.Common.Needles.get(thread_id,
