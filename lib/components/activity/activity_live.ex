@@ -183,6 +183,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def get_activity_actor(_verb, activity), do: e(activity, :subject, nil)
 
+  # can locality be decided without a mid-render preload? (loaded-nil = local, like `AdapterUtils.is_local?`)
+  defp peered_loaded?(%{character: %{peered: peered}} = subject),
+    do: Ecto.assoc_loaded?(peered) or peered_loaded?(Map.delete(subject, :character))
+
+  defp peered_loaded?(%{peered: peered}), do: Ecto.assoc_loaded?(peered)
+  defp peered_loaded?(_), do: false
+
   defp prepare_mutable_assigns(socket \\ %{}, assigns, extras)
 
   defp prepare_mutable_assigns(
@@ -208,19 +215,51 @@ defmodule Bonfire.UI.Social.ActivityLive do
     verb = extras[:verb] || prepare_verb(activity, e(assigns, :verb_default, nil) || "Create")
     activity_actor = get_activity_actor(verb, activity)
 
-    created =
-      e(object, :created, nil) ||
-        e(activity, :created, nil)
+    # `is_remote`/`peered` describe the *object*, so a remote actor boosting a local post must not flag it as remote: creator info comes from the object only (the boost/like activity's own `:created` is the booster's; created-less objects like Media carry a direct `:creator`)
+    object_created = e(object, :created, nil)
+    object_creator = e(object_created, :creator, nil) || e(object, :creator, nil)
+
+    object_creator_id =
+      e(object_created, :creator_id, nil) || e(object, :creator_id, nil) || id(object_creator)
+
+    locality_subject =
+      cond do
+        # the actor authored the object
+        not is_nil(object_creator_id) and object_creator_id == id(activity_actor) ->
+          activity_actor
+
+        peered_loaded?(object_creator) ->
+          object_creator
+
+        # creator differs from the actor but isn't classifiable without a preload: assume local rather than borrow the actor's locality
+        not is_nil(object_creator_id) or verb in @react_or_simple_verbs ->
+          :unclassified
+
+        # no separate creator info: the actor (or `subject_user` below) speaks for the object
+        true ->
+          activity_actor
+      end
 
     peered =
       e(object, :peered, nil) ||
-        e(created, :creator, :character, :peered, nil) ||
-        if id(object) == id(activity) do
-          e(activity, :peered, nil)
-        end ||
-        e(activity_actor, :character, :peered, nil)
+        if(id(object) == id(activity), do: e(activity, :peered, nil)) ||
+        case locality_subject do
+          %{} = subject -> e(subject, :character, :peered, nil) || e(subject, :peered, nil)
+          _ -> nil
+        end
 
-    # |> debug("peeeered")
+    is_remote_computed =
+      if is_nil(peered) and locality_subject == :unclassified do
+        false
+      else
+        !Bonfire.Social.is_local?(
+          peered ||
+            (if is_map(locality_subject), do: locality_subject) ||
+            e(assigns, :subject_user, nil) ||
+            e(socket_assigns, :subject_user, nil),
+          false
+        )
+      end
 
     published_in =
       if(showing_within not in [:smart_input, :pinned],
@@ -244,14 +283,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       labelled: maybe_labelled(activity, verb),
       peered: peered,
       is_remote:
-        (assigns[:is_remote] ||| socket_assigns[:is_remote] |||
-           !Bonfire.Social.is_local?(
-             peered ||
-               activity_actor ||
-               e(assigns, :subject_user, nil) ||
-               e(socket_assigns, :subject_user, nil),
-             false
-           ))
+        (assigns[:is_remote] ||| socket_assigns[:is_remote] ||| is_remote_computed)
         |> debug("is_remote"),
       thread_title:
         e(assigns, :thread_title, nil) || e(socket_assigns, :thread_title, nil) ||
@@ -1138,9 +1170,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
                     )
                   )}
                   character_username={e(component_assigns, :character, :username, nil)}
-                  activity_id={id(
-                    maybe_get(component_assigns, :activity, @activity)
-                    |> debug("activity used in ActivityLive")
+                  activity_id={maybe_get(
+                    component_assigns,
+                    :activity_id,
+                    id(
+                      maybe_get(component_assigns, :activity, @activity)
+                      |> debug("activity used in ActivityLive")
+                    )
                   )}
                   object_id={id(
                     maybe_get(component_assigns, :object, @object)
@@ -1150,8 +1186,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
                     e(maybe_get(component_assigns, :activity, @activity), :subject_id, nil)}
                   subjects_more={maybe_get(component_assigns, :subjects_more, [])}
                   replies_more_count={e(maybe_get(component_assigns, :activity, @activity), :replies_more_count, 0)}
-                  subject_peered={e(component_assigns, :character, :peered, nil) ||
-                    e(maybe_get(component_assigns, :activity, @activity), :subject, :character, :peered, nil)}
+                  subject_peered={case e(component_assigns, :character, nil) do
+                    nil ->
+                      e(maybe_get(component_assigns, :activity, @activity), :subject, :character, :peered, nil)
+
+                    character ->
+                      # never borrow the activity subject's (eg. booster's) peered
+                      e(character, :peered, nil)
+                  end}
                   object_boundary={@object_boundary}
                   object_type={maybe_get(component_assigns, :object_type, @object_type)}
                   date_ago={maybe_get(component_assigns, :date_ago, @date_ago)}
@@ -1537,7 +1579,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          profile: e(activity, :subject, :profile, nil),
          character: e(activity, :subject, :character, nil)
        }}
-    ] ++ component_activity_maybe_creator(activity, object, object_type)
+    ] ++ dated_by_object(component_activity_maybe_creator(activity, object, object_type))
   end
 
   def component_activity_subject(verb, activity, object, object_type, _, _, _)
@@ -1552,7 +1594,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           profile: e(activity, :subject, :profile, nil),
           character: e(activity, :subject, :character, nil)
         }}
-     ] ++ component_activity_maybe_creator(activity, object, object_type))
+     ] ++ dated_by_object(component_activity_maybe_creator(activity, object, object_type)))
     |> debug("MATCHED react case for verb: #{verb} in component_activity_subject")
   end
 
@@ -1659,6 +1701,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
       activity
       # |> debug("activity")
       |> component_activity_maybe_creator(object, object_type)
+      # this clause renders the object creator's byline for any verb, so date it by the object
+      |> dated_by_object()
+
+  # a creator byline must not inherit the wrapping activity's id: `DateAgoLive` prefers `activity_id` and would date the post by when it was boosted/liked
+  defp dated_by_object(components) do
+    Enum.map(components, fn
+      {module, assigns} when is_map(assigns) -> {module, Map.put(assigns, :activity_id, nil)}
+      module -> {module, %{activity_id: nil}}
+    end)
+  end
 
   # @decorate time()
   def component_activity_maybe_creator(activity, object, object_type)

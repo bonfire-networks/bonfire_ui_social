@@ -20,28 +20,38 @@ defmodule Bonfire.UI.Social.FeedView do
 
   def prepare_activity(activity, opts \\ []) do
     object = e(activity, :object, %{})
+    subject = e(activity, :subject, nil)
 
     author =
-      if opts[:author], do: e(activity, :subject, nil) || e(object, :created, :creator, nil)
+      if opts[:author], do: subject || e(object, :created, :creator, nil)
+
+    # locality describes the object: classify by its creator, not the activity's subject (mirrors ActivityLive)
+    creator = e(object, :created, :creator, nil) || e(object, :creator, nil)
 
     peered =
       e(object, :peered, nil) ||
-        e(author, :character, :peered, nil) ||
+        e(creator, :character, :peered, nil) ||
+        e(creator, :peered, nil) ||
         if id(object) == id(activity) do
           e(activity, :peered, nil)
         end
+
+    is_remote =
+      if not is_nil(creator) and id(creator) != id(subject) do
+        # eg. a boost: only the creator's own peered counts, assumed local otherwise
+        not is_nil(peered)
+      else
+        !Bonfire.Social.is_local?(
+          peered || subject || e(opts, :subject_user, nil),
+          false
+        )
+      end
 
     %{
       activity: activity |> Map.drop([:object, :subject, :created]),
       object: object,
       author: author,
-      is_remote:
-        !Bonfire.Social.is_local?(
-          peered ||
-            e(activity, :subject, nil) ||
-            e(opts, :subject_user, nil),
-          false
-        )
+      is_remote: is_remote
     }
 
     # |> debug("accctiv")
