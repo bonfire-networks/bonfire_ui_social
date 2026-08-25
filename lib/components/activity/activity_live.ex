@@ -254,7 +254,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       else
         !Bonfire.Social.is_local?(
           peered ||
-            (if is_map(locality_subject), do: locality_subject) ||
+            if(is_map(locality_subject), do: locality_subject) ||
             e(assigns, :subject_user, nil) ||
             e(socket_assigns, :subject_user, nil),
           false
@@ -275,11 +275,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
           existing -> existing
         end,
       published_in: published_in,
-      # resolved once here, since live-pushed activities can arrive without `:character` and `path/1` would then preload it on every re-render
-      published_in_path:
-        if(Bonfire.UI.Social.Activity.PublishedInLive.context_label(published_in),
-          do: path(published_in)
-        ),
       labelled: maybe_labelled(activity, verb),
       peered: peered,
       is_remote:
@@ -922,10 +917,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
           not is_nil(assigns[:custom_actions])
       )
 
+    placement = published_in_placement(assigns, e(assigns[:activity], :subject_id, nil))
+
     assigns =
       assign(assigns, %{
-        published_in_placement:
-          published_in_placement(assigns, e(assigns[:activity], :subject_id, nil)),
+        published_in_placement: placement,
+        # derived here and not in prepare, which dynamic (function-component) rendering skips along with every `data` default; a non-hidden placement already implies a resolvable label, so `path/1` never runs on a bare ULID
+        published_in_path: if(placement != :hidden, do: path(assigns[:published_in])),
         reply_context?:
           not is_nil(assigns[:reply_to]) and is_nil(assigns[:activity_inception]) and
             assigns[:showing_within] in [nil, :feed, :profile]
