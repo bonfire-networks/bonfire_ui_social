@@ -98,7 +98,10 @@ defmodule Bonfire.UI.Social.Activity.BoostedPostMetadataTest do
         object: %{
           id: "01POST00000000000000000000",
           peered: nil,
-          created: %{creator_id: "01CREATOR00000000000000000", creator: local_char("01CREATOR00000000000000000")}
+          created: %{
+            creator_id: "01CREATOR00000000000000000",
+            creator: local_char("01CREATOR00000000000000000")
+          }
         }
       }
 
@@ -112,7 +115,10 @@ defmodule Bonfire.UI.Social.Activity.BoostedPostMetadataTest do
         object: %{
           id: "01POST00000000000000000000",
           peered: nil,
-          created: %{creator_id: "01CREATOR00000000000000000", creator: remote_char("01CREATOR00000000000000000")}
+          created: %{
+            creator_id: "01CREATOR00000000000000000",
+            creator: remote_char("01CREATOR00000000000000000")
+          }
         }
       }
 
@@ -126,7 +132,10 @@ defmodule Bonfire.UI.Social.Activity.BoostedPostMetadataTest do
         object: %{
           id: "01POST00000000000000000000",
           peered: nil,
-          created: %{creator_id: "01CREATOR00000000000000000", creator: remote_char("01CREATOR00000000000000000")}
+          created: %{
+            creator_id: "01CREATOR00000000000000000",
+            creator: remote_char("01CREATOR00000000000000000")
+          }
         }
       }
 
