@@ -62,7 +62,7 @@
                   to={~p"/settings/user/feeds"}
                   label={l("Customize feeds")}
                   class="z-999 tooltip-button btn btn-circle touch-target-expanded btn-ghost btn-sm touch-manipulation"
-                ><span class="touch-target-hit-area" aria-hidden="true" /><#Icon iconify="ph:gear-six-fill" class="w-4 h-4 text-muted" /></LinkLive>
+                ><span class="touch-target-hit-area" aria-hidden="true" /><#Icon iconify="ph:gear-six-fill" class="w-4 h-4 text-primary" /></LinkLive>
               </div>
             {/if}
           </summary>

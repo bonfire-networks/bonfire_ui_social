@@ -35,7 +35,7 @@
       <div class="grid grid-cols-1 overflow-hidden">
         <div id="suggested-profiles-carousel" class="carousel-scroll pb-2" phx-hook="CarouselScroll">
           {#for user <- suggested_profiles}
-            <div class="rounded-box bg-base-200 overflow-hidden" style="width: calc(80% - 8px);">
+            <div class="overflow-hidden" style="width: calc(80% - 8px);">
               <StatelessComponent
                 module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
                 character={e(user, :character, nil) || e(user, :activity, :subject, :character, nil)}
