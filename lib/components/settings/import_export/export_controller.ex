@@ -940,7 +940,7 @@ defmodule Bonfire.UI.Social.ExportController do
   #   path = Entrepot.Storages.Disk.path(locator)
 
   #   if is_binary(path) and File.exists?(path) do
-  #     fun.(path, File.stream!(path, [], 512))
+  #     fun.(path, File.stream!(path, 512))
   #   else
   #     fun.("#{path}.txt", ["File not found"])
   #   end
@@ -983,7 +983,7 @@ defmodule Bonfire.UI.Social.ExportController do
   def media_stream(path, path, fun) when is_binary(path) do
     try do
       if File.exists?(path) do
-        fun.(path, File.stream!(path, [], 512))
+        fun.(path, File.stream!(path, 512))
       else
         warn(path, "Local file not found")
         fun.("#{path}.txt", ["Local file not found"])
