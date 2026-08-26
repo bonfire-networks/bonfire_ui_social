@@ -228,7 +228,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       if current_user do
         # apply_task(:async, fn -> # TODO? asynchronously simply so the count is updated quicker for the user
         debug(feed_id, "mark_seen: all in feed")
-        FeedActivities.mark_all_seen(feed_id, current_user: current_user)
+        FeedActivities.mark_all_seen(feed_id, socket)
         # end)
       end
 
@@ -252,16 +252,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         %{assigns: %{count: count}} = socket
       )
       when is_binary(activity_id) and activity_id != "" do
-    current_user = current_user_required!(socket)
-
-    if current_user,
+    if _current_user = current_user_required!(socket),
       do:
         apply_task(
           :start_async,
           fn ->
             # asynchronously simply so the count is updated quicker for the user
             debug(activity_id, "mark_seen")
-            Bonfire.Social.Seen.mark_seen(current_user, activity_id)
+            Bonfire.Social.Seen.mark_seen(socket, activity_id)
           end,
           socket: socket,
           id: "mark_seen"
@@ -314,7 +312,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   defp do_mark_feed_seen_on_visit(socket, feed_uid, current_user) do
-    FeedActivities.mark_all_seen(feed_uid, current_user: current_user)
+    FeedActivities.mark_all_seen(feed_uid, socket)
 
     PubSub.broadcast(
       "unseen_count:#{feed_uid}",
