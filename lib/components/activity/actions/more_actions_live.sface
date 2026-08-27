@@ -150,7 +150,12 @@
     {#if !current_user_id(@__context__)}
       <li>
         <LinkLive
-          to={"#{path(@object)}/interact/flag"}
+          to={Bonfire.UI.Common.guest_interaction_url(
+            "flag",
+            l("this %{object}", object: e(@object_type_readable, l("object"))),
+            @object,
+            @__context__
+          )}
           class="flex items-center w-full gap-2 text-sm text-base-content"
         >
           <span class="truncate ellipsis">{l("Flag this %{object}", object: e(@object_type_readable, l("object")))}</span>
