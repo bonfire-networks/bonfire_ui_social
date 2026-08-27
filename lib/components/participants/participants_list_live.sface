@@ -1,4 +1,4 @@
-<div data-role="participants_list_wrapper">
+<div id={"#{@id}_wrapper"} data-role="participants_list_wrapper">
   {#case e(assigns, :participants, [])}
     {#match participants when is_list(participants) and participants != []}
       <ul class={@list_class} data-role="participants_list">
@@ -11,17 +11,27 @@
 
       {#if length(participants) > @limit}
         <button
+          id={"#{@id}_toggle"}
           type="button"
           phx-click="toggle_participants"
           phx-target={@myself}
           data-role="toggle_participants"
-          class="mt-1 text-sm text-muted hover:underline mx-2 mb-2"
+          aria-expanded={if @expanded, do: "true", else: "false"}
+          class={@toggle_class}
         >
           {#if @expanded}
             {l("Show less")}
           {#else}
-            {l("Show %{count} more", count: length(participants) - @limit)}
+            <#slot {@collapsed_label}>{l("Show %{count} more", count: length(participants) - @limit)}</#slot>
           {/if}
+          <#Icon
+            :if={@show_toggle_icon}
+            iconify="ph:caret-down"
+            class={
+              "h-4 w-4 shrink-0 transition-transform duration-150 ease-out motion-reduce:transition-none",
+              "rotate-180": @expanded
+            }
+          />
         </button>
       {/if}
     {#match _}

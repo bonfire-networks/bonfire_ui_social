@@ -22,10 +22,20 @@ defmodule Bonfire.UI.Social.ParticipantsListLive do
   @doc "CSS class for each list item."
   prop item_class, :css_class, default: ""
 
+  @doc "CSS class for the reveal control."
+  prop toggle_class, :css_class,
+    default: "mt-1 text-sm text-muted hover:underline mx-2 mb-2"
+
+  @doc "Whether to show a disclosure caret beside the reveal label."
+  prop show_toggle_icon, :boolean, default: false
+
   data expanded, :boolean, default: false
 
   @doc "Renders a single participant. Receives `participant`."
   slot default, arg: [participant: :any]
+
+  @doc "Overrides the label shown while the list is collapsed."
+  slot collapsed_label
 
   def handle_event("toggle_participants", _params, socket) do
     {:noreply, assign(socket, expanded: !e(assigns(socket), :expanded, false))}

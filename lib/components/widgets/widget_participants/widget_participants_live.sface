@@ -2,50 +2,71 @@
   {#match participants when is_list(participants) and participants != []}
     {#case e(assigns, :reply_counts, %{})}
       {#match reply_counts}
-        {#case Enum.sum(Map.values(reply_counts))}
-          {#match total}
-            <Bonfire.UI.Common.WidgetBlockLive
-              class="border-y-hair border-secondary pt-card"
-              title_class="flex items-center justify-between pb-card px-card text-xs font-normal uppercase tracking-wide text-base-content"
-              widget_title={e(assigns, :widget_title, l("Top participants"))}
-            >
-              {!-- top 5 by reply count, with a reveal-the-rest control (#1988) --}
-              <Bonfire.UI.Social.ParticipantsListLive
-                id="widget_participants_list"
-                participants={Enum.sort_by(participants, &Map.get(reply_counts, id(&1), 0), :desc)}
-                limit={5}
-                item_class="p-1"
-                list_class="divide-hair flex flex-col divide-secondary"
-                :let={participant: participant}
+        <Bonfire.UI.Common.WidgetBlockLive
+          class="w-full overflow-hidden border-hair border-secondary bg-base-100 px-[18px] pb-2 pt-[14px]"
+          title_class="pb-2 text-xs font-normal uppercase tracking-wide text-base-content"
+          widget_title={e(assigns, :widget_title, l("Participants"))}
+        >
+          <:action>
+            <span class="text-xs leading-[1.2] tabular-nums text-muted">{length(participants)}</span>
+          </:action>
+
+          <Bonfire.UI.Social.ParticipantsListLive
+            id="widget_participants_list"
+            participants={Enum.sort_by(participants, &Map.get(reply_counts, id(&1), 0), :desc)}
+            limit={5}
+            toggle_class="inline-flex min-h-9 items-center gap-1 text-sm text-muted touch-manipulation transition-transform active:scale-[0.96] motion-reduce:transition-none"
+            show_toggle_icon
+            :let={participant: participant}
+          >
+            <:collapsed_label>{l("Show more")}</:collapsed_label>
+
+            <div class="grid min-h-11 grid-cols-[1.75rem_minmax(0,1fr)_4.75rem] items-center gap-2">
+              <LinkLive
+                to={path(participant)}
+                parent_id={deterministic_dom_id(__MODULE__, id(participant), "avatar", "widget_participants")}
+                class="shrink-0 rounded-full"
+                label={l("%{username}'s profile",
+                  username:
+                    e(participant, :profile, :name, nil) ||
+                      e(participant, :character, :username, "")
+                )}
               >
-                {#case Map.get(reply_counts, id(participant), 0)}
-                  {#match count}
-                    <StatelessComponent
-                      module={maybe_component(Bonfire.UI.Me.ProfileItemLive, @__context__)}
-                      show_controls={[]}
-                      wrapper_class="flex items-center bg-base-100 p-1 justify-between gap-1 rounded-field border-hair border-secondary"
-                      parent_id="widget_participants"
-                      character={e(participant, :character, nil)}
-                      profile={e(participant, :profile, nil)}
-                      avatar_class="w-9 h-9 rounded-full"
-                      fallback_class="w-9 h-9 rounded-full"
-                    >
-                      <div
-                        :if={count > 0 and total > 0}
-                        data-role="reply_share"
-                        class="shrink-0 mr-[20px] w-[60px] h-2 rounded-full bg-secondary overflow-hidden"
-                        title={"#{count} " <> l("replies")}
-                      >
-                        <div
-                          class="h-full rounded-full bg-gradient-to-r from-primary/60 to-primary transition-all duration-300"
-                          style={"width: #{round(count / total * 100)}%"}
-                        />
-                      </div>
-                    </StatelessComponent>
-                {/case}
-              </Bonfire.UI.Social.ParticipantsListLive>
-            </Bonfire.UI.Common.WidgetBlockLive>
-        {/case}
+                <Bonfire.UI.Common.AvatarLive
+                  parent_id={deterministic_dom_id(__MODULE__, id(participant), "avatar", "widget_participants")}
+                  user_id={id(participant)}
+                  src={e(participant, :profile, :icon, nil)}
+                  title={e(participant, :profile, :name, nil) || e(participant, :character, :username, "")}
+                  class="h-7 w-7 rounded-full"
+                  wrapper_class="avatar !flex h-7 w-7 shrink-0 border-0"
+                  fallback_class="h-7 w-7 rounded-full"
+                  is_remote={!check_is_local?(participant, preload_if_needed: false)}
+                />
+              </LinkLive>
+
+              <LinkLive
+                to={path(participant)}
+                parent_id={deterministic_dom_id(__MODULE__, id(participant), "name", "widget_participants")}
+                class="flex min-h-11 min-w-0 items-center truncate text-[13px] leading-[1.2] text-base-content [font-weight:550]"
+              >
+                {e(participant, :profile, :name, nil) ||
+                  e(participant, :character, :username, l("User"))}
+              </LinkLive>
+
+              <StatefulComponent
+                module={maybe_component(Bonfire.UI.Social.Graph.FollowButtonLive, @__context__)}
+                id={ComponentID.new(Bonfire.UI.Social.Graph.FollowButtonLive, id(participant), "widget_participants")}
+                object_id={id(participant)}
+                path={path(participant)}
+                hide_icon
+                container_class="flex w-[76px] items-center justify-end"
+                loading_class="skeleton h-8 w-[76px] rounded-[9px]"
+                class="btn btn-outline !h-8 !min-h-8 !w-[76px] !rounded-[9px] !border-secondary !px-2 text-xs leading-none text-muted [font-weight:550] hover:text-base-content"
+                class_already="btn btn-ghost !h-8 !min-h-8 !w-[76px] !rounded-[9px] !border-transparent !bg-base-content/[0.08] !px-2 text-xs leading-none text-muted [font-weight:550] hover:text-base-content"
+              />
+            </div>
+          </Bonfire.UI.Social.ParticipantsListLive>
+        </Bonfire.UI.Common.WidgetBlockLive>
     {/case}
   {#match _}
 {/case}
