@@ -170,23 +170,19 @@ defmodule Bonfire.UI.Social.CommentsEmbedGuestUsabilityTest do
 
     # BEFORE sign-in: guest, no import author → nothing created (allowlisted domain, but no creator),
     # empty state invites local sign-in
-    {:ok, guest_view, guest_html} = live(conn(), url)
+    {:ok, _guest_view, guest_html} = live(conn(), url)
     assert {:error, :not_found} = Media.get_by_path(uri)
     assert guest_html =~ "Be the first to comment"
     assert guest_html =~ "embed_empty_signin"
     refute guest_html =~ "/remote_interaction"
-    # visual: the empty state a guest sees (remove before commit)
-    Phoenix.LiveViewTest.open_browser(guest_view)
 
     # AFTER sign-in: the blogger returns signed in (the sign-in redirect lands back on the embed) →
     # the mount creates the anchor attributed to them, and the composer replaces the empty state
-    {:ok, signed_view, signed_html} = live(conn(user: me, account: account), url)
+    {:ok, _signed_view, signed_html} = live(conn(user: me, account: account), url)
     assert {:ok, media} = Media.get_by_path(uri)
     assert media.creator_id == id(me)
     refute signed_html =~ "Be the first to comment"
     # the reply composer slot for the new thread is present (commenting enabled)
     assert signed_html =~ "reply-slot-#{media.id}"
-    # visual: the created thread with the composer (remove before commit)
-    Phoenix.LiveViewTest.open_browser(signed_view)
   end
 end

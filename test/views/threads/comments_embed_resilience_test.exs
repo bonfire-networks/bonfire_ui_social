@@ -21,14 +21,14 @@ defmodule Bonfire.UI.Social.CommentsEmbedResilienceTest do
       # term and crash instead of {:noreply, socket}.
       {:ok, view, _html} = live(conn(), "/comments/embed?unrelated=1")
 
-      assert render(view) =~ "No comments possible here."
+      assert render(view) =~ "Be the first to comment"
     end
 
     test "unresolvable media_uri → renders the empty state, does not crash" do
       {:ok, _view, html} =
         live(conn(), "/comments/embed?media_uri=not-a-valid-url")
 
-      assert html =~ "No comments"
+      assert html =~ "Be the first to comment"
     end
   end
 end

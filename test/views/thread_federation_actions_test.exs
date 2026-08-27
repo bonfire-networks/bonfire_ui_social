@@ -16,6 +16,12 @@ defmodule Bonfire.UI.Social.Threads.FederationActionsTest do
     # processes without changing the instance setting for other tests.
     Process.put(:federating, true)
 
+    # ...but only `Bonfire.Federate.ActivityPub.Integration` reads that seam. Creating the remote actor below goes through `ActivityPub.Federator.Fetcher`, which asks `ActivityPub.Config.federating?/0` (Application env, untouched by the line above) so on an instance where that is false the setup dies with `{:error, "unhandled case for return_pointable"}` rather than the test failing on its own terms.
+    # Safe to set globally: this module is `async: false`, and ExUnit runs sync modules serially once every async one has finished, so nothing else is running to observe it.
+    instance_config = Application.get_env(:activity_pub, :instance)
+    Application.put_env(:activity_pub, :instance, Keyword.put(instance_config, :federating, true))
+    on_exit(fn -> Application.put_env(:activity_pub, :instance, instance_config) end)
+
     account = fake_account!()
     alice = fake_user!(account)
     {:ok, karen} = Bonfire.Federate.ActivityPub.Simulate.fake_remote_user()
