@@ -23,8 +23,7 @@ defmodule Bonfire.UI.Social.ParticipantsListLive do
   prop item_class, :css_class, default: ""
 
   @doc "CSS class for the reveal control."
-  prop toggle_class, :css_class,
-    default: "mt-1 text-sm text-muted hover:underline mx-2 mb-2"
+  prop toggle_class, :css_class, default: "mt-1 text-sm text-muted hover:underline mx-2 mb-2"
 
   @doc "Whether to show a disclosure caret beside the reveal label."
   prop show_toggle_icon, :boolean, default: false

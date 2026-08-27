@@ -91,6 +91,17 @@
       {/case}
     </.portal>
   {#else}
-    {l("No comments possible here.")}
+    {!-- No thread yet: invite LOCAL sign-in so the blogger can start it. Remote interaction needs an existing object to reply to, so it can't initialize a thread that doesn't exist yet; only a local account can mint the anchor. `target="_top"` escapes the iframe so login renders full-window; the `go` return (the embedding page) comes back with a `bonfire_embed_token`, re-authenticating the embed which then creates the anchor. --}
+    <div class="flex flex-col items-center gap-3 p-6 text-center" data-role="embed_empty">
+      <p class="text-muted">{l("Be the first to comment")}</p>
+      <a
+        :if={!current_user_id(@__context__)}
+        id="embed_empty_signin"
+        href={Bonfire.Common.URIs.base_url() <>
+          "/login?" <> URI.encode_query(go: e(@__context__, :go, nil) || "")}
+        target="_top"
+        class="btn btn-sm btn-primary rounded-full normal-case"
+      >{l("Sign in")}</a>
+    </div>
   {/if}
 </div>

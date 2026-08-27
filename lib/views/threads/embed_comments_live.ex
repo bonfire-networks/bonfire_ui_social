@@ -40,17 +40,17 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
 
   This LiveView is unauthenticated and its params come from a third-party page, so it accepts nothing that chooses a created post's author, audience or destination: `data-creator`, `data-boundary`, `data-group-id`, `data-to-circles` and `data-require-topic` are parsed-and-ignored (old snippets keep working; a warning is logged). They previously let any visitor forge a post's author, place it in an arbitrary group, or publish a paid Ghost article publicly via `data-boundary=public`.
 
-  A generic media thread is attributed to the signed-in viewer, else to the instance's configured import author (`Bonfire.Ghost.auto_import_as/0`). Ghost articles are never created by this view: webhooks and the explicit historical backfill own imports, including their author, destination and audience.
+  A generic media thread is attributed to the instance's configured import author: the `auto_import_as` instance setting (`[:bonfire_ghost, :auto_import_as]`, set in the Ghost settings; read via `Bonfire.Ghost.auto_import_as/0`), else the signed-in viewer. The import author wins so an anchor isn't attributed to an incidental reader who merely opened the page; the viewer is the fallback so a blogger on an instance without a configured author can still start a thread by signing in. Either way the operator chooses the author in settings, not per-embed. Ghost articles are never created by this view: webhooks and the explicit historical backfill own imports, including their author, destination and audience.
 
-  Reading an existing thread is always allowed, but a missing one is only *created* when all of these hold (see `maybe_create_anchor/3`):
+  Reading an existing thread is always allowed. A missing one is *created* (see `maybe_create_anchor/3`) only when there is a real account to attribute it to: the configured import author (`auto_import_as`), else the signed-in viewer. That import author is a genuine user the operator designates to stand in for imports (effectively a bot account, but a real one with its own boundaries and feeds), NOT a synthetic placeholder. What we never fall back to is an anonymous/placeholder subject, e.g. `Media.insert`'s `0AND0MSTRANGERS0FF1NTERNET` guests-circle sentinel: if no real account resolves, nothing is created and the empty state offers local sign-in so the blogger can sign in and start the discussion.
 
-    * the LiveView is on its connected (websocket) mount — plain HTTP fetches and crawlers never create content;
-    * a creator can be resolved (signed-in viewer, else the configured import author);
-    * for guests, the URI's origin is allowlisted in `IFRAME_ALLOWED_ORIGINS` (strict origin match; CSP-only values like `*` or `'self'` never authorize creation) — or the embed is a loopback dev preview, whose anchor is local-only anyway. A signed-in viewer may anchor any URI, since it's attributed to them.
+  Creation also requires the URI's HOST to be one the operator allowlisted in `IFRAME_ALLOWED_ORIGINS` (host match via `Bonfire.UI.Common.EmbedOrigins.host_allowed?/1`; CSP-only values like `*` or `'self'` never qualify), or the embed to be a loopback dev preview (whose anchor is local-only anyway). This domain allowlist applies to everyone, with no bypass for signed-in viewers, so a blogger initializes a thread by signing in on their own (allowlisted) site.
+
+  Creation runs on the static render too, since guests never get a connected socket on this instance. The two rules above, not "is the socket connected", are what bound creation.
 
   ## Dev/preview safety
 
-  When the embedding page is served from a loopback host (`localhost`, `127.0.0.0/8`, `[::1]`) — i.e. a local dev/preview of a site — any thread this embed CREATES is forced to a local-only boundary, so testing the widget can't accidentally publish public/federated content. Detected from the `embed_parent` (the page URL, always sent by the loader) or the `media_uri`. A localhost page carries a localhost URL, which is its own dedup key, so a preview never touches the production thread.
+  When the embedding page is served from a loopback host (`localhost`, `127.0.0.0/8`, `[::1]`), i.e. a local dev/preview of a site, any thread this embed CREATES is forced to a local-only boundary, so testing the widget can't accidentally publish public/federated content. Detected from the `embed_parent` (the page URL, always sent by the loader) or the `media_uri`. A localhost page carries a localhost URL, which is its own dedup key, so a preview never touches the production thread.
   """
 
   use Bonfire.UI.Common.Web,
@@ -215,40 +215,25 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
     end
   end
 
-  # Creation (as opposed to reading) is gated: this LiveView is loaded unauthenticated with
-  # caller-chosen params, and a guest-created anchor is published under the instance's configured
-  # import author — so mere navigation (or a crawler, or a forged iframe URL) must not mint posts.
-  #   * never during the static render — only the connected (websocket) mount creates, which
-  #     plain HTTP fetches and crawlers don't reach;
-  #   * a signed-in viewer may anchor any URI (it's attributed to them);
-  #   * a guest-loaded embed may only anchor URIs on origins the operator allowlisted in
-  #     `IFRAME_ALLOWED_ORIGINS` (strict origin match — CSP-only values like `*` or `'self'`
-  #     never qualify, see `Bonfire.UI.Common.EmbedOrigins.allowed?/1`); a loopback dev preview
-  #     is exempt since its anchor is forced local-only anyway (see `embed_boundary/1`).
+  # Create an anchor only when both hold, as described in the moduledoc: a real account to attribute
+  # it to, and an operator-approved domain.
   defp maybe_create_anchor(uri, params, socket) do
+    # the import author wins over the incidental signed-in viewer (the anchor stands in for the page)
     creator = embed_anchor_creator(socket)
 
     cond do
-      not socket_connected?(socket) ->
-        # quiet: the connected mount runs next and may create the anchor
-        {:noreply, assign_error(socket, l("No comments available here."))}
-
+      # no account to attribute to (no configured import author and no signed-in viewer): don't create; the empty state offers local sign-in to init
       is_nil(creator) ->
-        error(
-          uri,
-          "No embed creator configured — set an import author in the instance's Ghost settings (or sign in) to create thread anchors from embeds"
-        )
+        {:noreply, socket}
 
-        {:noreply, assign_error(socket, l("No comments available here."))}
-
-      is_nil(current_user(socket)) and
-          not (loopback_origin?(params) or Bonfire.UI.Common.EmbedOrigins.allowed?(uri)) ->
+      # the domain must be operator-allowlisted (for everyone, no bypass), unless a loopback preview
+      not (loopback_origin?(params) or Bonfire.UI.Common.EmbedOrigins.host_allowed?(uri)) ->
         warn(
           uri,
-          "Refusing to create a thread anchor for a guest-loaded embed — the URI's origin is not allowlisted in IFRAME_ALLOWED_ORIGINS"
+          "Not creating a thread anchor: the URI's host is not allowlisted in IFRAME_ALLOWED_ORIGINS"
         )
 
-        {:noreply, assign_error(socket, l("No comments available here."))}
+        {:noreply, socket}
 
       true ->
         case Bonfire.Files.Media.get_or_add_media_by_uri(
@@ -268,14 +253,20 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
 
           other ->
             error(other, "Could not resolve media_uri to a thread")
-            {:noreply, assign_error(socket, l("No comments available here."))}
+
+            {:noreply,
+             assign_error(socket, l("Could not make the discussion ready for commenting."))}
         end
     end
   end
 
-  # server-decided: the signed-in viewer, else the instance's configured import author
+  # server-decided: the configured import author wins, else the signed-in viewer
   def embed_anchor_creator(socket) do
-    current_user(socket) || maybe_apply(Bonfire.Ghost, :auto_import_as, [], fallback_return: nil) ||
+    configured_import_author() || current_user(socket)
+  end
+
+  defp configured_import_author do
+    maybe_apply(Bonfire.Ghost, :auto_import_as, [], fallback_return: nil) ||
       Config.get([:bonfire_ghost, :auto_import_as], nil)
   end
 

@@ -106,10 +106,17 @@ defmodule Bonfire.UI.Social.Feeds.A11y.Test do
       "button#feed_preset_dropdown_local_trigger[data-role=feed_preset_current][aria-expanded=false][aria-controls=feed_preset_dropdown_local_panel].focus-ring.px-2"
     )
     |> assert_has("#feed_preset_dropdown_local_panel.dropdown-panel.overflow-y-auto")
-    |> assert_has("fieldset#feed_preset_options_local label.min-h-14[for=feed_preset_local_default]")
+    |> assert_has(
+      "fieldset#feed_preset_options_local label.min-h-14[for=feed_preset_local_default]"
+    )
     |> assert_has("[data-role=calm_override_name].font-normal", text: "Replies")
-    |> assert_has("form#feed_overrides_form_local label.min-h-11.rounded-selector.px-2[class~='-mx-2']")
-    |> assert_has("[data-role=feed_advanced_filters_wrapper][class~='-mx-2'] [data-role=open_modal].focus-ring", text: "Advanced filters")
+    |> assert_has(
+      "form#feed_overrides_form_local label.min-h-11.rounded-selector.px-2[class~='-mx-2']"
+    )
+    |> assert_has(
+      "[data-role=feed_advanced_filters_wrapper][class~='-mx-2'] [data-role=open_modal].focus-ring",
+      text: "Advanced filters"
+    )
   end
 
   test "a boosted activity reflects the boost state in the trigger's accessible name", %{

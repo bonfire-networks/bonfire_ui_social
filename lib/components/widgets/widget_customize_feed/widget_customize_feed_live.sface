@@ -18,15 +18,15 @@
       {#case Bonfire.UI.Social.WidgetCustomizeFeedLive.current_preset_card(
           @feed_filters,
           @feed_baseline_filters
-      )}
+        )}
         {#match current_card}
           <Dropdown
             id={"feed_preset_dropdown_#{@feed_name || "default"}"}
             position="bottom-start"
             strategy="fixed"
-            match_trigger_width={true}
+            match_trigger_width
             focus_on_open="input:checked, input"
-            close_on_select={true}
+            close_on_select
             menu={false}
             wrapper_class="-mx-2"
             trigger_class="group focus-ring flex min-h-14 w-full cursor-pointer items-center gap-2 rounded-selector px-2 py-1.5 text-left text-base-content transition-colors duration-150 ease-out hover:bg-base-content/5 active:bg-base-content/10"
