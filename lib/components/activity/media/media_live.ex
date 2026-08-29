@@ -432,65 +432,16 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   def preview_img(%{media: %{id: _} = media}), do: preview_img(media)
 
   def preview_img(%{} = media) do
-    # Check for common app/site tile images which are often good previews
-    # Check for Open Graph images which might be nested
-    # Handle ActivityPub icon (can be object or array, e.g., from PeerTube)
-    # Check json_ld for PeerTube videos
-    # Check preview field for Mastodon videos
-    preview =
-      e(media, :metadata, "oembed", "thumbnail_url", nil) ||
-        e(media, :metadata, "twitter", "image", nil) ||
-        (e(media, :metadata, "facebook", "image", "url", nil) ||
-           e(media, :metadata, "facebook", "image", nil)) ||
-        e(media, :metadata, "image", "url", nil) ||
-        e(media, :metadata, "image", nil) ||
-        extract_ap_icon_url(e(media, :metadata, "icon", nil)) ||
-        extract_ap_icon_url(e(media, :metadata, "json_ld", "icon", nil)) ||
-        extract_ap_icon_url(e(media, :metadata, "preview", nil)) ||
-        e(media, :metadata, "other", "msapplication-TileImage", nil) ||
-        e(media, :metadata, "other", "apple-touch-icon", nil) ||
-        e(media, :metadata, "other", "og:image", nil) ||
-        e(media, :metadata, "other", "og:image:url", nil) ||
-        Media.thumbnail_url(media)
-
     # Only fall back to media_img if we have a proper image media type
     # Never use video URLs as poster images
     preview =
-      preview ||
+      Files.Media.metadata_image_url(media) ||
         if is_image_media_type?(e(media, :media_type, nil)), do: media_img(media), else: nil
 
     preview
     |> unwrap()
-    |> reject_site_icon_preview(media)
+    |> Files.Media.reject_site_icon(media)
   end
-
-  # Some sites publish their favicon as `og:image`; preserving the semantic distinction here lets link cards use the compact favicon layout without changing genuine cover images.
-  defp reject_site_icon_preview(preview, media) when is_binary(preview) do
-    favicon =
-      media
-      |> e(:metadata, "favicon", nil)
-      |> unwrap()
-
-    if preview == favicon, do: nil, else: preview
-  end
-
-  defp reject_site_icon_preview(preview, _media), do: preview
-
-  # Extract URL from ActivityPub icon (handles both single object and array)
-  defp extract_ap_icon_url(nil), do: nil
-
-  defp extract_ap_icon_url(icons) when is_list(icons) do
-    # Pick the largest icon (best quality thumbnail)
-    icons
-    |> Enum.filter(&is_map/1)
-    |> Enum.max_by(fn icon -> (icon["width"] || 0) * (icon["height"] || 0) end, fn -> nil end)
-    |> extract_ap_icon_url()
-  end
-
-  defp extract_ap_icon_url(%{"url" => url}) when is_binary(url), do: url
-  defp extract_ap_icon_url(%{"href" => url}) when is_binary(url), do: url
-  defp extract_ap_icon_url(url) when is_binary(url), do: url
-  defp extract_ap_icon_url(_), do: nil
 
   # Helper to check if media type is actually an image
   defp is_image_media_type?(media_type) do

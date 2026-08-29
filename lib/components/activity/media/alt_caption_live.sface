@@ -2,6 +2,7 @@
      label click never triggers the surrounding open-modal button / link. --}
 <div
   :if={@media_label}
+  data-id="media_alt"
   class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top"
   onclick="event.stopPropagation()"
 >
