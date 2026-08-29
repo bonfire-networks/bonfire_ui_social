@@ -183,9 +183,9 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
 
     warn_ignored_params(params)
 
-    # read first (same lookup `get_or_add_media_by_uri` dedups with), so displaying an existing
-    # thread needs no creator and no creation privileges. TODO: cache result
-    case Bonfire.Files.Media.get_by_path(uri) do
+    # read first, so displaying an existing thread needs no creator and no creation privileges.
+    # `get_by_url` matches the anchor by the media_uri whether it's the canonical `path` or a source url in `metadata.urls` (tracking params normalised away). TODO: cache result
+    case Bonfire.Files.Media.get_by_url(uri) do
       {:ok, %{id: id}} ->
         load_params(%{"id" => id}, nil, socket)
 

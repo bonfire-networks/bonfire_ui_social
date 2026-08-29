@@ -33,6 +33,124 @@ defmodule Bonfire.UI.Social.CommentsEmbedGuestUsabilityTest do
     get(conn, "/comments/embed?media_uri=#{URI.encode_www_form(uri)}#{extra}")
   end
 
+  test "a guest sees an EXISTING thread (not the empty state) once the anchor exists" do
+    author = fake_user!()
+    Process.put([:bonfire_ghost, :auto_import_as], author.id)
+    allowlist("https://blog.example.com")
+    uri = "https://blog.example.com/existing-thread/"
+
+    # first request creates the anchor
+    static_get(conn(), uri) |> html_response(200)
+    assert {:ok, media} = Media.get_by_path(uri)
+
+    # a subsequent guest request must render the thread, NOT the "be the first" empty state
+    html = static_get(conn(), uri) |> html_response(200)
+    refute html =~ "Be the first to comment"
+    assert html =~ media.id
+  end
+
+  test "a guest sees an existing thread even when the page's canonical URL differs from the media_uri" do
+    canonical = "https://blog.example.com/canonical-article/"
+
+    Tesla.Mock.mock_global(fn _env ->
+      {:ok,
+       %Tesla.Env{
+         status: 200,
+         body:
+           ~s(<html><head><link rel="canonical" href="#{canonical}"/><title>A</title></head></html>)
+       }}
+    end)
+
+    allowlist("https://blog.example.com")
+    account = fake_account!()
+    blogger = fake_user!(account)
+    # a page URL that differs from the canonical (e.g. tracking params) — the common real case
+    page_uri = "https://blog.example.com/page/?utm=abc"
+
+    # the blogger signs in and initializes the thread; the anchor is stored under the CANONICAL url
+    {:ok, _v, _h} =
+      live(
+        conn(user: blogger, account: account),
+        "/comments/embed/interactive?media_uri=#{URI.encode_www_form(page_uri)}"
+      )
+
+    # the canonical is the primary `path`; the (normalized) media_uri is recorded in metadata.urls and
+    # found via the `get_by_url` fallback
+    assert {:ok, media} = Media.get_by_path(canonical)
+    assert {:ok, %{id: same}} = Media.get_by_url(page_uri)
+    assert same == media.id
+
+    # a GUEST (no import author configured) visiting the same page URL must still see the thread,
+    # not the empty state — reading an existing thread must not depend on the media_uri matching
+    # the stored canonical path
+    html = static_get(conn(), page_uri) |> html_response(200)
+    refute html =~ "Be the first to comment"
+    assert html =~ media.id
+  end
+
+  test "a guest sees an existing thread when visiting the trailing-slash variant of the anchored URL" do
+    author = fake_user!()
+    Process.put([:bonfire_ghost, :auto_import_as], author.id)
+    allowlist("https://blog.example.com")
+
+    # the anchor is created from the URL WITH a trailing slash
+    stored = "https://blog.example.com/slash-thread/"
+    static_get(conn(), stored) |> html_response(200)
+    assert {:ok, media} = Media.get_by_path(stored)
+
+    # now a PURE guest (import author removed, so nothing can be created) arrives at the same page
+    # WITHOUT the trailing slash: seeing the thread proves the slash-normalized `urls` index resolved
+    # it, and no duplicate anchor was minted under the slash-less path
+    Process.delete([:bonfire_ghost, :auto_import_as])
+    variant = "https://blog.example.com/slash-thread"
+    html = static_get(conn(), variant) |> html_response(200)
+    refute html =~ "Be the first to comment"
+    assert html =~ media.id
+    assert {:error, :not_found} = Media.get_by_path(variant)
+  end
+
+  test "a guest sees an existing thread when visiting a tracking-param variant of the anchored URL" do
+    author = fake_user!()
+    Process.put([:bonfire_ghost, :auto_import_as], author.id)
+    allowlist("https://blog.example.com")
+
+    # the anchor is created from the clean URL (no tracking params)
+    stored = "https://blog.example.com/track-thread/"
+    static_get(conn(), stored) |> html_response(200)
+    assert {:ok, media} = Media.get_by_path(stored)
+
+    # a PURE guest (import author removed, so nothing can be created) arrives at the same page with
+    # tracking params: seeing the thread proves the tracking-strip normalization resolved it, and no
+    # duplicate anchor was minted under the tracking-carrying path
+    Process.delete([:bonfire_ghost, :auto_import_as])
+    variant = "https://blog.example.com/track-thread/?utm_source=news&fbclid=xyz"
+    html = static_get(conn(), variant) |> html_response(200)
+    refute html =~ "Be the first to comment"
+    assert html =~ media.id
+    assert {:error, :not_found} = Media.get_by_path(variant)
+  end
+
+  test "a guest sees an existing thread when visiting a combined slash + tracking variant" do
+    author = fake_user!()
+    Process.put([:bonfire_ghost, :auto_import_as], author.id)
+    allowlist("https://blog.example.com")
+
+    # the anchor is created from the clean URL WITH a trailing slash and no tracking params
+    stored = "https://blog.example.com/both-thread/"
+    static_get(conn(), stored) |> html_response(200)
+    assert {:ok, media} = Media.get_by_path(stored)
+
+    # a PURE guest arrives WITHOUT the trailing slash AND with tracking params: both normalizations
+    # (tracking-strip then slash-strip) must compose to resolve the one anchor, minting no duplicate
+    Process.delete([:bonfire_ghost, :auto_import_as])
+    variant = "https://blog.example.com/both-thread?utm_source=news&fbclid=xyz"
+    html = static_get(conn(), variant) |> html_response(200)
+    refute html =~ "Be the first to comment"
+    assert html =~ media.id
+    assert {:error, :not_found} = Media.get_by_path(variant)
+    assert {:error, :not_found} = Media.get_by_path("https://blog.example.com/both-thread")
+  end
+
   test "guest with no configured author: nothing created, empty state offers local sign-in" do
     uri = "https://blog.example.com/no-author/"
 
