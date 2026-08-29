@@ -85,6 +85,70 @@ defmodule Bonfire.UI.Social.Activity.MediaLinkLiveTest do
     assert Floki.find(identity, ~s([data-id="media_author"])) != []
   end
 
+  # The homepage link card for the instance's own site. Every field here is copied from the media that crashed the feed in production: `json_ld` is an ARRAY rather than an object, `path` has noscheme, and there is no cover image anywhere in the metadata, so every candidate in the preview chain has to fall through to the last one.
+  describe "a website link preview whose json_ld is an array" do
+    defp array_json_ld_media do
+      %Bonfire.Files.Media{
+        id: "01GSFXHPVXPG359CYYT7F68HPC",
+        path: "campground.bonfire.cafe",
+        file: nil,
+        size: 0,
+        media_type: "website",
+        metadata: %{
+          "canonical_url" => nil,
+          "facebook" => %{
+            "og:description" =>
+              "This is a demo instance of the Bonfire Classic flavour for testing purposes",
+            "og:locale" => "en",
+            "og:site_name" => "Bonfire Campground",
+            "og:type" => "website"
+          },
+          "favicon" => nil,
+          "json_ld" => [
+            %{
+              "@context" => "https://schema.org",
+              "@type" => "BreadcrumbList",
+              "itemListElement" => []
+            }
+          ],
+          "oembed" => nil,
+          "other" => %{
+            "description" =>
+              "This is a demo instance of the Bonfire Classic flavour for testing purposes",
+            "title" => "Bonfire Campground · Bonfire Campground",
+            "viewport" => "width=device-width, initial-scale=1.0, viewport-fit=cover"
+          },
+          "status_code" => 200,
+          "twitter" => %{"twitter:site" => "@SwitchToBonfire"}
+        }
+      }
+    end
+
+    test "the media classifies without raising" do
+      media = array_json_ld_media()
+
+      assert MediaLive.the_medias([media]) == [media]
+      assert MediaLive.has_video_page_metadata?(media) == false
+      assert MediaLive.peertube_embed_url(media) == nil
+    end
+
+    test "it has no cover image, so the card falls back to the compact layout" do
+      assert MediaLive.preview_img(array_json_ld_media()) == nil
+    end
+
+    test "it renders in a feed" do
+      html =
+        render_component(&MediaLive.render/1, %{
+          media: [array_json_ld_media()],
+          showing_within: :feed,
+          parent_id: "array-json-ld-test",
+          __context__: %{}
+        })
+
+      assert html =~ "campground.bonfire.cafe"
+    end
+  end
+
   defp media(metadata) do
     %Bonfire.Files.Media{
       id: "01K36J7G8R4PN6X4F9WQ2ZTCE",
