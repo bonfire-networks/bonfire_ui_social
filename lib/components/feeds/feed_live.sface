@@ -35,7 +35,7 @@
       <span class="sr-only">{l("Loading...")}</span>
     </div>
 
-    <div class="load_more_container flex flex-col h-full grow break-all w-full max-w-full">
+    <div class="load_more_container flex flex-col h-full grow w-full max-w-full">
       {!-- TODO: show tabs at top of persistent feed and use event handler to trigger switching feed within the component rather than patch the view? --}
       {!-- type={if @feed_name in [nil, :my], do: :header_only} --}
       {!-- "h-[56px]": @feed_name in [nil, :my] --}

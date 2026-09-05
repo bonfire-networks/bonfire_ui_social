@@ -1,4 +1,4 @@
-<section class="bonfire-wrapper flex flex-col !p-0 -mx-px">
+<section class="bonfire-wrapper page-panel flex flex-col !p-0">
   {!-- category filter bar: a horizontal, scrollable row of chips --}
   <div
     class="flex items-center gap-2 overflow-x-auto p-4 border-b border-secondary"

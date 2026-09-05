@@ -1,7 +1,9 @@
 <div :if={current_user_id(@__context__)} class="contents">
   <Dropdown
-    id="thread-view-options"
+    id={"thread-view-options-#{@thread_id}"}
     position="bottom"
+    menu={false}
+    focus_on_open="input:checked"
     trigger_class="btn btn-sm btn-ghost !font-normal text-muted gap-1"
     label={l("View options")}
   >
@@ -9,222 +11,57 @@
       <span>{l("View options")}</span>
       <#Icon iconify="mdi:chevron-down" class="w-4 h-4 opacity-60" aria-hidden="true" />
     </:trigger>
-    <li role="presentation" class="menu-title">{l("Thread layout")}</li>
-    <li role="none">
-      <a
-        role="menuitemradio"
-        aria-checked={if @thread_mode == :nested, do: "true", else: "false"}
-        phx-click="set"
-        phx-value-to_atoms="true"
-        phx-value-thread_mode="nested"
-        phx-target={@event_target}
-        class="flex gap-3 px-2 justify-between items-center text-base-content"
-      >
-        {l("Threaded replies")}
-        <div
-          class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
-          aria-hidden="true"
-        >
-          {#if @thread_mode == :nested}
-            <span class="w-[14px] h-[14px] bg-primary rounded-full" />
-          {/if}
-        </div>
-      </a>
-    </li>
-
-    <li role="none">
-      <a
-        role="menuitemradio"
-        aria-checked={if @thread_mode != :nested, do: "true", else: "false"}
-        phx-click="set"
-        phx-value-to_atoms="true"
-        phx-value-thread_mode="flat"
-        phx-target={@event_target}
-        class="flex gap-3 px-2 justify-between items-center text-base-content"
-      >
-        {l("Linear replies")}
-        <div
-          class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
-          aria-hidden="true"
-        >
-          {#if @thread_mode != :nested}
-            <span class="w-[14px] h-[14px] bg-primary rounded-full" />
-          {/if}
-        </div>
-      </a>
-    </li>
-    <li role="presentation" class="menu-title">{l("Sort order")}</li>
-    <li role="none">
-      <a
-        role="menuitemradio"
-        aria-checked={if (is_nil(@sort_by) or @sort_by == :latest_reply) and @sort_order != :desc,
-          do: "true",
-          else: "false"}
-        phx-click="set"
-        phx-value-to_atoms="true"
-        phx-value-sort_by="nil"
-        phx-value-sort_order="asc"
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-        class="flex gap-3 px-2 text-base-content justify-between items-center"
-      >
-        {if @thread_mode != :flat, do: l("Thread order"), else: l("Oldest first")}
-        <div
-          class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
-          aria-hidden="true"
-        >
-          {#if (is_nil(@sort_by) or @sort_by == :latest_reply) and @sort_order != :desc}
-            <span class="w-[14px] h-[14px] bg-primary rounded-full" />
-          {/if}
-        </div>
-      </a>
-    </li>
-    <li role="none">
-      <a
-        role="menuitemradio"
-        aria-checked={if is_nil(@sort_by) and @sort_order == :desc, do: "true", else: "false"}
-        phx-click="set"
-        phx-value-to_atoms="true"
-        phx-value-sort_by="nil"
-        phx-value-sort_order="desc"
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-        class="flex gap-3 px-2 text-base-content justify-between items-center"
-      >
-        {l("Newest first")}
-        <div
-          class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
-          aria-hidden="true"
-        >
-          {#if is_nil(@sort_by) and @sort_order == :desc}
-            <span class="w-[14px] h-[14px] bg-primary rounded-full" />
-          {/if}
-        </div>
-      </a>
-    </li>
-
-    {#if @thread_mode != :flat}
-      <li role="none">
-        <a
-          role="menuitemradio"
-          aria-checked={if @sort_by == :latest_reply, do: "true", else: "false"}
-          phx-click="set"
-          phx-value-to_atoms="true"
-          phx-value-sort_by="latest_reply"
-          phx-value-sort_order="desc"
-          phx-value-assign_global="true"
-          phx-target={@event_target}
-          class="flex gap-3 px-2 text-base-content justify-between items-center"
-        >
-          {l("Recently active")}
-          <div
-            class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
-            aria-hidden="true"
-          >
-            {#if @sort_by == :latest_reply}
-              <span class="w-[14px] h-[14px] bg-primary rounded-full" />
-            {/if}
-          </div>
-        </a>
-      </li>
-    {/if}
-
-    <li role="none">
-      <a
-        role="menuitemradio"
-        aria-checked={if @sort_by == :reply_count, do: "true", else: "false"}
-        phx-click="set"
-        phx-value-to_atoms="true"
-        phx-value-sort_by="reply_count"
-        phx-value-sort_order="desc"
-        phx-value-assign_global="true"
-        phx-target={@event_target}
-        class="flex gap-3 px-2 text-base-content justify-between items-center"
-      >
-        {l("Most replies")}
-        <div
-          class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
-          aria-hidden="true"
-        >
-          {#if @sort_by == :reply_count}
-            <span class="w-[14px] h-[14px] bg-primary rounded-full" />
-          {/if}
-        </div>
-      </a>
-    </li>
-
-    {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
-      <li role="none">
-        <a
-          role="menuitemradio"
-          aria-checked={if @sort_by == :boost_count, do: "true", else: "false"}
-          phx-click="set"
-          phx-value-to_atoms="true"
-          phx-value-sort_by="boost_count"
-          phx-value-sort_order="desc"
-          phx-value-assign_global="true"
-          phx-target={@event_target}
-          class="flex gap-3 px-2 text-base-content justify-between items-center"
-        >
-          {l("Most boosts")}
-          <div
-            class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
-            aria-hidden="true"
-          >
-            {#if @sort_by == :boost_count}
-              <span class="w-[14px] h-[14px] bg-primary rounded-full" />
-            {/if}
-          </div>
-        </a>
-      </li>
-
-      <li role="none">
-        <a
-          role="menuitemradio"
-          aria-checked={if @sort_by == :like_count, do: "true", else: "false"}
-          phx-click="set"
-          phx-value-to_atoms="true"
-          phx-value-sort_by="like_count"
-          phx-value-sort_order="desc"
-          phx-value-assign_global="true"
-          phx-target={@event_target}
-          class="flex gap-3 px-2 text-base-content justify-between items-center"
-        >
-          {l("Most liked")}
-          <div
-            class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
-            aria-hidden="true"
-          >
-            {#if @sort_by == :like_count}
-              <span class="w-[14px] h-[14px] bg-primary rounded-full" />
-            {/if}
-          </div>
-        </a>
-      </li>
-
-      <li role="none">
-        <a
-          role="menuitemradio"
-          aria-checked={if @sort_by == :popularity_score, do: "true", else: "false"}
-          phx-click="set"
-          phx-value-to_atoms="true"
-          phx-value-sort_by="popularity_score"
-          phx-value-sort_order="desc"
-          phx-value-assign_global="true"
-          phx-target={@event_target}
-          class="flex gap-3 px-2 text-base-content justify-between items-center"
-        >
-          {l("Trending")}
-          <div
-            class="w-5 h-5 flex items-center justify-center border border-secondary rounded-full"
-            aria-hidden="true"
-          >
-            {#if @sort_by == :popularity_score}
-              <span class="w-[14px] h-[14px] bg-primary rounded-full" />
-            {/if}
-          </div>
-        </a>
-      </li>
-    {/if}
+    <fieldset class="p-2">
+      <legend class="text-sm font-semibold">{l("Thread layout")}</legend>
+      {#for {mode, label} <- [{:nested, l("Threaded replies")}, {:flat, l("Linear replies")}]}
+        <label class="flex min-h-11 cursor-pointer items-center justify-between gap-3 px-2 text-base-content">
+          <span>{label}</span>
+          <input
+            id={"thread-layout-#{@thread_id}-#{mode}"}
+            type="radio"
+            name={"thread-layout-#{@thread_id}"}
+            value={mode}
+            checked={if mode == :flat, do: @thread_mode == :flat, else: @thread_mode != :flat}
+            class="radio radio-sm radio-primary"
+            phx-click="set"
+            phx-value-to_atoms="true"
+            phx-value-thread_mode={mode}
+            {...if mode == :flat and @sort_by == :latest_reply,
+              do: %{"phx-value-sort_by" => "nil", "phx-value-sort_order" => "desc", "phx-value-assign_global" => "true"},
+              else: %{}}
+            phx-target={@event_target}
+          />
+        </label>
+      {/for}
+    </fieldset>
+    <fieldset class="p-2">
+      <legend class="text-sm font-semibold">{l("Sort order")}</legend>
+      {#for {sort_by, sort_order, label} <-
+        [{nil, :asc, if(@thread_mode != :flat, do: l("Thread order"), else: l("Oldest first"))},
+         {nil, :desc, l("Newest first")}] ++
+          (if @thread_mode != :flat, do: [{:latest_reply, :desc, l("Recently active")}], else: []) ++
+          [{:reply_count, :desc, l("Most replies")}] ++
+          (if extension_enabled?(:bonfire_ui_reactions, @__context__),
+            do: [{:boost_count, :desc, l("Most boosts")}, {:like_count, :desc, l("Most liked")}, {:popularity_score, :desc, l("Trending")}],
+            else: [])}
+        <label class="flex min-h-11 cursor-pointer items-center justify-between gap-3 px-2 text-base-content">
+          <span>{label}</span>
+          <input
+            id={"thread-sort-#{@thread_id}-#{sort_by || :default}-#{sort_order}"}
+            type="radio"
+            name={"thread-sort-#{@thread_id}"}
+            value={"#{sort_by || :default}-#{sort_order}"}
+            checked={@sort_by == sort_by && (if sort_order == :desc, do: @sort_order == :desc, else: @sort_order != :desc)}
+            class="radio radio-sm radio-primary"
+            phx-click="set"
+            phx-value-to_atoms="true"
+            phx-value-sort_by={sort_by || "nil"}
+            phx-value-sort_order={sort_order}
+            phx-value-assign_global="true"
+            phx-target={@event_target}
+          />
+        </label>
+      {/for}
+    </fieldset>
   </Dropdown>
 </div>

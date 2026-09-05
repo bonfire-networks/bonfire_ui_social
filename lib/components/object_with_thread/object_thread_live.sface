@@ -1,7 +1,7 @@
 <div
   data-role="object-thread"
   class={
-    "flex flex-col flex-1 -mx-px",
+    "flex flex-col flex-1",
     "!max-w-[720px] mx-auto w-full": !current_user_id(@__context__)
   }
 >
@@ -43,7 +43,7 @@
   <div class="flex-1">
     {!-- INITIAL POST --}
     <div class="relative">
-      <div class="bonfire-wrapper" id="thread_main_object">
+      <div class="overflow-visible p-card bg-base-100 border-0 border-b-(length:--divider-width) border-(color:--divider-color) rounded-none shadow-none" id="thread_main_object">
         {#if @object_not_permitted}
           <StatelessComponent
             module={maybe_component(Bonfire.UI.Social.RestrictedContentLive, @__context__)}
@@ -96,6 +96,8 @@
       </div>
       <div class="">
         <Bonfire.UI.Social.ThreadLive
+          class="flex flex-col gap-0"
+          replies_class="thread-replies p-0 pr-card bg-base-100 border-0 border-b-(length:--divider-width) border-(color:--divider-color) rounded-none shadow-none"
           :if={@thread_id && !@object_not_permitted}
           id={@thread_id}
           thread_id={@thread_id}

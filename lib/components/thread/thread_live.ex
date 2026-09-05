@@ -11,6 +11,8 @@ defmodule Bonfire.UI.Social.ThreadLive do
   # import Bonfire.Me.Integration
 
   prop replies, :any, default: nil
+  prop class, :css_class, default: nil
+  prop replies_class, :css_class, default: "bonfire-wrapper"
   prop threaded_replies, :any, default: nil
   prop page_info, :any, default: nil
 

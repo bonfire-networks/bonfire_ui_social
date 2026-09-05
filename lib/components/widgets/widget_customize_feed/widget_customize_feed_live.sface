@@ -13,7 +13,6 @@
       phx-change="set_filter_preset"
       phx-target={@event_target}
     >
-      <!-- <div class="px-1 text-sm font-normal text-base-content" data-role="feed_preset_title">{l("Feed mode")}</div> -->
       {!-- Matching the current preset walks every bundle's signature, so compute it once per render and reuse it for the trigger and each radio's checked state. --}
       {#case Bonfire.UI.Social.WidgetCustomizeFeedLive.current_preset_card(
           @feed_filters,
@@ -97,9 +96,9 @@
       form_name="feed_overrides"
       form_id={"feed_overrides_form_#{@feed_name || "default"}"}
       form_role="feed_override_toggles"
-      form_class="flex flex-col gap-0 pt-2 pb-1"
+      form_class="flex flex-col gap-0 pt-2 pb-0.5"
       row_class="-mx-2 rounded-selector px-2 transition-colors duration-150 ease-out hover:bg-base-content/5 active:bg-base-content/10"
-      title_class="text-sm font-normal text-base-content"
+      name_class="text-sm font-normal text-(--stream-text-secondary)"
       rows={Bonfire.UI.Social.WidgetCustomizeFeedLive.override_rows(@feed_filters, @feed_name, @__context__)}
       field_prefix="scope"
       toggle_role="feed_override_toggle"

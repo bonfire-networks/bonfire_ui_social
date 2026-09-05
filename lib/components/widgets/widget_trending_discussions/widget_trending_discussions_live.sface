@@ -21,11 +21,11 @@
         </LinkLive>
       </:action>
 
-      <ul class="flex flex-col" role="list" data-id="trending_discussions">
+      <ul class="flex flex-col mx-(--stream-content-padding) rounded-box bg-(--stream-surface) overflow-hidden" role="list" data-id="trending_discussions">
         {#for fp <- discussions}
           <li
             id={"trending_discussion_#{id(fp.activity) || id(fp.activity.object)}"}
-            class="border-t-hair border-secondary first:border-t-hair"
+            class="p-0 border-0 bg-transparent [&+li]:border-t-hair [&+li]:border-t-(--stream-object-outline)"
           >
             <Bonfire.UI.Social.ActivityLive
               id={Bonfire.UI.Social.ActivityLive.component_id(

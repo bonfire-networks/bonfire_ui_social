@@ -3,7 +3,7 @@
   id={"cc_#{id(@activity) || id(@comment)}"}
   style={"padding-left: calc(var(--comment-base-indent, 0px) + #{if(@visual_level > 0, do: 4 + (@visual_level - 1) * 34, else: 0)}px)"}
   data-id="comment"
-  class="flex flex-1 w-full relative items-top"
+  class="flex flex-1 w-full relative items-top p-(--comment-top-inset)"
 >
   {!-- <div
         :if={@thread_level > 1}
