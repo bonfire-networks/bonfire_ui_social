@@ -1,22 +1,15 @@
 <div :if={current_user_id(@__context__)} class="contents">
-  {!-- Layout mode dropdown --}
   <Dropdown
-    id="layout-dropdown"
+    id="thread-view-options"
     position="bottom"
-    trigger_class="btn btn-sm btn-outline border-hair rounded-field border border-secondary bg-base-100 gap-2 pr-1"
-    label={l("Thread layout")}
+    trigger_class="btn btn-sm btn-ghost !font-normal text-muted gap-1"
+    label={l("View options")}
   >
     <:trigger>
-      {#if @thread_mode == :flat}
-        {!-- <#Icon iconify="bi:list" class="w-4 h-4" aria-hidden="true" /> --}
-        <span class="">{l("Linear")}</span>
-      {#else}
-        {!-- <#Icon iconify="bi:list-nested" class="w-4 h-4" aria-hidden="true" /> --}
-        <span class="">{l("Threaded")}</span>
-      {/if}
+      <span>{l("View options")}</span>
       <#Icon iconify="mdi:chevron-down" class="w-4 h-4 opacity-60" aria-hidden="true" />
     </:trigger>
-
+    <li role="presentation" class="menu-title">{l("Thread layout")}</li>
     <li role="none">
       <a
         role="menuitemradio"
@@ -60,54 +53,7 @@
         </div>
       </a>
     </li>
-  </Dropdown>
-
-  {!-- Sort order dropdown --}
-  <Dropdown
-    id="order_dropdown_thread"
-    position="bottom"
-    wrapper_class="flex"
-    trigger_class="btn btn-sm btn-outline border-hair rounded-field border border-secondary bg-base-100 gap-2 pr-1"
-    label={l("Sort order")}
-  >
-    <:trigger>
-      {#case {@sort_by, @sort_order}}
-        {#match {nil, :desc}}
-          <span class="flex items-center">
-            <span class="">{l("Newest first")}</span>
-          </span>
-        {#match {nil, _}}
-          <span class="flex items-center">
-            <span class="">{if @thread_mode != :flat, do: l("Thread order"), else: l("Oldest first")}</span>
-          </span>
-        {#match {:latest_reply, _}}
-          <span class="flex items-center">
-            <span class="">{l("Recently active")}</span>
-          </span>
-        {#match {:reply_count, _}}
-          <span class="flex items-center">
-            <span class="">{l("Most replies")}</span>
-          </span>
-        {#match {:boost_count, _}}
-          <span class="flex items-center">
-            <span class="">{l("Most boosts")}</span>
-          </span>
-        {#match {:like_count, _}}
-          <span class="flex items-center">
-            <span class="">{l("Most liked")}</span>
-          </span>
-        {#match {:popularity_score, _}}
-          <span class="flex items-center">
-            <span class="">{l("Trending")}</span>
-          </span>
-        {#match _}
-          <span class="flex items-center">
-            <span class="">{if @thread_mode != :flat, do: l("Thread order"), else: l("Oldest first")}</span>
-          </span>
-      {/case}
-      <#Icon iconify="mdi:chevron-down" class="w-4 h-4 opacity-60" aria-hidden="true" />
-    </:trigger>
-
+    <li role="presentation" class="menu-title">{l("Sort order")}</li>
     <li role="none">
       <a
         role="menuitemradio"

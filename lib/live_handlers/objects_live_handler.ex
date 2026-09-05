@@ -252,9 +252,12 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       object: object,
       sidebar_widgets: [
         users: [
-          secondary: [
-            {Bonfire.Tag.Web.WidgetTagsLive, []}
-          ]
+          secondary:
+            if e(assigns(socket), :showing_within, nil) == :thread do
+              []
+            else
+              [{Bonfire.Tag.Web.WidgetTagsLive, []}]
+            end
         ],
         guests: [
           secondary: nil

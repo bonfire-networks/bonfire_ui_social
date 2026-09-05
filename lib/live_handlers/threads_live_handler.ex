@@ -677,20 +677,19 @@ defmodule Bonfire.Social.Threads.LiveHandler do
                   []
               end
 
-            participants_and_tags =
+            participant_widgets =
               if participants != [] do
                 reply_counts = Threads.reply_counts_per_subject(thread_id)
 
                 [
                   {Bonfire.UI.Social.WidgetParticipantsLive,
-                   [participants: participants, reply_counts: reply_counts]},
-                  {Bonfire.Tag.Web.WidgetTagsLive, []}
+                   [participants: participants, reply_counts: reply_counts]}
                 ]
               else
                 []
               end
 
-            secondary_widgets = thread_context_widget ++ participants_and_tags
+            secondary_widgets = thread_context_widget ++ participant_widgets
 
             if secondary_widgets != [] do
               send(
