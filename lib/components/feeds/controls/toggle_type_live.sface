@@ -4,27 +4,14 @@
     e(@feed_filters, Bonfire.Common.Types.maybe_to_atom("exclude_#{@field}"), [])
   )}
   {#match state}
-    <div
-      data-toggle={@key}
-      data-state={state}
-      class={
-        "group flex items-center gap-3 rounded-lg px-2 py-1 transition-colors duration-150",
-        "bg-primary/[0.05]": state == :only,
-        "bg-base-content/[0.03]": state == :hide
-      }
-    >
-      <span class={
-        "flex-1 text-sm text-base-content truncate",
-        "line-through text-muted": state == :hide,
-        "text-primary font-medium": state == :only
-      }>
-        {@label}
-      </span>
+    {!-- quiet tri-state row: the control shows the state, the label stays plain --}
+    <div data-toggle={@key} data-state={state} class="flex items-center justify-between gap-3 min-h-10">
+      <span class="text-sm text-base-content truncate">{@label}</span>
 
       <div
         role="radiogroup"
         aria-label={l("Filter mode for %{label}", label: @label)}
-        class="inline-flex items-center rounded-full bg-base-content/[0.04] p-0.5 text-[11px] font-medium"
+        class="inline-flex items-center rounded-full bg-base-content/[0.06] p-0.5 text-[13px] font-medium shrink-0"
       >
         <button
           type="button"
@@ -38,16 +25,13 @@
           phx-value-toggle_value={if state == :only, do: "default", else: "true"}
           phx-target={@event_target}
           class={
-            "relative inline-flex items-center gap-1 px-2 py-1 rounded-full cursor-pointer transition-colors duration-150 before:absolute before:inset-x-0 before:-inset-y-2 before:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
-            "text-muted hover:text-base-content/80": state != :only,
-            "bg-primary text-primary-content": state == :only
+            "relative min-h-11 min-w-11 px-3 rounded-full transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
+            "text-muted hover:text-base-content": state != :only,
+            "bg-base-100 text-primary shadow-sm": state == :only
           }
         >
-          <#Icon iconify="ph:target-fill" class={"w-3 h-3", hidden: state != :only} />
           <span aria-hidden="true">{l("Only")}</span>
-          <span class="sr-only">
-            {l("Show only %{label} — hide everything else", label: @label)}
-          </span>
+          <span class="sr-only">{l("Show only %{label} — hide everything else", label: @label)}</span>
         </button>
         <button
           type="button"
@@ -61,15 +45,13 @@
           phx-value-toggle_value="default"
           phx-target={@event_target}
           class={
-            "relative inline-flex items-center px-2 py-1 rounded-full cursor-pointer transition-colors duration-150 before:absolute before:inset-x-0 before:-inset-y-2 before:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
-            "text-muted hover:text-base-content/80": state != :default,
-            "bg-base-100 text-base-content": state == :default
+            "relative min-h-11 min-w-11 px-3 rounded-full transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
+            "text-muted hover:text-base-content": state != :default,
+            "bg-base-100 text-base-content shadow-sm": state == :default
           }
         >
           <span aria-hidden="true">{@label_default || l("Include")}</span>
-          <span class="sr-only">
-            {l("Show %{label} alongside everything else", label: @label)}
-          </span>
+          <span class="sr-only">{l("Show %{label} alongside everything else", label: @label)}</span>
         </button>
         <button
           type="button"
@@ -83,16 +65,13 @@
           phx-value-toggle_value={if state == :hide, do: "default", else: "false"}
           phx-target={@event_target}
           class={
-            "relative inline-flex items-center gap-1 px-2 py-1 rounded-full cursor-pointer transition-colors duration-150 before:absolute before:inset-x-0 before:-inset-y-2 before:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
-            "text-muted hover:text-base-content/80": state != :hide,
-            "bg-base-content/75 text-base-100": state == :hide
+            "relative min-h-11 min-w-11 px-3 rounded-full transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
+            "text-muted hover:text-base-content": state != :hide,
+            "bg-base-100 text-error shadow-sm": state == :hide
           }
         >
-          <#Icon iconify="ph:eye-slash-fill" class={"w-3 h-3", hidden: state != :hide} />
           <span aria-hidden="true">{l("Hide")}</span>
-          <span class="sr-only">
-            {l("Hide %{label} from the feed", label: @label)}
-          </span>
+          <span class="sr-only">{l("Hide %{label} from the feed", label: @label)}</span>
         </button>
       </div>
     </div>
