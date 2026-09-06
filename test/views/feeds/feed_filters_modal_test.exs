@@ -25,7 +25,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
   defp open_filters_modal(session) do
     session
     |> wait_async()
-    |> click_button("[data-role=open_modal]", "Advanced filters")
+    |> click_button("[data-role=open_modal]", "More filters")
   end
 
   defp apply_filters(session) do
@@ -192,38 +192,6 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
   end
 
   describe "scope override toggles" do
-    test "feed modes layer over the feed's canonical content exclusions" do
-      baseline = %{
-        object_types: ["article"],
-        exclude_activity_types: [:like, :vote, :follow, :request],
-        time_limit: 0
-      }
-
-      assert %{exclude_activity_types: default_exclusions} =
-               Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_filters("default", baseline)
-
-      assert Enum.sort(default_exclusions) == Enum.sort(baseline.exclude_activity_types)
-
-      assert %{exclude_activity_types: focus_exclusions} =
-               Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_filters("focus", baseline)
-
-      assert Enum.sort(focus_exclusions) ==
-               Enum.sort(baseline.exclude_activity_types ++ [:reply, :boost])
-
-      assert Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_filters("focus", baseline).object_types ==
-               baseline.object_types
-
-      # the popularity cards force a 7-day window: count-ranking the whole history is an
-      # expensive query and would surface ancient greatest hits
-      assert Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_filters(
-               "discussions",
-               baseline
-             ).time_limit == 7
-
-      assert Bonfire.UI.Social.WidgetCustomizeFeedLive.current_preset(baseline, baseline) ==
-               "default"
-    end
-
     test "customize widget uses positive inclusion toggles", %{conn: conn} do
       conn
       |> visit("/feed/local")
@@ -248,23 +216,40 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> assert_has("input[name='scope[group_activity]'][type=checkbox]:checked")
     end
 
-    test "fine-tuning a preset exposes and clears the custom state", %{conn: conn} do
+    test "ordering and inclusion compose independently", %{conn: conn} do
       conn
       |> visit("/feed/local")
       |> wait_async()
-      |> assert_has("input[name=feed_preset][value=default]:checked")
-      |> assert_has("[data-role=feed_preset_current]", text: "Everything")
-      |> assert_has(
-        "input[name='scope[replies]'][phx-click='set_filter_overrides'][phx-value-on='false'][phx-target]"
-      )
       |> uncheck("Replies")
+      |> PhoenixTest.select("Order", option: "Most replied")
       |> wait_async()
-      |> assert_has("[data-role=feed_preset_current]", text: "Custom")
-      |> refute_has("input[name=feed_preset]:checked")
+      |> assert_has("select[name=feed_order] option[value=reply_count][selected]")
+      |> refute_has("form[id^=feed_range_form]")
+      |> assert_has("input[name='scope[replies]']:not(:checked)")
+      |> assert_has("input[name='scope[boosts]']:checked")
       |> check("Replies")
       |> wait_async()
-      |> assert_has("[data-role=feed_preset_current]", text: "Everything")
-      |> assert_has("input[name=feed_preset][value=default]:checked")
+      |> assert_has("select[name=feed_order] option[value=reply_count][selected]")
+    end
+
+    test "inclusion choices preserve ordering", %{conn: conn} do
+      conn
+      |> visit("/feed/explore")
+      |> wait_async()
+      |> PhoenixTest.select("Order", option: "Oldest first")
+      |> open_filters_modal()
+      |> refute_has("button", text: "Focus: hide replies and boosts")
+      |> uncheck("Replies")
+      |> wait_async()
+      |> uncheck("Boosts")
+      |> wait_async()
+      |> assert_has("select[name=feed_order] option[value=oldest][selected]")
+      |> assert_has("input[name='scope[replies]']:not(:checked)")
+      |> assert_has("input[name='scope[boosts]']:not(:checked)")
+      |> assert_has("select[name=feed_order] option[value=oldest][selected]")
+      |> check("Replies")
+      |> wait_async()
+      |> assert_has("select[name=feed_order] option[value=oldest][selected]")
     end
 
 
@@ -455,7 +440,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> assert_has("[data-role=feed_advanced_filters]")
       |> refute_has("button", text: "Apply filters")
       # expanding mounts the editor inline
-      |> click_button("[data-role=open_modal]", "Advanced filters")
+      |> click_button("[data-role=open_modal]", "More filters")
       |> assert_has("button[aria-expanded='true'] [data-role=feed_advanced_filters]")
       |> assert_has("button", text: "Apply filters")
       # applying reloads the feed but the expander stays open
@@ -463,7 +448,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> apply_filters()
       |> assert_has("button", text: "Apply filters")
       # collapsing unmounts the editor again
-      |> click_button("[data-role=open_modal]", "Advanced filters")
+      |> click_button("[data-role=open_modal]", "More filters")
       |> assert_has("button[aria-expanded='false'] [data-role=feed_advanced_filters]")
       |> refute_has("button", text: "Apply filters")
     end

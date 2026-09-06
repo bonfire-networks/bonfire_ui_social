@@ -51,7 +51,7 @@ defmodule Bonfire.UI.Social.Feeds.A11y.Test do
     conn
     |> visit("/feed/local")
     |> assert_has_or_open_browser("[data-id=object_body]", text: "widgets render alongside me")
-    # WidgetBlockLive titles ("Customize this feed", "Trending", ...) must be headings, not bare divs
+    # Sidebar titles must remain navigable as headings.
     |> assert_has("[role=heading][aria-level='2']")
   end
 
@@ -94,28 +94,19 @@ defmodule Bonfire.UI.Social.Feeds.A11y.Test do
   test "feed customization forms and toggle rows are accessible targets", %{conn: conn} do
     conn
     |> visit("/feed/local")
-    |> assert_has("form#feed_preset_form_local")
-    |> assert_has("aside.border-y-hair [data-id=widget_customize_feed]")
+    |> assert_has("form#feed_order_form_local")
+    |> assert_has("aside [data-id=widget_customize_feed]")
     |> assert_has("form#feed_overrides_form_local")
-    |> assert_has("[data-role=widget-heading]", text: "Customize this feed")
+    |> assert_has("[data-role=widget-heading]", text: "Feed preferences")
+    |> assert_has("label[for=feed_order_local]", text: "Order")
+    |> assert_has("select#feed_order_local.min-h-11.focus-ring")
+    |> assert_has("label", text: "Replies")
     |> assert_has(
-      "#feed_preset_dropdown_local[phx-hook=Tooltip][data-strategy=fixed][data-match-trigger-width=true]"
-    )
-    |> assert_has("#feed_preset_dropdown_local[class~='-mx-2']")
-    |> assert_has(
-      "button#feed_preset_dropdown_local_trigger[data-role=feed_preset_current][aria-expanded=false][aria-controls=feed_preset_dropdown_local_panel].focus-ring.px-2"
-    )
-    |> assert_has("#feed_preset_dropdown_local_panel.dropdown-panel.overflow-y-auto")
-    |> assert_has(
-      "fieldset#feed_preset_options_local label.min-h-14[for=feed_preset_local_default]"
-    )
-    |> assert_has("[data-role=calm_override_name].font-normal", text: "Replies")
-    |> assert_has(
-      "form#feed_overrides_form_local label.min-h-11.rounded-selector.px-2[class~='-mx-2']"
+      "form#feed_overrides_form_local label.min-h-11 input[type=checkbox]"
     )
     |> assert_has(
-      "[data-role=feed_advanced_filters_wrapper][class~='-mx-2'] [data-role=open_modal].focus-ring",
-      text: "Advanced filters"
+      "[data-role=feed_advanced_filters_wrapper] [data-role=open_modal].focus-ring",
+      text: "More filters"
     )
   end
 

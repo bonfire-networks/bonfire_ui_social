@@ -267,8 +267,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
         id: socket.assigns.preferences_widget_id,
         preferences: %{
           feed_name: feed_name,
-          feed_filters: filters,
-          feed_baseline_filters: LiveHandler.preset_canonical_filters(feed_name, assigns(socket))
+          feed_filters: filters
         }
       )
     end
@@ -281,7 +280,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
     {preferences, description} =
       case Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, assigns(socket)) do
-        {:ok, preset} when feed_name != :curated ->
+        {:ok, _preset} when feed_name != :curated ->
           preferences =
             if socket.assigns.hide_filters do
               []
@@ -292,7 +291,6 @@ defmodule Bonfire.UI.Social.FeedsLive do
                   event_target: "##{socket.assigns.feed_component_id}",
                   feed_id: socket.assigns.feed_id,
                   feed_name: feed_name,
-                  feed_baseline_filters: e(preset, :filters, %{}) || %{},
                   feed_filters: socket.assigns.feed_filters
                 ]}]
             end

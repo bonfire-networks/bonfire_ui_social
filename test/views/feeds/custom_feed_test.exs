@@ -68,7 +68,7 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
     |> visit("/feed")
     |> wait_async()
     # Set time limit via the advanced-filters editor (expanded inline from the customize widget)
-    |> click_button("[data-role=open_modal]", "Advanced filters")
+    |> click_button("[data-role=open_modal]", "More filters")
     |> click_button("Last Day")
     |> click_button("Apply filters")
     |> wait_async()
@@ -96,7 +96,7 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
     conn
     |> visit("/feed")
     |> wait_async()
-    |> click_button("[data-role=open_modal]", "Advanced filters")
+    |> click_button("[data-role=open_modal]", "More filters")
     |> fill_in("Feed title", with: preset_name)
     |> click_button("Save feed")
     |> visit("/settings/user/feeds")

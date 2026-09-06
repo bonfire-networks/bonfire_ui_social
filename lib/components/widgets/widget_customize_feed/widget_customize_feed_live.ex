@@ -1,12 +1,6 @@
 defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   @moduledoc """
-  Sidebar widget applying the calm-empowerment pattern (see `Bonfire.UI.Common.Settings.Calm.PresetCardsLive` & co) to feed customization. The visible layers deliberately vary different filter dimensions so they compose instead of overlapping:
-
-  1. preset cards pick the content mix and ranking (activity/object/media types + sort_by): everything / focus / most replied / most boosted;
-  2. override toggles for the most common adjustments: group activities (group-authored and group-context content), and replies / boosts visibility (these two touch the cards' dimension, so flipping one under a preset reads as customizing away from it);
-  3. the full filter matrix stays behind an explicit gesture: an "Advanced filters" row that directly opens the all-filters modal (`FeedFiltersModalContentLive`).
-
-  All levels post their form events to the `FeedLive` stateful component (via `event_target`), which reloads the feed in place; the page owns the widget list and forwards filter changes to this stateful widget.
+  Feed preferences separate ordering from content inclusion. Detailed filters are mounted only when expanded; all changes are handled by the owning FeedLive component.
   """
   use Bonfire.UI.Common.Web, :stateful_component
 
@@ -20,10 +14,8 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   prop feed_name, :any, default: nil
   prop showing_within, :atom, default: nil
   prop feed_filters, :any, default: nil
-  prop feed_baseline_filters, :any, default: nil
 
   data initial_preferences, :any, default: nil
-
   def update(%{preferences: preferences}, socket) do
     {:ok, assign(socket, preferences)}
   end
@@ -33,187 +25,83 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
 
     # A parent re-render carries the original props; only a new page selection resets live values.
     if socket.assigns.initial_preferences == initial_preferences do
-      {:ok, assign(socket, Map.drop(assigns, [:feed_name, :feed_filters, :feed_baseline_filters]))}
+      {:ok, assign(socket, Map.drop(assigns, [:feed_name, :feed_filters]))}
     else
       {:ok, socket |> assign(assigns) |> assign(initial_preferences: initial_preferences)}
     end
   end
 
-  # The filter dimensions a preset card owns (content types + ranking). Every bundle
-  # explicitly resets all of them, so switching cards fully replaces the mix while leaving
-  # scope filters such as time_limit and exclude_subjects untouched — except the popularity
-  # cards, which do set time_limit (ranking all-time by count would surface ancient greatest
-  # hits, and count-sorting the whole history is an expensive query).
-  @content_type_keys [
-    :activity_types,
-    :exclude_activity_types,
-    :object_types,
-    :exclude_object_types,
-    :media_types,
-    :exclude_media_types
-  ]
-
-  @preset_signature_keys @content_type_keys ++ [:sort_by]
-
-  # preset value -> filters (mirroring the built-in feed presets in
-  # Bonfire.Social.RuntimeConfig: :posts / :articles / :books / :trending_discussions /
-  # the disabled :trending).
-  # NB: never combine object_types AND media_types in one bundle — the loader ANDs the
-  # two dimensions (see FeedLoader.do_apply_filters), so a mixed preset must choose
-  # one inclusion dimension and express the rest through exclusions.
-  @preset_bundles [
-    {"default", %{}},
-    {"focus",
-     %{
-       exclude_activity_types: [:reply, :boost, :like, :follow]
-     }},
-    {"discussions",
-     %{
-       sort_by: :reply_count,
-       time_limit: 7,
-       exclude_activity_types: [:boost, :like, :vote, :follow, :reply]
-     }},
-    {"trending",
-     %{
-       sort_by: :boost_count,
-       time_limit: 7,
-       exclude_activity_types: [:reply]
-     }}
-  ]
-
-  def preset_cards do
+  @doc "Order choices supported by the feed loader, independent of content filters."
+  def order_options do
     [
-      %{
-        value: "default",
-        name: l("Everything"),
-        icon: "ph:sparkle-duotone",
-        description: l("The feed's usual mix of activities.")
-      },
-      %{
-        value: "focus",
-        name: l("Focus"),
-        icon: "ph:crosshair-simple-duotone",
-        description: l("Hide replies and boosts.")
-      },
-      %{
-        value: "discussions",
-        name: l("Most replied"),
-        icon: "ph:chats-circle-duotone",
-        description: l("This week's most active conversations.")
-      },
-      %{
-        value: "trending",
-        name: l("Most boosted"),
-        icon: "ph:trend-up-duotone",
-        description: l("This week's popular posts.")
-      }
+      {"newest", l("Newest first")},
+      {"oldest", l("Oldest first")},
+      {"reply_count", l("Most replied")},
+      {"boost_count", l("Most boosted")},
+      {"like_count", l("Most liked")},
+      {"latest_reply", l("Latest reply")},
+      {"popularity_score", l("Popularity")}
     ]
   end
 
-  @doc "The card describing the current preset, or a localized custom-state summary when the filters no longer match a preset."
-  def current_preset_card(feed_filters, baseline_filters \\ %{}) do
-    current = current_preset(feed_filters, baseline_filters)
+  @doc "The selected order, including ordering configured through the detailed editor."
+  def current_order(filters) do
+    case e(filters, :sort_by, nil) do
+      sort when sort in [nil, false, :date_created, "date_created", "false"] ->
+        if e(filters, :sort_order, :desc) in [:asc, "asc"], do: "oldest", else: "newest"
 
-    Enum.find(preset_cards(), &(&1.value == current)) ||
-      %{
-        value: "custom",
-        name: l("Custom"),
-        icon: "ph:sliders-horizontal-duotone",
-        description: l("Your own mix of feed filters.")
-      }
-  end
-
-  @doc "The filters a preset card applies over the named feed's canonical content mix. The default restores that baseline; focused/ranked modes preserve its exclusions while adding their own. Nil for an unknown value."
-  def preset_filters(value, baseline_filters \\ %{}) do
-    case List.keyfind(@preset_bundles, to_string(value), 0) do
-      {_, bundle} -> build_preset_filters(bundle, preset_baseline(baseline_filters))
-      _ -> nil
+      sort -> to_string(sort)
     end
   end
 
-  @doc "Which preset card matches the effective content-type + sort filters relative to the named feed's canonical baseline. Scope filters like time/subjects are ignored."
-  def current_preset(feed_filters, baseline_filters \\ %{}) do
-    baseline = preset_baseline(baseline_filters)
+  @doc """
+  Updates only ordering, adding a one-week window for ranking when no range is set.
 
-    signature =
-      baseline
-      |> inherit_current_filters(feed_filters)
-      |> content_signature()
+      iex> Bonfire.UI.Social.WidgetCustomizeFeedLive.order_filters("newest", %{})
+      %{sort_by: :date_created, sort_order: :desc}
 
-    Enum.find_value(@preset_bundles, "custom", fn {value, bundle} ->
-      if signature == content_signature(build_preset_filters(bundle, baseline)), do: value
-    end)
+      iex> Bonfire.UI.Social.WidgetCustomizeFeedLive.order_filters("reply_count", %{time_limit: 30})
+      %{sort_by: :reply_count, sort_order: :desc}
+
+      iex> Bonfire.UI.Social.WidgetCustomizeFeedLive.order_filters("boost_count", %{})
+      %{sort_by: :boost_count, sort_order: :desc, time_limit: 7}
+
+      iex> Bonfire.UI.Social.WidgetCustomizeFeedLive.order_filters("unknown", %{})
+      nil
+  """
+  def order_filters("newest", _filters), do: %{sort_by: :date_created, sort_order: :desc}
+  def order_filters("oldest", _filters), do: %{sort_by: :date_created, sort_order: :asc}
+
+  def order_filters(value, filters) do
+    case Enum.find([:reply_count, :boost_count, :like_count, :latest_reply, :popularity_score], &(to_string(&1) == value)) do
+      nil -> nil
+      sort ->
+        attrs = %{sort_by: sort, sort_order: :desc}
+        if sort != :latest_reply and e(filters, :time_limit, nil) == nil,
+          do: Map.put(attrs, :time_limit, 7),
+          else: attrs
+    end
   end
 
-  defp build_preset_filters(bundle, baseline) do
-    Map.new(@content_type_keys, &{&1, []})
-    |> Map.put(:sort_by, false)
-    |> Map.merge(baseline)
-    |> merge_preset_bundle(bundle)
-  end
-
-  defp preset_baseline(filters) do
-    Enum.reduce(@preset_signature_keys, %{}, fn key, baseline ->
-      case e(filters, key, nil) do
-        nil -> baseline
-        value -> Map.put(baseline, key, value)
-      end
-    end)
-  end
-
-  # A nil current value inherits the feed preset. Explicit []/false values remain meaningful
-  # because they clear an inherited list or ranking.
-  defp inherit_current_filters(baseline, filters) do
-    Map.new(@preset_signature_keys, fn key ->
-      value = e(filters, key, nil)
-      {key, if(is_nil(value), do: Map.get(baseline, key), else: value)}
-    end)
-  end
-
-  defp merge_preset_bundle(filters, bundle) do
-    baseline_exclusions = List.wrap(Map.get(filters, :exclude_activity_types) || [])
-    bundle_exclusions = List.wrap(Map.get(bundle, :exclude_activity_types) || [])
-
-    filters
-    |> Map.merge(bundle)
-    |> Map.put(
-      :exclude_activity_types,
-      Enum.uniq_by(baseline_exclusions ++ bundle_exclusions, &to_string/1)
-    )
-  end
-
-  defp content_signature(filters) do
-    Map.new(@preset_signature_keys, fn key ->
-      {key,
-       (e(filters, key, []) || [])
-       |> List.wrap()
-       |> Enum.map(&to_string/1)
-       |> Enum.sort()}
-    end)
-  end
-
-  @doc "Level-2 rows for `OverrideTogglesLive`: the most common adjustments, prefilled with the current effective state."
+  @doc "Common content inclusion controls, independent of ordering and source."
   def override_rows(feed_filters, _feed_name, _context) do
-      [
-        %{
-          key: :group_activity,
-          name: l("Group activities"),
-          # description: l("Activities shared into groups you follow."),
-          on: group_activities_included?(feed_filters)
-        },
-        %{
-          key: :replies,
-          name: l("Replies"),
-          # description: l("Skip conversation replies."),
-          on: not FeedExtraControlsLive.replies_excluded?(feed_filters)
-        },
-        %{
-          key: :boosts,
-          name: l("Boosts"),
-          # description: l("Skip re-shared posts."),
-          on: not FeedExtraControlsLive.boosts_excluded?(feed_filters)
-        }
-      ]
+    [
+      %{
+        key: :replies,
+        name: l("Replies"),
+        on: not FeedExtraControlsLive.replies_excluded?(feed_filters)
+      },
+      %{
+        key: :boosts,
+        name: l("Boosts"),
+        on: not FeedExtraControlsLive.boosts_excluded?(feed_filters)
+      },
+      %{
+        key: :group_activity,
+        name: l("Group activities"),
+        on: group_activities_included?(feed_filters)
+      }
+    ]
   end
 
   # spellings under which a group/category subject-type exclusion may be stored

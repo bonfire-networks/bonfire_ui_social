@@ -405,8 +405,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   # end
 
   # While a load we started is still in flight (load ref set + loading), a content-less
-  # update for the SAME feed is just the parent re-rendering (e.g. after `reload/3`
-  # send_self's the sidebar widgets): its props carry the parent's STALE feed_filters, so
+  # update for the SAME feed is just the parent re-rendering (e.g. after filter data changes): its props carry the parent's STALE feed_filters, so
   # assigning them would overwrite the in-flight filters, and falling through to the
   # fetch clauses below would restart the load with those stale filters — whose (newer)
   # result would then clobber the correctly-filtered one ("preset filters don't work").
@@ -858,24 +857,13 @@ defmodule Bonfire.UI.Social.FeedLive do
     end
   end
 
-  # Level 1 of the customize-feed widget: a preset card was picked
-  def handle_event("set_filter_preset", params, socket) do
-    feed_name = e(assigns(socket), :feed_name, nil)
-    baseline_filters = LiveHandler.preset_canonical_filters(feed_name, assigns(socket))
-
-    case Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_filters(
-           params["feed_preset"],
-           baseline_filters
-         ) do
+  def handle_event("set_feed_order", %{"feed_order" => order}, socket) do
+    case Bonfire.UI.Social.WidgetCustomizeFeedLive.order_filters(order, assigns(socket)[:feed_filters]) do
       nil -> {:noreply, socket}
       filters -> set_filters(filters, socket, true)
     end
   end
 
-  # Level 2 of the customize-feed widget: each common adjustment posts its key and desired
-  # state independently, so changing one toggle never re-applies the others as commands.
-  # Toggles that already match the requested state no-op; unknown keys are ignored, so
-  # adding a widget row can't crash the handler.
   def handle_event("set_filter_overrides", %{"key" => key, "on" => on}, socket)
       when on in ["true", "false"] do
     filters = assigns(socket)[:feed_filters] || %{}
@@ -912,11 +900,6 @@ defmodule Bonfire.UI.Social.FeedLive do
     else
       set_filters(attrs, socket, true)
     end
-  end
-
-  # Level 3 of the customize-feed widget: advanced knobs (also posts all knobs on each change)
-  def handle_event("set_filter_knobs", %{"filters" => filters}, socket) do
-    set_filters(Map.take(filters, ["time_limit", "sort_order", "origin"]), socket)
   end
 
   def handle_event(
@@ -1015,7 +998,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     # Similarly, sort_by: false means "reset to default ordering" — a nil wouldn't
     # survive the merge below (merge_as_map drops empty fields), so we remove the key
-    # from the existing filters instead (used by the customize-feed preset cards)
+    # from the existing filters instead (used when applying explicit filter replacements)
     {attrs, should_clear_sort} =
       case attrs do
         %{"sort_by" => "false"} -> {Map.delete(attrs, "sort_by"), true}
