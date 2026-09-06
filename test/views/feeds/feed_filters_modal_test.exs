@@ -34,17 +34,6 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
     |> wait_async()
   end
 
-  # PhoenixTest deliberately excludes controls inside a closed native <details> element.
-  # Submit the preset form directly here; the disclosure interaction itself is covered by
-  # accessibility assertions, while this test is concerned with state surviving a source switch.
-  defp select_feed_preset(session, preset) do
-    session.view
-    |> element("form[data-scope=feed_preset]")
-    |> render_change(%{"feed_preset" => preset})
-
-    session
-  end
-
   test "user profiles do not receive feed preferences", %{conn: conn, other_user: user} do
     conn
     |> visit("/@#{user.character.username}")
@@ -278,18 +267,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> assert_has("input[name=feed_preset][value=default]:checked")
     end
 
-    test "switching feed source rebases the selected mode", %{conn: conn} do
-      conn
-      |> visit("/feed/explore")
-      |> wait_async()
-      |> select_feed_preset("focus")
-      |> wait_async()
-      |> assert_has("[data-role=feed_preset_current]", text: "Focus")
-      |> check("Only people I follow")
-      |> wait_async()
-      |> assert_has("[data-role=feed_preset_current]", text: "Focus")
-      |> assert_has("input[name=feed_preset][value=focus]:checked")
-    end
+
   end
 
   describe "filter chips and badge" do

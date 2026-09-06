@@ -881,45 +881,30 @@ defmodule Bonfire.UI.Social.FeedLive do
     filters = assigns(socket)[:feed_filters] || %{}
     on? = on == "true"
 
-    {socket, attrs} =
+    attrs =
       case key do
         "replies" ->
           if on? == Bonfire.UI.Social.FeedExtraControlsLive.replies_excluded?(filters),
-            do: {socket, toggle_exclude_activity_type(%{}, filters, :reply, not on?)},
-            else: {socket, %{}}
+            do: toggle_exclude_activity_type(%{}, filters, :reply, not on?),
+            else: %{}
 
         "boosts" ->
           if on? == Bonfire.UI.Social.FeedExtraControlsLive.boosts_excluded?(filters),
-            do: {socket, toggle_exclude_activity_type(%{}, filters, :boost, not on?)},
-            else: {socket, %{}}
+            do: toggle_exclude_activity_type(%{}, filters, :boost, not on?),
+            else: %{}
 
         "group_activity" ->
           if on? ==
                Bonfire.UI.Social.WidgetCustomizeFeedLive.group_activities_included?(filters),
-             do: {socket, %{}},
+             do: %{},
              else:
-               {socket,
-                Bonfire.UI.Social.WidgetCustomizeFeedLive.group_activities_toggle_filters(
-                  filters,
-                  on?
-                )}
-
-        "following" ->
-          # source switch: swap between the Following feed and everything known to the
-          # instance, in place, carrying over only filters deviating from the source preset
-          case {on?, e(assigns(socket), :feed_name, nil)} do
-            {true, current} when current not in [:my, nil] ->
-              switch_feed_source(socket, %{}, current, :my)
-
-            {false, current} when current not in [:explore, nil] ->
-              switch_feed_source(socket, %{}, current, :explore)
-
-            _ ->
-              {socket, %{}}
-          end
+               Bonfire.UI.Social.WidgetCustomizeFeedLive.group_activities_toggle_filters(
+                 filters,
+                 on?
+               )
 
         _ ->
-          {socket, %{}}
+          %{}
       end
 
     if attrs == %{} do
@@ -927,51 +912,6 @@ defmodule Bonfire.UI.Social.FeedLive do
     else
       set_filters(attrs, socket, true)
     end
-  end
-
-  defp switch_feed_source(socket, attrs, source_feed_name, target_feed_name) do
-    # Drop preset-owned filter dimensions whose value merely mirrors the SOURCE feed's
-    # canonical preset (they were inherited, not chosen), so the TARGET feed's own preset
-    # filters apply after the switch; explicit deviations (preset cards, hide toggles,
-    # modal edits) travel along, as do scope filters like time_limit/exclude_subjects.
-    filters = Enums.maybe_to_map(e(assigns(socket), :feed_filters, nil) || %{})
-    source_preset = LiveHandler.preset_canonical_filters(source_feed_name, assigns(socket))
-    target_preset = LiveHandler.preset_canonical_filters(target_feed_name, assigns(socket))
-
-    rebased_filters =
-      case Bonfire.UI.Social.WidgetCustomizeFeedLive.current_preset(filters, source_preset) do
-        "custom" ->
-          prune_source_baseline(filters, source_preset)
-
-        preset ->
-          filters
-          |> Map.drop(Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_owned_keys())
-          |> Map.merge(
-            Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_filters(preset, target_preset)
-          )
-      end
-
-    # keep the parent view's feed_name in sync: its re-renders pass feed_name back down as
-    # a prop, and a stale one would read as a navigation to another feed (bypassing the
-    # in-flight guard in do_update and reverting the switch)
-    send_self(feed_name: target_feed_name)
-
-    {
-      socket |> assign(feed_name: target_feed_name, feed_filters: rebased_filters),
-      Map.put(attrs, :feed_name, target_feed_name)
-    }
-  end
-
-  defp prune_source_baseline(filters, source_preset) do
-    Enum.reduce(
-      Bonfire.UI.Social.WidgetCustomizeFeedLive.preset_owned_keys(),
-      filters,
-      fn key, acc ->
-        if LiveHandler.filter_value_matches?(e(filters, key, nil), e(source_preset, key, nil)),
-          do: Map.delete(acc, key),
-          else: acc
-      end
-    )
   end
 
   # Level 3 of the customize-feed widget: advanced knobs (also posts all knobs on each change)

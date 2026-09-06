@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   Sidebar widget applying the calm-empowerment pattern (see `Bonfire.UI.Common.Settings.Calm.PresetCardsLive` & co) to feed customization. The visible layers deliberately vary different filter dimensions so they compose instead of overlapping:
 
   1. preset cards pick the content mix and ranking (activity/object/media types + sort_by): everything / focus / most replied / most boosted;
-  2. override toggles for the most common adjustments: the feed source (following vs everything known to the instance), group activities (group-authored and group-context content), and replies / boosts visibility (these two touch the cards' dimension, so flipping one under a preset reads as customizing away from it);
+  2. override toggles for the most common adjustments: group activities (group-authored and group-context content), and replies / boosts visibility (these two touch the cards' dimension, so flipping one under a preset reads as customizing away from it);
   3. the full filter matrix stays behind an explicit gesture: an "Advanced filters" row that directly opens the all-filters modal (`FeedFiltersModalContentLive`).
 
   All levels post their form events to the `FeedLive` stateful component (via `event_target`), which reloads the feed in place; the page owns the widget list and forwards filter changes to this stateful widget.
@@ -54,9 +54,6 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   ]
 
   @preset_signature_keys @content_type_keys ++ [:sort_by]
-
-  @doc "The filter dimensions the preset cards own (used e.g. when switching feed source to decide which filters travel along)."
-  def preset_owned_keys, do: @preset_signature_keys
 
   # preset value -> filters (mirroring the built-in feed presets in
   # Bonfire.Social.RuntimeConfig: :posts / :articles / :books / :trending_discussions /
@@ -196,8 +193,7 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   end
 
   @doc "Level-2 rows for `OverrideTogglesLive`: the most common adjustments, prefilled with the current effective state."
-  def override_rows(feed_filters, feed_name, _context) do
-    following_row(feed_name) ++
+  def override_rows(feed_filters, _feed_name, _context) do
       [
         %{
           key: :group_activity,
@@ -219,21 +215,6 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
         }
       ]
   end
-
-  # source switch: ON = the Following feed, OFF = everything known to the instance
-  # (explore); only meaningful on those two feeds — hidden elsewhere (a named feed like
-  # bookmarks or a custom feed has its own source)
-  defp following_row(feed_name) when feed_name in [:my, :explore] do
-    [
-      %{
-        key: :following,
-        name: l("Only people I follow"),
-        on: feed_name == :my
-      }
-    ]
-  end
-
-  defp following_row(_), do: []
 
   # spellings under which a group/category subject-type exclusion may be stored
   # (we store `:group`; the modal or saved feeds may carry other aliases)

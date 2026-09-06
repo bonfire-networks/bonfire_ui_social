@@ -16,8 +16,12 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
       |> visit("/feed")
       |> click_link("li a", "Following")
       |> assert_path("/feed/my")
+      |> wait_async()
+      |> refute_has("input[name='scope[following]']")
       |> click_link("li a", "Explore")
       |> assert_path("/feed/explore")
+      |> wait_async()
+      |> refute_has("input[name='scope[following]']")
 
       # Note: "Likes" and "Bookmarks" feeds are currently commented out in the navigation
       # |> click_link("li a", "Likes")
