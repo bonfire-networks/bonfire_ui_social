@@ -66,7 +66,7 @@
   {/case}
 
   <div class="flex flex-col divide-hair divide-secondary overflow-y-auto flex-1 min-h-0">
-    <section>
+    <section :if={:origin in @sections}>
       <div class="">
         {#case @preset_origin_info}
           {#match %{preset_has_fixed_origin: true, preset_origin: preset_origin}}
@@ -121,7 +121,7 @@
       </div>
     </section>
 
-    <section :if={current_user_id(@__context__)}>
+    <section :if={:hide_own in @sections and current_user_id(@__context__)}>
       <label class="flex min-h-11 cursor-pointer items-center justify-between gap-3 px-4 py-1.5">
         <span class="text-sm text-base-content">{l("Hide my own activities")}</span>
         <input
@@ -138,7 +138,7 @@
       </label>
     </section>
 
-    <details class="group">
+    <details :if={:time_range in @sections} class="group">
       <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
         <div class="flex items-center gap-3">
           <#Icon iconify="ph:timer-fill" class="size-4 text-primary" />
@@ -174,7 +174,7 @@
       </div>
     </details>
 
-    <details class="group">
+    <details :if={:sort_order in @sections} class="group">
       <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
         <div class="flex items-center gap-3">
           <#Icon iconify="ph:sort-ascending-fill" class="size-4 text-primary" />
@@ -220,7 +220,7 @@
       </div>
     </details>
 
-    <details class="group">
+    <details :if={:object_types in @sections} class="group">
       <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
         <div class="flex items-center gap-3">
           <#Icon iconify="ph:article-ny-times-fill" class="size-4 text-primary" />
@@ -299,7 +299,7 @@
     </details>
 
     {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
-      <details class="group">
+      <details :if={:activity_types in @sections} class="group">
         <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
           <div class="flex items-center gap-3">
             <#Icon iconify="ph:pulse-fill" class="size-4 text-primary" />
@@ -368,7 +368,7 @@
       </details>
     {/if}
 
-    <details class="group">
+    <details :if={:media_types in @sections} class="group">
       <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
         <div class="flex items-center gap-3">
           <#Icon iconify="ph:play-circle-fill" class="size-4 text-primary" />
@@ -458,7 +458,7 @@
     </details>
 
     {#for key <- @pending_filters[:subject_types] || []}
-      <div class="px-4 py-3">
+      <div :if={:subject_types in @sections} class="px-4 py-3">
         <Bonfire.UI.Social.ToggleTypeLive
           label={String.capitalize(to_string(key))}
           key={key}
@@ -471,7 +471,7 @@
       </div>
     {/for}
 
-    <details class="group">
+    <details :if={:circles in @sections} class="group">
       <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
         <div class="flex items-center gap-3">
           <#Icon iconify="ph:circle-fill" class="size-4 text-primary" />
@@ -512,7 +512,7 @@
         {/case}
       </div>
     </details>
-    <details class="group shrink-0 mx-2 my-2 rounded-xl border-hair border-secondary overflow-hidden">
+    <details :if={:save_preset in @sections} class="group shrink-0 mx-2 my-2 rounded-xl border-hair border-secondary overflow-hidden">
       <summary class="flex items-center gap-2 cursor-pointer list-none px-3 py-2.5">
         <span class="flex-1 text-sm font-medium text-base-content truncate">
           {l("Save as custom feed")}

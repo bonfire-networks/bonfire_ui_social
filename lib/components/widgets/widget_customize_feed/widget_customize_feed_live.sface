@@ -57,6 +57,7 @@
             id={"feed_preferences_details_#{@feed_name}"}
             module={Bonfire.UI.Social.FeedFiltersModalContentLive}
             show_reset={false}
+            sections={Bonfire.UI.Social.FeedFiltersModalContentLive.sections() -- [:sort_order]}
             {...Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}
           />
         </:default>

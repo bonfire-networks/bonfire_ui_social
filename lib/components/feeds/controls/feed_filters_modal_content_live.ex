@@ -1,6 +1,12 @@
 defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
   use Bonfire.UI.Common.Web, :stateful_component
 
+  @sections [:origin, :hide_own, :time_range, :sort_order, :object_types, :activity_types, :media_types, :subject_types, :circles, :save_preset]
+  prop sections, :list, default: @sections
+
+  @doc "Available editor sections, so hosts can omit controls they already provide."
+  def sections, do: @sections
+
   prop show_reset, :boolean, default: true
   prop event_target, :any, default: nil
   prop feed_id, :any, default: nil
