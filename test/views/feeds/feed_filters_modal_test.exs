@@ -527,7 +527,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> visit("/feed/local")
       |> open_filters_modal()
       |> click_button("[data-toggle='article'] button", "Only")
-      |> assert_has("summary:has([iconify='ph:article-ny-times-fill']) .badge",
+      |> assert_has("[data-row=object_types] [data-role=row_value]",
         text: "1 only"
       )
     end

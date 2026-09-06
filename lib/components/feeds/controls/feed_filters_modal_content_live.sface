@@ -224,21 +224,25 @@
       </div>
     </details>
 
-    <details :if={:object_types in @sections} class="group">
-      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
-        <div class="flex items-center gap-3">
-          <#Icon iconify="ph:article-ny-times-fill" class="size-4 text-primary" />
-          <h4 class="text-sm font-medium text-base-content/80">{l("Content types")}</h4>
-        </div>
-        <div class="flex items-center gap-2 min-w-0">
-          <span class="badge text-xs">
-            {Bonfire.UI.Social.FeedFiltersModalContentLive.types_summary(@pending_filters, :object_types)}
-          </span>
-          <#Icon
-            iconify="ph:caret-down-bold"
-            class="w-4 h-4 text-muted shrink-0 transition-transform duration-150 group-open:rotate-180"
-          />
-        </div>
+    <details :if={:object_types in @sections} class="group" data-row="object_types"
+      id={"#{@id}_object_types_section"}
+      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+    >
+      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
+        <h4 class="text-xs uppercase font-normal text-muted">{l("Content types")}</h4>
+        <span class="flex items-center gap-2 min-w-0">
+          <span
+            data-role="row_value"
+            class={
+              "text-sm truncate",
+              "text-primary":
+                Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :object_types),
+              "text-muted":
+                !Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :object_types)
+            }
+          >{Bonfire.UI.Social.FeedFiltersModalContentLive.types_summary(@pending_filters, :object_types)}</span>
+          <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
+        </span>
       </summary>
       <div class="px-3 pb-2 flex flex-col gap-0.5">
         <Bonfire.UI.Social.ToggleTypeLive
@@ -303,21 +307,25 @@
     </details>
 
     {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
-      <details :if={:activity_types in @sections} class="group">
-        <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
-          <div class="flex items-center gap-3">
-            <#Icon iconify="ph:pulse-fill" class="size-4 text-primary" />
-            <h4 class="text-sm font-medium text-base-content/80">{l("Activity types")}</h4>
-          </div>
-          <div class="flex items-center gap-2 min-w-0">
-            <span class="badge text-xs">
-              {Bonfire.UI.Social.FeedFiltersModalContentLive.types_summary(@pending_filters, :activity_types)}
-            </span>
-            <#Icon
-              iconify="ph:caret-down-bold"
-              class="w-4 h-4 text-muted shrink-0 transition-transform duration-150 group-open:rotate-180"
-            />
-          </div>
+      <details :if={:activity_types in @sections} class="group" data-row="activity_types"
+        id={"#{@id}_activity_types_section"}
+        phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+      >
+        <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
+          <h4 class="text-xs uppercase font-normal text-muted">{l("Activity types")}</h4>
+          <span class="flex items-center gap-2 min-w-0">
+            <span
+              data-role="row_value"
+              class={
+                "text-sm truncate",
+                "text-primary":
+                  Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :activity_types),
+                "text-muted":
+                  !Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :activity_types)
+              }
+            >{Bonfire.UI.Social.FeedFiltersModalContentLive.types_summary(@pending_filters, :activity_types)}</span>
+            <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
+          </span>
         </summary>
         <div class="px-3 pb-2 flex flex-col gap-0.5">
           <Bonfire.UI.Social.ToggleTypeLive
@@ -372,21 +380,23 @@
       </details>
     {/if}
 
-    <details :if={:media_types in @sections} class="group">
-      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
-        <div class="flex items-center gap-3">
-          <#Icon iconify="ph:play-circle-fill" class="size-4 text-primary" />
-          <h4 class="text-sm font-medium text-base-content/80">{l("Media types")}</h4>
-        </div>
-        <div class="flex items-center gap-2 min-w-0">
-          <span class="badge text-xs">
-            {Bonfire.UI.Social.FeedFiltersModalContentLive.types_summary(@pending_filters, :media_types)}
-          </span>
-          <#Icon
-            iconify="ph:caret-down-bold"
-            class="w-4 h-4 text-muted shrink-0 transition-transform duration-150 group-open:rotate-180"
-          />
-        </div>
+    <details :if={:media_types in @sections} class="group" data-row="media_types"
+      id={"#{@id}_media_types_section"}
+      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+    >
+      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
+        <h4 class="text-xs uppercase font-normal text-muted">{l("Media types")}</h4>
+        <span class="flex items-center gap-2 min-w-0">
+          <span
+            data-role="row_value"
+            class={
+              "text-sm truncate max-w-[180px]",
+              "text-primary": Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :media_types),
+              "text-muted": !Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :media_types)
+            }
+          >{Bonfire.UI.Social.FeedFiltersModalContentLive.types_summary(@pending_filters, :media_types)}</span>
+          <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
+        </span>
       </summary>
       <div class="px-3 pb-2 flex flex-col gap-0.5">
         <Bonfire.UI.Social.ToggleTypeLive

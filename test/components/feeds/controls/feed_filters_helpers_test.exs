@@ -10,6 +10,8 @@ defmodule Bonfire.UI.Social.FeedFiltersHelpersTest do
   @moduletag :ui
 
   alias Bonfire.UI.Social.ToggleTypeLive
+  doctest Bonfire.UI.Social.FeedFiltersModalContentLive, only: [types_filtered?: 2]
+
   alias Bonfire.UI.Social.FeedFiltersModalContentLive
 
   describe "ToggleTypeLive.check_throuple/3" do

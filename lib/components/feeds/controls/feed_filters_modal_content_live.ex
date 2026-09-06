@@ -216,6 +216,19 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
     end
   end
 
+  @doc """
+  Whether a type dimension has an include or exclude selection, independent of its translated label.
+
+      iex> Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(%{exclude_media_types: [:image]}, :media_types)
+      true
+      iex> Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(%{}, :media_types)
+      false
+  """
+  def types_filtered?(filters, field) do
+    List.wrap(e(filters, field, [])) != [] or
+      List.wrap(e(filters, maybe_to_atom("exclude_#{field}"), [])) != []
+  end
+
   @doc "Short summary for a type field, e.g. 'All', '2 only', '1 hidden', '2 only · 1 hidden'."
   def types_summary(filters, field) do
     include = length(List.wrap(e(filters, field, [])))
