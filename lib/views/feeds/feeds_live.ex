@@ -126,19 +126,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
            #     class: "btn-sm hidden md:inline-flex btn btn-primary"
            #   ]}
          ],
-         sidebar_widgets: [
-           users: [
-             secondary: [
-               {Bonfire.UI.Social.WidgetFeedsLive, []},
-               #  {Bonfire.UI.Social.WidgetFeedLive, [event_target: ]},
-               {Bonfire.Tag.Web.WidgetTagsLive, []}
-               #  {Bonfire.UI.Social.WidgetTrendingLinksLive, []}
-             ]
-           ],
-           guests: [
-             secondary: [{Bonfire.Tag.Web.WidgetTagsLive, []}]
-           ]
-         ],
+         sidebar_widgets: [],
+         preferences_widget_id: nil,
          maybe_rss_or_atom: maybe_rss_or_atom(session)
        )}
     end
@@ -269,12 +258,61 @@ defmodule Bonfire.UI.Social.FeedsLive do
       |> assign(feed_assigns |> debug("feed_default_assigns"))
       |> maybe_clear_badge_on_visit()
 
-    widgets =
-      time_section :lv_maybe_widgets do
-        FeedLive.maybe_widgets(assigns(socket))
+    configure_widgets(socket)
+  end
+
+  def handle_info({:feed_filters_changed, component_id, feed_name, filters}, socket) do
+    if component_id == socket.assigns.feed_component_id and socket.assigns.preferences_widget_id do
+      Phoenix.LiveView.send_update(Bonfire.UI.Social.WidgetCustomizeFeedLive,
+        id: socket.assigns.preferences_widget_id,
+        preferences: %{
+          feed_name: feed_name,
+          feed_filters: filters,
+          feed_baseline_filters: LiveHandler.preset_canonical_filters(feed_name, assigns(socket))
+        }
+      )
+    end
+
+    {:noreply, socket}
+  end
+
+  defp configure_widgets(socket) do
+    feed_name = FeedLive.feed_name(assigns(socket))
+
+    {preferences, description} =
+      case Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, assigns(socket)) do
+        {:ok, preset} when feed_name != :curated ->
+          preferences =
+            if socket.assigns.hide_filters do
+              []
+            else
+              [{Bonfire.UI.Social.WidgetCustomizeFeedLive,
+                [
+                  id: "feed_preferences_#{socket.assigns.feed_component_id}",
+                  event_target: "##{socket.assigns.feed_component_id}",
+                  feed_id: socket.assigns.feed_id,
+                  feed_name: feed_name,
+                  feed_baseline_filters: e(preset, :filters, %{}) || %{},
+                  feed_filters: socket.assigns.feed_filters
+                ]}]
+            end
+
+          {preferences, [{Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: feed_name]}]}
+
+        _ ->
+          {[], []}
       end
 
-    assign(socket, widgets)
+    assign(socket,
+      preferences_widget_id:
+        if(preferences != [] and not is_nil(current_user_id(socket)),
+          do: "feed_preferences_#{socket.assigns.feed_component_id}"
+        ),
+      sidebar_widgets: [
+        users: [secondary: preferences ++ [{Bonfire.Tag.Web.WidgetTagsLive, []}]],
+        guests: [secondary: description]
+      ]
+    )
   end
 
   defp maybe_clear_badge_on_visit(socket) do

@@ -6,9 +6,9 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   2. override toggles for the most common adjustments: the feed source (following vs everything known to the instance), group activities (group-authored and group-context content), and replies / boosts visibility (these two touch the cards' dimension, so flipping one under a preset reads as customizing away from it);
   3. the full filter matrix stays behind an explicit gesture: an "Advanced filters" row that directly opens the all-filters modal (`FeedFiltersModalContentLive`).
 
-  All levels post their form events to the `FeedLive` stateful component (via `event_target`), which reloads the feed in place; the widget itself stays stateless and is re-sent by `FeedLive.reload/3` whenever filters change.
+  All levels post their form events to the `FeedLive` stateful component (via `event_target`), which reloads the feed in place; the page owns the widget list and forwards filter changes to this stateful widget.
   """
-  use Bonfire.UI.Common.Web, :stateless_component
+  use Bonfire.UI.Common.Web, :stateful_component
 
   alias Bonfire.UI.Social.FeedExtraControlsLive
 
@@ -21,6 +21,23 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   prop showing_within, :atom, default: nil
   prop feed_filters, :any, default: nil
   prop feed_baseline_filters, :any, default: nil
+
+  data initial_preferences, :any, default: nil
+
+  def update(%{preferences: preferences}, socket) do
+    {:ok, assign(socket, preferences)}
+  end
+
+  def update(assigns, socket) do
+    initial_preferences = Map.take(assigns, [:event_target, :feed_name, :feed_filters])
+
+    # A parent re-render carries the original props; only a new page selection resets live values.
+    if socket.assigns.initial_preferences == initial_preferences do
+      {:ok, assign(socket, Map.drop(assigns, [:feed_name, :feed_filters, :feed_baseline_filters]))}
+    else
+      {:ok, socket |> assign(assigns) |> assign(initial_preferences: initial_preferences)}
+    end
+  end
 
   # The filter dimensions a preset card owns (content types + ranking). Every bundle
   # explicitly resets all of them, so switching cards fully replaces the mix while leaving

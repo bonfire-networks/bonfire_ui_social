@@ -1,3 +1,4 @@
+<div id={@id}>
 <Bonfire.UI.Common.WidgetBlockLive
   widget_title={@widget_title || l("Customize this feed")}
   title_class="flex items-center justify-between text-base font-semibold text-base-content"
@@ -137,3 +138,4 @@
     </div> --}
   </div>
 </Bonfire.UI.Common.WidgetBlockLive>
+</div>

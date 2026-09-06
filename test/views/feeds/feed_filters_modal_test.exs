@@ -45,6 +45,27 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
     session
   end
 
+  test "user profiles do not receive feed preferences", %{conn: conn, other_user: user} do
+    conn
+    |> visit("/@#{user.character.username}")
+    |> wait_async()
+    |> assert_has("[data-id=profile]")
+    |> refute_has("[data-id=widget_customize_feed]")
+  end
+
+  test "group profiles retain their About widget", %{conn: conn, user: user} do
+    group = Bonfire.Classify.Simulate.fake_group!(user, %{name: "Sidebar ownership group"})
+
+    conn
+    |> visit("/&#{group.character.username}/discussions")
+    |> wait_async()
+    |> assert_has("[data-id=group]")
+    |> assert_has("aside", text: "Who can join")
+    |> assert_has("aside", text: "Who can see")
+    |> assert_has("aside", text: "Who can post")
+    |> refute_has("[data-id=widget_customize_feed]")
+  end
+
   describe "filter modal opens and displays sections" do
     test "opening advanced filters shows all sections", %{conn: conn} do
       conn

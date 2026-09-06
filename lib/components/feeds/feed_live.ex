@@ -13,6 +13,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop feed_ids, :any, default: nil
   prop feed, :any, default: nil
   prop subject_user, :any, default: nil
+  prop notify_filter_changes, :boolean, default: false
 
   prop page_info, :any, default: nil
   prop previous_page_info, :any, default: nil
@@ -238,7 +239,13 @@ defmodule Bonfire.UI.Social.FeedLive do
     import Bonfire.UI.Common.Timing
 
     time_section :lv_feed_component do
-      do_update(assigns, socket)
+      {:ok, updated_socket} = do_update(assigns, socket)
+
+      if updated_socket.assigns[:feed_filters] != socket.assigns[:feed_filters] do
+        notify_filter_changes(assigns(updated_socket))
+      end
+
+      {:ok, updated_socket}
     end
   end
 
@@ -621,107 +628,11 @@ defmodule Bonfire.UI.Social.FeedLive do
   #    |> LiveHandler.insert_feed(LiveHandler.feed_assigns_maybe_async(tab, socket))}
   # end
 
-  def maybe_widgets(assigns) do
-    maybe_widgets(assigns, feed_name(assigns))
+  defp notify_filter_changes(%{notify_filter_changes: true} = assigns) do
+    send(self(), {:feed_filters_changed, assigns.id, assigns.feed_name, assigns.feed_filters})
   end
 
-  def maybe_widgets(assigns, feed_name) do
-    cond do
-      feed_name in [:curated] ->
-        curated_widgets()
-
-      # feed_name in [:notifications] ->
-      #   [
-      #     # page_header_aside: [
-      #     #   {Bonfire.UI.Social.HeaderAsideNotificationsSeenLive,
-      #     #    [
-      #     #      feed_id: e(assigns[:current_user], :character, :notifications_id, nil),
-      #     #      feed_name: "notifications"
-      #     #    ]}
-      #     #   # {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: "notifications"]}
-      #     # ]
-      #   ]
-
-      true ->
-        # bind the preset here rather than re-resolving it in widgets/2 — each resolution
-        # costs a Settings read, a possible boundary check and a localise_tree walk, and
-        # this runs on every feed mount/navigation
-        case Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, assigns) do
-          {:ok, preset} ->
-            widgets(assigns, e(preset, :filters, %{}) || %{})
-
-          _ ->
-            [
-              # page_header_aside: [
-              #   {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: feed_name]}
-              # ]
-            ]
-        end
-    end
-  end
-
-  defp curated_widgets() do
-    [
-      sidebar_widgets: [
-        # guests: [
-        #   secondary: [
-        #     {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: :curated]},
-        #     {Bonfire.Tag.Web.WidgetTagsLive, []}
-        #   ]
-        # ],
-        users: [
-          secondary: [
-            # {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: :curated]},
-            # {Bonfire.UI.Social.WidgetFeedsLive, []},
-            {Bonfire.Tag.Web.WidgetTagsLive, []}
-          ]
-        ]
-      ]
-    ]
-  end
-
-  def widgets(assigns, feed_baseline_filters) do
-    feed_name = e(assigns, :feed_name, nil)
-
-    customize_feed_widget =
-      if e(assigns, :hide_filters, nil) != true,
-        do: [
-          {Bonfire.UI.Social.WidgetCustomizeFeedLive,
-           [
-             event_target: "##{e(assigns, :feed_component_id, nil)}",
-             feed_id: e(assigns, :feed_id, nil),
-             feed_name: feed_name,
-             feed_filters: e(assigns, :feed_filters, nil),
-             feed_baseline_filters: feed_baseline_filters,
-             showing_within: e(assigns, :showing_within, nil)
-           ]}
-        ],
-        else: []
-
-    [
-      # page_header_aside: [
-      #   {Bonfire.UI.Social.HeaderAsideFeedFiltersLive, [feed_name: feed_name]}
-      # ],
-      sidebar_widgets: [
-        guests: [
-          secondary: [
-            {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: feed_name]}
-          ]
-        ],
-        users: [
-          secondary:
-            customize_feed_widget ++
-              [
-                # {Bonfire.UI.Social.WidgetGettingStartedLive, [type: Surface.LiveComponent]},
-                # {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: feed_name]},
-                # {Bonfire.UI.Social.WidgetFeedsLive, []},
-                {Bonfire.Tag.Web.WidgetTagsLive, []}
-                # {Bonfire.UI.Social.WidgetTrendingLinksLive, []}
-              ]
-        ]
-      ]
-    ]
-  end
+  defp notify_filter_changes(_assigns), do: :ok
 
   def feed_name(assigns),
     do:
@@ -1253,20 +1164,6 @@ defmodule Bonfire.UI.Social.FeedLive do
 
     feed_name = feed_name(assigns)
 
-    # re-send widgets with the UPDATED filters so sidebar widgets (e.g. customize-feed) reflect them
-    # (NB: don't send_self(feed_filters: ...) — the parent re-passes stale feed/loading props down)
-    assigns = Map.put(assigns, :feed_filters, feed_filters)
-
-    baseline_filters =
-      case Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, assigns) do
-        {:ok, preset} -> e(preset, :filters, %{}) || %{}
-        _ -> nil
-      end
-
-    if is_nil(feed_name) or feed_name in [:my, :explore, :remote, :local, :custom] or
-         not is_nil(baseline_filters),
-       do: send_self(widgets(assigns, baseline_filters || %{}))
-
     socket =
       socket
       |> assign(
@@ -1290,13 +1187,9 @@ defmodule Bonfire.UI.Social.FeedLive do
       )
       |> debug("reload with feed_assigns")
 
-    {
-      :noreply,
-      socket
-      |> LiveHandler.insert_feed(feed_assigns, reset: reset)
-      # |> debug("socket_assigned")
-      # |> debug("seeet")
-    }
+    socket = LiveHandler.insert_feed(socket, feed_assigns, reset: reset)
+    notify_filter_changes(assigns(socket))
+    {:noreply, socket}
   end
 
   defp reject_types(list, types) do
