@@ -1,13 +1,14 @@
 <div class="flex flex-col max-h-[calc(100vh-10rem)]">
-  {#if @show_reset && @active_filters != []}
+  {#if @title || (@show_reset && @active_filters != [])}
     <div class="flex items-center justify-between gap-3 min-h-10 pb-1">
-      <span />
+      <h3 :if={@title} class="text-base font-semibold text-base-content">{@title}</h3>
+      <span :if={!@title} />
       {#if @show_reset && @active_filters != []}
         <button
           type="button"
           phx-click="reset_pending"
           phx-target={@myself}
-          class="min-h-11 px-2 rounded-selector text-sm text-muted hover:text-base-content hover:bg-base-content/5 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100"
+          class="h-8 px-2 rounded-selector text-sm text-muted hover:text-base-content hover:bg-base-content/5 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100"
           data-role="reset_filters"
         >
           {l("Reset %{count}", count: length(@active_filters))}
@@ -16,6 +17,7 @@
     </div>
   {/if}
 
+  <p :if={@description} class="text-xs text-muted pb-2">{@description}</p>
 
   <div class="flex flex-col divide-hair divide-secondary overflow-y-auto flex-1 min-h-0">
     {!-- WHERE IT WAS POSTED --}
@@ -66,7 +68,7 @@
                   phx-value-origin={value}
                   phx-target={@myself}
                   class={
-                    "flex items-center justify-between gap-3 min-h-11 px-2 -mx-2 rounded-selector text-sm text-left transition-colors duration-150 hover:bg-base-content/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
+                    "flex items-center justify-between gap-3 min-h-10 px-2 -mx-2 rounded-selector text-sm text-left transition-colors duration-150 hover:bg-base-content/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
                     "text-primary font-medium":
                       Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, value),
                     "text-base-content":
@@ -82,6 +84,22 @@
                 </button>
               {/for}
             </div>
+            {!-- specific instances: only offered once "Other instances" is chosen --}
+            {#if Bonfire.UI.Social.FeedFiltersModalContentLive.show_instances?(@pending_filters)}
+              <form id={"#{@id}_instances_form"} phx-change="set_instances" phx-submit="set_instances" phx-target={@myself}>
+                <label for={"#{@id}_instances"} class="block text-xs text-muted mb-1">{l("Only these instances")}</label>
+                <input
+                  id={"#{@id}_instances"}
+                  type="text"
+                  name="instances_text"
+                  value={@pending_instances_text}
+                  placeholder={l("mastodon.social, gancio.org")}
+                  autocomplete="off"
+                  spellcheck="false"
+                  class="input input-sm w-full text-base"
+                />
+              </form>
+            {/if}
         {/case}
       </div>
     </details>
@@ -102,6 +120,111 @@
         />
       </label>
     </div>
+
+    {!-- FROM PEOPLE --}
+    <details :if={:from_people in @sections} class="group" data-row="from_people"
+      id={"#{@id}_from_people_section"}
+      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+    >
+      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
+        <h4 class="text-xs uppercase font-normal text-muted">{l("From people")}</h4>
+        <span class="flex items-center gap-2 min-w-0">
+          <span
+            data-role="row_value"
+            class={"text-sm truncate max-w-[180px]", "text-primary": @selected_authors != [], "text-muted": @selected_authors == []}
+          >{Bonfire.UI.Social.FeedFiltersModalContentLive.people_summary(@selected_authors, :include)}</span>
+          <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
+        </span>
+      </summary>
+      <div class="pb-3 flex flex-col gap-1">
+        <form phx-change="multi_select" phx-target={@myself} id={"#{@id}_author_form"}>
+          <Bonfire.UI.Common.MultiselectLive.UserSelectorLive
+            implementation={:live_select}
+            mode={:tags}
+            variant={:filter}
+            label={l("Type a name or @handle")}
+            form_input_name={"#{@id}_include_people"}
+            selected_options={@selected_authors}
+            event_target={@myself}
+            debounce={300}
+          />
+        </form>
+        <p class="text-xs text-muted">{l("Backspace removes the last person")}</p>
+      </div>
+    </details>
+
+    {!-- NOT FROM PEOPLE --}
+    <details :if={:not_people in @sections} class="group" data-row="not_people"
+      id={"#{@id}_not_people_section"}
+      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+    >
+      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
+        <h4 class="text-xs uppercase font-normal text-muted">{l("Not from people")}</h4>
+        <span class="flex items-center gap-2 min-w-0">
+          <span
+            data-role="row_value"
+            class={"text-sm truncate max-w-[180px]", "text-primary": @selected_excluded_authors != [], "text-muted": @selected_excluded_authors == []}
+          >{Bonfire.UI.Social.FeedFiltersModalContentLive.people_summary(@selected_excluded_authors, :exclude)}</span>
+          <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
+        </span>
+      </summary>
+      <div class="pb-3 flex flex-col gap-1">
+        <form phx-change="multi_select_exclude" phx-target={@myself} id={"#{@id}_exclude_author_form"}>
+          <Bonfire.UI.Common.MultiselectLive.UserSelectorLive
+            implementation={:live_select}
+            mode={:tags}
+            variant={:filter}
+            label={l("Type a name or @handle")}
+            form_input_name={"#{@id}_exclude_people"}
+            selected_options={@selected_excluded_authors}
+            event_target={@myself}
+            debounce={300}
+          />
+        </form>
+        <p class="text-xs text-muted">{l("Their posts are left out even when they match everything else.")}</p>
+      </div>
+    </details>
+
+    {!-- HASHTAGS --}
+    <details :if={:hashtags in @sections} class="group" data-row="hashtags"
+      id={"#{@id}_hashtags_section"}
+      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+    >
+      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
+        <h4 class="text-xs uppercase font-normal text-muted">{l("Hashtags")}</h4>
+        <span class="flex items-center gap-2 min-w-0">
+          <span
+            data-role="row_value"
+            class={
+              "text-sm truncate max-w-[180px]",
+              "text-primary": List.wrap(e(@pending_filters, :tags, [])) != [],
+              "text-muted": List.wrap(e(@pending_filters, :tags, [])) == []
+            }
+          >{Bonfire.UI.Social.FeedFiltersModalContentLive.hashtags_summary(@pending_filters)}</span>
+          <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
+        </span>
+      </summary>
+      <form id={"#{@id}_tags_form"} phx-change="set_tags" phx-submit="set_tags" phx-target={@myself} class="pb-3">
+        <label for={"#{@id}_tags"} class="sr-only">{l("Hashtags")}</label>
+        <input
+          id={"#{@id}_tags"}
+          type="text"
+          name="tags_text"
+          value={@pending_tags_text}
+          placeholder={l("#bonfire #fediverse")}
+          autocomplete="off"
+          spellcheck="false"
+          class="input input-sm w-full text-base"
+        />
+        <p class="text-xs text-muted mt-1">
+          {#if length(List.wrap(e(@pending_filters, :tags, []))) > 1}
+            {l("Shows posts with any of these tags")}
+          {#else}
+            {l("The # is optional")}
+          {/if}
+        </p>
+      </form>
+    </details>
 
     <details :if={:time_range in @sections} class="group" data-row="time_range"
       id={"#{@id}_time_range_section"}
@@ -203,7 +326,7 @@
         </span>
       </summary>
       <div class="pb-3 flex flex-col gap-1">
-        {#for {key, label} <- [{:post, l("Posts")}, {:article, l("Articles")}, {"Edition", l("Books")}, {:Event, l("Events")}]}
+        {#for {key, label} <- [{:post, l("Posts")}, {:article, l("Articles")}, {"Edition", l("Books")}, {:Event, l("Events")}], key in @object_types}
           <Bonfire.UI.Social.ToggleTypeLive
             label={label}
             key={key}
@@ -294,12 +417,49 @@
               "text-primary": Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :media_types),
               "text-muted": !Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :media_types)
             }
-          >{Bonfire.UI.Social.FeedFiltersModalContentLive.types_summary(@pending_filters, :media_types)}</span>
+          >{Bonfire.UI.Social.FeedFiltersModalContentLive.media_summary(@pending_filters, @media_types)}</span>
           <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
         </span>
       </summary>
       <div class="pb-3 flex flex-col gap-1">
-        {#for {key, label} <- [{:link, l("Links")}, {:image, l("Images")}, {:video, l("Videos")}, {:audio, l("Audio")}, {:research, l("Research publications")}]}
+        {!-- quick actions for the common cases --}
+        <div class="flex flex-wrap gap-1.5 pb-2">
+          <button
+            type="button"
+            phx-click="any_media"
+            phx-target={@myself}
+            aria-pressed={if Bonfire.UI.Social.FeedFiltersModalContentLive.any_media?(@pending_filters, @media_types),
+              do: "true",
+              else: "false"}
+            class={
+              "btn btn-sm",
+              "btn-primary":
+                Bonfire.UI.Social.FeedFiltersModalContentLive.any_media?(@pending_filters, @media_types),
+              "btn-ghost":
+                !Bonfire.UI.Social.FeedFiltersModalContentLive.any_media?(@pending_filters, @media_types)
+            }
+          >
+            {l("Any media")}
+          </button>
+          <button
+            type="button"
+            phx-click="clear_media"
+            phx-target={@myself}
+            aria-pressed={if !Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :media_types),
+              do: "true",
+              else: "false"}
+            class={
+              "btn btn-sm",
+              "btn-primary":
+                !Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :media_types),
+              "btn-ghost":
+                Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :media_types)
+            }
+          >
+            {l("No preference")}
+          </button>
+        </div>
+        {#for {key, label} <- [{:link, l("Links")}, {:image, l("Images")}, {:video, l("Videos")}, {:audio, l("Audio")}, {:research, l("Research publications")}], key in @media_types}
           <Bonfire.UI.Social.ToggleTypeLive
             label={label}
             key={key}

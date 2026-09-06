@@ -1,18 +1,50 @@
 defmodule Bonfire.UI.Social.FeedFiltersHelpersTest do
-  @moduledoc """
-  Pure-function coverage for the tri-state toggle logic and the small display
-  helpers used to label collapsed sections of the feed filters modal.
-  No DB, no LiveView — fast and deterministic.
-  """
+  @moduledoc "Coverage for filter transitions, scope-preserving Reset and row summaries."
   use ExUnit.Case, async: true
 
   # bucket this into the ui CI leg: bare `ExUnit.Case` skips the tag the extension case templates apply, so without it this also runs in the federation job catch-all
   @moduletag :ui
 
   alias Bonfire.UI.Social.ToggleTypeLive
-  doctest Bonfire.UI.Social.FeedFiltersModalContentLive, only: [types_filtered?: 2, reset_filters: 2]
-
   alias Bonfire.UI.Social.FeedFiltersModalContentLive
+  doctest FeedFiltersModalContentLive
+
+  test "Any media uses the host's options and preserves other filters" do
+    attrs = %{
+      __context__: %{}, sections: [:media_types], media_types: [:image, :research],
+      feed_filters: %{exclude_media_types: [:image], time_limit: 30}
+    }
+    socket = %Phoenix.LiveView.Socket{assigns: %{__changed__: %{}}}
+    {:ok, socket} = FeedFiltersModalContentLive.update(attrs, socket)
+
+    {:noreply, selected} = FeedFiltersModalContentLive.handle_event("any_media", %{}, socket)
+    assert selected.assigns.pending_filters == %{
+      media_types: [:image, :research], exclude_media_types: [], time_limit: 30
+    }
+    assert FeedFiltersModalContentLive.any_media?(selected.assigns.pending_filters, attrs.media_types)
+    assert FeedFiltersModalContentLive.media_summary(selected.assigns.pending_filters, attrs.media_types) == "Any media"
+
+    {:noreply, cleared} = FeedFiltersModalContentLive.handle_event("clear_media", %{}, selected)
+    assert cleared.assigns.pending_filters.time_limit == 30
+    refute FeedFiltersModalContentLive.any_media?(cleared.assigns.pending_filters, attrs.media_types)
+    assert FeedFiltersModalContentLive.media_summary(cleared.assigns.pending_filters, attrs.media_types) == "Any"
+  end
+
+  test "Any media is not selected for exclusions, extra types or an empty option list" do
+    refute FeedFiltersModalContentLive.any_media?(%{media_types: [:image], exclude_media_types: [:video]}, [:image])
+    refute FeedFiltersModalContentLive.any_media?(%{media_types: [:image, :research]}, [:image])
+    refute FeedFiltersModalContentLive.any_media?(%{}, [])
+  end
+
+  test "specific instance input stays hidden for local origins" do
+    for origin <- [nil, :all, :local, [:local], "local", ["local"], []] do
+      refute FeedFiltersModalContentLive.show_instances?(%{origin: origin})
+    end
+
+    for origin <- [:remote, [:remote], ["mastodon.social"]] do
+      assert FeedFiltersModalContentLive.show_instances?(%{origin: origin})
+    end
+  end
 
   test "circle toggles use the generic handler and section Reset clears both directions" do
     attrs = %{__context__: %{}, sections: [], feed_filters: %{time_limit: 30}}
@@ -31,6 +63,27 @@ defmodule Bonfire.UI.Social.FeedFiltersHelpersTest do
     assert reset.assigns.pending_filters == %{time_limit: 30}
     assert FeedFiltersModalContentLive.filters_to_apply(reset.assigns.pending_filters, hidden.assigns.pending_filters) ==
              %{time_limit: 30, subject_circles: [], exclude_subject_circles: []}
+  end
+
+  test "drafts survive updates from the same host and reset when the host changes" do
+    attrs = %{
+      __context__: %{}, feed_filters: %{}, sections: [:hashtags],
+      context_key: {:profile, "alice"}, apply_to: :parent
+    }
+    socket = %Phoenix.LiveView.Socket{assigns: %{__changed__: %{}}}
+    {:ok, socket} = FeedFiltersModalContentLive.update(attrs, socket)
+
+    {:noreply, edited} = FeedFiltersModalContentLive.handle_event("set_tags", %{"tags_text" => "#bonfire"}, socket)
+    refute_received {FeedFiltersModalContentLive, :apply, _}
+    {:ok, same_host} = FeedFiltersModalContentLive.update(attrs, edited)
+    {:noreply, _} = FeedFiltersModalContentLive.handle_event("apply", %{}, same_host)
+    assert_received {FeedFiltersModalContentLive, :apply, %{tags: ["bonfire"]}}
+
+    {:ok, other_host} = FeedFiltersModalContentLive.update(%{attrs | context_key: {:profile, "bob"}}, edited)
+    {:noreply, _} = FeedFiltersModalContentLive.handle_event("apply", %{}, other_host)
+    assert_received {FeedFiltersModalContentLive, :apply, filters}
+    assert filters == %{}
+    assert other_host.assigns.pending_tags_text == ""
   end
 
   describe "ToggleTypeLive.check_throuple/3" do

@@ -34,6 +34,7 @@ defmodule Bonfire.UI.Social.FeedControlsLive do
       sort_filter(filters) ++
       origin_filter(filters) ++
       people_filters(filters) ++
+      tag_filters(filters) ++
       type_filters(filters) ++
       circle_filters(filters, context)
   end
@@ -50,6 +51,13 @@ defmodule Bonfire.UI.Social.FeedControlsLive do
         end
       end)
     end)
+  end
+
+  defp tag_filters(filters) do
+    filters
+    |> e(:tags, [])
+    |> List.wrap()
+    |> Enum.map(fn tag -> {"#" <> to_string(tag), nil, :tags, tag} end)
   end
 
   defp time_filter(filters) do
@@ -82,6 +90,8 @@ defmodule Bonfire.UI.Social.FeedControlsLive do
     case e(filters, :origin, nil) do
       origin when origin in [:local, [:local]] -> [{l("Local only"), nil, :origin, :local}]
       origin when origin in [:remote, [:remote]] -> [{l("Remote only"), nil, :origin, :remote}]
+      # a list of specific instance domains
+      domains when is_list(domains) -> Enum.map(domains, &{to_string(&1), nil, :origin, &1})
       _ -> []
     end
   end

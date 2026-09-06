@@ -148,6 +148,19 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
   end
 
   describe "activity type filters" do
+    test "Any media selects all available types and updates its summary", %{conn: conn} do
+      conn
+      |> visit("/feed/local")
+      |> open_filters_modal()
+      |> click_button("Any media")
+      |> assert_has("button[aria-pressed=true]", text: "Any media")
+      |> assert_has("[data-toggle=research][data-state=only]")
+      |> assert_has("[data-row=media_types] [data-role=row_value]", text: "Any media")
+      |> click_button("No preference")
+      |> assert_has("[data-toggle=research][data-state=default]")
+      |> assert_has("[data-row=media_types] [data-role=row_value]", text: "Any")
+    end
+
     test "toggling boost filter to Hide updates the toggle state", %{conn: conn} do
       conn
       |> visit("/feed/local")
@@ -443,6 +456,29 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
         })
 
       assert html |> Floki.parse_fragment!() |> Floki.find("[data-role=reset_filters]") |> Floki.text() |> String.trim() == "Reset 1"
+    end
+
+    test "own-activity toggle and excluded people share the same selection", %{user: user, other_user: other_user} do
+      editor = Bonfire.UI.Social.FeedFiltersModalContentLive
+      attrs = %{
+        id: "people_filters", __context__: %{current_user: user},
+        feed_filters: %{}, sections: [:hide_own, :not_people]
+      }
+      socket = %Phoenix.LiveView.Socket{assigns: %{__changed__: %{}}}
+      {:ok, socket} = editor.update(attrs, socket)
+      toggle = %{"toggle" => "subjects", "toggle_type" => user.id, "toggle_value" => "false"}
+
+      {:noreply, hidden} = editor.handle_event("set_filter", toggle, socket)
+      assert Enum.map(hidden.assigns.selected_excluded_authors, & &1.id) == [user.id]
+
+      selections = hidden.assigns.selected_excluded_authors ++ [%{id: other_user.id, name: "Other"}]
+      params = %{"multi_select" => %{"people_filters_exclude_people" => selections}}
+      {:noreply, selected} = editor.handle_event("multi_select_exclude", params, hidden)
+      assert Enum.sort(selected.assigns.pending_filters.exclude_subjects) == Enum.sort([user.id, other_user.id])
+
+      {:noreply, visible} = editor.handle_event("set_filter", %{toggle | "toggle_value" => "default"}, selected)
+      assert Enum.map(visible.assigns.selected_excluded_authors, & &1.id) == [other_user.id]
+      assert visible.assigns.pending_filters.exclude_subjects == [other_user.id]
     end
 
     test "Hide my own activities updates the checkbox", %{conn: conn} do
