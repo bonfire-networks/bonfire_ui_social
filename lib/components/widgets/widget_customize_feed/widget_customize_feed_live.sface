@@ -4,6 +4,11 @@
   title_class="flex items-center justify-between text-base font-semibold text-base-content"
   class="w-full flex-auto mx-auto p-card border-y-hair border-secondary"
 >
+  <:action>
+    <button id={"feed_reset_#{@feed_name}"} type="button" class="btn btn-ghost px-2 btn-sm font-normal" aria-label={l("Reset feed preferences")} phx-click="reset_preferences" phx-target={@myself}>
+      {l("Reset")}
+    </button>
+  </:action>
   <div class="flex flex-col gap-3" data-id="widget_customize_feed">
     <form
       id={"feed_order_form_#{@feed_name || "default"}"}

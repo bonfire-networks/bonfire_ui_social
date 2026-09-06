@@ -15,7 +15,7 @@ defmodule Bonfire.UI.Social.FeedControlsLive do
       modal_component_stateful?: true,
       event_target: assigns[:event_target],
       apply_to: filter_recipient(assigns[:event_target]),
-      context_key: {assigns[:event_target], assigns[:feed_id], assigns[:feed_name]},
+      context_key: {assigns[:event_target], assigns[:feed_id], assigns[:feed_name], assigns[:reset_revision]},
       feed_id: assigns[:feed_id],
       feed_name: assigns[:feed_name],
       showing_within: assigns[:showing_within],

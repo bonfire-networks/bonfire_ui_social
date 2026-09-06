@@ -234,6 +234,12 @@ defmodule Bonfire.UI.Social.FeedLive do
     end
   end
 
+  def update(%{reset_preferences: true}, socket) do
+    filters = LiveHandler.preset_canonical_filters(feed_name(assigns(socket)), assigns(socket))
+    {:noreply, socket} = reload(filters, socket, true)
+    {:ok, socket}
+  end
+
   # Replaced @decorate time() with time_section for profiler dashboard integration
   def update(assigns, socket) do
     import Bonfire.UI.Common.Timing

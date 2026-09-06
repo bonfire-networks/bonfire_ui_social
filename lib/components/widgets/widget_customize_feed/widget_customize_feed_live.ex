@@ -16,6 +16,13 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   prop feed_filters, :any, default: nil
 
   data initial_preferences, :any, default: nil
+  data reset_revision, :integer, default: 0
+
+  def handle_event("reset_preferences", _, %{assigns: %{event_target: "#" <> feed_id}} = socket) do
+    Phoenix.LiveView.send_update(Bonfire.UI.Social.FeedLive, id: feed_id, reset_preferences: true)
+    {:noreply, assign(socket, reset_revision: socket.assigns.reset_revision + 1)}
+  end
+
   def update(%{preferences: preferences}, socket) do
     {:ok, assign(socket, preferences)}
   end

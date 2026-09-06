@@ -364,6 +364,68 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
     end
   end
 
+  describe "Reset feed preferences" do
+    test "reset restores the current feed defaults", %{conn: conn} do
+      conn
+      |> visit("/feed/local")
+      |> wait_async()
+      |> uncheck("Replies")
+      |> PhoenixTest.select("Order", option: "Most boosted")
+      |> open_filters_modal()
+      |> click_button("Reset feed preferences")
+      |> wait_async()
+      |> assert_has("select[name=feed_order] option[value=newest][selected]")
+      |> assert_has("input[name='scope[replies]']:checked")
+      |> refute_has("select[name=time_limit]")
+    end
+
+    test "header Reset discards pending edits even when applied filters already match defaults", %{conn: conn} do
+      Process.put(Bonfire.Common.Config.keys_tree([Bonfire.UI.Social.FeedLive, :time_limit]), 30)
+
+      conn
+      |> visit("/feed/local")
+      |> wait_async()
+      |> click_button("Reset feed preferences")
+      |> open_filters_modal()
+      |> click_button("Last Day")
+      |> click_button("Reset feed preferences")
+      |> wait_async()
+      |> assert_has("button[aria-label='Remove filter: Last Month']")
+      |> apply_filters()
+      |> assert_has("button[aria-label='Remove filter: Last Month']")
+    end
+
+    test "header Reset restores the configured time window and sort order", %{conn: conn, user: user} do
+      Process.put(Bonfire.Common.Config.keys_tree([Bonfire.UI.Social.FeedLive, :time_limit]), 7)
+
+      fake_post!(user, "public", %{
+        post_content: %{html_body: "reset restores this older post"},
+        id: DatesTimes.past(2, :day) |> DatesTimes.generate_ulid()
+      })
+
+      fake_post!(user, "public", %{
+        post_content: %{html_body: "outside the configured default window"},
+        id: DatesTimes.past(60, :day) |> DatesTimes.generate_ulid()
+      })
+
+      conn
+      |> visit("/feed/local")
+      |> open_filters_modal()
+      |> PhoenixTest.select("Order", option: "Oldest first")
+      |> wait_async()
+      |> click_button("Last Day")
+      |> apply_filters()
+      |> refute_has("[data-id=feed] article", text: "reset restores this older post")
+      |> click_button("Reset feed preferences")
+      |> wait_async()
+      |> assert_has("[data-id=feed] article", text: "reset restores this older post")
+      |> refute_has("[data-id=feed] article", text: "outside the configured default window")
+      |> assert_has("button[aria-label='Remove filter: Last Week']")
+      |> assert_has("select[name=feed_order] option[value=newest][selected]")
+    end
+
+  end
+
   describe "Reset all" do
     test "clears every pending filter and the Hide my activity toggle", %{conn: conn} do
       conn
