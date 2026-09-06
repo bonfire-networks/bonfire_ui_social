@@ -138,21 +138,23 @@
       </label>
     </section>
 
-    <details :if={:time_range in @sections} class="group">
-      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
-        <div class="flex items-center gap-3">
-          <#Icon iconify="ph:timer-fill" class="size-4 text-primary" />
-          <h4 class="text-sm font-medium text-base-content/80">{l("Time range")}</h4>
-        </div>
-        <div class="flex items-center gap-2 min-w-0">
-          <span class="badge text-xs">
-            {Bonfire.UI.Social.FeedFiltersModalContentLive.time_range_summary(@pending_filters)}
-          </span>
-          <#Icon
-            iconify="ph:caret-down-bold"
-            class="w-4 h-4 text-muted shrink-0 transition-transform duration-150 group-open:rotate-180"
-          />
-        </div>
+    <details :if={:time_range in @sections} class="group" data-row="time_range"
+      id={"#{@id}_time_range_section"}
+      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+    >
+      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
+        <h4 class="text-xs uppercase font-normal text-muted">{l("Time range")}</h4>
+        <span class="flex items-center gap-2 min-w-0">
+          <span
+            data-role="row_value"
+            class={
+              "text-sm truncate",
+              "text-primary": e(@pending_filters, :time_limit, 0) not in [nil, 0],
+              "text-muted": e(@pending_filters, :time_limit, 0) in [nil, 0]
+            }
+          >{Bonfire.UI.Social.FeedFiltersModalContentLive.time_range_summary(@pending_filters)}</span>
+          <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
+        </span>
       </summary>
       <div class="px-4 pb-3 flex flex-wrap gap-2">
         {#for {days, label} <- Bonfire.UI.Social.TimeControlLive.default_options()}
@@ -174,21 +176,23 @@
       </div>
     </details>
 
-    <details :if={:sort_order in @sections} class="group">
-      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
-        <div class="flex items-center gap-3">
-          <#Icon iconify="ph:sort-ascending-fill" class="size-4 text-primary" />
-          <h4 class="text-sm font-medium text-base-content/80">{l("Sort order")}</h4>
-        </div>
-        <div class="flex items-center gap-2 min-w-0">
-          <span class="badge text-xs">
-            {Bonfire.UI.Social.FeedFiltersModalContentLive.sort_order_summary(@pending_filters)}
-          </span>
-          <#Icon
-            iconify="ph:caret-down-bold"
-            class="w-4 h-4 text-muted shrink-0 transition-transform duration-150 group-open:rotate-180"
-          />
-        </div>
+    <details :if={:sort_order in @sections} class="group" data-row="sort_order"
+      id={"#{@id}_sort_order_section"}
+      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+    >
+      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
+        <h4 class="text-xs uppercase font-normal text-muted">{l("Sort order")}</h4>
+        <span class="flex items-center gap-2 min-w-0">
+          <span
+            data-role="row_value"
+            class={
+              "text-sm truncate",
+              "text-primary": e(@pending_filters, :sort_order, nil) == :asc,
+              "text-muted": e(@pending_filters, :sort_order, nil) != :asc
+            }
+          >{Bonfire.UI.Social.FeedFiltersModalContentLive.sort_order_summary(@pending_filters)}</span>
+          <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
+        </span>
       </summary>
       <div class="px-4 pb-3 flex flex-wrap gap-2">
         <button
@@ -471,21 +475,23 @@
       </div>
     {/for}
 
-    <details :if={:circles in @sections} class="group">
-      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
-        <div class="flex items-center gap-3">
-          <#Icon iconify="ph:circle-fill" class="size-4 text-primary" />
-          <h4 class="text-sm font-medium text-base-content/80">{l("Filter by circles")}</h4>
-        </div>
-        <div class="flex items-center gap-2 min-w-0">
-          <span class="badge text-xs">
-            {Bonfire.UI.Social.FeedFiltersModalContentLive.circles_summary(@pending_filters)}
-          </span>
-          <#Icon
-            iconify="ph:caret-down-bold"
-            class="w-4 h-4 text-muted shrink-0 transition-transform duration-150 group-open:rotate-180"
-          />
-        </div>
+    <details :if={:circles in @sections} class="group" data-row="circles"
+      id={"#{@id}_circles_section"}
+      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+    >
+      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
+        <h4 class="text-xs uppercase font-normal text-muted">{l("Filter by circles")}</h4>
+        <span class="flex items-center gap-2 min-w-0">
+          <span
+            data-role="row_value"
+            class={
+              "text-sm truncate",
+              "text-primary": List.wrap(e(@pending_filters, :subject_circles, [])) != [],
+              "text-muted": List.wrap(e(@pending_filters, :subject_circles, [])) == []
+            }
+          >{Bonfire.UI.Social.FeedFiltersModalContentLive.circles_summary(@pending_filters)}</span>
+          <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
+        </span>
       </summary>
       <div class="px-3 pb-3">
         {#case @my_circles}
@@ -512,15 +518,13 @@
         {/case}
       </div>
     </details>
-    <details :if={:save_preset in @sections} class="group shrink-0 mx-2 my-2 rounded-xl border-hair border-secondary overflow-hidden">
-      <summary class="flex items-center gap-2 cursor-pointer list-none px-3 py-2.5">
-        <span class="flex-1 text-sm font-medium text-base-content truncate">
-          {l("Save as custom feed")}
-        </span>
-        <#Icon
-          iconify="ph:caret-down-bold"
-          class="w-4 h-4 text-primary shrink-0 transition-transform duration-150 group-open:rotate-180"
-        />
+    <details :if={:save_preset in @sections} class="group" data-row="save_preset"
+      id={"#{@id}_save_preset_section"}
+      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+    >
+      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
+        <span class="text-[15px] text-base-content">{l("Save as custom feed")}</span>
+        <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
       </summary>
       <div class="px-3 pb-3 pt-1">
         <form
