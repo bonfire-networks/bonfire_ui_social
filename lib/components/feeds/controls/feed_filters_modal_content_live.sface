@@ -562,9 +562,8 @@
   <div class="flex items-center justify-end gap-2 p-4 border-t border-secondary shrink-0 bg-base-100 sticky bottom-0">
     <button
       type="button"
-      phx-click="apply_filters"
-      phx-target={@event_target}
-      phx-value-filters={Bonfire.UI.Social.FeedFiltersModalContentLive.encode_filters(@pending_filters)}
+      phx-click="apply"
+      phx-target={@myself}
       class="btn btn-sm btn-primary rounded-full px-6"
     >
       {l("Apply filters")}

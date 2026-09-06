@@ -6,33 +6,55 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
   prop feed_name, :any, default: nil
   prop showing_within, :atom, default: nil
   prop feed_filters, :any, default: nil
+  prop context_key, :any, default: nil
+  prop apply_to, :any, default: :parent
+
+  data pending_filters, :map, default: nil
+  data init_state, :any, default: nil
 
   def update(assigns, socket) do
-    # Don't overwrite pending changes on subsequent updates
-    socket =
-      if socket.assigns[:pending_filters] do
-        socket |> assign(assigns) |> assign_derived()
-      else
-        filters = Enums.maybe_to_map(assigns[:feed_filters]) || %{}
-        context = assigns[:__context__] || socket.assigns[:__context__]
+    socket = assign(socket, assigns)
+    filters = Enums.maybe_to_map(socket.assigns.feed_filters) || %{}
+    state = {filters, socket.assigns.context_key}
 
+    socket =
+      if socket.assigns[:init_state] == state do
+        socket
+      else
+        context = socket.assigns[:__context__]
         my_circles =
           if context do
-            Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(
-              context,
-              :subject_circles
-            ) || []
+            Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(context, :subject_circles) || []
           else
             []
           end
 
-        socket
-        |> assign(assigns)
-        |> assign(pending_filters: filters, my_circles: my_circles)
-        |> assign_derived()
+        assign(socket, init_state: state, pending_filters: filters, my_circles: my_circles)
       end
 
-    {:ok, socket}
+    {:ok, assign_derived(socket)}
+  end
+
+  # Apply reads pending state rather than a phx-value snapshot from the last render.
+  def handle_event("apply", _params, socket) do
+    assigns = assigns(socket)
+    {applied, _context} = assigns[:init_state]
+    pending = assigns[:pending_filters]
+
+    filters = filters_to_apply(pending, applied)
+
+    case assigns[:apply_to] do
+      {module, host_id} ->
+        Phoenix.LiveView.send_update(module, id: host_id, apply_filters: filters)
+
+      %Phoenix.LiveComponent.CID{} = cid ->
+        Phoenix.LiveView.send_update(cid, apply_filters: filters)
+
+      :parent ->
+        send(self(), {__MODULE__, :apply, filters})
+    end
+
+    {:noreply, socket}
   end
 
   def handle_event("set_filter", %{"time_limit" => time_limit} = _attrs, socket) do
@@ -146,11 +168,23 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
   def origin_matches?(filters, :all), do: e(filters, :origin, nil) in [nil, :all]
   def origin_matches?(filters, origin), do: e(filters, :origin, nil) in [origin, [origin]]
 
-  @doc "Encodes filters map to JSON for passing via phx-value."
-  def encode_filters(filters) do
-    filters
-    |> Enums.nested_structs_to_maps()
-    |> Jason.encode!()
+  @doc """
+  Includes explicit removals because feed hosts merge partial updates. Scalar resets use the same values as the editor's All time and default-order controls.
+
+      iex> Bonfire.UI.Social.FeedFiltersModalContentLive.filters_to_apply(%{}, %{time_limit: 1, sort_by: :like_count, sort_order: :asc, subjects: ["alice"], origin: :remote})
+      %{time_limit: 0, sort_by: false, sort_order: :desc, subjects: [], origin: :all}
+      iex> Bonfire.UI.Social.FeedFiltersModalContentLive.filters_to_apply(%{time_limit: 30}, %{time_limit: 1})
+      %{time_limit: 30}
+  """
+  def filters_to_apply(pending, applied) do
+    (Map.keys(applied) -- Map.keys(pending))
+    |> Enum.reduce(pending, fn
+      :origin, acc -> Map.put(acc, :origin, :all)
+      :time_limit, acc -> Map.put(acc, :time_limit, 0)
+      :sort_by, acc -> Map.put(acc, :sort_by, false)
+      :sort_order, acc -> Map.put(acc, :sort_order, :desc)
+      key, acc -> if is_list(applied[key]), do: Map.put(acc, key, []), else: acc
+    end)
   end
 
   @doc "Human-readable summary shown in the collapsed Time range section header."

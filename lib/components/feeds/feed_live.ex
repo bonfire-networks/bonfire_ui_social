@@ -223,6 +223,16 @@ defmodule Bonfire.UI.Social.FeedLive do
     # end
   end
 
+  # the filters modal applies its pending state via send_update (see
+  # FeedFiltersModalContentLive.handle_event("apply", ...)), replacing lists wholesale
+  def update(%{apply_filters: filters}, socket) when is_map(filters) do
+    case set_filters(filters, socket, true) do
+      {:noreply, socket} -> {:ok, socket}
+      {:ok, socket} -> {:ok, socket}
+      _ -> {:ok, socket}
+    end
+  end
+
   # Replaced @decorate time() with time_section for profiler dashboard integration
   def update(assigns, socket) do
     import Bonfire.UI.Common.Timing
@@ -1165,6 +1175,11 @@ defmodule Bonfire.UI.Social.FeedLive do
     case FeedFilters.validate(attrs) do
       {:ok, filters} ->
         existing_filters = assigns(socket)[:feed_filters] || %{}
+        # Validation fills in :desc even for content-only changes; keep the chosen direction.
+        filters =
+          if Map.has_key?(attrs, :sort_order) or Map.has_key?(attrs, "sort_order"),
+            do: filters,
+            else: Map.put(filters, :sort_order, e(existing_filters, :sort_order, :desc))
 
         explicit_filter_replacements =
           if replace_lists do
