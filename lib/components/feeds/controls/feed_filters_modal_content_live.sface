@@ -121,9 +121,9 @@
       </div>
     </section>
 
-    <section :if={:hide_own in @sections and current_user_id(@__context__)}>
-      <label class="flex min-h-11 cursor-pointer items-center justify-between gap-3 px-4 py-1.5">
-        <span class="text-sm text-base-content">{l("Hide my own activities")}</span>
+    <div :if={:hide_own in @sections and current_user_id(@__context__)} data-row="hide_own">
+      <label class="flex min-h-12 cursor-pointer items-center justify-between gap-3">
+        <span class="text-xs uppercase font-normal text-muted">{l("Hide my own activities")}</span>
         <input
           id={"feed_filter_hide_own_activities_#{@feed_name || "custom"}"}
           type="checkbox"
@@ -136,7 +136,7 @@
           phx-target={@myself}
         />
       </label>
-    </section>
+    </div>
 
     <details :if={:time_range in @sections} class="group" data-row="time_range"
       id={"#{@id}_time_range_section"}
@@ -156,7 +156,7 @@
           <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
         </span>
       </summary>
-      <div class="px-4 pb-3 flex flex-wrap gap-2">
+      <div class="pb-3 flex flex-wrap gap-2">
         {#for {days, label} <- Bonfire.UI.Social.TimeControlLive.default_options()}
           <button
             type="button"
@@ -194,7 +194,7 @@
           <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
         </span>
       </summary>
-      <div class="px-4 pb-3 flex flex-wrap gap-2">
+      <div class="pb-3 flex flex-wrap gap-2">
         <button
           type="button"
           phx-click="set_filter"
@@ -244,44 +244,18 @@
           <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
         </span>
       </summary>
-      <div class="px-3 pb-2 flex flex-col gap-0.5">
-        <Bonfire.UI.Social.ToggleTypeLive
-          label={l("All posts")}
-          key={:post}
-          field={:object_types}
-          feed_filters={@pending_filters}
-          event_target={@myself}
-          event_name="set_filter"
-          label_default={l("Include")}
-        />
-        <Bonfire.UI.Social.ToggleTypeLive
-          label={l("Articles")}
-          key={:article}
-          field={:object_types}
-          feed_filters={@pending_filters}
-          event_target={@myself}
-          event_name="set_filter"
-          label_default={l("Include")}
-        />
-        <Bonfire.UI.Social.ToggleTypeLive
-          label={l("Books")}
-          key="Edition"
-          field={:object_types}
-          feed_filters={@pending_filters}
-          event_target={@myself}
-          event_name="set_filter"
-          label_default={l("Include")}
-        />
-        <Bonfire.UI.Social.ToggleTypeLive
-          label={l("Events")}
-          key={:Event}
-          field={:object_types}
-          feed_filters={@pending_filters}
-          event_target={@myself}
-          event_name="set_filter"
-          label_default={l("Include")}
-        />
-
+      <div class="pb-3 flex flex-col gap-1">
+        {#for {key, label} <- [{:post, l("Posts")}, {:article, l("Articles")}, {"Edition", l("Books")}, {:Event, l("Events")}]}
+          <Bonfire.UI.Social.ToggleTypeLive
+            label={label}
+            key={key}
+            field={:object_types}
+            feed_filters={@pending_filters}
+            event_target={@myself}
+            event_name="set_filter"
+            label_default={l("Include")}
+          />
+        {/for}
         {#for key
           when key not in [
                  :post,
@@ -327,45 +301,19 @@
             <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
           </span>
         </summary>
-        <div class="px-3 pb-2 flex flex-col gap-0.5">
-          <Bonfire.UI.Social.ToggleTypeLive
-            label={l("Boosts")}
-            key={:boost}
-            field={:activity_types}
-            feed_filters={@pending_filters}
-            event_target={@myself}
-            event_name="set_filter"
-            label_default={l("Include")}
-          />
-          <Bonfire.UI.Social.ToggleTypeLive
-            label={l("Likes")}
-            key={:like}
-            field={:activity_types}
-            feed_filters={@pending_filters}
-            event_target={@myself}
-            event_name="set_filter"
-            label_default={l("Include")}
-          />
-          <Bonfire.UI.Social.ToggleTypeLive
-            label={l("Follows")}
-            key={:follow}
-            field={:activity_types}
-            feed_filters={@pending_filters}
-            event_target={@myself}
-            event_name="set_filter"
-            label_default={l("Include")}
-          />
-          <Bonfire.UI.Social.ToggleTypeLive
-            label={l("Replies")}
-            key={:reply}
-            field={:activity_types}
-            feed_filters={@pending_filters}
-            event_target={@myself}
-            event_name="set_filter"
-            label_default={l("Include")}
-          />
-
-          {#for key when key not in [:boost, :like, :follow, :reply] <- @pending_filters[:activity_types] || []}
+        <div class="pb-3 flex flex-col gap-1">
+          {#for {key, label} <- [{:boost, l("Boosts")}, {:like, l("Likes")}, {:follow, l("Follows")}, {:reply, l("Replies")}]}
+            <Bonfire.UI.Social.ToggleTypeLive
+              label={label}
+              key={key}
+              field={:activity_types}
+              feed_filters={@pending_filters}
+              event_target={@myself}
+              event_name="set_filter"
+              label_default={l("Include")}
+            />
+          {/for}
+        {#for key when key not in [:boost, :like, :follow, :reply] <- @pending_filters[:activity_types] || []}
             <Bonfire.UI.Social.ToggleTypeLive
               label={String.capitalize(to_string(key))}
               key={key}
@@ -398,53 +346,18 @@
           <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
         </span>
       </summary>
-      <div class="px-3 pb-2 flex flex-col gap-0.5">
-        <Bonfire.UI.Social.ToggleTypeLive
-          label={l("Links")}
-          key={:link}
-          field={:media_types}
-          feed_filters={@pending_filters}
-          event_target={@myself}
-          event_name="set_filter"
-          label_default={l("Include")}
-        />
-        <Bonfire.UI.Social.ToggleTypeLive
-          label={l("Images")}
-          key={:image}
-          field={:media_types}
-          feed_filters={@pending_filters}
-          event_target={@myself}
-          event_name="set_filter"
-          label_default={l("Include")}
-        />
-        <Bonfire.UI.Social.ToggleTypeLive
-          label={l("Videos")}
-          key={:video}
-          field={:media_types}
-          feed_filters={@pending_filters}
-          event_target={@myself}
-          event_name="set_filter"
-          label_default={l("Include")}
-        />
-        <Bonfire.UI.Social.ToggleTypeLive
-          label={l("Audio")}
-          key={:audio}
-          field={:media_types}
-          feed_filters={@pending_filters}
-          event_target={@myself}
-          event_name="set_filter"
-          label_default={l("Include")}
-        />
-        <Bonfire.UI.Social.ToggleTypeLive
-          label={l("Research publications")}
-          key={:research}
-          field={:media_types}
-          feed_filters={@pending_filters}
-          event_target={@myself}
-          event_name="set_filter"
-          label_default={l("Include")}
-        />
-
+      <div class="pb-3 flex flex-col gap-1">
+        {#for {key, label} <- [{:link, l("Links")}, {:image, l("Images")}, {:video, l("Videos")}, {:audio, l("Audio")}, {:research, l("Research publications")}]}
+          <Bonfire.UI.Social.ToggleTypeLive
+            label={label}
+            key={key}
+            field={:media_types}
+            feed_filters={@pending_filters}
+            event_target={@myself}
+            event_name="set_filter"
+            label_default={l("Include")}
+          />
+        {/for}
         {#for key
           when key not in [
                  :image,
@@ -503,10 +416,10 @@
           <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
         </span>
       </summary>
-      <div class="px-3 pb-3">
+      <div class="pb-3">
         {#case @my_circles}
           {#match []}
-            <p class="text-sm text-muted px-1 py-1">
+            <p class="text-sm text-muted">
               {l(
                 "You haven't created any circles yet. Create one in your boundary settings to filter by specific groups of people."
               )}
@@ -536,17 +449,17 @@
         <span class="text-[15px] text-base-content">{l("Save as custom feed")}</span>
         <span aria-hidden="true" class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90">›</span>
       </summary>
-      <div class="px-3 pb-3 pt-1">
+      <div class="pb-3">
         <form
-          id="form_create_feed_preset"
+          id={"#{@id}_create_feed_preset"}
           class="w-full flex flex-col gap-2"
           phx-submit="Bonfire.Social.Feeds:preset_create"
           phx-target={@event_target}
         >
           <fieldset class="fieldset">
             <legend class="fieldset-legend">{l("Feed title")}</legend>
-            <label for="feed_name" class="sr-only">{l("Feed title")}</label>
-            <input id="feed_name" name="name" class="input w-full" placeholder={l("Add a title...")}>
+            <label for={"#{@id}_feed_name"} class="sr-only">{l("Feed title")}</label>
+            <input id={"#{@id}_feed_name"} name="name" class="input w-full" placeholder={l("Add a title...")}>
           </fieldset>
 
           <fieldset class="fieldset">
@@ -575,9 +488,10 @@
     </details>
   </div>
 
-  <div class="flex items-center justify-end gap-2 p-4 border-t border-secondary shrink-0 bg-base-100 sticky bottom-0">
+  <div class="flex items-center justify-end gap-2 pt-3 shrink-0">
     <button
       type="button"
+      data-role="apply_filters"
       phx-click="apply"
       phx-target={@myself}
       class="btn btn-sm btn-primary rounded-full px-6"
