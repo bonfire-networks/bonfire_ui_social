@@ -18,7 +18,6 @@ defmodule Bonfire.UI.Social.FeedControlsLive do
       context_key: {assigns[:event_target], assigns[:feed_id], assigns[:feed_name], assigns[:reset_revision]},
       feed_id: assigns[:feed_id],
       feed_name: assigns[:feed_name],
-      showing_within: assigns[:showing_within],
       feed_filters: assigns[:feed_filters]
     ]
   end
@@ -34,8 +33,23 @@ defmodule Bonfire.UI.Social.FeedControlsLive do
     time_filter(filters) ++
       sort_filter(filters) ++
       origin_filter(filters) ++
+      people_filters(filters) ++
       type_filters(filters) ++
       circle_filters(filters, context)
+  end
+
+  defp people_filters(filters) do
+    Enum.flat_map([{:subjects, :show}, {:exclude_subjects, :hide}], fn {field, icon} ->
+      filters
+      |> e(field, [])
+      |> List.wrap()
+      |> Enum.flat_map(fn entry ->
+        case Enums.id(entry) do
+          nil -> []
+          id -> [{e(entry, :profile, :name, nil) || l("Someone"), icon, field, id}]
+        end
+      end)
+    end)
   end
 
   defp time_filter(filters) do

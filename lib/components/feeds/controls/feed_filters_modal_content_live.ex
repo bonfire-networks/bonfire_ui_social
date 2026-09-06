@@ -1,17 +1,27 @@
 defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
   use Bonfire.UI.Common.Web, :stateful_component
 
-  @sections [:origin, :hide_own, :time_range, :sort_order, :object_types, :activity_types, :media_types, :subject_types, :circles, :save_preset]
-  prop sections, :list, default: @sections
+  @filter_fields [
+    origin: [:origin],
+    hide_own: [:exclude_subjects],
+    time_range: [:time_limit],
+    sort_order: [:sort_by, :sort_order],
+    object_types: [:object_types, :exclude_object_types],
+    activity_types: [:activity_types, :exclude_activity_types],
+    media_types: [:media_types, :exclude_media_types],
+    subject_types: [:subject_types, :exclude_subject_types],
+    circles: [:subject_circles, :exclude_subject_circles],
+    save_preset: []
+  ]
+  prop sections, :list, default: Keyword.keys(@filter_fields)
 
   @doc "Available editor sections, so hosts can omit controls they already provide."
-  def sections, do: @sections
+  def sections, do: Keyword.keys(@filter_fields)
 
   prop show_reset, :boolean, default: true
   prop event_target, :any, default: nil
   prop feed_id, :any, default: nil
   prop feed_name, :any, default: nil
-  prop showing_within, :atom, default: nil
   prop feed_filters, :any, default: nil
   prop context_key, :any, default: nil
   prop apply_to, :any, default: :parent
@@ -22,7 +32,8 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
   def update(assigns, socket) do
     socket = assign(socket, assigns)
     filters = Enums.maybe_to_map(socket.assigns.feed_filters) || %{}
-    state = {filters, socket.assigns.context_key}
+    sections = socket.assigns[:sections] || sections()
+    state = {filters, {socket.assigns.context_key, sections}}
 
     socket =
       if socket.assigns[:init_state] == state do
@@ -30,7 +41,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
       else
         context = socket.assigns[:__context__]
         my_circles =
-          if context do
+          if :circles in sections and context do
             Bonfire.UI.Boundaries.SetBoundariesLive.circles_for_multiselect(context, :subject_circles) || []
           else
             []
@@ -122,20 +133,6 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
     to_string(Enums.id(entry) || entry) == to_string(Enums.id(type) || type)
   end
 
-  def handle_event("set_filter", %{"subject_circles" => circle_id}, socket) do
-    {:noreply,
-     update_pending_fn(socket, fn filters ->
-       current = e(filters, :subject_circles, [])
-
-       updated =
-         if circle_id in current,
-           do: List.delete(current, circle_id),
-           else: [circle_id | current]
-
-       Map.put(filters, :subject_circles, Enum.uniq(updated))
-     end)}
-  end
-
   def handle_event("set_filter", attrs, socket) do
     {:noreply,
      update_pending_fn(socket, fn filters ->
@@ -144,31 +141,18 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
   end
 
   def handle_event("reset_pending", _params, socket) do
-    {:noreply, assign(socket, :pending_filters, %{})}
+    {:noreply, socket |> assign(:pending_filters, reset_filters(socket.assigns.pending_filters, socket.assigns[:sections] || sections())) |> assign_derived()}
   end
 
-  def handle_event("remove_active_filter", %{"field" => field, "key" => key}, socket) do
-    field_atom = maybe_to_atom(field)
+  @doc """
+  Clears editable rows while retaining the host's other scope constraints.
 
-    {:noreply,
-     update_pending_fn(socket, fn filters ->
-       case Map.get(filters, field_atom) do
-         list when is_list(list) ->
-           remaining = Enum.reject(list, fn v -> to_string(v) == key end)
-
-           if remaining == [],
-             do: Map.delete(filters, field_atom),
-             else: Map.put(filters, field_atom, remaining)
-
-         _ ->
-           Map.delete(filters, field_atom)
-       end
-     end)}
-  end
-
-  def handle_event("remove_active_filter", %{"field" => field}, socket) do
-    field_atom = maybe_to_atom(field)
-    {:noreply, update_pending_fn(socket, &Map.delete(&1, field_atom))}
+      iex> Bonfire.UI.Social.FeedFiltersModalContentLive.reset_filters(%{subjects: ["owner"], in_feeds: ["notifications"], time_limit: 7, media_types: [:image]}, [:time_range, :media_types])
+      %{subjects: ["owner"], in_feeds: ["notifications"]}
+  """
+  def reset_filters(filters, sections) do
+    keys = sections |> Enum.flat_map(&Keyword.get(@filter_fields, &1, []))
+    Map.drop(filters, keys)
   end
 
   @doc "True when the current :origin filter matches the given option (`:all`, `:local`, `:remote`)."
@@ -192,6 +176,16 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
       :sort_order, acc -> Map.put(acc, :sort_order, :desc)
       key, acc -> if is_list(applied[key]), do: Map.put(acc, key, []), else: acc
     end)
+  end
+
+  @doc "Collapsed value for the origin row."
+  def origin_summary(filters) do
+    case e(filters, :origin, nil) do
+      origin when origin in [nil, :all] -> l("Anywhere")
+      origin when origin in [:local, [:local]] -> l("This instance")
+      origin when origin in [:remote, [:remote]] -> l("Other instances")
+      _ -> l("Anywhere")
+    end
   end
 
   @doc "Human-readable summary shown in the collapsed Time range section header."
@@ -268,8 +262,6 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
       active_filters: Bonfire.UI.Social.FeedControlsLive.active_filters(filters, context),
       user_activities_excluded?:
         Bonfire.UI.Social.FeedExtraControlsLive.user_activities_excluded?(filters, context),
-      replies_excluded?: Bonfire.UI.Social.FeedExtraControlsLive.replies_excluded?(filters),
-      boosts_excluded?: Bonfire.UI.Social.FeedExtraControlsLive.boosts_excluded?(filters),
       preset_origin_info:
         Bonfire.UI.Social.FeedExtraControlsLive.get_preset_origin_info(filters, context)
     )

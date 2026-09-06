@@ -10,9 +10,28 @@ defmodule Bonfire.UI.Social.FeedFiltersHelpersTest do
   @moduletag :ui
 
   alias Bonfire.UI.Social.ToggleTypeLive
-  doctest Bonfire.UI.Social.FeedFiltersModalContentLive, only: [types_filtered?: 2]
+  doctest Bonfire.UI.Social.FeedFiltersModalContentLive, only: [types_filtered?: 2, reset_filters: 2]
 
   alias Bonfire.UI.Social.FeedFiltersModalContentLive
+
+  test "circle toggles use the generic handler and section Reset clears both directions" do
+    attrs = %{__context__: %{}, sections: [], feed_filters: %{time_limit: 30}}
+    socket = %Phoenix.LiveView.Socket{assigns: %{__changed__: %{}}}
+    {:ok, socket} = FeedFiltersModalContentLive.update(attrs, socket)
+    toggle = %{"toggle" => "subject_circles", "toggle_type" => "circle-one", "toggle_value" => "true"}
+
+    {:noreply, included} = FeedFiltersModalContentLive.handle_event("set_filter", toggle, socket)
+    assert included.assigns.pending_filters.subject_circles == ["circle-one"]
+    {:noreply, hidden} = FeedFiltersModalContentLive.handle_event("set_filter", %{toggle | "toggle_value" => "false"}, included)
+    assert hidden.assigns.pending_filters.subject_circles == []
+    assert hidden.assigns.pending_filters.exclude_subject_circles == ["circle-one"]
+
+    hidden = Phoenix.Component.assign(hidden, :sections, [:circles])
+    {:noreply, reset} = FeedFiltersModalContentLive.handle_event("reset_pending", %{}, hidden)
+    assert reset.assigns.pending_filters == %{time_limit: 30}
+    assert FeedFiltersModalContentLive.filters_to_apply(reset.assigns.pending_filters, hidden.assigns.pending_filters) ==
+             %{time_limit: 30, subject_circles: [], exclude_subject_circles: []}
+  end
 
   describe "ToggleTypeLive.check_throuple/3" do
     test "returns true when value is in include only" do

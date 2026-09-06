@@ -3,10 +3,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
   use Bonfire.UI.Social.ConnCase, async: false
   @moduletag :ui
 
-  alias Bonfire.Social.Fake
   alias Bonfire.Social.Boosts
-  alias Bonfire.Social.Graph.Follows
-  alias Bonfire.Posts
   import Bonfire.Posts.Fake, except: [fake_remote_user!: 0]
   use Bonfire.Common.Repo
   alias Bonfire.Common.DatesTimes
@@ -61,11 +58,10 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> visit("/feed/my")
       |> open_filters_modal()
       |> assert_has("h4", text: "Time range")
-      |> refute_has("h4", text: "Sort order")
-      |> assert_has("select[name=feed_order]")
+      |> refute_has("[data-row=sort_order]")
       |> assert_has("h4", text: "Content types")
       |> assert_has("h4", text: "Activity types")
-      |> assert_has("h4", text: "Media types")
+      |> assert_has("h4", text: "Media")
       |> assert_has("h4", text: "Filter by circles")
     end
 
@@ -105,16 +101,6 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> refute_has("[data-id=feed] article", text: "posted long ago")
     end
 
-    # FIXME (regression from the filters-in-widget move, see @moduledoc): applying
-    # `time_limit: 0` ("All time") does NOT widen the window — the feed still hides the 60-day-old
-    # post. Confirmed via diagnostics: FeedFilters.validate + FeedLoader.feed respect `time_limit: 0`
-    # when called directly (the old post IS returned), but after the real apply→set_filters→reload
-    # path FeedLive's feed_filters comes back with `time_limit: 7` (the default), i.e. the 0 was
-    # dropped as an "empty" value somewhere in reload/feed_assigns (likely
-    # Enums.filter_empty_enum in FeedLoader.merge_feed_filters treating 0 as empty, letting
-    # merge_some_defaults re-apply the default 7). Suggested fix: preserve an explicit `time_limit: 0`
-    # through the merge (don't treat 0 as empty for this field), then re-enable this assertion.
-    @tag :fixme
     test "selecting All time shows all posts", %{conn: conn} do
       conn
       |> visit("/feed/local")
@@ -133,19 +119,19 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> click_button("Last Week")
       |> apply_filters()
       # the inline editor stays open after applying
-      |> assert_has("button[aria-label='Remove filter: Last Week']")
+      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "Last Week")
     end
   end
 
   describe "sort order filter" do
-    test "selecting Oldest first and applying changes feed order", %{conn: conn, user: user} do
-      first_post =
+    test "selecting Oldest first changes feed order", %{conn: conn, user: user} do
+      _first_post =
         fake_post!(user, "public", %{
           post_content: %{html_body: "first post"},
           id: DatesTimes.past(2, :day) |> DatesTimes.generate_ulid()
         })
 
-      second_post =
+      _second_post =
         fake_post!(user, "public", %{
           post_content: %{html_body: "second post"},
           id: DatesTimes.now() |> DatesTimes.generate_ulid()
@@ -153,12 +139,11 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
 
       conn
       |> visit("/feed/local")
-      |> open_filters_modal()
+      |> wait_async()
       |> PhoenixTest.select("Order", option: "Oldest first")
       |> wait_async()
-      |> apply_filters()
       |> assert_has("[data-id=feed] article:first-child", text: "first post")
-      |> assert_has("button[aria-label='Remove filter: Oldest first']")
+      |> assert_has("select[name=feed_order] option[value=oldest][selected]")
     end
   end
 
@@ -254,120 +239,6 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> assert_has("select[name=feed_order] option[value=oldest][selected]")
     end
 
-
-  end
-
-  describe "filter chips and badge" do
-    # FIXME (regression from the filters-in-widget move, see @moduledoc): the
-    # active-filters count badge now lives on the customize-feed *widget's* Advanced-filters
-    # trigger, which receives feed_filters as a PROP. After apply, FeedLive itself gets the new
-    # filters (the sibling "selecting Oldest first ... changes feed order" test passes — the feed
-    # really does reorder), but the widget's feed_filters prop stays stale, so its badge never
-    # appears. reload() does `send_self(widgets(assigns))` to re-push the widget with updated
-    # filters; either that snapshot doesn't carry the just-set value or the badge render races it
-    # (an extra wait_async here did not help). Suggested fix: make reload() re-send the widget with
-    # the merged filters (or move the badge to read live state), then re-enable this assertion.
-    @tag :fixme
-    test "badge shows count of active filters", %{conn: conn} do
-      conn
-      |> visit("/feed/local")
-      |> open_filters_modal()
-      |> click_button("Last Week")
-      |> PhoenixTest.select("Order", option: "Oldest first")
-      |> wait_async()
-      |> apply_filters()
-      |> wait_async()
-      |> assert_has("[data-id=widget_customize_feed] .badge.badge-secondary")
-    end
-
-    test "active time filter is available in the modal after applying", %{conn: conn} do
-      conn
-      |> visit("/feed/local")
-      |> open_filters_modal()
-      |> click_button("Last Month")
-      |> apply_filters()
-      |> assert_has("button[aria-label='Remove filter: Last Month']")
-    end
-
-    # FIXME (regression from the filters-in-widget move, see @moduledoc): setting the
-    # Boosts tri-state toggle to "Hide" and applying does NOT hide the boost — the boosted_by row is
-    # still shown. Same family as the "All time" failure: the applied exclude_activity_types isn't
-    # surviving the apply→set_filters→reload merge into the effective feed_filters (the editor's own
-    # "Boost" chip does appear, so the pending state is correct; it's the reload merge that drops it).
-    # Suggested fix: ensure exclude_* lists set via the editor survive the reload merge, then
-    # re-enable the refute/assert below.
-    @tag :fixme
-    test "exclude boost filter hides boost activities", %{
-      conn: conn,
-      user: user,
-      other_user: other_user
-    } do
-      original_post =
-        fake_post!(other_user, "public", %{
-          post_content: %{html_body: "boost filter original post"}
-        })
-
-      assert {:ok, _boost} = Boosts.boost(user, original_post)
-
-      conn
-      |> visit("/feed/local")
-      |> assert_has("[data-id=feed] [data-role=boosted_by]")
-      |> open_filters_modal()
-      |> click_button("[data-toggle='boost'] button", "Hide")
-      |> apply_filters()
-      |> refute_has("[data-id=feed] [data-role=boosted_by]")
-      |> assert_has("[data-id=feed] article", text: "boost filter original post")
-      |> assert_has("button[aria-label='Remove filter: Boost']")
-    end
-  end
-
-  describe "save as custom feed" do
-    test "user can save current filters as a feed preset", %{conn: conn} do
-      conn
-      |> visit("/feed/local")
-      |> open_filters_modal()
-      |> click_button("Last Week")
-      |> apply_filters()
-      |> fill_in("Feed title", with: "My weekly feed")
-      |> click_button("Save feed")
-      # Should not crash — verify we're still on a working feed page
-      |> assert_has("[data-id=widget_customize_feed]")
-      |> assert_path("/feed/local")
-    end
-  end
-
-  describe "modal state is local until Apply" do
-    test "toggling filters in modal does not reload feed", %{
-      conn: conn,
-      user: user
-    } do
-      fake_post!(user, "public", %{
-        post_content: %{html_body: "visible post"}
-      })
-
-      conn
-      |> visit("/feed/local")
-      |> assert_has("[data-id=feed] article", text: "visible post")
-      |> open_filters_modal()
-      # Toggle a filter — feed should NOT change yet
-      |> click_button("Last Day")
-      # The modal should show the button as active
-      |> assert_has("button.btn-primary", text: "Last Day")
-    end
-
-    test "pending changes survive reopening the modal without Apply", %{conn: conn} do
-      conn
-      |> visit("/feed/local")
-      |> open_filters_modal()
-      |> click_button("[data-toggle='boost'] button", "Hide")
-      # Close the modal without applying (Escape / click-out aren't modeled;
-      # instead we confirm the chip summary inside the modal still reflects
-      # the tri-state change).
-      |> assert_has("[data-toggle='boost'][data-state='hide']")
-    end
-  end
-
-  describe "Reset feed preferences" do
     test "reset restores the current feed defaults", %{conn: conn} do
       conn
       |> visit("/feed/local")
@@ -382,6 +253,87 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> refute_has("select[name=time_limit]")
     end
 
+  end
+
+  describe "applied filters" do
+    test "active time filter is available in the modal after applying", %{conn: conn} do
+      conn
+      |> visit("/feed/local")
+      |> open_filters_modal()
+      |> click_button("Last Month")
+      |> apply_filters()
+      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "Last Month")
+    end
+
+    test "exclude boost filter hides boost activities", %{
+      conn: conn,
+      user: user,
+      other_user: other_user
+    } do
+      original_post =
+        fake_post!(other_user, "public", %{
+          post_content: %{html_body: "boost filter original post"}
+        })
+
+      assert {:ok, _follow} = Bonfire.Social.Graph.Follows.follow(user, other_user)
+      assert {:ok, _boost} = Boosts.boost(user, original_post)
+
+      # Following includes both outboxes; locality feeds do not contain the boost entry.
+      conn
+      |> visit("/feed/my")
+      |> wait_async()
+      |> assert_has("[data-id=feed] [data-role=boosted_by]")
+      |> open_filters_modal()
+      |> click_button("[data-toggle='boost'] button", "Hide")
+      |> apply_filters()
+      |> refute_has("[data-id=feed] [data-role=boosted_by]")
+      |> assert_has("[data-id=feed] article", text: "boost filter original post")
+      |> assert_has("[data-toggle=boost][data-state=hide]")
+    end
+  end
+
+  describe "save as custom feed" do
+    test "user can save current filters as a feed preset", %{conn: conn} do
+      conn
+      |> visit("/feed/local")
+      |> open_filters_modal()
+      |> click_button("Last Week")
+      |> apply_filters()
+      |> fill_in("Feed title", with: "weekly-filter-review")
+      |> click_button("Save feed")
+      |> assert_has("[data-id=flash_info]", text: "Feed created successfully")
+      |> visit("/settings/user/feeds")
+      |> assert_has("div", text: "weekly-filter-review")
+      |> visit("/feed/weekly-filter-review")
+      |> open_filters_modal()
+      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "Last Week")
+    end
+  end
+
+  describe "modal state is local until Apply" do
+    test "toggling filters in modal does not reload feed", %{
+      conn: conn,
+      user: user
+    } do
+      fake_post!(user, "public", %{
+        post_content: %{html_body: "visible post"},
+        id: DatesTimes.past(2, :day) |> DatesTimes.generate_ulid()
+      })
+
+      conn
+      |> visit("/feed/local")
+      |> assert_has("[data-id=feed] article", text: "visible post")
+      |> open_filters_modal()
+      # Toggle a filter — feed should NOT change yet
+      |> click_button("Last Day")
+      |> assert_has("button.btn-primary", text: "Last Day")
+      |> assert_has("[data-id=feed] article", text: "visible post")
+      |> apply_filters()
+      |> refute_has("[data-id=feed] article", text: "visible post")
+    end
+  end
+
+  describe "Reset all" do
     test "header Reset discards pending edits even when applied filters already match defaults", %{conn: conn} do
       Process.put(Bonfire.Common.Config.keys_tree([Bonfire.UI.Social.FeedLive, :time_limit]), 30)
 
@@ -393,9 +345,9 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> click_button("Last Day")
       |> click_button("Reset feed preferences")
       |> wait_async()
-      |> assert_has("button[aria-label='Remove filter: Last Month']")
+      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "Last Month")
       |> apply_filters()
-      |> assert_has("button[aria-label='Remove filter: Last Month']")
+      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "Last Month")
     end
 
     test "header Reset restores the configured time window and sort order", %{conn: conn, user: user} do
@@ -423,25 +375,24 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> wait_async()
       |> assert_has("[data-id=feed] article", text: "reset restores this older post")
       |> refute_has("[data-id=feed] article", text: "outside the configured default window")
-      |> assert_has("button[aria-label='Remove filter: Last Week']")
+      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "Last Week")
       |> assert_has("select[name=feed_order] option[value=newest][selected]")
     end
 
-  end
-
-  describe "Reset placement" do
     test "More filters has no additional Reset button", %{conn: conn} do
       conn
       |> visit("/feed/local")
       |> open_filters_modal()
       |> click_button("Last Week")
-      |> refute_has("button[phx-click=reset_pending]")
+      |> refute_has("[data-role=reset_filters]")
       |> assert_has("button[aria-label='Reset feed preferences']")
     end
+
   end
 
   describe "Content origin radio group" do
-    @origin_scope "[aria-labelledby='content-origin-label']"
+    # the label id is prefixed with the component id (the editor can mount twice on a page)
+    @origin_scope "[role=radiogroup][aria-labelledby$='_origin_label']"
 
     # `/feed/my` is the home feed — it has no fixed-origin preset, so the
     # origin radiogroup renders. `/feed/local` would render the read-only
@@ -450,11 +401,11 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       conn
       |> visit("/feed/my")
       |> open_filters_modal()
-      |> assert_has("#{@origin_scope} [role=radio][aria-checked='true']", text: "Both")
-      |> click_button("#{@origin_scope} [role=radio]", "Local")
-      |> assert_has("#{@origin_scope} [role=radio][aria-checked='true']", text: "Local")
-      |> click_button("#{@origin_scope} [role=radio]", "Remote")
-      |> assert_has("#{@origin_scope} [role=radio][aria-checked='true']", text: "Remote")
+      |> assert_has("#{@origin_scope} [role=radio][aria-checked='true']", text: "Anywhere")
+      |> click_button("#{@origin_scope} [role=radio]", "This instance")
+      |> assert_has("#{@origin_scope} [role=radio][aria-checked='true']", text: "This instance")
+      |> click_button("#{@origin_scope} [role=radio]", "Other instances")
+      |> assert_has("#{@origin_scope} [role=radio][aria-checked='true']", text: "Other instances")
     end
   end
 
@@ -481,12 +432,26 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
   end
 
   describe "Hide my own activities quick toggle" do
-    test "checking the toggle surfaces the 'Hiding my activity' chip", %{conn: conn} do
+    test "Reset counts the current user's exclusion once", %{user: user} do
+      html =
+        render_component(Bonfire.UI.Social.FeedFiltersModalContentLive, %{
+          id: "reset_count_editor",
+          __context__: %{current_user: user},
+          feed_filters: %{exclude_subjects: [user.id]},
+          sections: [:hide_own],
+          show_reset: true
+        })
+
+      assert html |> Floki.parse_fragment!() |> Floki.find("[data-role=reset_filters]") |> Floki.text() |> String.trim() == "Reset 1"
+    end
+
+    test "Hide my own activities updates the checkbox", %{conn: conn} do
       conn
       |> visit("/feed/local")
       |> open_filters_modal()
       |> check("Hide my own activities")
-      |> assert_has("span", text: "Hiding my activity")
+      |> assert_has("[data-row=hide_own] input[type=checkbox][checked]")
+      |> refute_has("[data-role=reset_filters]")
     end
   end
 
@@ -512,24 +477,18 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> click_button("[data-role=open_modal]", "More filters")
       |> assert_has("button[aria-expanded='false'] [data-role=feed_advanced_filters]")
       |> refute_has("button", text: "Apply filters")
+      |> click_button("[data-role=open_modal]", "More filters")
+      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "Last Day")
     end
   end
 
-  describe "badge summaries in collapsed sections" do
-    # The <summary> element wrapping each collapsed section shows a badge
-    # with a compact count (e.g. "1 only") produced by `types_summary/2`.
-    # We use `:has()` to scope to a specific section by its icon, which
-    # Floki supports. The unit tests in feed_filters_helpers_test.exs
-    # cover every branch of the summary helpers; here we just confirm the
-    # badge is wired into the template for one representative section.
-    test "Content types badge updates to '1 only' after isolating Articles", %{conn: conn} do
+  describe "collapsed section summaries" do
+    test "Content types summary updates to '1 only' after isolating Articles", %{conn: conn} do
       conn
       |> visit("/feed/local")
       |> open_filters_modal()
       |> click_button("[data-toggle='article'] button", "Only")
-      |> assert_has("[data-row=object_types] [data-role=row_value]",
-        text: "1 only"
-      )
+      |> assert_has("[data-row=object_types] summary [data-role=row_value]", text: "1 only")
     end
   end
 end

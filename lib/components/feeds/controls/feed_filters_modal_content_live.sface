@@ -1,125 +1,90 @@
 <div class="flex flex-col max-h-[calc(100vh-10rem)]">
-  {#case @active_filters}
-    {#match []}
-      {#if @user_activities_excluded?}
-        <div class="flex items-start gap-2 px-4 py-2.5 border-b border-secondary">
-          <div class="flex-1 flex flex-wrap gap-1.5">
-            <span class="inline-flex items-center gap-1 h-7 px-2.5 rounded-full bg-base-100 border border-secondary text-xs text-base-content/80">
-              <#Icon iconify="ph:user-minus-fill" class="size-4 text-primary" />
-              {l("Hiding my activity")}
-            </span>
-          </div>
-          <button
-            type="button"
-            :if={@show_reset}
-            phx-click="reset_pending"
-            phx-target={@myself}
-            class="shrink-0 h-7 px-2 rounded-full text-xs text-muted hover:text-base-content hover:bg-base-content/10 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100"
-          >
-            {l("Reset all")}
-          </button>
-        </div>
-      {/if}
-    {#match active_filters}
-      <div class="flex items-start gap-2 px-4 py-2.5 border-b border-secondary">
-        <div class="flex-1 flex flex-wrap gap-1.5">
-          {#if @user_activities_excluded?}
-            <span class="inline-flex items-center gap-1 h-7 pl-2.5 pr-1 rounded-full bg-base-100 border border-secondary text-xs text-base-content/80">
-              <#Icon iconify="ph:user-minus-fill" class="size-4 text-primary" />
-              {l("Hiding my activity")}
-            </span>
-          {/if}
-          {#for {label, chip_icon, field, key} <- active_filters}
-            <span class="inline-flex items-center gap-1 h-7 pl-2.5 pr-1 rounded-full bg-base-100 border border-secondary text-xs text-base-content/80">
-              {#case chip_icon}
-                {#match :show}
-                  <#Icon iconify="ph:target-fill" class="w-3.5 h-3.5 text-primary" />
-                {#match :hide}
-                  <#Icon iconify="ph:eye-slash-fill" class="size-4 text-primary" />
-                {#match _}
-              {/case}
-              {label}
-              <button
-                type="button"
-                phx-click="remove_active_filter"
-                phx-value-field={to_string(field)}
-                phx-value-key={to_string(key)}
-                phx-target={@myself}
-                aria-label={l("Remove filter: %{label}", label: label)}
-                class="relative ml-0.5 inline-flex w-5 h-5 items-center justify-center rounded-full text-muted hover:text-base-content hover:bg-base-content/10 transition-colors duration-150 before:absolute before:content-[''] before:-inset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100"
-              >
-                <#Icon iconify="ph:x-bold" class="w-3 h-3" />
-              </button>
-            </span>
-          {/for}
-        </div>
+  {#if @show_reset && @active_filters != []}
+    <div class="flex items-center justify-between gap-3 min-h-10 pb-1">
+      <span />
+      {#if @show_reset && @active_filters != []}
         <button
           type="button"
-          :if={@show_reset}
           phx-click="reset_pending"
           phx-target={@myself}
-          class="shrink-0 h-7 px-2 rounded-full text-xs text-muted hover:text-base-content hover:bg-base-content/10 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100"
+          class="min-h-11 px-2 rounded-selector text-sm text-muted hover:text-base-content hover:bg-base-content/5 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100"
+          data-role="reset_filters"
         >
-          {l("Reset all")}
+          {l("Reset %{count}", count: length(@active_filters))}
         </button>
-      </div>
-  {/case}
+      {/if}
+    </div>
+  {/if}
+
 
   <div class="flex flex-col divide-hair divide-secondary overflow-y-auto flex-1 min-h-0">
-    <section :if={:origin in @sections}>
-      <div class="">
+    {!-- WHERE IT WAS POSTED --}
+    <details :if={:origin in @sections} class="group" data-row="origin"
+      id={"#{@id}_origin_section"}
+      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+    >
+      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
+        <h4 id={"#{@id}_origin_label"} class="text-xs uppercase font-normal text-muted">{l("Origin")}</h4>
+        <span class="flex items-center gap-2 min-w-0">
+          <span
+            data-role="row_value"
+            class={
+              "text-sm truncate max-w-[180px]",
+              "text-primary": !Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, :all),
+              "text-muted": Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, :all)
+            }
+          >{Bonfire.UI.Social.FeedFiltersModalContentLive.origin_summary(@pending_filters)}</span>
+          <span
+            aria-hidden="true"
+            class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90"
+          >›</span>
+        </span>
+      </summary>
+      <div class="pb-3 flex flex-col gap-2">
         {#case @preset_origin_info}
           {#match %{preset_has_fixed_origin: true, preset_origin: preset_origin}}
-            <div class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
-              <span class="text-sm text-base-content" title={l("Fixed for this feed")}>
-                {l("Content origin")}
-              </span>
-              <div class="inline-flex items-center gap-0.5 rounded-full bg-base-content/[0.04] p-0.5 text-[11px] opacity-60">
-                {#for {value, label} <- [{:all, l("Both")}, {:local, l("Local")}, {:remote, l("Remote")}]}
-                  <span class={
-                    "px-2.5 py-1 rounded-full",
-                    "bg-base-100 text-base-content":
-                      (value == :all and preset_origin not in [:local, :remote]) or preset_origin == value,
-                    "text-muted":
-                      not ((value == :all and preset_origin not in [:local, :remote]) or preset_origin == value)
-                  }>{label}</span>
-                {/for}
-              </div>
-            </div>
+            <p class="text-sm text-muted" title={l("Fixed for this feed")}>
+              {l("This feed always shows content from %{origin}.",
+                origin:
+                  if(preset_origin == :local,
+                    do: l("this instance"),
+                    else: if(preset_origin == :remote, do: l("other instances"), else: l("anywhere"))
+                  )
+              )}
+            </p>
           {#match _}
-            <div class="flex items-center justify-between gap-3 cursor-pointer list-none px-4 py-2.5">
-              <span id="content-origin-label" class="text-sm text-base-content">{l("Content origin")}</span>
-              <div
-                role="radiogroup"
-                aria-labelledby="content-origin-label"
-                class="inline-flex items-center gap-0.5 rounded-full bg-base-content/[0.04] p-0.5 text-[11px] font-medium"
-              >
-                {#for {value, label} <- [{:all, l("Both")}, {:local, l("Local")}, {:remote, l("Remote")}]}
-                  <button
-                    type="button"
-                    role="radio"
-                    aria-checked={if Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, value),
-                      do: "true",
-                      else: "false"}
-                    phx-click="set_filter"
-                    phx-value-origin={value}
-                    phx-target={@myself}
-                    class={
-                      "relative px-2.5 py-1 rounded-full transition-colors duration-150 before:absolute before:content-[''] before:inset-x-0 before:-inset-y-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
-                      "bg-base-100 text-base-content":
-                        Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, value),
-                      "text-muted hover:text-base-content":
-                        not Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, value)
-                    }
-                  >
-                    {label}
-                  </button>
-                {/for}
-              </div>
+            {!-- stacked options (a segmented control wraps at sidebar width) --}
+            <div role="radiogroup" aria-labelledby={"#{@id}_origin_label"} class="flex flex-col">
+              {#for {value, label} <- [{:all, l("Anywhere")}, {:local, l("This instance")}, {:remote, l("Other instances")}]}
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={if Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, value),
+                    do: "true",
+                    else: "false"}
+                  phx-click="set_filter"
+                  phx-value-origin={value}
+                  phx-target={@myself}
+                  class={
+                    "flex items-center justify-between gap-3 min-h-11 px-2 -mx-2 rounded-selector text-sm text-left transition-colors duration-150 hover:bg-base-content/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
+                    "text-primary font-medium":
+                      Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, value),
+                    "text-base-content":
+                      not Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, value)
+                  }
+                >
+                  <span>{label}</span>
+                  <span
+                    :if={Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, value)}
+                    aria-hidden="true"
+                    class="text-primary"
+                  >✓</span>
+                </button>
+              {/for}
             </div>
         {/case}
       </div>
-    </section>
+    </details>
 
     <div :if={:hide_own in @sections and current_user_id(@__context__)} data-row="hide_own">
       <label class="flex min-h-12 cursor-pointer items-center justify-between gap-3">
@@ -200,12 +165,8 @@
           phx-click="set_filter"
           phx-value-sort_order={:desc}
           phx-target={@myself}
-          class={
-            "btn btn-sm",
-            "btn-primary": e(@pending_filters, :sort_order, :desc) == :desc
-          }
+          class={"btn btn-sm", "btn-primary": e(@pending_filters, :sort_order, :desc) == :desc}
         >
-          <#Icon iconify="ph:sort-ascending-fill" class="w-4 h-4" />
           {l("Newest first")}
         </button>
         <button
@@ -213,17 +174,14 @@
           phx-click="set_filter"
           phx-value-sort_order={:asc}
           phx-target={@myself}
-          class={
-            "btn btn-sm",
-            "btn-primary": e(@pending_filters, :sort_order, nil) == :asc
-          }
+          class={"btn btn-sm", "btn-primary": e(@pending_filters, :sort_order, nil) == :asc}
         >
-          <#Icon iconify="ph:sort-descending-fill" class="w-4 h-4" />
           {l("Oldest first")}
         </button>
       </div>
     </details>
 
+    {!-- CONTENT TYPES --}
     <details :if={:object_types in @sections} class="group" data-row="object_types"
       id={"#{@id}_object_types_section"}
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
@@ -257,16 +215,8 @@
           />
         {/for}
         {#for key
-          when key not in [
-                 :post,
-                 "post",
-                 Bonfire.Data.Social.Post,
-                 :article,
-                 "article",
-                 :Event,
-                 "Event",
-                 "Edition"
-               ] <- @pending_filters[:object_types] || []}
+          when key not in [:post, "post", Bonfire.Data.Social.Post, :article, "article", :Event, "Event", "Edition"] <-
+            @pending_filters[:object_types] || []}
           <Bonfire.UI.Social.ToggleTypeLive
             label={String.capitalize(to_string(key))}
             key={key}
@@ -277,11 +227,12 @@
             label_default={l("Include")}
           />
         {/for}
+        <p class="pt-1 text-xs text-muted"><b class="font-medium text-base-content/70">{l("Only")}</b> {l("shows just these")} · <b class="font-medium text-base-content/70">{l("Hide")}</b> {l("leaves them out")}</p>
       </div>
     </details>
 
-    {#if extension_enabled?(:bonfire_ui_reactions, @__context__)}
-      <details :if={:activity_types in @sections} class="group" data-row="activity_types"
+    {#if :activity_types in @sections and extension_enabled?(:bonfire_ui_reactions, @__context__)}
+      <details class="group" data-row="activity_types"
         id={"#{@id}_activity_types_section"}
         phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
       >
@@ -313,7 +264,7 @@
               label_default={l("Include")}
             />
           {/for}
-        {#for key when key not in [:boost, :like, :follow, :reply] <- @pending_filters[:activity_types] || []}
+          {#for key when key not in [:boost, :like, :follow, :reply] <- @pending_filters[:activity_types] || []}
             <Bonfire.UI.Social.ToggleTypeLive
               label={String.capitalize(to_string(key))}
               key={key}
@@ -328,12 +279,13 @@
       </details>
     {/if}
 
+    {!-- MEDIA --}
     <details :if={:media_types in @sections} class="group" data-row="media_types"
       id={"#{@id}_media_types_section"}
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
       <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
-        <h4 class="text-xs uppercase font-normal text-muted">{l("Media types")}</h4>
+        <h4 class="text-xs uppercase font-normal text-muted">{l("Media")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"
@@ -359,18 +311,8 @@
           />
         {/for}
         {#for key
-          when key not in [
-                 :image,
-                 :link,
-                 :audio,
-                 :video,
-                 :research,
-                 "image",
-                 "link",
-                 "audio",
-                 "video",
-                 "research"
-               ] <- @pending_filters[:media_types] || []}
+          when key not in [:image, :link, :audio, :video, :research, "image", "link", "audio", "video", "research"] <-
+            @pending_filters[:media_types] || []}
           <Bonfire.UI.Social.ToggleTypeLive
             label={String.capitalize(to_string(key))}
             key={key}
@@ -384,19 +326,21 @@
       </div>
     </details>
 
-    {#for key <- @pending_filters[:subject_types] || []}
-      <div :if={:subject_types in @sections} class="px-4 py-3">
-        <Bonfire.UI.Social.ToggleTypeLive
-          label={String.capitalize(to_string(key))}
-          key={key}
-          field={:subject_types}
-          feed_filters={@pending_filters}
-          event_target={@myself}
-          event_name="set_filter"
-          label_default={l("Include")}
-        />
-      </div>
-    {/for}
+    {#if :subject_types in @sections}
+      {#for key <- @pending_filters[:subject_types] || []}
+        <div class="py-2" data-row="subject_types">
+          <Bonfire.UI.Social.ToggleTypeLive
+            label={String.capitalize(to_string(key))}
+            key={key}
+            field={:subject_types}
+            feed_filters={@pending_filters}
+            event_target={@myself}
+            event_name="set_filter"
+            label_default={l("Include")}
+          />
+        </div>
+      {/for}
+    {/if}
 
     <details :if={:circles in @sections} class="group" data-row="circles"
       id={"#{@id}_circles_section"}
@@ -425,7 +369,7 @@
               )}
             </p>
           {#match my_circles}
-            <div class="flex flex-col gap-0.5">
+            <div class="flex flex-col gap-1">
               {#for circle <- my_circles}
                 <Bonfire.UI.Social.ToggleTypeLive
                   label={elem(circle, 1)[:name]}
@@ -441,6 +385,7 @@
         {/case}
       </div>
     </details>
+
     <details :if={:save_preset in @sections} class="group" data-row="save_preset"
       id={"#{@id}_save_preset_section"}
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
@@ -491,10 +436,10 @@
   <div class="flex items-center justify-end gap-2 pt-3 shrink-0">
     <button
       type="button"
-      data-role="apply_filters"
       phx-click="apply"
       phx-target={@myself}
       class="btn btn-sm btn-primary rounded-full px-6"
+      data-role="apply_filters"
     >
       {l("Apply filters")}
     </button>
