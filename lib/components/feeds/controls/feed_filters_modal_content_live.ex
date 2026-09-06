@@ -1,6 +1,7 @@
 defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
   use Bonfire.UI.Common.Web, :stateful_component
 
+  prop show_reset, :boolean, default: true
   prop event_target, :any, default: nil
   prop feed_id, :any, default: nil
   prop feed_name, :any, default: nil

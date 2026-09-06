@@ -426,18 +426,14 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
 
   end
 
-  describe "Reset all" do
-    test "clears every pending filter and the Hide my activity toggle", %{conn: conn} do
+  describe "Reset placement" do
+    test "More filters has no additional Reset button", %{conn: conn} do
       conn
       |> visit("/feed/local")
       |> open_filters_modal()
-      |> click_button("[data-toggle='boost'] button", "Hide")
       |> click_button("Last Week")
-      |> assert_has("[data-toggle='boost'][data-state='hide']")
-      |> assert_has("button.btn-primary", text: "Last Week")
-      |> click_button("Reset all")
-      |> assert_has("[data-toggle='boost'][data-state='default']")
-      |> refute_has("button.btn-primary", text: "Last Week")
+      |> refute_has("button[phx-click=reset_pending]")
+      |> assert_has("button[aria-label='Reset feed preferences']")
     end
   end
 

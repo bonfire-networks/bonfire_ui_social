@@ -52,6 +52,14 @@
         <:open_btn>
           <span class="flex-1 text-left" data-role="feed_advanced_filters">{l("More filters")}</span>
         </:open_btn>
+        <:default>
+          <StatefulComponent
+            id={"feed_preferences_details_#{@feed_name}"}
+            module={Bonfire.UI.Social.FeedFiltersModalContentLive}
+            show_reset={false}
+            {...Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}
+          />
+        </:default>
       </Bonfire.UI.Common.OpenExpanderLive>
     </div>
   </div>

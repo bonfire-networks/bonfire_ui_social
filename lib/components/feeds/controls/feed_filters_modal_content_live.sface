@@ -11,6 +11,7 @@
           </div>
           <button
             type="button"
+            :if={@show_reset}
             phx-click="reset_pending"
             phx-target={@myself}
             class="shrink-0 h-7 px-2 rounded-full text-xs text-muted hover:text-base-content hover:bg-base-content/10 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100"
@@ -54,6 +55,7 @@
         </div>
         <button
           type="button"
+          :if={@show_reset}
           phx-click="reset_pending"
           phx-target={@myself}
           class="shrink-0 h-7 px-2 rounded-full text-xs text-muted hover:text-base-content hover:bg-base-content/10 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100"
