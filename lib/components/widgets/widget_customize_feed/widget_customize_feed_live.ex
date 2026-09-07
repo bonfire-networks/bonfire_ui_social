@@ -57,7 +57,8 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
       sort when sort in [nil, false, :date_created, "date_created", "false"] ->
         if e(filters, :sort_order, :desc) in [:asc, "asc"], do: "oldest", else: "newest"
 
-      sort -> to_string(sort)
+      sort ->
+        to_string(sort)
     end
   end
 
@@ -80,10 +81,16 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   def order_filters("oldest", _filters), do: %{sort_by: :date_created, sort_order: :asc}
 
   def order_filters(value, filters) do
-    case Enum.find([:reply_count, :boost_count, :like_count, :latest_reply, :popularity_score], &(to_string(&1) == value)) do
-      nil -> nil
+    case Enum.find(
+           [:reply_count, :boost_count, :like_count, :latest_reply, :popularity_score],
+           &(to_string(&1) == value)
+         ) do
+      nil ->
+        nil
+
       sort ->
         attrs = %{sort_by: sort, sort_order: :desc}
+
         if sort != :latest_reply and e(filters, :time_limit, nil) == nil,
           do: Map.put(attrs, :time_limit, 7),
           else: attrs

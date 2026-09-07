@@ -16,7 +16,6 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
       |> assert_path("/feed/explore")
       |> wait_async()
       |> refute_has("[data-role=feed_source_toggle]")
-
     end
 
     test "user can change ranking and return to chronological order" do
@@ -26,8 +25,13 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
         |> wait_async()
 
       Enum.reduce(
-        [{"Most replied", "reply_count"}, {"Most boosted", "boost_count"},
-         {"Most liked", "like_count"}, {"Oldest first", "oldest"}, {"Newest first", "newest"}],
+        [
+          {"Most replied", "reply_count"},
+          {"Most boosted", "boost_count"},
+          {"Most liked", "like_count"},
+          {"Oldest first", "oldest"},
+          {"Newest first", "newest"}
+        ],
         session,
         fn {label, value}, session ->
           session
@@ -37,6 +41,5 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
         end
       )
     end
-
   end
 end

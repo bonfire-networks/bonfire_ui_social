@@ -6,7 +6,13 @@ defmodule Bonfire.UI.Social.FeedEditorLifecycleTest do
   doctest Editor, only: [filters_to_apply: 2]
 
   test "Apply retains a pending edit across a parent render without publishing it early" do
-    attrs = %{id: "draft", feed_filters: %{time_limit: 30}, context_key: :local, apply_to: :parent}
+    attrs = %{
+      id: "draft",
+      feed_filters: %{time_limit: 30},
+      context_key: :local,
+      apply_to: :parent
+    }
+
     socket = %Phoenix.LiveView.Socket{assigns: %{__changed__: %{}}}
     {:ok, socket} = Editor.update(attrs, socket)
     {:noreply, socket} = Editor.handle_event("set_filter", %{"time_limit" => "1"}, socket)
@@ -18,7 +24,13 @@ defmodule Bonfire.UI.Social.FeedEditorLifecycleTest do
   end
 
   test "changing feed context discards a draft even when the applied filters match" do
-    attrs = %{id: "draft", feed_filters: %{time_limit: 30}, context_key: :local, apply_to: :parent}
+    attrs = %{
+      id: "draft",
+      feed_filters: %{time_limit: 30},
+      context_key: :local,
+      apply_to: :parent
+    }
+
     socket = %Phoenix.LiveView.Socket{assigns: %{__changed__: %{}}}
     {:ok, socket} = Editor.update(attrs, socket)
     {:noreply, socket} = Editor.handle_event("set_filter", %{"time_limit" => "1"}, socket)
@@ -29,7 +41,13 @@ defmodule Bonfire.UI.Social.FeedEditorLifecycleTest do
   end
 
   test "new applied filters replace an older draft" do
-    attrs = %{id: "draft", feed_filters: %{time_limit: 30}, context_key: :local, apply_to: :parent}
+    attrs = %{
+      id: "draft",
+      feed_filters: %{time_limit: 30},
+      context_key: :local,
+      apply_to: :parent
+    }
+
     socket = %Phoenix.LiveView.Socket{assigns: %{__changed__: %{}}}
     {:ok, socket} = Editor.update(attrs, socket)
     {:noreply, socket} = Editor.handle_event("set_filter", %{"time_limit" => "1"}, socket)

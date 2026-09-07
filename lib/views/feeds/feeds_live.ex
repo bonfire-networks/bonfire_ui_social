@@ -285,14 +285,16 @@ defmodule Bonfire.UI.Social.FeedsLive do
             if socket.assigns.hide_filters do
               []
             else
-              [{Bonfire.UI.Social.WidgetCustomizeFeedLive,
-                [
-                  id: "feed_preferences_#{socket.assigns.feed_component_id}",
-                  event_target: "##{socket.assigns.feed_component_id}",
-                  feed_id: socket.assigns.feed_id,
-                  feed_name: feed_name,
-                  feed_filters: socket.assigns.feed_filters
-                ]}]
+              [
+                {Bonfire.UI.Social.WidgetCustomizeFeedLive,
+                 [
+                   id: "feed_preferences_#{socket.assigns.feed_component_id}",
+                   event_target: "##{socket.assigns.feed_component_id}",
+                   feed_id: socket.assigns.feed_id,
+                   feed_name: feed_name,
+                   feed_filters: socket.assigns.feed_filters
+                 ]}
+              ]
             end
 
           {preferences, [{Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: feed_name]}]}

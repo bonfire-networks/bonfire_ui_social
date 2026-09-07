@@ -1,68 +1,82 @@
 <div id={@id} class="bg-[var(--stream-surface)] rounded-box">
-<Bonfire.UI.Common.WidgetBlockLive
-  widget_title={@widget_title || l("Feed preferences")}
-  title_class="flex items-center justify-between text-base font-semibold text-base-content"
-  class="w-full flex-auto mx-auto p-card border-y-hair border-secondary"
->
-  <:action>
-    <button id={"feed_reset_#{@feed_name}"} type="button" class="btn btn-ghost px-2 btn-sm font-normal" aria-label={l("Reset feed preferences")} phx-click="reset_preferences" phx-target={@myself}>
-      {l("Reset")}
-    </button>
-  </:action>
-  <div class="flex flex-col gap-3" data-id="widget_customize_feed">
-    <form
-      id={"feed_order_form_#{@feed_name || "default"}"}
-      class="mt-3 flex flex-col gap-2"
-      phx-change="set_feed_order"
-      phx-target={@event_target}
-    >
-      <label for={"feed_order_#{@feed_name || "default"}"} class="text-sm font-medium">{l("Order")}</label>
-      <select id={"feed_order_#{@feed_name || "default"}"} name="feed_order" class="select w-full min-h-11 text-base focus-ring">
-        {#for {value, label} <- Bonfire.UI.Social.WidgetCustomizeFeedLive.order_options()}
-          <option value={value} selected={Bonfire.UI.Social.WidgetCustomizeFeedLive.current_order(@feed_filters) == value}>{label}</option>
-        {/for}
-      </select>
-    </form>
-    <fieldset class="min-w-0">
-      <legend class="text-sm font-medium">{l("Include")}</legend>
-      <Bonfire.UI.Common.Settings.Calm.OverrideTogglesLive
-        scope={nil}
-        event_name="set_filter_overrides"
-        event_mode={:click}
-        event_target={@event_target}
-        form_name="feed_overrides"
-        form_id={"feed_overrides_form_#{@feed_name || "default"}"}
-        form_role="feed_override_toggles"
-        form_class="flex flex-col gap-0 pt-2 pb-0.5"
-        row_class="-mx-2 rounded-selector px-2 transition-colors duration-150 ease-out hover:bg-base-content/5 active:bg-base-content/10"
-        name_class="text-sm font-normal text-(--stream-text-secondary)"
-        rows={Bonfire.UI.Social.WidgetCustomizeFeedLive.override_rows(@feed_filters, @feed_name, @__context__)}
-        field_prefix="scope"
-        toggle_role="feed_override_toggle"
-      />
-    </fieldset>
-    <div class="-mx-2" data-role="feed_advanced_filters_wrapper">
-      <Bonfire.UI.Common.OpenExpanderLive
-        parent_id={"feed_filters_#{@feed_name}"}
-        modal_assigns={Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}
-        open_btn_wrapper_class="rounded-selector focus-ring"
-        open_btn_class="min-h-11 w-full px-2 py-2 text-sm font-medium text-base-content/80 flex items-center gap-2 cursor-pointer hover:bg-base-content/5 hover:text-base-content"
-        caret_class="size-4 text-base-content/70"
+  <Bonfire.UI.Common.WidgetBlockLive
+    widget_title={@widget_title || l("Feed preferences")}
+    title_class="flex items-center justify-between text-base font-semibold text-base-content"
+    class="w-full flex-auto mx-auto p-card border-y-hair border-secondary"
+  >
+    <:action>
+      <button
+        id={"feed_reset_#{@feed_name}"}
+        type="button"
+        class="btn btn-ghost px-2 btn-sm font-normal"
+        aria-label={l("Reset feed preferences")}
+        phx-click="reset_preferences"
+        phx-target={@myself}
       >
-        <:open_btn>
-          <span class="flex-1 text-left" data-role="feed_advanced_filters">{l("More filters")}</span>
-        </:open_btn>
-        <:default>
-          <StatefulComponent
-            id={"feed_preferences_details_#{@feed_name}"}
-            module={Bonfire.UI.Social.FeedFiltersModalContentLive}
-            show_reset={false}
-            sections={Bonfire.UI.Social.FeedFiltersModalContentLive.sections() -- [:sort_order]}
-            {...Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}
-          />
-        </:default>
-      </Bonfire.UI.Common.OpenExpanderLive>
+        {l("Reset")}
+      </button>
+    </:action>
+    <div class="flex flex-col gap-3" data-id="widget_customize_feed">
+      <form
+        id={"feed_order_form_#{@feed_name || "default"}"}
+        class="mt-3 flex flex-col gap-2"
+        phx-change="set_feed_order"
+        phx-target={@event_target}
+      >
+        <label for={"feed_order_#{@feed_name || "default"}"} class="text-sm font-medium">{l("Order")}</label>
+        <select
+          id={"feed_order_#{@feed_name || "default"}"}
+          name="feed_order"
+          class="select w-full min-h-11 text-base focus-ring"
+        >
+          {#for {value, label} <- Bonfire.UI.Social.WidgetCustomizeFeedLive.order_options()}
+            <option
+              value={value}
+              selected={Bonfire.UI.Social.WidgetCustomizeFeedLive.current_order(@feed_filters) == value}
+            >{label}</option>
+          {/for}
+        </select>
+      </form>
+      <fieldset class="min-w-0">
+        <legend class="text-sm font-medium">{l("Include")}</legend>
+        <Bonfire.UI.Common.Settings.Calm.OverrideTogglesLive
+          scope={nil}
+          event_name="set_filter_overrides"
+          event_mode={:click}
+          event_target={@event_target}
+          form_name="feed_overrides"
+          form_id={"feed_overrides_form_#{@feed_name || "default"}"}
+          form_role="feed_override_toggles"
+          form_class="flex flex-col gap-0 pt-2 pb-0.5"
+          row_class="-mx-2 rounded-selector px-2 transition-colors duration-150 ease-out hover:bg-base-content/5 active:bg-base-content/10"
+          name_class="text-sm font-normal text-(--stream-text-secondary)"
+          rows={Bonfire.UI.Social.WidgetCustomizeFeedLive.override_rows(@feed_filters, @feed_name, @__context__)}
+          field_prefix="scope"
+          toggle_role="feed_override_toggle"
+        />
+      </fieldset>
+      <div class="-mx-2" data-role="feed_advanced_filters_wrapper">
+        <Bonfire.UI.Common.OpenExpanderLive
+          parent_id={"feed_filters_#{@feed_name}"}
+          modal_assigns={Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}
+          open_btn_wrapper_class="rounded-selector focus-ring"
+          open_btn_class="min-h-11 w-full px-2 py-2 text-sm font-medium text-base-content/80 flex items-center gap-2 cursor-pointer hover:bg-base-content/5 hover:text-base-content"
+          caret_class="size-4 text-base-content/70"
+        >
+          <:open_btn>
+            <span class="flex-1 text-left" data-role="feed_advanced_filters">{l("More filters")}</span>
+          </:open_btn>
+          <:default>
+            <StatefulComponent
+              id={"feed_preferences_details_#{@feed_name}"}
+              module={Bonfire.UI.Social.FeedFiltersModalContentLive}
+              show_reset={false}
+              sections={Bonfire.UI.Social.FeedFiltersModalContentLive.sections() -- [:sort_order]}
+              {...Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}
+            />
+          </:default>
+        </Bonfire.UI.Common.OpenExpanderLive>
+      </div>
     </div>
-  </div>
-</Bonfire.UI.Common.WidgetBlockLive>
+  </Bonfire.UI.Common.WidgetBlockLive>
 </div>
