@@ -1,20 +1,17 @@
 <div
-  :if={(@boost_count || 0) > 0 or (@reply_count || 0) > 0}
   id={deterministic_dom_id(__MODULE__, id(@object), "fediverse_reactions", @parent_id)}
   data-role="fediverse_reactions"
   role="group"
   aria-label={l("Thread stats")}
-  class="flex items-center gap-3 px-2"
+  class="flex flex-wrap items-center gap-x-3 gap-y-1 px-2"
 >
-  <div data-role="replies_summary" class="text-sm text-base-content">
-    <span data-id="reply_count" class="text-sm tabular-nums font-medium text-base-content">{@reply_count || 0}</span>
-    <span class="">{lp("Reply", "Replies", @reply_count || 0)}</span>
-  </div>
-  <span class="text-primary font-bold" aria-hidden="true">
-    ·
-  </span>
-  <div data-role="boosts_summary" class="text-sm text-base-content">
-    <span data-id="boosts_count" class="text-sm tabular-nums font-medium text-base-content">{@boost_count || 0}</span>
-    <span class="">{lp("Boost", "Boosts", @boost_count || 0)}</span>
-  </div>
+  {#for {reaction, count} <- [boost: @boost_count, like: @like_count, quote: @quote_count]}
+    <span :if={reaction != :boost} class="text-primary font-bold" aria-hidden="true">·</span>
+    <Bonfire.UI.Reactions.ReactionCounterLive
+      reaction={reaction}
+      count={count || 0}
+      thread_id={@thread_id || id(@object)}
+      parent_id={@parent_id}
+    />
+  {/for}
 </div>

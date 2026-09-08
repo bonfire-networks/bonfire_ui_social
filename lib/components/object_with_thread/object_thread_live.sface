@@ -102,7 +102,6 @@
           id={@thread_id}
           thread_id={@thread_id}
           highlight_reply_id={@reply_id}
-          thread_boost_count={@root_boost_count}
           include_path_ids={@include_path_ids}
           current_url={@current_url}
           main_object_component_id={@main_object_component_id}

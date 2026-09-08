@@ -15,9 +15,10 @@
     showing_within={@showing_within}
     object={@object}
     activity={@activity}
-    reply_count={@reply_count || e(@activity, :replied, :total_replies_count, nil) ||
-      e(@object, :replied, :total_replies_count, nil)}
     thread_boost_count={@thread_boost_count}
+    thread_like_count={@thread_like_count}
+    thread_quote_count={@thread_quote_count}
+    thread_id={@thread_id}
     is_remote={e(@object, :peered, :canonical_uri, nil) != nil}
   >
     <Bonfire.UI.Social.ThreadControlsLive

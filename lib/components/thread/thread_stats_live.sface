@@ -4,13 +4,15 @@
     role="region"
     aria-label={l("Thread stats and actions")}
   >
-    {!-- Left: reply/boost counts, folded into this row so the thread has one
+    {!-- Left: reaction counts, folded into this row so the thread has one
          metadata band rather than a separate bordered one above it --}
     <StatelessComponent
       module={maybe_component(Bonfire.UI.Social.Activity.FediverseReactionsLive, @__context__)}
       object={@object}
-      reply_count={@reply_count}
       boost_count={@thread_boost_count}
+      like_count={@thread_like_count}
+      quote_count={@thread_quote_count}
+      thread_id={@thread_id}
     />
 
     {!-- Right: thread controls + remote actions, unified into one segmented toolbar --}

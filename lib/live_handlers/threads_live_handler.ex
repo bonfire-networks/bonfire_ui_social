@@ -705,18 +705,6 @@ defmodule Bonfire.Social.Threads.LiveHandler do
                  ]}
               )
             end
-
-            send_thread_updates(
-              pid,
-              component_id,
-              %{
-                skip_loading_comments: true,
-                thread_boost_count:
-                  Bonfire.Social.Boosts.count([in_thread: thread_id], current_user: current_user)
-              },
-              nil,
-              current_user: current_user
-            )
           end,
           socket: socket,
           id: "load_thread_meta"
@@ -902,6 +890,14 @@ defmodule Bonfire.Social.Threads.LiveHandler do
            has_replies: reply_count > 0,
            thread_boost_count:
              Bonfire.Social.Boosts.count([in_thread: thread_id],
+               current_user: current_user(assigns)
+             ),
+           thread_like_count:
+             Bonfire.Social.Likes.count([in_thread: thread_id],
+               current_user: current_user(assigns)
+             ),
+           thread_quote_count:
+             Bonfire.Social.Quotes.count([in_thread: thread_id],
                current_user: current_user(assigns)
              ),
            activity_preloads: {preloads, nil}

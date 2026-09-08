@@ -45,7 +45,9 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop activity_inception, :any, default: nil
 
   prop reply_count, :any, default: nil
-  prop thread_boost_count, :any, default: nil
+  data thread_boost_count, :integer, default: 0
+  data thread_like_count, :integer, default: 0
+  data thread_quote_count, :integer, default: 0
   prop participant_count, :any, default: nil
   prop last_reply_id, :any, default: nil
 
