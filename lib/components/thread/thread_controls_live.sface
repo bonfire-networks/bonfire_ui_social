@@ -27,7 +27,11 @@
             phx-value-to_atoms="true"
             phx-value-thread_mode={mode}
             {...if mode == :flat and @sort_by == :latest_reply,
-              do: %{"phx-value-sort_by" => "nil", "phx-value-sort_order" => "desc", "phx-value-assign_global" => "true"},
+              do: %{
+                "phx-value-sort_by" => "nil",
+                "phx-value-sort_order" => "desc",
+                "phx-value-assign_global" => "true"
+              },
               else: %{}}
             phx-target={@event_target}
           />
@@ -37,13 +41,19 @@
     <fieldset class="p-2">
       <legend class="text-sm font-semibold">{l("Sort order")}</legend>
       {#for {sort_by, sort_order, label} <-
-        [{nil, :asc, if(@thread_mode != :flat, do: l("Thread order"), else: l("Oldest first"))},
-         {nil, :desc, l("Newest first")}] ++
-          (if @thread_mode != :flat, do: [{:latest_reply, :desc, l("Recently active")}], else: []) ++
-          [{:reply_count, :desc, l("Most replies")}] ++
-          (if extension_enabled?(:bonfire_ui_reactions, @__context__),
-            do: [{:boost_count, :desc, l("Most boosts")}, {:like_count, :desc, l("Most liked")}, {:popularity_score, :desc, l("Trending")}],
-            else: [])}
+          [
+            {nil, :asc, if(@thread_mode != :flat, do: l("Thread order"), else: l("Oldest first"))},
+            {nil, :desc, l("Newest first")}
+          ] ++
+            if(@thread_mode != :flat, do: [{:latest_reply, :desc, l("Recently active")}], else: []) ++
+            [{:reply_count, :desc, l("Most replies")}] ++
+            if extension_enabled?(:bonfire_ui_reactions, @__context__),
+              do: [
+                {:boost_count, :desc, l("Most boosts")},
+                {:like_count, :desc, l("Most liked")},
+                {:popularity_score, :desc, l("Trending")}
+              ],
+              else: []}
         <label class="flex min-h-11 cursor-pointer items-center justify-between gap-3 px-2 text-base-content">
           <span>{label}</span>
           <input
@@ -51,7 +61,8 @@
             type="radio"
             name={"thread-sort-#{@thread_id}"}
             value={"#{sort_by || :default}-#{sort_order}"}
-            checked={@sort_by == sort_by && (if sort_order == :desc, do: @sort_order == :desc, else: @sort_order != :desc)}
+            checked={@sort_by == sort_by &&
+              if sort_order == :desc, do: @sort_order == :desc, else: @sort_order != :desc}
             class="radio radio-sm radio-primary"
             phx-click="set"
             phx-value-to_atoms="true"

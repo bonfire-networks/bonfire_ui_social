@@ -57,7 +57,8 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
     context = assigns[:__context__] || socket.assigns[:__context__]
     sections = socket.assigns.sections
 
-    filters = Enums.maybe_to_map(e(assigns, :feed_filters, nil) || socket.assigns[:feed_filters]) || %{}
+    filters =
+      Enums.maybe_to_map(e(assigns, :feed_filters, nil) || socket.assigns[:feed_filters]) || %{}
 
     state = {filters, {socket.assigns.context_key, sections}}
 
@@ -160,33 +161,34 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
     value = params["toggle_value"]
 
     socket =
-     update_pending_fn(socket, fn filters ->
-       already_selected = List.wrap(e(filters, include_field, []))
-       already_excluded = List.wrap(e(filters, exclude_field, []))
+      update_pending_fn(socket, fn filters ->
+        already_selected = List.wrap(e(filters, include_field, []))
+        already_excluded = List.wrap(e(filters, exclude_field, []))
 
-       case value do
-         "true" ->
-           filters
-           |> Map.put(include_field, Enum.uniq(already_selected ++ [type_atom]))
-           |> Map.put(exclude_field, Enum.reject(already_excluded, &same_type?(&1, type_atom)))
+        case value do
+          "true" ->
+            filters
+            |> Map.put(include_field, Enum.uniq(already_selected ++ [type_atom]))
+            |> Map.put(exclude_field, Enum.reject(already_excluded, &same_type?(&1, type_atom)))
 
-         "false" ->
-           filters
-           |> Map.put(include_field, Enum.reject(already_selected, &same_type?(&1, type_atom)))
-           |> Map.put(exclude_field, Enum.uniq(already_excluded ++ [type_atom]))
+          "false" ->
+            filters
+            |> Map.put(include_field, Enum.reject(already_selected, &same_type?(&1, type_atom)))
+            |> Map.put(exclude_field, Enum.uniq(already_excluded ++ [type_atom]))
 
-         _ ->
-           filters
-           |> Map.put(include_field, Enum.reject(already_selected, &same_type?(&1, type_atom)))
-           |> Map.put(exclude_field, Enum.reject(already_excluded, &same_type?(&1, type_atom)))
-       end
-     end)
+          _ ->
+            filters
+            |> Map.put(include_field, Enum.reject(already_selected, &same_type?(&1, type_atom)))
+            |> Map.put(exclude_field, Enum.reject(already_excluded, &same_type?(&1, type_atom)))
+        end
+      end)
 
     socket =
       if include_field == :subjects do
         assign(socket,
           selected_authors: load_authors(socket.assigns.pending_filters[:subjects]),
-          selected_excluded_authors: load_authors(socket.assigns.pending_filters[:exclude_subjects])
+          selected_excluded_authors:
+            load_authors(socket.assigns.pending_filters[:exclude_subjects])
         )
       else
         socket
@@ -267,7 +269,8 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
   end
 
   def handle_event("multi_select_exclude", params, socket) do
-    {:noreply, sync_authors(socket, params, "exclude_people", :selected_excluded_authors, :exclude_subjects)}
+    {:noreply,
+     sync_authors(socket, params, "exclude_people", :selected_excluded_authors, :exclude_subjects)}
   end
 
   # --- Hashtags & specific instances (free-text, comma/space separated) ---
@@ -514,6 +517,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
   def any_media?(filters, media_types) do
     only = filters |> e(:media_types, []) |> List.wrap() |> MapSet.new(&to_string/1)
     available = MapSet.new(media_types, &to_string/1)
+
     media_types != [] and only == available and
       List.wrap(e(filters, :exclude_media_types, [])) == []
   end
@@ -537,8 +541,12 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
     hide = List.wrap(e(filters, :exclude_media_types, [])) |> Enum.map(&to_string/1)
 
     cond do
-      any_media?(filters, media_types) -> l("Any media")
-      only == [] and hide == [] -> l("Any")
+      any_media?(filters, media_types) ->
+        l("Any media")
+
+      only == [] and hide == [] ->
+        l("Any")
+
       true ->
         [
           if(only != [], do: Enum.map_join(only, ", ", &String.capitalize/1)),
@@ -563,6 +571,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
 
   defp update_pending_fn(socket, fun) do
     pending = socket.assigns[:pending_filters] || %{}
+
     socket
     |> assign(:pending_filters, fun.(pending))
     |> assign_derived()

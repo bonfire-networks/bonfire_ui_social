@@ -265,7 +265,6 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> assert_has("input[name='scope[replies]']:checked")
       |> refute_has("select[name=time_limit]")
     end
-
   end
 
   describe "applied filters" do
@@ -347,7 +346,8 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
   end
 
   describe "Reset all" do
-    test "header Reset discards pending edits even when applied filters already match defaults", %{conn: conn} do
+    test "header Reset discards pending edits even when applied filters already match defaults",
+         %{conn: conn} do
       Process.put(Bonfire.Common.Config.keys_tree([Bonfire.UI.Social.FeedLive, :time_limit]), 30)
 
       conn
@@ -363,7 +363,10 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> assert_has("[data-row=time_range] [data-role=row_value]", text: "Last Month")
     end
 
-    test "header Reset restores the configured time window and sort order", %{conn: conn, user: user} do
+    test "header Reset restores the configured time window and sort order", %{
+      conn: conn,
+      user: user
+    } do
       Process.put(Bonfire.Common.Config.keys_tree([Bonfire.UI.Social.FeedLive, :time_limit]), 7)
 
       fake_post!(user, "public", %{
@@ -400,7 +403,6 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> refute_has("[data-role=reset_filters]")
       |> assert_has("button[aria-label='Reset feed preferences']")
     end
-
   end
 
   describe "Content origin radio group" do
@@ -455,15 +457,26 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
           show_reset: true
         })
 
-      assert html |> Floki.parse_fragment!() |> Floki.find("[data-role=reset_filters]") |> Floki.text() |> String.trim() == "Reset 1"
+      assert html
+             |> Floki.parse_fragment!()
+             |> Floki.find("[data-role=reset_filters]")
+             |> Floki.text()
+             |> String.trim() == "Reset 1"
     end
 
-    test "own-activity toggle and excluded people share the same selection", %{user: user, other_user: other_user} do
+    test "own-activity toggle and excluded people share the same selection", %{
+      user: user,
+      other_user: other_user
+    } do
       editor = Bonfire.UI.Social.FeedFiltersModalContentLive
+
       attrs = %{
-        id: "people_filters", __context__: %{current_user: user},
-        feed_filters: %{}, sections: [:hide_own, :not_people]
+        id: "people_filters",
+        __context__: %{current_user: user},
+        feed_filters: %{},
+        sections: [:hide_own, :not_people]
       }
+
       socket = %Phoenix.LiveView.Socket{assigns: %{__changed__: %{}}}
       {:ok, socket} = editor.update(attrs, socket)
       toggle = %{"toggle" => "subjects", "toggle_type" => user.id, "toggle_value" => "false"}
@@ -471,12 +484,18 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       {:noreply, hidden} = editor.handle_event("set_filter", toggle, socket)
       assert Enum.map(hidden.assigns.selected_excluded_authors, & &1.id) == [user.id]
 
-      selections = hidden.assigns.selected_excluded_authors ++ [%{id: other_user.id, name: "Other"}]
+      selections =
+        hidden.assigns.selected_excluded_authors ++ [%{id: other_user.id, name: "Other"}]
+
       params = %{"multi_select" => %{"people_filters_exclude_people" => selections}}
       {:noreply, selected} = editor.handle_event("multi_select_exclude", params, hidden)
-      assert Enum.sort(selected.assigns.pending_filters.exclude_subjects) == Enum.sort([user.id, other_user.id])
 
-      {:noreply, visible} = editor.handle_event("set_filter", %{toggle | "toggle_value" => "default"}, selected)
+      assert Enum.sort(selected.assigns.pending_filters.exclude_subjects) ==
+               Enum.sort([user.id, other_user.id])
+
+      {:noreply, visible} =
+        editor.handle_event("set_filter", %{toggle | "toggle_value" => "default"}, selected)
+
       assert Enum.map(visible.assigns.selected_excluded_authors, & &1.id) == [other_user.id]
       assert visible.assigns.pending_filters.exclude_subjects == [other_user.id]
     end

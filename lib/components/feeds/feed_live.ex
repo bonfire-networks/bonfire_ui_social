@@ -864,7 +864,10 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   def handle_event("set_feed_order", %{"feed_order" => order}, socket) do
-    case Bonfire.UI.Social.WidgetCustomizeFeedLive.order_filters(order, assigns(socket)[:feed_filters]) do
+    case Bonfire.UI.Social.WidgetCustomizeFeedLive.order_filters(
+           order,
+           assigns(socket)[:feed_filters]
+         ) do
       nil -> {:noreply, socket}
       filters -> set_filters(filters, socket, true)
     end

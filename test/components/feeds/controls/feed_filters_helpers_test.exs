@@ -11,27 +11,53 @@ defmodule Bonfire.UI.Social.FeedFiltersHelpersTest do
 
   test "Any media uses the host's options and preserves other filters" do
     attrs = %{
-      __context__: %{}, sections: [:media_types], media_types: [:image, :research],
+      __context__: %{},
+      sections: [:media_types],
+      media_types: [:image, :research],
       feed_filters: %{exclude_media_types: [:image], time_limit: 30}
     }
+
     socket = %Phoenix.LiveView.Socket{assigns: %{__changed__: %{}}}
     {:ok, socket} = FeedFiltersModalContentLive.update(attrs, socket)
 
     {:noreply, selected} = FeedFiltersModalContentLive.handle_event("any_media", %{}, socket)
+
     assert selected.assigns.pending_filters == %{
-      media_types: [:image, :research], exclude_media_types: [], time_limit: 30
-    }
-    assert FeedFiltersModalContentLive.any_media?(selected.assigns.pending_filters, attrs.media_types)
-    assert FeedFiltersModalContentLive.media_summary(selected.assigns.pending_filters, attrs.media_types) == "Any media"
+             media_types: [:image, :research],
+             exclude_media_types: [],
+             time_limit: 30
+           }
+
+    assert FeedFiltersModalContentLive.any_media?(
+             selected.assigns.pending_filters,
+             attrs.media_types
+           )
+
+    assert FeedFiltersModalContentLive.media_summary(
+             selected.assigns.pending_filters,
+             attrs.media_types
+           ) == "Any media"
 
     {:noreply, cleared} = FeedFiltersModalContentLive.handle_event("clear_media", %{}, selected)
     assert cleared.assigns.pending_filters.time_limit == 30
-    refute FeedFiltersModalContentLive.any_media?(cleared.assigns.pending_filters, attrs.media_types)
-    assert FeedFiltersModalContentLive.media_summary(cleared.assigns.pending_filters, attrs.media_types) == "Any"
+
+    refute FeedFiltersModalContentLive.any_media?(
+             cleared.assigns.pending_filters,
+             attrs.media_types
+           )
+
+    assert FeedFiltersModalContentLive.media_summary(
+             cleared.assigns.pending_filters,
+             attrs.media_types
+           ) == "Any"
   end
 
   test "Any media is not selected for exclusions, extra types or an empty option list" do
-    refute FeedFiltersModalContentLive.any_media?(%{media_types: [:image], exclude_media_types: [:video]}, [:image])
+    refute FeedFiltersModalContentLive.any_media?(
+             %{media_types: [:image], exclude_media_types: [:video]},
+             [:image]
+           )
+
     refute FeedFiltersModalContentLive.any_media?(%{media_types: [:image, :research]}, [:image])
     refute FeedFiltersModalContentLive.any_media?(%{}, [])
   end
@@ -50,36 +76,60 @@ defmodule Bonfire.UI.Social.FeedFiltersHelpersTest do
     attrs = %{__context__: %{}, sections: [], feed_filters: %{time_limit: 30}}
     socket = %Phoenix.LiveView.Socket{assigns: %{__changed__: %{}}}
     {:ok, socket} = FeedFiltersModalContentLive.update(attrs, socket)
-    toggle = %{"toggle" => "subject_circles", "toggle_type" => "circle-one", "toggle_value" => "true"}
+
+    toggle = %{
+      "toggle" => "subject_circles",
+      "toggle_type" => "circle-one",
+      "toggle_value" => "true"
+    }
 
     {:noreply, included} = FeedFiltersModalContentLive.handle_event("set_filter", toggle, socket)
     assert included.assigns.pending_filters.subject_circles == ["circle-one"]
-    {:noreply, hidden} = FeedFiltersModalContentLive.handle_event("set_filter", %{toggle | "toggle_value" => "false"}, included)
+
+    {:noreply, hidden} =
+      FeedFiltersModalContentLive.handle_event(
+        "set_filter",
+        %{toggle | "toggle_value" => "false"},
+        included
+      )
+
     assert hidden.assigns.pending_filters.subject_circles == []
     assert hidden.assigns.pending_filters.exclude_subject_circles == ["circle-one"]
 
     hidden = Phoenix.Component.assign(hidden, :sections, [:circles])
     {:noreply, reset} = FeedFiltersModalContentLive.handle_event("reset_pending", %{}, hidden)
     assert reset.assigns.pending_filters == %{time_limit: 30}
-    assert FeedFiltersModalContentLive.filters_to_apply(reset.assigns.pending_filters, hidden.assigns.pending_filters) ==
+
+    assert FeedFiltersModalContentLive.filters_to_apply(
+             reset.assigns.pending_filters,
+             hidden.assigns.pending_filters
+           ) ==
              %{time_limit: 30, subject_circles: [], exclude_subject_circles: []}
   end
 
   test "drafts survive updates from the same host and reset when the host changes" do
     attrs = %{
-      __context__: %{}, feed_filters: %{}, sections: [:hashtags],
-      context_key: {:profile, "alice"}, apply_to: :parent
+      __context__: %{},
+      feed_filters: %{},
+      sections: [:hashtags],
+      context_key: {:profile, "alice"},
+      apply_to: :parent
     }
+
     socket = %Phoenix.LiveView.Socket{assigns: %{__changed__: %{}}}
     {:ok, socket} = FeedFiltersModalContentLive.update(attrs, socket)
 
-    {:noreply, edited} = FeedFiltersModalContentLive.handle_event("set_tags", %{"tags_text" => "#bonfire"}, socket)
+    {:noreply, edited} =
+      FeedFiltersModalContentLive.handle_event("set_tags", %{"tags_text" => "#bonfire"}, socket)
+
     refute_received {FeedFiltersModalContentLive, :apply, _}
     {:ok, same_host} = FeedFiltersModalContentLive.update(attrs, edited)
     {:noreply, _} = FeedFiltersModalContentLive.handle_event("apply", %{}, same_host)
     assert_received {FeedFiltersModalContentLive, :apply, %{tags: ["bonfire"]}}
 
-    {:ok, other_host} = FeedFiltersModalContentLive.update(%{attrs | context_key: {:profile, "bob"}}, edited)
+    {:ok, other_host} =
+      FeedFiltersModalContentLive.update(%{attrs | context_key: {:profile, "bob"}}, edited)
+
     {:noreply, _} = FeedFiltersModalContentLive.handle_event("apply", %{}, other_host)
     assert_received {FeedFiltersModalContentLive, :apply, filters}
     assert filters == %{}

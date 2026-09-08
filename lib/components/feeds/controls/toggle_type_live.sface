@@ -5,7 +5,11 @@
   )}
   {#match state}
     {!-- quiet tri-state row: the control shows the state, the label stays plain --}
-    <div data-toggle={@key} data-state={state} class="flex items-center justify-between gap-3 min-h-10">
+    <div
+      data-toggle={@key}
+      data-state={state}
+      class="flex items-center justify-between gap-3 min-h-10"
+    >
       <span class="text-sm text-base-content truncate">{@label}</span>
 
       <div
