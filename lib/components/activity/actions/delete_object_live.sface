@@ -14,28 +14,7 @@ TODO: use preloaded boundaries for can? when available
 
   <input name="object_id" type="hidden" value={id(@object)}>
 
-  {#if @with_password_prompt}
-    <div class="p-3 rounded-lg bg-base-content/5 border-hair border-secondary mt-4">
-      <div class="text-sm font-medium">{l("Enter password to confirm")}</div>
-      <label class="label" for="password_confirm_input">
-        <span class="label-text text-sm">{l("For security purposes please enter the password of your account")}</span>
-      </label>
-      <input
-        id="password_confirm_input"
-        name="password"
-        type="password"
-        placeholder={l("Type here")}
-        class="input input-bordered w-full"
-      />
-      {!-- covers passwordless/magic-link accounts (no password to enter) and anyone who forgot theirs; returns here via `go` --}
-      <a
-        href={"/account/password/change?go=" <> URI.encode_www_form(current_url(@__context__) || "/")}
-        class="link link-primary text-xs mt-2 inline-block"
-      >
-        {l("Reset password")}
-      </a>
-    </div>
-  {/if}
+
 
   <:open_btn>
     <div role="delete" title={l("Delete this object")} class={@open_btn_class}>
