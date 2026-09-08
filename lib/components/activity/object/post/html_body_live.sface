@@ -18,8 +18,9 @@
         @showing_within not in [:smart_input, :pinned],
     # microblog posts read as one block: paragraph breaks cost ~half a line, not article-style margins
     "prose-p:!my-1": e(@object_type, nil) != :article,
-    # The main post anchors the discussion and should stand apart from replies.
-    "!text-[20px] !leading-[1.5]": @viewing_main_object && @showing_within == :thread,
+    # Give the main note modest emphasis while preserving article typography.
+    "!text-lg !leading-[1.5]":
+      @viewing_main_object && @showing_within == :thread && e(@object_type, nil) != :article,
     "!text-sm !text-muted": e(@object_type, nil) == :article && @showing_within != :thread
   }
 >

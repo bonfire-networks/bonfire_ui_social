@@ -28,7 +28,7 @@ defmodule Bonfire.UI.Social.Threads.FediverseReactionsTest do
     |> visit("/discussion/#{post.id}")
     |> assert_has("[data-role=boosts_summary]", text: "0 Boosts")
     |> assert_has("[data-role=likes_summary]", text: "0 Likes")
-    |> assert_has("[data-role=quotes_summary]", text: "0 Quotes")
+    |> refute_has("[data-role=quotes_summary]")
     |> refute_has("[data-role=fediverse_reactions] button")
     |> refute_has("[data-role=replies_summary]")
   end
@@ -55,6 +55,7 @@ defmodule Bonfire.UI.Social.Threads.FediverseReactionsTest do
     |> refute_has("[data-role=booster]", text: bob.profile.name)
   end
 
+  @tag skip: "Quote counters are temporarily disabled pending production query performance work"
   test "opens quote authors and omits the reply counter", %{conn: conn, bob: bob, post: post} do
     publish_quote(bob, post)
 
@@ -71,6 +72,7 @@ defmodule Bonfire.UI.Social.Threads.FediverseReactionsTest do
     |> refute_has(".modal-open")
   end
 
+  @tag skip: "Quote counters are temporarily disabled pending production query performance work"
   test "quote totals and authors exclude hidden posts and deduplicate authors", %{
     conn: conn, alice: alice, bob: bob, post: post
   } do
@@ -94,6 +96,7 @@ defmodule Bonfire.UI.Social.Threads.FediverseReactionsTest do
     |> refute_has("[data-role=quoter]", text: carol.profile.name)
   end
 
+  @tag skip: "Quote counters are temporarily disabled pending production query performance work"
   test "deduplicates authors across quote pages", %{conn: conn, alice: alice, bob: bob, post: post} do
     publish_quote(bob, post)
     for _ <- 1..19, do: publish_quote(alice, post)
@@ -114,7 +117,56 @@ defmodule Bonfire.UI.Social.Threads.FediverseReactionsTest do
         {Boosts, :boost, "booster", "Boost", "Boosted by"},
         {Likes, :like, "liker", "Like", "Liked by"}
       ] do
+    test "#{action} modal exposes the next page and appends its people", %{conn: conn, post: post} do
+      people = for _ <- 1..21, do: fake_user!()
+      for person <- people, do: assert({:ok, _} = apply(unquote(context), unquote(action), [person, post]))
+      oldest_person = List.first(people)
+
+      conn
+      |> visit("/discussion/#{post.id}")
+      |> click_button("[data-role=#{unquote(action)}s_summary] button", "21 #{unquote(label)}s")
+      |> assert_has("[data-role=#{unquote(role)}]", count: 20)
+      |> refute_has("[data-role=#{unquote(role)}]", text: oldest_person.profile.name)
+      |> click_button("[data-role=#{unquote(role)}_list] button", "Load more")
+      |> assert_has("[data-role=#{unquote(role)}]", count: 21)
+      |> assert_has("[data-role=#{unquote(role)}]", text: oldest_person.profile.name)
+      |> refute_has("[data-role=#{unquote(role)}_list] button", text: "Load more")
+    end
+
+    test "#{action} totals and people exclude replies on both discussion routes", %{conn: conn, alice: alice, bob: bob, post: post} do
+      carol = fake_user!()
+      {:ok, reply} = Posts.publish(
+        current_user: alice,
+        post_attrs: %{post_content: %{html_body: Faker.Lorem.sentence()}, reply_to_id: post.id},
+        boundary: "public"
+      )
+      assert {:ok, _} = apply(unquote(context), unquote(action), [bob, reply])
+      assert {:ok, _} = apply(unquote(context), unquote(action), [carol, reply])
+
+      for route <- ["/discussion/#{post.id}", "/post/#{post.id}"] do
+        conn
+        |> visit(route)
+        |> assert_has("[data-role=#{unquote(action)}s_summary]", text: "0 #{unquote(label)}s")
+        |> refute_has("[data-role=#{unquote(action)}s_summary] button")
+      end
+
+      assert {:ok, _} = apply(unquote(context), unquote(action), [bob, post])
+
+      for route <- ["/discussion/#{post.id}", "/post/#{post.id}"] do
+        conn
+        |> visit(route)
+        |> click_button("[data-role=#{unquote(action)}s_summary] button", "1 #{unquote(label)}")
+        |> assert_has("[data-role=#{unquote(role)}]", count: 1)
+        |> assert_has("[data-role=#{unquote(role)}]", text: bob.profile.name)
+        |> refute_has("[data-role=#{unquote(role)}]", text: carol.profile.name)
+        |> refute_has("[data-role=#{unquote(role)}_list] button", text: "Load more")
+      end
+    end
+
     test "#{action} opens its people list on demand and closes", %{conn: conn, bob: bob, post: post} do
+      avatar_url = "https://example.org/avatars/#{bob.id}.png"
+      {:ok, icon} = Bonfire.Files.Media.insert(bob, avatar_url, %{media_type: "image/png", size: 0}, %{url: avatar_url})
+      {:ok, bob} = Bonfire.Me.Profiles.set_profile_image(:icon, bob, icon)
       assert {:ok, _} = apply(unquote(context), unquote(action), [bob, post])
       role = unquote(role)
       summary = "[data-role=#{unquote(action)}s_summary]"
@@ -126,12 +178,13 @@ defmodule Bonfire.UI.Social.Threads.FediverseReactionsTest do
       |> assert_has("[role=dialog]", text: unquote(title))
       |> assert_has("[data-role=#{role}]", text: bob.profile.name)
       |> assert_has("[data-role=#{role}] a[href='#{path(bob)}']")
+      |> assert_has("[data-role=#{role}] img[src='#{avatar_url}']")
       |> refute_has("[data-role=#{role}_list] button", text: "Load more")
       |> click_button("[data-role=close-modal]", "Close")
       |> refute_has(".modal-open")
     end
 
-    test "#{action} includes reply authors once and excludes other threads", %{conn: conn, alice: alice, bob: bob, post: post} do
+    test "#{action} lists each author once and excludes other threads", %{conn: conn, alice: alice, bob: bob, post: post} do
       carol = fake_user!()
       {:ok, reply} = Posts.publish(
         current_user: alice,
@@ -162,8 +215,8 @@ defmodule Bonfire.UI.Social.Threads.FediverseReactionsTest do
       assert {:ok, first} = apply(unquote(context), unquote(action), [alice, post])
       assert {:ok, second} = apply(unquote(context), unquote(action), [bob, post])
       opts = [current_user: alice, limit: 1, preload: :subject]
-      page = unquote(context).list_paginated([in_thread: post.id], opts)
-      next_page = unquote(context).list_paginated([in_thread: post.id], opts ++ [after: page.page_info.end_cursor])
+      page = unquote(context).list_paginated([objects: post.id], opts)
+      next_page = unquote(context).list_paginated([objects: post.id], opts ++ [after: page.page_info.end_cursor])
 
       assert Enum.map(page.edges ++ next_page.edges, & &1.id) == [second.id, first.id]
       assert next_page.page_info.end_cursor == nil

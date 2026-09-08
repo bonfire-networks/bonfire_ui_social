@@ -5,7 +5,8 @@
   aria-label={l("Thread stats")}
   class="flex flex-wrap items-center gap-x-3 gap-y-1 px-2"
 >
-  {#for {reaction, count} <- [boost: @boost_count, like: @like_count, quote: @quote_count]}
+  {!-- Quote counters are disabled until their production query cost is addressed. Previously: [boost: @boost_count, like: @like_count, quote: @quote_count] --}
+  {#for {reaction, count} <- [boost: @boost_count, like: @like_count]}
     <span :if={reaction != :boost} class="text-primary font-bold" aria-hidden="true">·</span>
     <Bonfire.UI.Reactions.ReactionCounterLive
       reaction={reaction}

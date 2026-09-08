@@ -889,17 +889,18 @@ defmodule Bonfire.Social.Threads.LiveHandler do
            reply_count: reply_count,
            has_replies: reply_count > 0,
            thread_boost_count:
-             Bonfire.Social.Boosts.count([in_thread: thread_id],
+             Bonfire.Social.Boosts.count([objects: thread_id],
                current_user: current_user(assigns)
              ),
            thread_like_count:
-             Bonfire.Social.Likes.count([in_thread: thread_id],
+             Bonfire.Social.Likes.count([objects: thread_id],
                current_user: current_user(assigns)
              ),
-           thread_quote_count:
-             Bonfire.Social.Quotes.count([in_thread: thread_id],
-               current_user: current_user(assigns)
-             ),
+           # Quote counts are disabled until their production query cost is addressed.
+           # thread_quote_count:
+           #   Bonfire.Social.Quotes.count([in_thread: thread_id],
+           #     current_user: current_user(assigns)
+           #   ),
            activity_preloads: {preloads, nil}
          ]
          |> debug("extra assigns")}
