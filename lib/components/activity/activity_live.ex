@@ -2504,6 +2504,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
         Enum.any?(types, &(&1 == "Edition" || &1 == "Book")) ->
           {l("Edition"), Bonfire.UI.Social.Activity.BookActivityStreamsLive}
 
+        # a recipe (from cuisine.social) arrives as `["Note", "Preparation"]`, so the type is only
+        # kept whole (rather than becoming a Post) when claimed via `AP_HANDLE_OBJECT_TYPES`
+        Enum.any?(types, &(&1 == "Preparation")) ->
+          {l("Recipe"), Bonfire.UI.Social.Activity.PreparationActivityStreamsLive}
+
         # NOTE: probably not used now as Article is being created as a Post and Page as Media
         Enum.any?(types, &(&1 == "Article" || &1 == "Page")) ->
           {l("Article"), Bonfire.UI.Social.Activity.ArticleActivityStreamsLive}
