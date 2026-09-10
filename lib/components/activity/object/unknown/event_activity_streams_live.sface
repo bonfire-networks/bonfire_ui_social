@@ -10,29 +10,15 @@
   </div>
 {#else}
   <div class="rounded-box border border-secondary bg-base-100 overflow-hidden">
-    {!-- Poster with calendar chip + Event badge --}
+    {!-- Calendar chip + Event badge. The poster is an `attachment`, so it is already shown as Media
+    alongside this card. --}
     <div class="relative">
-      {#case poster_url(@json)}
-        {#match nil}
-          <div
-            class="flex items-center justify-center h-24 bg-base-200 border-b border-secondary"
-            aria-hidden="true"
-          >
-            <#Icon iconify="ph:calendar-blank-bold" class="w-10 h-10 text-base-content/10" />
-          </div>
-        {#match src}
-          <img
-            src={src}
-            alt={object_field(@json, "name") || l("Event poster")}
-            loading="lazy"
-            decoding="async"
-            class={
-              "w-full object-cover aspect-[16/9] bg-base-200",
-              "max-h-80": !@viewing_main_object,
-              "max-h-[28rem]": @viewing_main_object
-            }
-          />
-      {/case}
+      <div
+        class="flex items-center justify-center h-24 bg-base-200 border-b border-secondary"
+        aria-hidden="true"
+      >
+        <#Icon iconify="ph:calendar-blank-bold" class="w-10 h-10 text-base-content/10" />
+      </div>
 
       <div class="absolute top-3 right-3 badge badge-neutral gap-1.5 font-medium shadow-sm">
         <#Icon iconify="ph:calendar-blank-bold" class="w-3.5 h-3.5" />

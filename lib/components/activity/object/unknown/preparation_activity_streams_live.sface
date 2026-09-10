@@ -1,0 +1,115 @@
+{!-- The dish's photo is an `attachment`, so it is already shown as Media alongside this card. --}
+<div class="rounded-box border border-secondary bg-base-100 overflow-hidden">
+  <div class="p-4">
+    <div class="badge badge-neutral gap-1.5 font-medium mb-2">
+      <#Icon iconify="ph:cooking-pot-bold" class="w-3.5 h-3.5" />
+      {@object_type_readable || l("Recipe")}
+    </div>
+
+    <a href={source_url(@json)} target="_blank" rel="noopener noreferrer">
+      <h2 class={
+        "font-medium text-base-content text-balance leading-snug hover:underline",
+        "text-xl": @viewing_main_object,
+        "text-lg": !@viewing_main_object
+      }>
+        {rich(object_field(@json, "name") || l("Untitled recipe"))}
+      </h2>
+    </a>
+
+    {!-- The sender's own blurb. `content` is deliberately NOT rendered: it is a stub restating the
+    title, the hashtags and the source link, all of which the card already shows. --}
+    {#case object_field(@json, "description")}
+      {#match nil}
+      {#match ""}
+      {#match description}
+        <article class={
+          "mt-3 prose prose-sm prose-p:my-0 max-w-prose text-base-content/80",
+          "line-clamp-3": !@viewing_main_object
+        }>
+          {rich(description)}
+        </article>
+    {/case}
+
+    {!-- What it makes and how much of it --}
+    <div class="flex flex-wrap items-center gap-4 mt-3 text-sm text-base-content">
+      {#case serving_label(@json)}
+        {#match nil}
+        {#match serving}
+          <div class="flex items-center gap-2">
+            <#Icon iconify="ph:users-bold" class="w-4 h-4 shrink-0 text-muted" />
+            <span>{serving}</span>
+          </div>
+      {/case}
+
+      {#case ingredients(@json)}
+        {#match []}
+        {#match list}
+          <div class="flex items-center gap-2">
+            <#Icon iconify="ph:carrot-bold" class="w-4 h-4 shrink-0 text-muted" />
+            <span>{lp("%{count} ingredient", "%{count} ingredients", length(list), count: length(list))}</span>
+          </div>
+      {/case}
+    </div>
+
+    {!-- The recipe itself is only worth the room on the object's own page: in a feed the summary
+    line above plus the link are enough. --}
+    {#if @viewing_main_object}
+      {#case ingredients(@json)}
+        {#match []}
+        {#match list}
+          <div class="mt-5">
+            <h3 class="font-medium text-base-content">{l("Ingredients")}</h3>
+            <ul class="mt-2 space-y-1">
+              {#for ingredient <- list}
+                <li class="flex items-baseline gap-2 text-sm text-base-content">
+                  <span class="font-medium tabular-nums shrink-0">{quantity_label(ingredient)}</span>
+                  <span>{e(ingredient, "name", "")}</span>
+                </li>
+              {/for}
+            </ul>
+          </div>
+      {/case}
+
+      {#case steps(@json)}
+        {#match []}
+        {#match list}
+          <div class="mt-5">
+            <h3 class="font-medium text-base-content">{l("Method")}</h3>
+            <ol class="mt-2 space-y-3">
+              {!-- `prose-p:my-0` because prose's paragraph margins would push each step's text below
+              its number. No `whitespace-pre-line` either: `rich/1` already turns newlines into
+              `<br>` and leaves the original newline in the markup, which would then break twice. --}
+              {#for {step, index} <- Enum.with_index(list, 1)}
+                <li class="flex items-start gap-3">
+                  <span class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-base-200 text-xs font-medium tabular-nums">{index}</span>
+                  <article class="prose prose-sm prose-p:my-0 max-w-prose min-w-0 text-base-content/80">
+                    {rich(e(step, "content", ""))}
+                  </article>
+                </li>
+              {/for}
+            </ol>
+          </div>
+      {/case}
+
+      {!-- Hashtags are cast as real tags at ingest, so they already render with the activity. --}
+    {/if}
+
+    {#case source_url(@json)}
+      {#match nil}
+      {#match url}
+        {#case source_host(url)}
+          {#match nil}
+          {#match host}
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 mt-4 text-sm font-medium text-primary hover:underline transition-colors"
+            >
+              {l("View on %{instance}", instance: host)}
+              <#Icon iconify="ph:arrow-square-out-bold" class="w-4 h-4" />
+            </a>
+        {/case}
+    {/case}
+  </div>
+</div>
