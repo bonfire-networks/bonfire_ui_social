@@ -35,7 +35,7 @@
                 <Bonfire.UI.Common.AvatarLive
                   parent_id={deterministic_dom_id(__MODULE__, id(participant), "avatar", "widget_participants")}
                   user_id={id(participant)}
-                  src={e(participant, :profile, :icon, nil)}
+                  src={Media.avatar_url(participant)}
                   title={e(participant, :profile, :name, nil) || e(participant, :character, :username, "")}
                   class="h-7 w-7 rounded-full"
                   wrapper_class="avatar !flex h-7 w-7 shrink-0 border-0"
