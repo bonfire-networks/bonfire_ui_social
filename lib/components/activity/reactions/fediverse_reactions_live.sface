@@ -8,7 +8,8 @@
   {!-- Quote counters are disabled until their production query cost is addressed. Previously: [boost: @boost_count, like: @like_count, quote: @quote_count] --}
   {#for {reaction, count} <- [boost: @boost_count, like: @like_count]}
     <span :if={reaction != :boost} class="text-primary font-bold" aria-hidden="true">·</span>
-    <Bonfire.UI.Reactions.ReactionCounterLive
+    <StatelessComponent
+      module={maybe_component(Bonfire.UI.Reactions.ReactionCounterLive, @__context__)}
       reaction={reaction}
       count={count || 0}
       thread_id={@thread_id || id(@object)}
