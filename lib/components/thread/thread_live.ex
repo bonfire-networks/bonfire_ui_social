@@ -59,6 +59,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
   # (computed at insert time — stream items can't see their predecessor at render)
   data time_gaps, :map, default: %{}
   data last_top_reply_date, :any, default: nil
+  data reply_generation, :integer, default: 0
 
   def mount(socket) do
     {

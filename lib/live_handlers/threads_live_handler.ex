@@ -745,17 +745,18 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       |> assign(loading: show_loader)
     else
       debug("socket not connected or not logged in, just load thread")
-      load_thread(socket)
+      load_thread(socket, reset: reset_stream)
     end
   end
 
-  def load_thread_maybe_async(socket_or_opts, _, _) do
+  def load_thread_maybe_async(socket_or_opts, _, reset_stream) do
     debug("no socket, just load thread")
     # debug(e(socket_or_opts, :assigns, nil), "not socket")
-    load_thread(socket_or_opts)
+    load_thread(socket_or_opts, reset: reset_stream)
   end
 
-  def load_thread(socket) do
+  @doc "Loads a thread synchronously, honouring stream resets so fresh results replace previously loaded branches."
+  def load_thread(socket, opts \\ []) do
     with {replies, assigns} when is_list(replies) and is_list(assigns) <-
            load_thread_assigns(socket) do
       thread_mode = e(assigns, :thread_mode, nil)
@@ -774,7 +775,8 @@ defmodule Bonfire.Social.Threads.LiveHandler do
              sort_order: e(assigns, :sort_order, nil),
              thread_id: e(assigns, :thread_id, nil),
              current_user: current_user(assigns) || current_user(socket)
-           )}
+           )},
+          opts
         )
       else
         socket
@@ -783,7 +785,8 @@ defmodule Bonfire.Social.Threads.LiveHandler do
           {:replies,
            Bonfire.Social.Activities.prepare_subject_and_creator(replies,
              current_user: current_user(assigns) || current_user(socket)
-           )}
+           )},
+          opts
         )
       end
     else
@@ -1002,16 +1005,13 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     debug(replies, "insert threaded replies into stream")
 
     socket
+    |> maybe_reset_reply_generation(opts)
     |> maybe_track_time_gaps(replies, opts)
     |> maybe_stream_insert(:threaded_replies, replies, opts)
   end
 
   def insert_comments(socket, {:threaded_replies, replies, at}, opts) do
-    debug(replies, "insert threaded replies into stream")
-
-    socket
-    |> maybe_track_time_gaps(replies, opts ++ [at: at])
-    |> maybe_stream_insert(:threaded_replies, replies, opts ++ [at: at])
+    insert_comments(socket, {:threaded_replies, replies}, opts ++ [at: at])
   end
 
   def insert_comments(socket, {replies, assigns}, opts)
@@ -1038,6 +1038,12 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       end
       |> insert_comments(socket, {..., replies}, opts)
     end
+  end
+
+  defp maybe_reset_reply_generation(socket, opts) do
+    if opts[:reset],
+      do: assign(socket, :reply_generation, (socket.assigns[:reply_generation] || 0) + 1),
+      else: socket
   end
 
   # Time-gap divider labels for top-level entries, computed as they're inserted into

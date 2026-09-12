@@ -27,6 +27,7 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   prop activity_inception, :any, default: nil
   prop hide_actions, :any, default: false
   prop depth_loaded, :any, default: nil
+  prop reply_generation, :integer, default: 0
 
   prop activity_preloads, :tuple, default: {nil, nil}
 
@@ -47,7 +48,7 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
     # incoming wins, matching stream_insert — since the same reply can be
     # delivered twice (live_push hits both the thread_id and reply_to_id topics).
     existing = e(assigns(socket), :threaded_replies, [])
-    merged = Enum.uniq_by(entries ++ existing, fn {entry, _children} -> id(entry) end)
+    merged = merge_replies(existing, entries, at)
     added = max(length(merged) - length(existing), 0)
 
     socket =
@@ -72,6 +73,16 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   end
 
   def update(assigns, socket) do
+    assigns =
+      if id(assigns[:comment]) == id(socket.assigns[:comment]) and
+           assigns[:reply_generation] == socket.assigns[:reply_generation] do
+        assigns
+        |> Map.put(:comment, merge_comment(socket.assigns[:comment], assigns[:comment]))
+        |> Map.put(:threaded_replies, merge_replies(socket.assigns[:threaded_replies] || [], assigns[:threaded_replies] || []))
+      else
+        assigns
+      end
+
     {:ok,
      socket
      |> assign(assigns)
@@ -81,6 +92,31 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
      )
      |> assign_show_thread_lines(assigns)}
   end
+
+  @doc """
+  Merges paginated branches without losing loaded descendants or replacing a real comment with an unresolved placeholder. A full reload must use a fresh generation instead of merging.
+
+      iex> merge_replies([{%{id: "a"}, [{%{id: "b"}, []}]}], [{%{id: "a", stub: true}, [{%{id: "c"}, []}]}])
+      [{%{id: "a"}, [{%{id: "b"}, []}, {%{id: "c"}, []}]}]
+  """
+  def merge_replies(existing, incoming, at \\ -1) do
+    existing_by_id = Map.new(existing, fn {comment, children} -> {id(comment), {comment, children}} end)
+    incoming_by_id = Map.new(incoming, fn {comment, children} -> {id(comment), {comment, children}} end)
+
+    (if at == 0, do: incoming ++ existing, else: existing ++ incoming)
+    |> Enum.uniq_by(fn {comment, _} -> id(comment) end)
+    |> Enum.map(fn {comment, _} = entry ->
+      case {existing_by_id[id(comment)], incoming_by_id[id(comment)]} do
+        {{old, old_children}, {new, new_children}} ->
+          {merge_comment(old, new), merge_replies(old_children, new_children, at)}
+
+        _ -> entry
+      end
+    end)
+  end
+
+  defp merge_comment(%{} = existing, %{stub: true}), do: existing
+  defp merge_comment(_existing, incoming), do: incoming
 
   def render(assigns) do
     # memoized: the template reads the collapse decision in ~9 places

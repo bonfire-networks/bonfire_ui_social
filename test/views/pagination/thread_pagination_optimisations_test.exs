@@ -89,13 +89,13 @@ defmodule Bonfire.UI.Social.Threads.PaginationOptimisationsTest do
     end
   end
 
-  describe "arrange cap (subtree capping)" do
-    test "renders thread when total descendants exceed cap without crashing", %{
+  describe "paginated subtrees" do
+    test "renders thread when total descendants exceed the page limit without crashing", %{
       conn: conn,
       alice: alice,
       op: op
     } do
-      # cap at 3 total nodes across the arranged tree
+      # Limit the reply page to 3; readable ancestors may add context.
       Process.put([:bonfire, :pagination_hard_max_limit], 3)
 
       # create 2 root replies each with 2 children (6 total nodes)
@@ -106,14 +106,14 @@ defmodule Bonfire.UI.Social.Threads.PaginationOptimisationsTest do
       publish_reply(alice, r2.id, 5)
       publish_reply(alice, r2.id, 6)
 
-      # should render without error; cap keeps total ≤ pagination_hard_max_limit
+      # Pagination must leave a renderable tree.
       conn
       |> visit("/discussion/#{op.id}")
       |> assert_has("[data-id='comment']")
       |> refute_has("[data-role=error]")
     end
 
-    test "load more shows additional subtrees after cap drops some", %{
+    test "load more shows subtrees from the next root page", %{
       conn: conn,
       alice: alice,
       op: op

@@ -253,6 +253,7 @@
                     activity_preloads={@activity_preloads}
                     hide_actions={@hide_actions}
                     depth_loaded={@depth_loaded}
+                    reply_generation={@reply_generation}
                     thread_reply_count={@thread_reply_count}
                     time_gap_before={time_gap_before(@comment, @threaded_replies, index)}
                   />

@@ -67,4 +67,41 @@ defmodule Bonfire.UI.Social.Threads.OrphanPlaceholderTest do
     |> assert_has("[data-id='comment']", text: "hidden parent")
     |> assert_has("[data-id='comment']", text: "public child")
   end
+
+  test "refreshing a deep DM permalink keeps readable ancestors and hides them from outsiders" do
+    account = fake_account!()
+    sender = fake_user!(account)
+    recipient = fake_user!(fake_account!())
+    outsider = fake_user!(fake_account!())
+    Process.put([:bonfire, :thread_pagination_hard_limit], 2)
+    Process.put([:bonfire, :thread_default_root_reply_limit], 2)
+
+    {:ok, root} = Bonfire.Messages.send(sender, %{post_content: %{html_body: "Private conversation"}}, recipient)
+
+    messages = Enum.scan(1..6, root, fn n, parent ->
+      {:ok, message} = Bonfire.Messages.send(sender, %{
+        post_content: %{html_body: "Private reply #{n}"},
+        reply_to_id: parent.id
+      }, recipient)
+      message
+    end)
+
+    target = List.last(messages)
+    url = "/discussion/#{root.id}/reply/6/#{target.id}"
+
+    session = conn(user: sender, account: account) |> visit(url)
+    session = Enum.reduce(1..6, session, fn n, session -> assert_has(session, "[data-id='comment']", text: "Private reply #{n}") end)
+
+    session
+    |> visit(url)
+    |> refute_has("[data-role='comment-unavailable']")
+    |> assert_has("[data-id='comment']", text: "Private reply 1")
+    |> assert_has("[data-id='comment']", text: "Private reply 6")
+
+    assert %{edges: []} = Bonfire.Social.Threads.list_replies(root.id,
+      current_user: outsider,
+      total_replies_count: 6,
+      include_path_ids: Bonfire.Social.Threads.thread_ancestors_path(target.id)
+    )
+  end
 end

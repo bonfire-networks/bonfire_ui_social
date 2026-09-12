@@ -326,8 +326,7 @@
         away. It is STICKY at the foot of the feed column rather than fixed to the window: that
         keeps it inside the column at every breakpoint and window height (a window-anchored
         button lands on the nav rail or the sticky user menu depending on how tall the viewport
-        is), and it settles under the load-more button once the reader reaches the end. The
-        h-14/-mb-14 pair gives the row zero net height, so it costs the feed no layout space.
+        is). The h-14/-mt-14 pair overlaps the end of the feed instead of extending below it, avoiding extra scrollable space.
         The bottom inset matches the left one (0.5rem), plus the dock's height on mobile.
         Gated on `enable_marker`, which is what marks a feed as the page's own scrollable
         timeline — widget and thread feeds must not add a second floating button.
@@ -335,7 +334,7 @@
         once scrolled, so it is never a focus stop nobody can see — including without JS. --}
       <div
         :if={@enable_marker == true}
-        class="sticky z-fixed -mb-14 flex h-14 items-center justify-start pl-2 dock-safe-bottom [--dock-safe-gap:0.5rem] pointer-events-none"
+        class="sticky z-fixed -mt-14 flex h-14 shrink-0 items-center justify-start pl-2 dock-safe-bottom [--dock-safe-gap:0.5rem] pointer-events-none"
       >
         <button
           type="button"
