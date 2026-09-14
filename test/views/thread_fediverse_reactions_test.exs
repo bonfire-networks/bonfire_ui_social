@@ -74,13 +74,18 @@ defmodule Bonfire.UI.Social.Threads.FediverseReactionsTest do
 
   @tag skip: "Quote counters are temporarily disabled pending production query performance work"
   test "quote totals and authors exclude hidden posts and deduplicate authors", %{
-    conn: conn, alice: alice, bob: bob, post: post
+    conn: conn,
+    alice: alice,
+    bob: bob,
+    post: post
   } do
-    {:ok, reply} = Posts.publish(
-      current_user: alice,
-      post_attrs: %{post_content: %{html_body: Faker.Lorem.sentence()}, reply_to_id: post.id},
-      boundary: "public"
-    )
+    {:ok, reply} =
+      Posts.publish(
+        current_user: alice,
+        post_attrs: %{post_content: %{html_body: Faker.Lorem.sentence()}, reply_to_id: post.id},
+        boundary: "public"
+      )
+
     publish_quote(bob, post)
     publish_quote(bob, reply)
     carol = fake_user!()
@@ -97,7 +102,12 @@ defmodule Bonfire.UI.Social.Threads.FediverseReactionsTest do
   end
 
   @tag skip: "Quote counters are temporarily disabled pending production query performance work"
-  test "deduplicates authors across quote pages", %{conn: conn, alice: alice, bob: bob, post: post} do
+  test "deduplicates authors across quote pages", %{
+    conn: conn,
+    alice: alice,
+    bob: bob,
+    post: post
+  } do
     publish_quote(bob, post)
     for _ <- 1..19, do: publish_quote(alice, post)
     publish_quote(bob, post)
@@ -119,7 +129,10 @@ defmodule Bonfire.UI.Social.Threads.FediverseReactionsTest do
       ] do
     test "#{action} modal exposes the next page and appends its people", %{conn: conn, post: post} do
       people = for _ <- 1..21, do: fake_user!()
-      for person <- people, do: assert({:ok, _} = apply(unquote(context), unquote(action), [person, post]))
+
+      for person <- people,
+          do: assert({:ok, _} = apply(unquote(context), unquote(action), [person, post]))
+
       oldest_person = List.first(people)
 
       conn
@@ -133,13 +146,21 @@ defmodule Bonfire.UI.Social.Threads.FediverseReactionsTest do
       |> refute_has("[data-role=#{unquote(role)}_list] button", text: "Load more")
     end
 
-    test "#{action} totals and people exclude replies on both discussion routes", %{conn: conn, alice: alice, bob: bob, post: post} do
+    test "#{action} totals and people exclude replies on both discussion routes", %{
+      conn: conn,
+      alice: alice,
+      bob: bob,
+      post: post
+    } do
       carol = fake_user!()
-      {:ok, reply} = Posts.publish(
-        current_user: alice,
-        post_attrs: %{post_content: %{html_body: Faker.Lorem.sentence()}, reply_to_id: post.id},
-        boundary: "public"
-      )
+
+      {:ok, reply} =
+        Posts.publish(
+          current_user: alice,
+          post_attrs: %{post_content: %{html_body: Faker.Lorem.sentence()}, reply_to_id: post.id},
+          boundary: "public"
+        )
+
       assert {:ok, _} = apply(unquote(context), unquote(action), [bob, reply])
       assert {:ok, _} = apply(unquote(context), unquote(action), [carol, reply])
 
@@ -163,9 +184,18 @@ defmodule Bonfire.UI.Social.Threads.FediverseReactionsTest do
       end
     end
 
-    test "#{action} opens its people list on demand and closes", %{conn: conn, bob: bob, post: post} do
+    test "#{action} opens its people list on demand and closes", %{
+      conn: conn,
+      bob: bob,
+      post: post
+    } do
       avatar_url = "https://example.org/avatars/#{bob.id}.png"
-      {:ok, icon} = Bonfire.Files.Media.insert(bob, avatar_url, %{media_type: "image/png", size: 0}, %{url: avatar_url})
+
+      {:ok, icon} =
+        Bonfire.Files.Media.insert(bob, avatar_url, %{media_type: "image/png", size: 0}, %{
+          url: avatar_url
+        })
+
       {:ok, bob} = Bonfire.Me.Profiles.set_profile_image(:icon, bob, icon)
       assert {:ok, _} = apply(unquote(context), unquote(action), [bob, post])
       role = unquote(role)
@@ -184,18 +214,28 @@ defmodule Bonfire.UI.Social.Threads.FediverseReactionsTest do
       |> refute_has(".modal-open")
     end
 
-    test "#{action} lists each author once and excludes other threads", %{conn: conn, alice: alice, bob: bob, post: post} do
+    test "#{action} lists each author once and excludes other threads", %{
+      conn: conn,
+      alice: alice,
+      bob: bob,
+      post: post
+    } do
       carol = fake_user!()
-      {:ok, reply} = Posts.publish(
-        current_user: alice,
-        post_attrs: %{post_content: %{html_body: Faker.Lorem.sentence()}, reply_to_id: post.id},
-        boundary: "public"
-      )
-      {:ok, other_post} = Posts.publish(
-        current_user: carol,
-        post_attrs: %{post_content: %{html_body: Faker.Lorem.sentence()}},
-        boundary: "public"
-      )
+
+      {:ok, reply} =
+        Posts.publish(
+          current_user: alice,
+          post_attrs: %{post_content: %{html_body: Faker.Lorem.sentence()}, reply_to_id: post.id},
+          boundary: "public"
+        )
+
+      {:ok, other_post} =
+        Posts.publish(
+          current_user: carol,
+          post_attrs: %{post_content: %{html_body: Faker.Lorem.sentence()}},
+          boundary: "public"
+        )
+
       assert {:ok, _} = apply(unquote(context), unquote(action), [bob, post])
       assert {:ok, _} = apply(unquote(context), unquote(action), [bob, reply])
       assert {:ok, _} = apply(unquote(context), unquote(action), [carol, other_post])
@@ -211,12 +251,21 @@ defmodule Bonfire.UI.Social.Threads.FediverseReactionsTest do
   end
 
   for {context, action} <- [{Boosts, :boost}, {Likes, :like}] do
-    test "#{action} queries advance the cursor without repeating records", %{alice: alice, bob: bob, post: post} do
+    test "#{action} queries advance the cursor without repeating records", %{
+      alice: alice,
+      bob: bob,
+      post: post
+    } do
       assert {:ok, first} = apply(unquote(context), unquote(action), [alice, post])
       assert {:ok, second} = apply(unquote(context), unquote(action), [bob, post])
       opts = [current_user: alice, limit: 1, preload: :subject]
       page = unquote(context).list_paginated([objects: post.id], opts)
-      next_page = unquote(context).list_paginated([objects: post.id], opts ++ [after: page.page_info.end_cursor])
+
+      next_page =
+        unquote(context).list_paginated(
+          [objects: post.id],
+          opts ++ [after: page.page_info.end_cursor]
+        )
 
       assert Enum.map(page.edges ++ next_page.edges, & &1.id) == [second.id, first.id]
       assert next_page.page_info.end_cursor == nil
@@ -224,16 +273,20 @@ defmodule Bonfire.UI.Social.Threads.FediverseReactionsTest do
   end
 
   defp publish_quote(user, quoted, boundary \\ "public") do
-    {:ok, post} = Posts.publish(
-      current_user: user,
-      post_attrs: %{post_content: %{html_body: Faker.Lorem.sentence()}},
-      quotes: [quoted],
-      boundary: boundary
-    )
+    {:ok, post} =
+      Posts.publish(
+        current_user: user,
+        post_attrs: %{post_content: %{html_body: Faker.Lorem.sentence()}},
+        quotes: [quoted],
+        boundary: boundary
+      )
+
     if user.id == quoted.created.creator_id do
       post
     else
-      {:ok, accepted} = Bonfire.Social.Quotes.accept_quote(post, quoted, current_user: quoted.created.creator_id)
+      {:ok, accepted} =
+        Bonfire.Social.Quotes.accept_quote(post, quoted, current_user: quoted.created.creator_id)
+
       accepted
     end
   end

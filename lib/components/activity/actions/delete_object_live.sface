@@ -14,8 +14,6 @@ TODO: use preloaded boundaries for can? when available
 
   <input name="object_id" type="hidden" value={id(@object)}>
 
-
-
   <:open_btn>
     <div role="delete" title={l("Delete this object")} class={@open_btn_class}>
       <span :if={!@hide_text} class="text-sm font-medium truncate ellipsis text-left flex-1">

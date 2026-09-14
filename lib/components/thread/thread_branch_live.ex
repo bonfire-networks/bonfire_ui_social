@@ -78,7 +78,10 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
            assigns[:reply_generation] == socket.assigns[:reply_generation] do
         assigns
         |> Map.put(:comment, merge_comment(socket.assigns[:comment], assigns[:comment]))
-        |> Map.put(:threaded_replies, merge_replies(socket.assigns[:threaded_replies] || [], assigns[:threaded_replies] || []))
+        |> Map.put(
+          :threaded_replies,
+          merge_replies(socket.assigns[:threaded_replies] || [], assigns[:threaded_replies] || [])
+        )
       else
         assigns
       end
@@ -100,17 +103,21 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
       [{%{id: "a"}, [{%{id: "b"}, []}, {%{id: "c"}, []}]}]
   """
   def merge_replies(existing, incoming, at \\ -1) do
-    existing_by_id = Map.new(existing, fn {comment, children} -> {id(comment), {comment, children}} end)
-    incoming_by_id = Map.new(incoming, fn {comment, children} -> {id(comment), {comment, children}} end)
+    existing_by_id =
+      Map.new(existing, fn {comment, children} -> {id(comment), {comment, children}} end)
 
-    (if at == 0, do: incoming ++ existing, else: existing ++ incoming)
+    incoming_by_id =
+      Map.new(incoming, fn {comment, children} -> {id(comment), {comment, children}} end)
+
+    if(at == 0, do: incoming ++ existing, else: existing ++ incoming)
     |> Enum.uniq_by(fn {comment, _} -> id(comment) end)
     |> Enum.map(fn {comment, _} = entry ->
       case {existing_by_id[id(comment)], incoming_by_id[id(comment)]} do
         {{old, old_children}, {new, new_children}} ->
           {merge_comment(old, new), merge_replies(old_children, new_children, at)}
 
-        _ -> entry
+        _ ->
+          entry
       end
     end)
   end

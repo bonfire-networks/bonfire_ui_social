@@ -39,7 +39,10 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
     |> refute_has("[data-id=widget_customize_feed]")
   end
 
-  test "group profiles show access details in the hero instead of the sidebar", %{conn: conn, user: user} do
+  test "group profiles show access details in the hero instead of the sidebar", %{
+    conn: conn,
+    user: user
+  } do
     group = Bonfire.Classify.Simulate.fake_group!(user, %{name: "Sidebar ownership group"})
 
     conn

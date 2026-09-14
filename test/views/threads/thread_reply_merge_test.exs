@@ -9,7 +9,7 @@ defmodule Bonfire.UI.Social.ThreadReplyMergeTest do
     incoming = [{%{id: "a", stub: true}, [{%{id: "b", stub: true}, [{%{id: "d"}, []}]}]}]
 
     assert [{%{id: "a"}, [{%{id: "b"}, [{%{id: "c"}, []}, {%{id: "d"}, []}]}]}] =
-      ThreadBranchLive.merge_replies(existing, incoming)
+             ThreadBranchLive.merge_replies(existing, incoming)
   end
 
   test "a resolved parent replaces its placeholder without losing children" do
@@ -17,7 +17,7 @@ defmodule Bonfire.UI.Social.ThreadReplyMergeTest do
     incoming = [{%{id: "a", activity: :loaded}, []}]
 
     assert [{%{id: "a", activity: :loaded}, [{%{id: "b"}, []}]}] =
-      ThreadBranchLive.merge_replies(existing, incoming)
+             ThreadBranchLive.merge_replies(existing, incoming)
   end
 
   test "live additions prepend and repeated deliveries do not duplicate replies" do
@@ -30,13 +30,20 @@ defmodule Bonfire.UI.Social.ThreadReplyMergeTest do
   end
 
   test "component updates merge pages but a fresh generation replaces old content" do
-    socket = %Phoenix.LiveView.Socket{assigns: %{
-      __changed__: %{},
-      comment: %{id: "a"},
-      threaded_replies: [{%{id: "b"}, []}],
+    socket = %Phoenix.LiveView.Socket{
+      assigns: %{
+        __changed__: %{},
+        comment: %{id: "a"},
+        threaded_replies: [{%{id: "b"}, []}],
+        reply_generation: 0
+      }
+    }
+
+    incoming = %{
+      comment: %{id: "a", stub: true},
+      threaded_replies: [{%{id: "c"}, []}],
       reply_generation: 0
-    }}
-    incoming = %{comment: %{id: "a", stub: true}, threaded_replies: [{%{id: "c"}, []}], reply_generation: 0}
+    }
 
     assert {:ok, merged} = ThreadBranchLive.update(incoming, socket)
     refute Map.get(merged.assigns.comment, :stub)
