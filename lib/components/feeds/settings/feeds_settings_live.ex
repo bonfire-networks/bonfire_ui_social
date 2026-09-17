@@ -1,10 +1,13 @@
 defmodule Bonfire.UI.Social.FeedsSettingsLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
+  alias Bonfire.UI.Social.FeedNavigation
+
   prop selected_tab, :any
   prop scope, :atom, default: nil
   prop presets, :list, default: []
 
+  @doc "Renders feed defaults and permitted built-in and custom preset settings."
   def render(assigns) do
     scoped = Bonfire.Common.Settings.LiveHandler.scoped(assigns[:scope], assigns[:__context__])
 
@@ -12,40 +15,27 @@ defmodule Bonfire.UI.Social.FeedsSettingsLive do
          Bonfire.Boundaries.can?(assigns[:__context__], :configure, :instance) != true do
       raise Bonfire.Fail, :unauthorized
     else
-      presets =
-        Bonfire.Social.Feeds.feed_presets_permitted(current_user: current_user(assigns))
-        |> Enum.filter(fn {_slug, preset} ->
-          case preset[:parameterized] do
-            nil ->
-              true
+      available = FeedNavigation.list_presets(current_user: current_user(assigns))
+      preferred = Settings.get([Bonfire.UI.Social.FeedLive, :default_feed], :my, scoped)
 
-            param ->
-              param == %{subjects: [:me]}
-          end
-        end)
+      presets =
+        available
         |> Enum.map(fn {id, preset} ->
           Map.put(preset, :id, id)
         end)
         |> Enum.sort_by(fn preset ->
-          # Sort by built_in status first (built-ins come first), then by name/id
           {preset[:built_in] != true, preset[:name] || preset.id}
         end)
 
       assigns
       |> assign(scoped: scoped)
       |> assign(page_title: l("Feed presets"))
-      |> assign(presets: presets)
+      |> assign(
+        presets: presets,
+        default_feed: FeedNavigation.resolve_default(available, preferred),
+        default_feed_form: Phoenix.Component.to_form(%{})
+      )
       |> render_sface()
     end
-  end
-
-  def handle_event("edit_preset", %{"id" => _preset_id}, socket) do
-    # TODO: Implement edit preset functionality
-    {:noreply, socket}
-  end
-
-  def handle_event("delete_preset", %{"id" => _preset_id}, socket) do
-    # TODO: Implement delete preset functionality
-    {:noreply, socket}
   end
 end

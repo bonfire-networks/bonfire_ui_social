@@ -5,6 +5,20 @@
       )}</div>
   </div>
 
+  <.form for={@default_feed_form} id="default-feed-form" class="p-4 border-b border-secondary" phx-change="Bonfire.Common.Settings:set">
+    <Bonfire.UI.Common.SettingsSelectLive
+      keys={[Bonfire.UI.Social.FeedLive, :default_feed]}
+      id="default-feed-select"
+      current_value={@default_feed}
+      label_name={l("Default feed")}
+      name={l("Default feed")}
+      description={l("Choose which feed opens when you click Feeds in the sidebar.")}
+      options={Enum.map(@presets, fn preset -> {preset.id, FeedNavigation.get_name(preset, preset.id)} end)}
+      default_value={:my}
+      scope={@scope}
+    />
+  </.form>
+
   <div x-data="{open: false}" class="">
     <div
       x-on:click="open = !open"

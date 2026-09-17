@@ -19,7 +19,7 @@
 
   <p :if={@description} class="text-xs text-muted pb-2">{@description}</p>
 
-  <div class="flex flex-col divide-hair divide-secondary overflow-y-auto flex-1 min-h-0">
+  <div class="flex flex-col overflow-y-auto flex-1 min-h-0">
     {!-- WHERE IT WAS POSTED --}
     <details
       :if={:origin in @sections}
@@ -28,8 +28,8 @@
       id={"#{@id}_origin_section"}
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
-      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
-        <h4 id={"#{@id}_origin_label"} class="text-xs uppercase font-normal text-muted">{l("Origin")}</h4>
+      <summary class="feed-filter-summary">
+        <h4 id={"#{@id}_origin_label"} class="text-sm font-normal text-(--stream-text-secondary)">{l("Origin")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"
@@ -119,13 +119,13 @@
     </details>
 
     <div :if={:hide_own in @sections and current_user_id(@__context__)} data-row="hide_own">
-      <label class="flex min-h-12 cursor-pointer items-center justify-between gap-3">
-        <span class="text-xs uppercase font-normal text-muted">{l("Hide my own activities")}</span>
+      <label class="flex min-h-10 [@media(pointer:coarse)]:min-h-11 cursor-pointer items-center justify-between gap-3">
+        <span class="text-sm font-normal text-(--stream-text-secondary)">{l("Hide my own activities")}</span>
         <input
           id={"feed_filter_hide_own_activities_#{@feed_name || "custom"}"}
           type="checkbox"
           checked={@user_activities_excluded?}
-          class="toggle toggle-primary toggle-sm"
+          class="toggle toggle-primary toggle-xs"
           phx-click="set_filter"
           phx-value-toggle="subjects"
           phx-value-toggle_type={current_user_id(@__context__)}
@@ -143,8 +143,8 @@
       id={"#{@id}_from_people_section"}
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
-      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
-        <h4 class="text-xs uppercase font-normal text-muted">{l("From people")}</h4>
+      <summary class="feed-filter-summary">
+        <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("From people")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"
@@ -185,8 +185,8 @@
       id={"#{@id}_not_people_section"}
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
-      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
-        <h4 class="text-xs uppercase font-normal text-muted">{l("Not from people")}</h4>
+      <summary class="feed-filter-summary">
+        <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("Not from people")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"
@@ -219,6 +219,72 @@
       </div>
     </details>
 
+    {#if :subject_types in @sections}
+      {#for key <- @pending_filters[:subject_types] || []}
+        <div class="py-2" data-row="subject_types">
+          <Bonfire.UI.Social.ToggleTypeLive
+            label={String.capitalize(to_string(key))}
+            key={key}
+            field={:subject_types}
+            feed_filters={@pending_filters}
+            event_target={@myself}
+            event_name="set_filter"
+            label_default={l("Include")}
+          />
+        </div>
+      {/for}
+    {/if}
+
+    <details
+      :if={:circles in @sections}
+      class="group"
+      data-row="circles"
+      id={"#{@id}_circles_section"}
+      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+    >
+      <summary class="feed-filter-summary">
+        <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("Filter by circles")}</h4>
+        <span class="flex items-center gap-2 min-w-0">
+          <span
+            data-role="row_value"
+            class={
+              "text-sm truncate",
+              "text-primary": List.wrap(e(@pending_filters, :subject_circles, [])) != [],
+              "text-muted": List.wrap(e(@pending_filters, :subject_circles, [])) == []
+            }
+          >{Bonfire.UI.Social.FeedFiltersModalContentLive.circles_summary(@pending_filters)}</span>
+          <span
+            aria-hidden="true"
+            class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90"
+          >›</span>
+        </span>
+      </summary>
+      <div class="pb-3">
+        {#case @my_circles}
+          {#match []}
+            <p class="text-sm text-muted">
+              {l(
+                "You haven't created any circles yet. Create one in your boundary settings to filter by specific groups of people."
+              )}
+            </p>
+          {#match my_circles}
+            <div class="flex flex-col gap-1">
+              {#for circle <- my_circles}
+                <Bonfire.UI.Social.ToggleTypeLive
+                  label={elem(circle, 1)[:name]}
+                  key={elem(circle, 1)[:id]}
+                  field={:subject_circles}
+                  feed_filters={@pending_filters}
+                  event_target={@myself}
+                  event_name="set_filter"
+                  label_default={l("Include")}
+                />
+              {/for}
+            </div>
+        {/case}
+      </div>
+    </details>
+
     {!-- HASHTAGS --}
     <details
       :if={:hashtags in @sections}
@@ -227,8 +293,8 @@
       id={"#{@id}_hashtags_section"}
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
-      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
-        <h4 class="text-xs uppercase font-normal text-muted">{l("Hashtags")}</h4>
+      <summary class="feed-filter-summary">
+        <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("Hashtags")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"
@@ -279,8 +345,8 @@
       id={"#{@id}_time_range_section"}
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
-      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
-        <h4 class="text-xs uppercase font-normal text-muted">{l("Time range")}</h4>
+      <summary class="feed-filter-summary">
+        <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("Time range")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"
@@ -323,8 +389,8 @@
       id={"#{@id}_sort_order_section"}
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
-      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
-        <h4 class="text-xs uppercase font-normal text-muted">{l("Sort order")}</h4>
+      <summary class="feed-filter-summary">
+        <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("Sort order")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"
@@ -370,8 +436,8 @@
       id={"#{@id}_object_types_section"}
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
-      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
-        <h4 class="text-xs uppercase font-normal text-muted">{l("Content types")}</h4>
+      <summary class="feed-filter-summary">
+        <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("Content types")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"
@@ -443,8 +509,8 @@
         id={"#{@id}_activity_types_section"}
         phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
       >
-        <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
-          <h4 class="text-xs uppercase font-normal text-muted">{l("Activity types")}</h4>
+        <summary class="feed-filter-summary">
+          <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("Activity types")}</h4>
           <span class="flex items-center gap-2 min-w-0">
             <span
               data-role="row_value"
@@ -508,8 +574,8 @@
       id={"#{@id}_media_types_section"}
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
-      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
-        <h4 class="text-xs uppercase font-normal text-muted">{l("Media")}</h4>
+      <summary class="feed-filter-summary">
+        <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("Media")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"
@@ -610,72 +676,6 @@
       </div>
     </details>
 
-    {#if :subject_types in @sections}
-      {#for key <- @pending_filters[:subject_types] || []}
-        <div class="py-2" data-row="subject_types">
-          <Bonfire.UI.Social.ToggleTypeLive
-            label={String.capitalize(to_string(key))}
-            key={key}
-            field={:subject_types}
-            feed_filters={@pending_filters}
-            event_target={@myself}
-            event_name="set_filter"
-            label_default={l("Include")}
-          />
-        </div>
-      {/for}
-    {/if}
-
-    <details
-      :if={:circles in @sections}
-      class="group"
-      data-row="circles"
-      id={"#{@id}_circles_section"}
-      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
-    >
-      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
-        <h4 class="text-xs uppercase font-normal text-muted">{l("Filter by circles")}</h4>
-        <span class="flex items-center gap-2 min-w-0">
-          <span
-            data-role="row_value"
-            class={
-              "text-sm truncate",
-              "text-primary": List.wrap(e(@pending_filters, :subject_circles, [])) != [],
-              "text-muted": List.wrap(e(@pending_filters, :subject_circles, [])) == []
-            }
-          >{Bonfire.UI.Social.FeedFiltersModalContentLive.circles_summary(@pending_filters)}</span>
-          <span
-            aria-hidden="true"
-            class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90"
-          >›</span>
-        </span>
-      </summary>
-      <div class="pb-3">
-        {#case @my_circles}
-          {#match []}
-            <p class="text-sm text-muted">
-              {l(
-                "You haven't created any circles yet. Create one in your boundary settings to filter by specific groups of people."
-              )}
-            </p>
-          {#match my_circles}
-            <div class="flex flex-col gap-1">
-              {#for circle <- my_circles}
-                <Bonfire.UI.Social.ToggleTypeLive
-                  label={elem(circle, 1)[:name]}
-                  key={elem(circle, 1)[:id]}
-                  field={:subject_circles}
-                  feed_filters={@pending_filters}
-                  event_target={@myself}
-                  event_name="set_filter"
-                  label_default={l("Include")}
-                />
-              {/for}
-            </div>
-        {/case}
-      </div>
-    </details>
-
     <details
       :if={:save_preset in @sections}
       class="group"
@@ -683,8 +683,8 @@
       id={"#{@id}_save_preset_section"}
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
-      <summary class="flex items-center justify-between gap-3 cursor-pointer list-none min-h-12">
-        <span class="text-[15px] text-base-content">{l("Save as custom feed")}</span>
+      <summary class="feed-filter-summary">
+        <span class="text-sm text-base-content">{l("Save as custom feed")}</span>
         <span
           aria-hidden="true"
           class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90"

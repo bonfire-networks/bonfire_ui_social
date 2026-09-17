@@ -3032,30 +3032,4 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  def handle_event("toggle_feeds_nav_visibility", _params, socket) do
-    debug("toggle_feeds_nav_visibility")
-
-    with {:ok, settings} <-
-           Bonfire.Common.Settings.set(
-             %{
-               Bonfire.Social.FeedLive => %{
-                 show_feeds_nav_open:
-                   !Bonfire.Common.Settings.get(
-                     [Bonfire.Social.FeedLive, :show_feeds_nav_open],
-                     true,
-                     context: assigns(socket),
-                     name: l("Default Feeds Nav Open"),
-                     description:
-                       l("Whether the feed navigation sidebar should be open by default.")
-                   )
-               }
-             },
-             current_user: current_user(socket)
-           ) do
-      {
-        :noreply,
-        socket |> maybe_assign_context(settings)
-      }
-    end
-  end
 end

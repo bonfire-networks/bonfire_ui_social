@@ -35,7 +35,7 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
         session,
         fn {label, value}, session ->
           session
-          |> PhoenixTest.select("Order", option: label)
+          |> PhoenixTest.select("Sort", option: label)
           |> wait_async()
           |> assert_has("select[name=feed_order] option[value='#{value}'][selected]")
         end

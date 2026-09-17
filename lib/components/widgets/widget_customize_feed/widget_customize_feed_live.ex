@@ -98,7 +98,7 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   end
 
   @doc "Common content inclusion controls, independent of ordering and source."
-  def override_rows(feed_filters, _feed_name, _context) do
+  def override_rows(feed_filters) do
     [
       %{
         key: :replies,

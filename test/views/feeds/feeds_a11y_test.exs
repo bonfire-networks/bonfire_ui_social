@@ -98,7 +98,7 @@ defmodule Bonfire.UI.Social.Feeds.A11y.Test do
     |> assert_has("aside [data-id=widget_customize_feed]")
     |> assert_has("form#feed_overrides_form_local")
     |> assert_has("[data-role=widget-heading]", text: "Feed preferences")
-    |> assert_has("label[for=feed_order_local]", text: "Order")
+    |> assert_has("label[for=feed_order_local]", text: "Sort")
     |> assert_has("select#feed_order_local.min-h-11.focus-ring")
     |> assert_has("label", text: "Replies")
     |> assert_has("form#feed_overrides_form_local label.min-h-11 input[type=checkbox]")

@@ -1,82 +1,53 @@
 <div>
-  {#case to_string(Bonfire.Common.Settings.get([:ui, :sidebar, :section_divider], "none", :instance))}
-    {#match "line"}
-      <div
-        class="my-1 mx-4"
-        style="border-top: 1px solid color-mix(in oklch, var(--color-base-content) 10%, transparent)"
-        aria-hidden="true"
-      />
-    {#match "custom"}
-      {#case to_string(Bonfire.Common.Settings.get([:ui, :sidebar, :section_divider_image], "", :instance))}
-        {#match src when src != ""}
-          <div class="lg:px-[30px] flex justify-center" aria-hidden="true">
-            <img src={src} class="h-6 w-full object-contain mt-[36px]" alt="">
-          </div>
-        {#match _}
-      {/case}
-    {#match _}
-  {/case}
-  <ul class="menu relative p-0 w-full mt-2 px-0 lg:px-card gap-0">
-    <li class="w-full">
-      {#if Bonfire.Common.Settings.get(
-          [:ui, :sidebar, :disable_collapsible],
-          false,
-          @__context__[:instance_settings] || :instance
-        )}
-        <details open class="details-static w-full overflow-hidden">
-          <summary class="group/sidebar-summary relative font-medium uppercase pl-4 text-xs text-muted list-none after:content-none [&::-webkit-details-marker]:hidden flex">
-            <span class="font-medium text-muted uppercase text-xs flex-1">{l("Feeds")}</span>
-            {#if !Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
-              <LinkLive
-                to={~p"/settings/user/feeds"}
-                label={l("Customize feeds")}
-                class="[@media(hover:hover)]:opacity-0 group-hover/sidebar-summary:opacity-100 group-focus-within/sidebar-summary:opacity-100 btn btn-circle touch-target-expanded size-8 min-h-8 min-w-8 p-0 btn-outline border-secondary touch-manipulation"
-              ><span class="touch-target-hit-area" aria-hidden="true" /><#Icon iconify="ph:gear-six-fill" class="w-4 h-4" /></LinkLive>
-            {/if}
-          </summary>
-
-          <div class="pointer-events-auto">
-            <Bonfire.UI.Common.WidgetsLive
-              id="feeds_nav_links"
-              widgets={@presets}
-              page={@page}
-              type={:link}
-              selected_tab={@selected_tab}
-              container_class="menu before:content-none after:content-none !ml-0 p-0 w-full gap-0"
-            />
-          </div>
-        </details>
-      {#else}
+  <!-- <Bonfire.UI.Common.SidebarSectionDividerLive /> -->
+  <ul class="menu relative p-0 w-full px-0 lg:px-card gap-0">
+    <li id="sidebar-feeds" class="!block w-full min-w-0">
+      <div class="group/sidebar-feeds relative !block !p-0 !rounded-none hover:!bg-transparent">
+        <LinkLive
+          to={@default_href}
+          opts={[
+            id: "sidebar-feeds-link",
+            "phx-click": Phoenix.LiveView.JS.dispatch("click", to: "#sidebar-feeds-list:not([open]) > summary")
+          ]}
+          class="flex w-full min-w-0 items-center gap-2 min-h-9 px-3 pr-20 py-1.5 rounded-selector hover:bg-base-content/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary [@media(pointer:coarse)]:min-h-11 [@media(pointer:coarse)]:pr-24"
+        >
+          <#Icon iconify="ph:rss-simple-fill" class="size-5 shrink-0 text-primary" />
+          <span class={["truncate min-w-0 text-base", Bonfire.UI.Common.LinkWidgetLive.active_label_class(@active?)]}>{l("Feeds")}</span>
+        </LinkLive>
+        <LinkLive
+          :if={!Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
+          to={~p"/settings/user/feeds"}
+          label={l("Customize feeds")}
+          opts={[id: "sidebar-feeds-settings"]}
+          class="absolute right-9 top-0 flex size-9 items-center justify-center rounded-md hover:bg-base-content/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary [@media(hover:hover)]:opacity-0 group-hover/sidebar-feeds:opacity-100 group-focus-within/sidebar-feeds:opacity-100 [@media(pointer:coarse)]:size-11 [@media(pointer:coarse)]:right-11"
+        ><#Icon iconify="ph:gear-six-fill" class="size-4 text-muted" /></LinkLive>
         <details
-          open={Bonfire.Common.Settings.get([Bonfire.Social.FeedLive, :show_feeds_nav_open], true, @__context__)}
-          class="w-full overflow-hidden"
+          id="sidebar-feeds-list"
+          phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+          class="group/sidebar-feed-list !block"
         >
           <summary
-            phx-click="Bonfire.Social.Feeds:toggle_feeds_nav_visibility"
-            class="group/sidebar-summary relative font-medium uppercase pl-4 text-xs text-muted list-none after:content-none [&::-webkit-details-marker]:hidden flex"
-          >
-            <span class="flex-1 w-full">{l("Feeds")}</span>
-            {#if !Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
-              <div class="normal-case font-normal absolute right-0">
-                <LinkLive
-                  to={~p"/settings/user/feeds"}
-                  label={l("Customize feeds")}
-                  class="[@media(hover:hover)]:opacity-0 group-hover/sidebar-summary:opacity-100 group-focus-within/sidebar-summary:opacity-100 z-999 tooltip-button btn btn-circle touch-target-expanded btn-ghost btn-sm touch-manipulation"
-                ><span class="touch-target-hit-area" aria-hidden="true" /><#Icon iconify="ph:gear-six-fill" class="w-4 h-4 text-primary" /></LinkLive>
-              </div>
-            {/if}
-          </summary>
-
-          <Bonfire.UI.Common.WidgetsLive
+            aria-label={l("Expand or collapse feeds")}
+            class="absolute right-0 top-0 flex !p-0 !min-h-0 !size-9 items-center justify-center rounded-md cursor-pointer list-none after:!content-none [&::-webkit-details-marker]:hidden hover:bg-base-content/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary [@media(pointer:coarse)]:!size-11"
+          ><#Icon iconify="ph:caret-right" class="size-3.5 text-muted group-open/sidebar-feed-list:rotate-90" /></summary>
+          <ul
             id="feeds_nav_links"
-            widgets={@presets}
-            page={@page}
-            type={:link}
-            selected_tab={@selected_tab}
-            container_class="menu before:content-none after:content-none !ml-0 p-0 w-full gap-0"
-          />
+            class="sidebar-child-list"
+          >
+            <li :for={preset <- @presets} class="!block w-full min-w-0 !pl-7">
+              <LinkLive
+                to={preset.href}
+                opts={[id: "sidebar-feed-" <> preset.slug, "aria-current": if(preset.active?, do: "page", else: nil)]}
+                class={[
+                  "sidebar-child-link",
+                  "bg-base-content/10 text-base-content": preset.active?,
+                  "text-base-content/80": not preset.active?
+                ]}
+              ><span class="min-w-0 truncate">{preset.name}</span></LinkLive>
+            </li>
+          </ul>
         </details>
-      {/if}
+      </div>
     </li>
   </ul>
 </div>
