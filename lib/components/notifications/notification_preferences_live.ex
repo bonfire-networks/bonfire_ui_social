@@ -71,9 +71,15 @@ defmodule Bonfire.UI.Social.NotificationPreferencesLive do
   defp comparable(value), do: value
 
   @doc """
-  Feed filters and assigns implied by this user's display switches and "Show in centre" switches.
+  Feed filters and assigns implied by this user's display switches and "Notify me about" switches.
 
-  `showing` is the activity types the view asks for, which outrank a "Show in centre" switch.
+  `FeedLoader` already applies the "Notify me about" exclusions to every notifications read, so the
+  query does not need them from here. This page does: the `feed_filters` assign is built from the
+  preset's filters (`feed_default_assigns_from_preset/2`) rather than from what the loader prepared,
+  and the Apply button works by comparing these against that assign. The loader unions, so saying it
+  twice changes no query.
+
+  `showing` is the activity types the view asks for, which outrank a "Notify me about" switch.
   """
   def display_overrides(context, showing \\ []) do
     {filters, assigns} =

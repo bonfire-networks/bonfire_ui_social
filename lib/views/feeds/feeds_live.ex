@@ -186,7 +186,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     mounted_feed_id = assigns(socket)[:feed_component_id]
 
     # Every chip rebuilds the page's feed assigns, as a first load does: asking the mounted component to reload itself instead (`apply_filters`) inserts the right rows but they stay invisible until something rebuilds those assigns, which is why visiting the flags chip made every later chip work. Per-chip component ids were tried too and are worse, as a fresh component mounts and loads unfiltered
-    # this user's display switches: filters go in with the chip's, assigns after the feed ones (which carry the preset's defaults for the same keys). The chip's own types are what it asks for, so its "Show in centre" switch doesn't empty the view that is the way back to it
+    # this user's display switches: filters go in with the chip's, assigns after the feed ones (which carry the preset's defaults for the same keys). The chip's own types are what it asks for, so a hidden category's chip still shows it
     {display_filters, display_assigns} =
       Bonfire.UI.Social.NotificationPreferencesLive.display_overrides(
         socket,
