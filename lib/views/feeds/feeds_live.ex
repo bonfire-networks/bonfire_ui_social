@@ -145,6 +145,53 @@ defmodule Bonfire.UI.Social.FeedsLive do
     set_feed_assigns(maybe_to_atom(tab), params, socket)
   end
 
+  # a notifications category chip, eg. `/notifications/likes`: a chip key, a chip alias, or any verb
+  def handle_params(%{"notification_category" => segment} = params, _url, socket) do
+    case Bonfire.UI.Social.NotificationFiltersLive.resolve_segment(segment, socket) do
+      {chip, preset, filters} ->
+        handle_notification_chip(chip, preset, filters, params, socket)
+
+      nil ->
+        {:noreply, push_patch(socket, to: "/notifications")}
+    end
+  end
+
+  # no segment: the default chip, which is the unfiltered feed
+  def handle_params(params, _url, %{assigns: %{live_action: :notifications}} = socket) do
+    handle_notification_chip(
+      nil,
+      Bonfire.UI.Social.NotificationFiltersLive.default_preset(),
+      %{activity_types: []},
+      params,
+      socket
+    )
+  end
+
+  defp handle_notification_chip(chip, preset, filters, params, socket) do
+    # a mounted `FeedLive` ignores changed assigns ("skip replacing feed unless it was loading"), so
+    # a patch has to tell the component what changed: its filters, plus the preset when the chip
+    # shows a different feed (or when we are coming back from one that did).
+    # NOTE: giving each chip its own component id instead was tried and is worse — the fresh
+    # component mounts and loads UNFILTERED, showing every notification under every chip.
+    mounted_feed_id = assigns(socket)[:feed_component_id]
+    preset_changed? = assigns(socket)[:feed_name] != preset
+
+    params = params |> Map.delete("notification_category") |> Map.merge(Map.new(filters))
+
+    # `selected_tab` after the feed assigns, which set it to the feed name
+    with {:noreply, socket} <- set_feed_assigns(preset, params, socket) do
+      if mounted_feed_id do
+        send_update(
+          Bonfire.UI.Social.FeedLive,
+          [id: mounted_feed_id, apply_filters: filters] ++
+            if(preset_changed?, do: [apply_preset: preset], else: [])
+        )
+      end
+
+      {:noreply, assign(socket, selected_tab: chip)}
+    end
+  end
+
   # def handle_params(%{"tab" => "explore" = _tab} = params, _url, socket) do
   #   if module_enabled?(Bonfire.Social.Pins, socket) and
   #        Bonfire.Common.Settings.get(
@@ -268,9 +315,10 @@ defmodule Bonfire.UI.Social.FeedsLive do
         module == Bonfire.UI.Social.NotificationPreferencesButtonLive
       end)
 
-    if socket.assigns.feed_name == :notifications do
+    if socket.assigns[:live_action] == :notifications do
       assign(socket,
-        page_header_aside: header_aside ++ [{Bonfire.UI.Social.NotificationPreferencesButtonLive, []}]
+        page_header_aside:
+          header_aside ++ [{Bonfire.UI.Social.NotificationPreferencesButtonLive, []}]
       )
     else
       assign(socket, page_header_aside: header_aside)

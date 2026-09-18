@@ -7,7 +7,8 @@
           to={@default_href}
           opts={[
             id: "sidebar-feeds-link",
-            "phx-click": Phoenix.LiveView.JS.dispatch("click", to: "#sidebar-feeds-list:not([open]) > summary")
+            "phx-click":
+              Phoenix.LiveView.JS.dispatch("click", to: "#sidebar-feeds-list:not([open]) > summary")
           ]}
           class="flex w-full min-w-0 items-center gap-2 min-h-9 px-3 pr-20 py-1.5 rounded-selector hover:bg-base-content/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary [@media(pointer:coarse)]:min-h-11 [@media(pointer:coarse)]:pr-24"
         >
@@ -29,11 +30,11 @@
           <summary
             aria-label={l("Expand or collapse feeds")}
             class="absolute right-0 top-0 flex !p-0 !min-h-0 !size-9 items-center justify-center rounded-md cursor-pointer list-none after:!content-none [&::-webkit-details-marker]:hidden hover:bg-base-content/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary [@media(pointer:coarse)]:!size-11"
-          ><#Icon iconify="ph:caret-right" class="size-3.5 text-muted group-open/sidebar-feed-list:rotate-90" /></summary>
-          <ul
-            id="feeds_nav_links"
-            class="sidebar-child-list"
-          >
+          ><#Icon
+              iconify="ph:caret-right"
+              class="size-3.5 text-muted group-open/sidebar-feed-list:rotate-90"
+            /></summary>
+          <ul id="feeds_nav_links" class="sidebar-child-list">
             <li :for={preset <- @presets} class="!block w-full min-w-0 !pl-7">
               <LinkLive
                 to={preset.href}

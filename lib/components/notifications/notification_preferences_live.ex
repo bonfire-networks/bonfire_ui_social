@@ -1,5 +1,10 @@
 defmodule Bonfire.UI.Social.NotificationPreferencesLive do
-  @moduledoc "UI-only notification preferences. Native controls are intentionally disconnected from settings and delivery."
+  @moduledoc """
+  Notification preferences.
+
+  Sections whose backend isn't built yet render only when the app-wide `:show_unimplemented` flag
+  is on, and each drops its check as it is wired up.
+  """
   use Bonfire.UI.Common.Web, :stateless_component
 
   @doc "Activity labels for the notification preferences design preview."
@@ -19,10 +24,12 @@ defmodule Bonfire.UI.Social.NotificationPreferencesLive do
   @doc "Audience options shown as a design preview, not implemented policies."
   def audience_types do
     [
-      {"not_followed", l("People you don’t follow"), l("Accounts outside the people you follow.")},
+      {"not_followed", l("People you don’t follow"),
+       l("Accounts outside the people you follow.")},
       {"not_following", l("People not following you"), l("Accounts that don’t follow you.")},
       {"new", l("New accounts"), l("Accounts created in the past 30 days.")},
-      {"private", l("Unsolicited private mentions"), l("Private mentions outside an existing conversation.")},
+      {"private", l("Unsolicited private mentions"),
+       l("Private mentions outside an existing conversation.")},
       {"moderated", l("Moderated accounts"), l("Accounts limited by instance moderators.")},
       {"bots", l("Bots"), l("Accounts marked as automated.")}
     ]

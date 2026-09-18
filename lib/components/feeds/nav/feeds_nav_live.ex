@@ -7,8 +7,12 @@ defmodule Bonfire.UI.Social.FeedsNavLive do
 
   def render(assigns) do
     available = FeedNavigation.list_presets(current_user: current_user(assigns))
-    preferred = Settings.get([Bonfire.UI.Social.FeedLive, :default_feed], :my, assigns[:__context__])
+
+    preferred =
+      Settings.get([Bonfire.UI.Social.FeedLive, :default_feed], :my, assigns[:__context__])
+
     default = FeedNavigation.resolve_default(available, preferred)
+
     selected =
       case current_url(assigns) do
         url when is_binary(url) ->

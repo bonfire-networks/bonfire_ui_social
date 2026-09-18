@@ -1102,6 +1102,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def feed_default_assigns_from_preset(feed_name, opts) do
+    case feed_preset_and_default_assigns(feed_name, opts) do
+      {:ok, _preset, assigns} -> assigns
+      _ -> []
+    end
+  end
+
+  @doc "Like `feed_default_assigns_from_preset/2` but also returns the (permitted) preset itself, for callers that need its filters or opts."
+  def feed_preset_and_default_assigns(feed_name, opts) do
     # TODO: optimise by avoiding loading the preset twice (here and in prepare_filters_assigns_preloads_posloads)
     with {:ok, %{filters: filters} = preset} <-
            Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, opts) do
@@ -1118,17 +1126,18 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       existing_filters = e(assigns, :feed_filters, %{})
       updated_filters = Map.merge(existing_filters, preset_exclusions)
 
-      assigns
-      |> Keyword.put(:feed_filters, updated_filters)
-      |> maybe_put_new(:page_title, e(preset, :name, nil))
+      {:ok, preset,
+       assigns
+       |> Keyword.put(:feed_filters, updated_filters)
+       |> maybe_put_new(:page_title, e(preset, :name, nil))}
     else
       {:ok, _} ->
         # debug("No preset found with assigns")
-        []
+        {:ok, nil, []}
 
       other ->
         warn(other, "Could not find feed preset")
-        []
+        other
     end
   end
 
@@ -3031,5 +3040,4 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       :ok
     end
   end
-
 end

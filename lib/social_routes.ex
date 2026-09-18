@@ -85,6 +85,11 @@ defmodule Bonfire.UI.Social.Routes do
 
         # live("/notifications", NotificationsFeedLive, as: :notifications)
         live("/notifications", FeedsLive, :notifications, as: :notifications)
+
+        # a category chip, eg. `/notifications/likes` (not named `tab`, which means a feed name here)
+        live("/notifications/:notification_category", FeedsLive, :notifications,
+          as: :notifications
+        )
       end
     end
   end

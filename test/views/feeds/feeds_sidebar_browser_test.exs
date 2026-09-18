@@ -11,6 +11,7 @@ defmodule Bonfire.UI.Social.FeedsSidebarBrowserTest do
   @moduletag :browser
   if System.get_env("PHX_SERVER") not in ~w(yes true 1),
     do: @moduletag(skip: "Run with just test-ui-browser and a free SERVER_PORT")
+
   @endpoint Application.compile_env!(:bonfire, :endpoint_module)
 
   setup do
@@ -29,7 +30,9 @@ defmodule Bonfire.UI.Social.FeedsSidebarBrowserTest do
       session
       |> Browser.resize_window(1440, 1000)
       |> Browser.visit(base_url <> "/login")
-      |> Browser.fill_in(Query.fillable_field("login_fields[email_or_username]"), with: user.character.username)
+      |> Browser.fill_in(Query.fillable_field("login_fields[email_or_username]"),
+        with: user.character.username
+      )
       |> Browser.fill_in(Query.fillable_field("login_fields[password]"), with: password)
       |> Browser.click(Query.css("#login_submit_btn"))
       |> Browser.assert_has(Query.css(".phx-connected #sidebar-feeds-link"))
@@ -37,7 +40,8 @@ defmodule Bonfire.UI.Social.FeedsSidebarBrowserTest do
     %{session: session}
   end
 
-  test "disclosure stays open through feed navigation and stays closed after another navigation", %{session: session} do
+  test "disclosure stays open through feed navigation and stays closed after another navigation",
+       %{session: session} do
     session
     |> Browser.assert_has(Query.css("#sidebar-feeds-list:not([open]) > summary"))
     |> Browser.click(Query.css("#sidebar-feeds-link"))

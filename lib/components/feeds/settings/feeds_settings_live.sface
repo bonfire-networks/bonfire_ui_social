@@ -5,7 +5,12 @@
       )}</div>
   </div>
 
-  <.form for={@default_feed_form} id="default-feed-form" class="p-4 border-b border-secondary" phx-change="Bonfire.Common.Settings:set">
+  <.form
+    for={@default_feed_form}
+    id="default-feed-form"
+    class="p-4 border-b border-secondary"
+    phx-change="Bonfire.Common.Settings:set"
+  >
     <Bonfire.UI.Common.SettingsSelectLive
       keys={[Bonfire.UI.Social.FeedLive, :default_feed]}
       id="default-feed-select"

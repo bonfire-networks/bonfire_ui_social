@@ -26,7 +26,10 @@
         phx-change="set_feed_order"
         phx-target={@event_target}
       >
-        <label for={"feed_order_#{@feed_name || "default"}"} class="text-sm font-normal text-(--stream-text-secondary)">{l("Sort")}</label>
+        <label
+          for={"feed_order_#{@feed_name || "default"}"}
+          class="text-sm font-normal text-(--stream-text-secondary)"
+        >{l("Sort")}</label>
         <select
           id={"feed_order_#{@feed_name || "default"}"}
           name="feed_order"
@@ -58,7 +61,10 @@
           toggle_role="feed_override_toggle"
         />
       </fieldset>
-      <div class="mt-1.5 border-t border-base-content/10 pt-1" data-role="feed_advanced_filters_wrapper">
+      <div
+        class="mt-1.5 border-t border-base-content/10 pt-1"
+        data-role="feed_advanced_filters_wrapper"
+      >
         <Bonfire.UI.Common.OpenExpanderLive
           parent_id={"feed_filters_#{@feed_name}"}
           modal_assigns={Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}

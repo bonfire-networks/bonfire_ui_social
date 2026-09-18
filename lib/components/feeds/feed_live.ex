@@ -226,6 +226,28 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   # the filters modal applies its pending state via send_update (see
   # FeedFiltersModalContentLive.handle_event("apply", ...)), replacing lists wholesale
+  # switch this component to another feed preset, applying the preset's own filters, opts and gate (unlike `apply_filters`, which can only narrow the feed this component already has). Must come before the `apply_filters` clause, as a caller can send both at once
+  def update(%{apply_preset: preset_name} = assigns, socket) do
+    case LiveHandler.feed_preset_and_default_assigns(preset_name, to_options(socket)) do
+      {:ok, preset, preset_assigns} ->
+        socket =
+          socket
+          |> assign(preset_assigns)
+          # so `reload/3` and the loader resolve this preset (and its `opts`) rather than the old feed
+          |> assign(feed_name: preset_name)
+
+        filters =
+          Enums.merge_as_map(e(preset, :filters, %{}), e(assigns, :apply_filters, nil) || %{})
+
+        {:noreply, socket} = reload(filters, socket, true)
+        {:ok, socket}
+
+      other ->
+        warn(other, "Could not apply feed preset")
+        {:ok, socket}
+    end
+  end
+
   def update(%{apply_filters: filters}, socket) when is_map(filters) do
     case set_filters(filters, socket, true) do
       {:noreply, socket} -> {:ok, socket}
@@ -1099,12 +1121,20 @@ defmodule Bonfire.UI.Social.FeedLive do
     socket =
       socket
       |> assign(
+        # an async load addresses its result at `assigns[:feed_component_id]`, but a LiveComponent's
+        # socket carries its id as `assigns[:id]`, so without this a reload started from inside this
+        # component dispatches to a recomputed id, the result never arrives, and the feed stays stuck
+        # on its loading placeholder (only visible outside `:test`, where feeds load synchronously)
+        feed_component_id: e(assigns, :feed_component_id, nil) || e(assigns, :id, nil),
         loading: reset,
         reloading: !reset,
         page_info: nil,
         previous_page_info: nil,
         newer_page_info: nil,
         resumed_from_marker: nil,
+        # a stale count from the previous filters makes an empty result render the end-of-feed
+        # message instead of the empty state
+        feed_count: nil,
         feed_filters: feed_filters
       )
 

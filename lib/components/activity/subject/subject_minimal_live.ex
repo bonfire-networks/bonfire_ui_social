@@ -1,4 +1,15 @@
 defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
+  @moduledoc """
+  The subject line of a notification row.
+
+  TODO: `notification_icon/1` and `notification_aggregate?/1` both dispatch on localised verb DISPLAY
+  STRINGS ("Boost", "Request to Quote"), which breaks in any other locale and duplicates what is
+  already declared elsewhere: the verb registry declares an icon per verb (in `-duotone` variants,
+  where these are `-fill`), and `Bonfire.UI.Social.NotificationFiltersLive` already resolves
+  icon-override-then-verb for the chip bar. Refactor both to be config-based and keyed on the verb
+  ATOM, with the registry as the default and config as the single override point, once
+  `Activities.experienced_verb/2` exists to supply that atom.
+  """
   use Bonfire.UI.Common.Web, :stateless_component
 
   # Source the verb families from the same compile-env keys ActivityLive uses,

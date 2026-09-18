@@ -1,26 +1,32 @@
-<fieldset id="notification-filters" aria-describedby="notification-filters-preview" class="mb-4 min-w-0 border-b border-base-content/10">
-  <legend class="sr-only">{l("Filter notifications")}</legend>
-  <p id="notification-filters-preview" class="sr-only">{l("Design preview: selecting a category does not filter the feed yet.")}</p>
-  <div id="notification-filter-options" phx-update="ignore" class="grid grid-cols-8">
-    {#for {key, label, icon} <- categories()}
-      <label class="tooltip tooltip-bottom relative min-w-0 cursor-pointer" data-tip={label}>
-        <input
-          id={"notification-filter-#{key}"}
-          type="radio"
-          name="notification-category"
-          value={key}
-          aria-label={label}
-          checked={key == "all"}
-          class="peer sr-only"
-        />
-        <span class="flex min-h-12 items-center justify-center border-b-2 border-transparent text-base-content/60 hover:bg-base-content/5 peer-checked:border-primary peer-checked:text-primary peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-[-2px]">
-          {#if key == "all"}
-            <span class="text-sm font-medium">{l("All")}</span>
-          {#else}
+<nav
+  id="notification-filters"
+  aria-label={l("Filter notifications")}
+  class="mb-4 min-w-0 border-b border-base-content/10"
+>
+  <ul class="flex min-w-0 list-none p-0">
+    {#for {key, chip} <- chips(@__context__)}
+      <li class="min-w-0 flex-1">
+        <LinkPatchLive
+          to={chip_path(key, chip)}
+          opts={[
+            id: "notification-filter-#{key}",
+            "data-tip": chip_label(key, chip),
+            "aria-current": if(current?(key, @selected_tab), do: "page", else: nil)
+          ]}
+          class={
+            "tooltip tooltip-bottom flex min-h-12 w-full items-center justify-center border-b-2 text-base-content/60 hover:bg-base-content/5 focus-visible:outline-2 focus-visible:-outline-offset-2",
+            "border-primary text-primary": current?(key, @selected_tab),
+            "border-transparent": !current?(key, @selected_tab)
+          }
+        >
+          {#if icon = chip_icon(key, chip)}
             <span aria-hidden="true"><Iconify.iconify icon={icon} class="size-5" /></span>
+            <span class="sr-only">{chip_label(key, chip)}</span>
+          {#else}
+            <span class="truncate px-2 text-sm font-medium">{chip_label(key, chip)}</span>
           {/if}
-        </span>
-      </label>
+        </LinkPatchLive>
+      </li>
     {/for}
-  </div>
-</fieldset>
+  </ul>
+</nav>

@@ -10,14 +10,16 @@
     href={FeedController.feed_path("rss", @feed_name, %{})}
   />
 
+  {!-- these two check the route, not the feed name, which a chip can switch to another preset --}
   <StatelessComponent
-    :if={@feed_name == :notifications}
+    :if={@live_action == :notifications}
     module={maybe_component(Bonfire.UI.Social.NotificationPreferencesLive, @__context__)}
   />
 
   <StatelessComponent
-    :if={@feed_name == :notifications}
+    :if={@live_action == :notifications}
     module={maybe_component(Bonfire.UI.Social.NotificationFiltersLive, @__context__)}
+    selected_tab={@selected_tab}
   />
 
   <StatefulComponent
