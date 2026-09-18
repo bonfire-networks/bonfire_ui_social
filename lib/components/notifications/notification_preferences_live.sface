@@ -1,0 +1,130 @@
+<section
+  id="notification-preferences-panel"
+  aria-labelledby="notification-preferences-title"
+  style="display: none;"
+  class="mb-8 border-b-4 border-base-content/20 pb-6 text-base-content"
+>
+  <div id="notification-preferences-controls" phx-update="ignore" class="p-card space-y-4">
+    <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+      <h2 id="notification-preferences-title" class="text-heading font-medium">{l("Notification preferences")}</h2>
+      <p id="notification-preferences-preview-notice" class="text-xs text-base-content/60">
+        {l("Preview only · Changes are not saved")}
+      </p>
+    </div>
+
+    <section
+      id="notification-push-preview"
+      aria-labelledby="notification-push-title"
+      class="relative isolate overflow-hidden rounded-box p-4"
+      style="background: color-mix(in oklch, var(--color-primary) 4%, var(--color-base-100));"
+    >
+      <span
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-0 -z-10"
+        style="background-image: radial-gradient(circle, color-mix(in oklch, var(--color-primary) 30%, transparent) 1px, transparent 1px); background-size: 12px 12px; mask-image: linear-gradient(90deg, transparent 45%, black);"
+      />
+      <h3 id="notification-push-title" class="text-sm font-medium">{l("Push notifications")}</h3>
+      <p id="notification-push-preview-note" class="sr-only">
+        {l("Sample devices for this preview. No browser permission is requested and no real subscriptions are changed.")}
+      </p>
+
+      <div>
+        <label for="notification-push-this-browser" class="flex min-h-11 cursor-pointer items-center gap-3 py-3 text-sm">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-6 shrink-0 text-primary">
+            <rect x="3" y="4" width="18" height="13" rx="2" /><path d="M8 21h8m-4-4v4" />
+          </svg>
+          <span class="flex-1">
+            <span class="block font-medium">{l("This browser")}</span>
+            <span class="block text-xs text-base-content/60">{l("Enable push alerts")}</span>
+          </span>
+          <input id="notification-push-this-browser" type="checkbox" class="toggle toggle-sm toggle-primary shrink-0" aria-describedby="notification-push-preview-note" />
+        </label>
+      </div>
+
+      <details id="notification-push-other-devices">
+        <summary class="min-h-11 cursor-pointer py-3 text-sm text-base-content/70 focus-visible:outline focus-visible:outline-2">{l("Manage other devices")} <span class="text-xs">{l("· Sample")}</span></summary>
+        <div id="notification-push-sample-device" class="flex items-center justify-between gap-4 py-3">
+          <div class="min-w-0 text-sm">
+            <p class="font-medium">{l("Safari on iPhone")}</p>
+            <p class="mt-1 text-xs text-base-content/60">{l("Push enabled")}</p>
+          </div>
+          <button
+            id="notification-push-remove-sample"
+            type="button"
+            class="btn btn-ghost btn-sm min-h-11 shrink-0"
+            aria-label={l("Remove sample Safari on iPhone subscription")}
+            phx-click={JS.hide(to: "#notification-push-sample-device")
+              |> JS.show(to: "#notification-push-sample-removed")
+              |> JS.focus(to: "#notification-push-undo-remove")}
+          >{l("Remove")}</button>
+        </div>
+        <div id="notification-push-sample-removed" style="display: none;" role="status">
+          <div class="flex items-center justify-between gap-4 py-3 text-sm">
+            <p class="text-base-content/70">{l("Sample device removed from this preview.")}</p>
+            <button
+              id="notification-push-undo-remove"
+              type="button"
+              class="btn btn-ghost btn-sm min-h-11 shrink-0"
+              phx-click={JS.show(to: "#notification-push-sample-device")
+                |> JS.hide(to: "#notification-push-sample-removed")
+                |> JS.focus(to: "#notification-push-remove-sample")}
+            >{l("Undo")}</button>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <fieldset class="border-t border-base-content/10 pt-4" aria-describedby="notification-preferences-preview-notice">
+      <legend class="sr-only">{l("Notify me about")}</legend>
+      <div class="grid grid-cols-[minmax(0,1fr)_5.5rem_3rem] sm:grid-cols-[minmax(0,1fr)_8rem_5rem] items-center gap-2 pb-3 text-xs">
+        <span class="text-base font-medium">{l("Notify me about")}</span>
+        <span class="text-center text-base-content/70">{l("Show in centre")}</span>
+        <span class="text-center text-base-content/70">{l("Push")}</span>
+      </div>
+      {#for {key, label} <- activity_types()}
+        <div class="grid grid-cols-[minmax(0,1fr)_5.5rem_3rem] sm:grid-cols-[minmax(0,1fr)_8rem_5rem] items-center gap-2 py-1">
+          <span class="text-sm">{label}</span>
+          <label class="flex min-h-8 cursor-pointer items-center justify-center">
+            <span class="sr-only">{l("%{type}: show in notification centre", type: label)}</span>
+            <input id={"notification-pref-#{key}-centre"} type="checkbox" class="toggle toggle-sm toggle-primary" checked />
+          </label>
+          <label class="flex min-h-8 cursor-pointer items-center justify-center">
+            <span class="sr-only">{l("%{type}: push notifications", type: label)}</span>
+            <input id={"notification-pref-#{key}-push"} type="checkbox" class="toggle toggle-sm toggle-primary" />
+          </label>
+        </div>
+      {/for}
+    </fieldset>
+
+    <details class="border-t border-base-content/10 pt-4">
+      <summary id="notification-audience-toggle" class="min-h-8 cursor-pointer py-2 text-base font-medium focus-visible:outline focus-visible:outline-2">
+        {l("Manage who you hear from")}
+      </summary>
+      <p class="mt-1 mb-4 text-sm leading-relaxed text-base-content/70">{l("Accept shows notifications normally. Filter holds them for review without push alerts. Ignore hides them and suppresses push alerts.")}</p>
+      {#for {key, label, description} <- audience_types()}
+        <div class="flex items-center justify-between gap-4 py-3">
+          <label for={"notification-audience-#{key}"} class="min-w-0 text-sm">
+            <span class="block font-medium">{label}</span>
+            <span class="mt-1 block text-sm leading-relaxed text-base-content/70">{description}</span>
+          </label>
+          <select id={"notification-audience-#{key}"} class="select select-bordered min-h-8 w-auto shrink-0 text-base">
+            <option value="accept">{l("Accept")}</option>
+            <option value="filter">{l("Filter")}</option>
+            <option value="ignore">{l("Ignore")}</option>
+          </select>
+        </div>
+      {/for}
+    </details>
+
+    <fieldset class="border-t border-base-content/10 pt-6">
+      <legend class="sr-only">{l("Display")}</legend>
+      <h3 class="mb-3 text-base font-medium">{l("Display")}</h3>
+      {#for {key, label} <- [{"highlight", l("Highlight unread notifications")}, {"filters", l("Show category filters")}, {"group", l("Group similar notifications")}]}
+        <label class="flex min-h-8 cursor-pointer items-center justify-between gap-3 py-2 text-sm">
+          <span>{label}</span>
+          <input id={"notification-display-#{key}"} type="checkbox" class="toggle toggle-sm toggle-primary" checked />
+        </label>
+      {/for}
+    </fieldset>
+  </div>
+</section>

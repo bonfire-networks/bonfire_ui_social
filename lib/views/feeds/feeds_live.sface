@@ -10,6 +10,16 @@
     href={FeedController.feed_path("rss", @feed_name, %{})}
   />
 
+  <StatelessComponent
+    :if={@feed_name == :notifications}
+    module={maybe_component(Bonfire.UI.Social.NotificationPreferencesLive, @__context__)}
+  />
+
+  <StatelessComponent
+    :if={@feed_name == :notifications}
+    module={maybe_component(Bonfire.UI.Social.NotificationFiltersLive, @__context__)}
+  />
+
   <StatefulComponent
     module={maybe_component(Bonfire.UI.Social.FeedLive, @__context__)}
     id={@feed_component_id}

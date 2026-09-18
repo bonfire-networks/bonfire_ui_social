@@ -1,0 +1,12 @@
+<button
+  id="notification-preferences-toggle"
+  type="button"
+  class="btn btn-ghost btn-circle"
+  aria-expanded="false"
+  aria-controls="notification-preferences-panel"
+  phx-click={JS.toggle(to: "#notification-preferences-panel")
+    |> JS.toggle_attribute({"aria-expanded", "true", "false"}, to: "#notification-preferences-toggle")}
+>
+  <#Icon iconify="ph:sliders-horizontal" class="size-5" />
+  <span class="sr-only">{l("Preferences")}</span>
+</button>

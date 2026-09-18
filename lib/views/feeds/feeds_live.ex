@@ -256,9 +256,25 @@ defmodule Bonfire.UI.Social.FeedsLive do
     socket =
       socket
       |> assign(feed_assigns |> debug("feed_default_assigns"))
+      |> assign_notification_preferences()
       |> maybe_clear_badge_on_visit()
 
     configure_widgets(socket)
+  end
+
+  defp assign_notification_preferences(socket) do
+    header_aside =
+      Enum.reject(socket.assigns.page_header_aside, fn {module, _opts} ->
+        module == Bonfire.UI.Social.NotificationPreferencesButtonLive
+      end)
+
+    if socket.assigns.feed_name == :notifications do
+      assign(socket,
+        page_header_aside: header_aside ++ [{Bonfire.UI.Social.NotificationPreferencesButtonLive, []}]
+      )
+    else
+      assign(socket, page_header_aside: header_aside)
+    end
   end
 
   def handle_info({:feed_filters_changed, component_id, feed_name, filters}, socket) do
