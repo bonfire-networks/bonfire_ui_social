@@ -168,25 +168,22 @@ defmodule Bonfire.UI.Social.FeedsLive do
   end
 
   defp handle_notification_chip(chip, preset, filters, params, socket) do
-    # a mounted `FeedLive` ignores changed assigns ("skip replacing feed unless it was loading"), so
-    # a patch has to tell the component what changed: its filters, plus the preset when the chip
-    # shows a different feed (or when we are coming back from one that did).
-    # NOTE: giving each chip its own component id instead was tried and is worse — the fresh
-    # component mounts and loads UNFILTERED, showing every notification under every chip.
+    # a mounted `FeedLive` ignores changed assigns ("skip replacing feed unless it was loading"), so a patch has to tell the component what changed. NOTE: giving each chip its own component id instead was tried and is worse, as the fresh component mounts and loads UNFILTERED
     mounted_feed_id = assigns(socket)[:feed_component_id]
-    preset_changed? = assigns(socket)[:feed_name] != preset
 
+    # Every chip rebuilds the page's feed assigns, as a first load does: asking the mounted component to reload itself instead (`apply_filters`) inserts the right rows but they stay invisible until something rebuilds those assigns, which is why visiting the flags chip made every later chip work. Per-chip component ids were tried too and are worse, as a fresh component mounts and loads unfiltered
     params = params |> Map.delete("notification_category") |> Map.merge(Map.new(filters))
 
     # `selected_tab` after the feed assigns, which set it to the feed name
     with {:noreply, socket} <- set_feed_assigns(preset, params, socket) do
-      if mounted_feed_id do
-        send_update(
-          Bonfire.UI.Social.FeedLive,
-          [id: mounted_feed_id, apply_filters: filters] ++
-            if(preset_changed?, do: [apply_preset: preset], else: [])
-        )
-      end
+      # a different preset (the flags chip) also needs the mounted component switched over to it, with the narrowing, since `apply_preset` alone would reload that preset unfiltered
+      if mounted_feed_id,
+        do:
+          send_update(Bonfire.UI.Social.FeedLive,
+            id: mounted_feed_id,
+            apply_preset: preset,
+            apply_filters: filters
+          )
 
       {:noreply, assign(socket, selected_tab: chip)}
     end

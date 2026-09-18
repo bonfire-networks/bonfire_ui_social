@@ -21,12 +21,9 @@ defmodule Bonfire.UI.Social.NotificationFiltersLive do
   @doc """
   Chips to render, in display order, from config.
 
-  An entry naming a `preset` takes its label, icon and the verbs it filters by from that feed
-  preset, and appears only when the preset's own gate permits it
-  (`Feeds.feed_preset_if_permitted/2`, which is how `instance_permission_required` and
-  `current_user_required` are already enforced for presets), so a chip needs no permission
-  vocabulary of its own. Its path still comes from its key, so it narrows this feed like any other
-  chip rather than navigating away to the preset's own feed.
+  Every chip is a feed preset plus a narrowing. The narrowing is what `filters` holds; a reload of an already-mounted feed has to merge it onto the preset's own filters (`Feeds.preset_filters/2`), or it silently drops preset settings and loads an unbounded, ungrouped feed, while a first load passes the narrowing alone because it resolves the preset itself. Label and icon fall back to the preset's.
+
+  A chip may name its own `preset` to show a different feed, and then that preset's gate decides whether the chip appears at all (`Feeds.feed_preset_if_permitted/2`, which is how `instance_permission_required` and `current_user_required` are enforced for presets), so a chip needs no permission vocabulary of its own. Chips that don't name one use `default_preset/0` purely as a source of filters, and stay visible regardless of its gate.
   """
   def chips(context \\ nil) do
     Config.get([__MODULE__, :notification_chips], [],
@@ -36,25 +33,30 @@ defmodule Bonfire.UI.Social.NotificationFiltersLive do
     |> Enum.flat_map(&from_feed_preset(&1, context))
   end
 
-  defp from_feed_preset({key, %{preset: preset_key} = chip}, context) do
-    case Bonfire.Social.Feeds.feed_preset_if_permitted(preset_key, context) do
+  defp from_feed_preset({key, chip}, context) do
+    named_preset = e(chip, :preset, nil)
+
+    case Bonfire.Social.Feeds.feed_preset_if_permitted(named_preset || default_preset(), context) do
       {:ok, preset} ->
-        [
-          {key,
-           %{
-             name_pluralized: e(chip, :name_pluralized, nil) || e(preset, :name, nil),
-             icon: e(chip, :icon, nil) || e(preset, :icon, nil),
-             description: e(chip, :description, nil) || e(preset, :description, nil),
-             path_aliases: e(chip, :path_aliases, [])
-           }}
-        ]
+        [{key, from_preset(key, chip, preset)}]
 
       _not_permitted ->
-        []
+        # a chip that NAMES a preset belongs to that feed, so its gate hides the chip; the default preset is only where filters come from, so keep the chip and narrow nothing
+        if named_preset, do: [], else: [{key, chip}]
     end
   end
 
-  defp from_feed_preset(entry, _context), do: [entry]
+  defp from_preset(key, chip, preset) do
+    %{
+      name_pluralized: e(chip, :name_pluralized, nil) || e(preset, :name, nil),
+      icon: e(chip, :icon, nil) || e(preset, :icon, nil),
+      description: e(chip, :description, nil) || e(preset, :description, nil),
+      preset: e(chip, :preset, nil),
+      # the narrowing only: merged onto the preset's own filters by whoever reloads a mounted feed, but passed alone to a first load, which resolves the preset itself
+      filters: e(chip, :filters, nil) || default_filters(key),
+      path_aliases: e(chip, :path_aliases, [])
+    }
+  end
 
   @doc """
   The URL for a chip: the first of its `path_aliases` when set, else its key.
@@ -77,10 +79,7 @@ defmodule Bonfire.UI.Social.NotificationFiltersLive do
   @doc """
   Resolves a URL segment to `{chip key, feed preset, extra filters}`, or `nil` when it names nothing.
 
-  Chips are matched first (by key or by any of their aliases), then any declared verb, so a
-  category with no chip still has a URL. A chip only declares `filters` when they differ from
-  "activities of the verb my key names", and only declares a `preset` when it shows a different feed
-  (in which case that preset supplies the filters, so there are no extra ones).
+  Chips are matched first (by key or by any of their aliases), then any declared verb, so a category with no chip still has a URL. The filters returned are already complete (preset merged with narrowing, see `chips/1`); a chip config entry only states `filters` when they differ from "activities of the verb my key names".
   """
   def resolve_segment(segment, context \\ nil)
 
@@ -97,10 +96,8 @@ defmodule Bonfire.UI.Social.NotificationFiltersLive do
   defp resolve_chip(segment, context) do
     Enum.find_value(chips(context), fn {key, chip} ->
       if to_string(key) == segment or segment in e(chip, :path_aliases, []) do
-        case e(chip, :preset, nil) do
-          nil -> {key, default_preset(), e(chip, :filters, nil) || default_filters(key)}
-          preset -> {key, preset, %{}}
-        end
+        # `chips/1` has already merged the preset's filters with this chip's narrowing
+        {key, e(chip, :preset, nil) || default_preset(), e(chip, :filters, nil) || %{}}
       end
     end)
   end

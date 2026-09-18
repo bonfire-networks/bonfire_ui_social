@@ -1121,10 +1121,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     socket =
       socket
       |> assign(
-        # an async load addresses its result at `assigns[:feed_component_id]`, but a LiveComponent's
-        # socket carries its id as `assigns[:id]`, so without this a reload started from inside this
-        # component dispatches to a recomputed id, the result never arrives, and the feed stays stuck
-        # on its loading placeholder (only visible outside `:test`, where feeds load synchronously)
+        # an async load addresses its result at `assigns[:feed_component_id]` but a LiveComponent's socket carries its id as `assigns[:id]`, so without this a reload started from inside this component dispatches to a recomputed id and the result never arrives (invisible in `:test`, where feeds load synchronously)
         feed_component_id: e(assigns, :feed_component_id, nil) || e(assigns, :id, nil),
         loading: reset,
         reloading: !reset,
@@ -1135,6 +1132,8 @@ defmodule Bonfire.UI.Social.FeedLive do
         # a stale count from the previous filters makes an empty result render the end-of-feed
         # message instead of the empty state
         feed_count: nil,
+        # the `preload_more` event sets this to "infinite_scroll" and it STICKS in assigns, so after any scroll-triggered preload every later stream render marks its entries `hidden`, waiting on scroll JS to reveal them. A reset batch is a fresh first page, so it has to be visible or the feed looks empty while holding rows
+        hide_activities: if(reset, do: nil, else: e(assigns, :hide_activities, nil)),
         feed_filters: feed_filters
       )
 
