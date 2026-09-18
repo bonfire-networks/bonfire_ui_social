@@ -98,7 +98,7 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
     |> assert_has("[data-verb=Follow]")
   end
 
-  test "a chip with no matching notifications shows the empty state, and going back restores the feed",
+  test "a chip with no matching notifications says so, and going back restores the feed",
        %{conn: conn} do
     conn
     |> visit("/notifications")
@@ -106,7 +106,8 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
     # nothing in the fixtures is a boost
     |> click_link("#notification-filter-boost", "Boosts")
     |> wait_async()
-    |> assert_has("[data-id=empty-feed]", text: "You have no notifications")
+    # the notifications preset queries a 30-day window, so the answer names the window: the preset's "You have no notifications" would claim more than the query asked
+    |> assert_has("[data-id=feed]", text: "That's all for the last")
     |> refute_has("[data-verb=Like]")
     |> click_link("#notification-filter-latest", "Latest")
     |> wait_async()
@@ -165,9 +166,9 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
 
   test "chips render from config, in config order, falling back to the key for the path" do
     Process.put(
-      [:bonfire_ui_social, NotificationFiltersLive, :notification_chips],
-      latest: %{name_pluralized: "Everything"},
-      like: %{name_pluralized: "Faves", filters: %{activity_types: [:like]}}
+      [:bonfire_social, Bonfire.Social.Notifications, :categories],
+      latest: %{name_pluralized: "Everything", activity_types: []},
+      like: %{name_pluralized: "Faves"}
     )
 
     doc =

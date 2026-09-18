@@ -1,15 +1,20 @@
 <section
-  :if={show_unimplemented?()}
   id="notification-preferences-panel"
   aria-labelledby="notification-preferences-title"
   style="display: none;"
   class="mb-8 border-b-4 border-base-content/20 pb-6 text-base-content"
 >
-  <div id="notification-preferences-controls" phx-update="ignore" class="p-card space-y-4">
+  {!-- no `phx-update="ignore"`: these controls are live, and ignoring updates would freeze their checked state and the Apply button --}
+  <div id="notification-preferences-controls" class="p-card space-y-4">
     <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
       <h2 id="notification-preferences-title" class="text-heading font-medium">{l("Notification preferences")}</h2>
-      <p id="notification-preferences-preview-notice" class="text-xs text-base-content/60">
-        {l("Preview only · Changes are not saved")}
+      {!-- only the sections that are still unbuilt claim to be a preview, so a live section never says its changes are discarded --}
+      <p
+        :if={show_unimplemented?()}
+        id="notification-preferences-preview-notice"
+        class="text-xs text-base-content/60"
+      >
+        {l("Some sections below are previews · Their changes are not saved")}
       </p>
     </div>
 
@@ -93,21 +98,37 @@
       </details>
     </section>
 
-    <fieldset
-      class="border-t border-base-content/10 pt-4"
-      aria-describedby="notification-preferences-preview-notice"
-    >
+    {!-- no `aria-describedby` on the preview notice: the "Show in centre" column saves, and only the Push beside it is still a preview --}
+    <fieldset class="border-t border-base-content/10 pt-4">
       <legend class="sr-only">{l("Notify me about")}</legend>
       <div class="grid grid-cols-[minmax(0,1fr)_5.5rem_3rem] sm:grid-cols-[minmax(0,1fr)_8rem_5rem] items-center gap-2 pb-3 text-xs">
         <span class="text-base font-medium">{l("Notify me about")}</span>
-        <span class="text-center text-base-content/70">{l("Show in centre")}</span>
+        {!-- named after the chip it affects: switching a category off drops it from Latest, while its own chip still shows it --}
+        <span class="text-center text-base-content/70">{l("Show in Latest")}</span>
         <span :if={show_unimplemented?()} class="text-center text-base-content/70">{l("Push")}</span>
       </div>
-      {#for {key, label} <- activity_types()}
+      {#for {key, label, wired?} <- notification_rows()}
         <div class="grid grid-cols-[minmax(0,1fr)_5.5rem_3rem] sm:grid-cols-[minmax(0,1fr)_8rem_5rem] items-center gap-2 py-1">
           <span class="text-sm">{label}</span>
-          <label class="flex min-h-8 cursor-pointer items-center justify-center">
-            <span class="sr-only">{l("%{type}: show in notification centre", type: label)}</span>
+          {!-- a row whose switch nothing honours yet stays inert rather than saving a setting no query reads --}
+          <form
+            :if={wired?}
+            data-scope={key}
+            phx-change="Bonfire.Common.Settings:set"
+            class="flex min-h-8 items-center justify-center"
+          >
+            <label class="flex cursor-pointer items-center justify-center">
+              <span class="sr-only">{l("%{type}: show in Latest notifications", type: label)}</span>
+              <Bonfire.UI.Common.SettingsToggleLive
+                id={"notification-pref-#{key}-centre"}
+                keys={Notifications.show_in_centre_key(key)}
+                default_value
+                compact
+              />
+            </label>
+          </form>
+          <label :if={!wired?} class="flex min-h-8 cursor-pointer items-center justify-center">
+            <span class="sr-only">{l("%{type}: show in Latest notifications", type: label)}</span>
             <input
               id={"notification-pref-#{key}-centre"}
               type="checkbox"
@@ -130,7 +151,11 @@
       {/for}
     </fieldset>
 
-    <details :if={show_unimplemented?()} class="border-t border-base-content/10 pt-4">
+    <details
+      :if={show_unimplemented?()}
+      id="notification-audience-preview"
+      class="border-t border-base-content/10 pt-4"
+    >
       <summary
         id="notification-audience-toggle"
         class="min-h-8 cursor-pointer py-2 text-base font-medium focus-visible:outline-2"
@@ -161,21 +186,31 @@
     <fieldset class="border-t border-base-content/10 pt-6">
       <legend class="sr-only">{l("Display")}</legend>
       <h3 class="mb-3 text-base font-medium">{l("Display")}</h3>
-      {#for {key, label} <- [
-          {"highlight", l("Highlight unread notifications")},
-          {"filters", l("Show category filters")},
-          {"group", l("Group similar notifications")}
-        ]}
-        <label class="flex min-h-8 cursor-pointer items-center justify-between gap-3 py-2 text-sm">
-          <span>{label}</span>
-          <input
+      {#for {key, toggle} <- display_toggles()}
+        <form data-scope={key} phx-change="Bonfire.Common.Settings:set" class="py-2">
+          <Bonfire.UI.Common.SettingsToggleLive
             id={"notification-display-#{key}"}
-            type="checkbox"
-            class="toggle toggle-sm toggle-primary"
-            checked
+            name={e(toggle, :name, key)}
+            description={e(toggle, :description, nil)}
+            keys={display_setting_key(key)}
+            default_value={e(toggle, :default, false)}
           />
-        </label>
+        </form>
       {/for}
+
+      {!-- switches save as you flip them; the feed is only re-queried on demand, so one reload covers however many you changed --}
+      <div
+        :if={display_pending?(@__context__, @feed_filters, @feed_assigns)}
+        id="notification-display-apply"
+        class="mt-3 flex items-center justify-between gap-3 border-t border-base-content/10 pt-3"
+      >
+        <p role="status" class="text-sm text-base-content/70">{l("Saved. The feed below hasn't caught up yet.")}</p>
+        <button
+          type="button"
+          class="btn btn-sm btn-primary shrink-0"
+          phx-click="apply_notification_display"
+        >{l("Apply to feed")}</button>
+      </div>
     </fieldset>
   </div>
 </section>

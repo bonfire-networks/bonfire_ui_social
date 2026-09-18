@@ -116,6 +116,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
          hide_filters: false,
          tab_path_suffix: nil,
          feed_component_id: nil,
+         # set per feed by the preset's assigns, but needed before the first load too
+         enable_marker: nil,
          feedback_title: l("Your feed is empty"),
          feedback_message:
            l("You can start by following some people, or writing a new post yourself."),
@@ -167,22 +169,48 @@ defmodule Bonfire.UI.Social.FeedsLive do
     )
   end
 
+  # display switches save as they are flipped (`SettingsToggleLive`), and this re-queries the feed once for however many changed, rather than reloading on every toggle
+  def handle_event("apply_notification_display", _params, socket) do
+    {:noreply,
+     push_patch(socket,
+       to:
+         Bonfire.UI.Social.NotificationFiltersLive.path_for(
+           assigns(socket)[:selected_tab],
+           socket
+         )
+     )}
+  end
+
   defp handle_notification_chip(chip, preset, filters, params, socket) do
     # a mounted `FeedLive` ignores changed assigns ("skip replacing feed unless it was loading"), so a patch has to tell the component what changed. NOTE: giving each chip its own component id instead was tried and is worse, as the fresh component mounts and loads UNFILTERED
     mounted_feed_id = assigns(socket)[:feed_component_id]
 
     # Every chip rebuilds the page's feed assigns, as a first load does: asking the mounted component to reload itself instead (`apply_filters`) inserts the right rows but they stay invisible until something rebuilds those assigns, which is why visiting the flags chip made every later chip work. Per-chip component ids were tried too and are worse, as a fresh component mounts and loads unfiltered
-    params = params |> Map.delete("notification_category") |> Map.merge(Map.new(filters))
+    # this user's display switches: filters go in with the chip's, assigns after the feed ones (which carry the preset's defaults for the same keys). The chip's own types are what it asks for, so its "Show in centre" switch doesn't empty the view that is the way back to it
+    {display_filters, display_assigns} =
+      Bonfire.UI.Social.NotificationPreferencesLive.display_overrides(
+        socket,
+        e(filters, :activity_types, [])
+      )
+
+    chip_filters = Map.merge(Map.new(filters), display_filters)
+
+    params =
+      params
+      |> Map.delete("notification_category")
+      |> Map.merge(chip_filters)
 
     # `selected_tab` after the feed assigns, which set it to the feed name
     with {:noreply, socket} <- set_feed_assigns(preset, params, socket) do
-      # a different preset (the flags chip) also needs the mounted component switched over to it, with the narrowing, since `apply_preset` alone would reload that preset unfiltered
+      socket = assign(socket, display_assigns)
+
+      # a different preset (the flags chip) also needs the mounted component switched over to it, with the narrowing, since `apply_preset` alone would reload that preset unfiltered. The display switches go with it, or the component reloads without them and the categories this user hid come back on every chip click
       if mounted_feed_id,
         do:
           send_update(Bonfire.UI.Social.FeedLive,
             id: mounted_feed_id,
             apply_preset: preset,
-            apply_filters: filters
+            apply_filters: chip_filters
           )
 
       {:noreply, assign(socket, selected_tab: chip)}

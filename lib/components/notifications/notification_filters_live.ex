@@ -3,13 +3,13 @@ defmodule Bonfire.UI.Social.NotificationFiltersLive do
   Category chips for the notifications feed.
 
   Each chip is a link, not an event, so a filtered view is shareable and the back button works.
-  The chip list is declared in config (see `Bonfire.UI.Social.RuntimeConfig`); a URL segment
-  resolves against that list first and then against the verb registry, so every declared verb has
-  a working URL whether or not a chip is shown for it.
+  The categories come from `Bonfire.Social.Notifications`, which declares them once for the chips, the "Notify me about" switches and the API; a URL segment resolves against that list first and then against the verb registry, so every declared verb has a working URL whether or not a chip is
+  shown for it.
   """
   use Bonfire.UI.Common.Web, :stateless_component
 
   alias Bonfire.Boundaries.Verbs
+  alias Bonfire.Social.Notifications
 
   @doc "Which chip is being viewed; nil means the unfiltered feed."
   prop selected_tab, :any, default: nil
@@ -26,10 +26,7 @@ defmodule Bonfire.UI.Social.NotificationFiltersLive do
   A chip may name its own `preset` to show a different feed, and then that preset's gate decides whether the chip appears at all (`Feeds.feed_preset_if_permitted/2`, which is how `instance_permission_required` and `current_user_required` are enforced for presets), so a chip needs no permission vocabulary of its own. Chips that don't name one use `default_preset/0` purely as a source of filters, and stay visible regardless of its gate.
   """
   def chips(context \\ nil) do
-    Config.get([__MODULE__, :notification_chips], [],
-      name: l("Notification categories"),
-      description: l("Which category chips to offer on the notifications feed.")
-    )
+    Notifications.categories_shown(:chip)
     |> Enum.flat_map(&from_feed_preset(&1, context))
   end
 
@@ -38,11 +35,12 @@ defmodule Bonfire.UI.Social.NotificationFiltersLive do
 
     case Bonfire.Social.Feeds.feed_preset_if_permitted(named_preset || default_preset(), context) do
       {:ok, preset} ->
-        [{key, from_preset(key, chip, preset)}]
+        # only a chip's OWN preset lends it a label and icon; the default preset is the feed every chip narrows, so borrowing from it puts the notifications bell on every category that declares neither icon nor verb
+        [{key, from_preset(key, chip, if(named_preset, do: preset))}]
 
       _not_permitted ->
-        # a chip that NAMES a preset belongs to that feed, so its gate hides the chip; the default preset is only where filters come from, so keep the chip and narrow nothing
-        if named_preset, do: [], else: [{key, chip}]
+        # a chip that NAMES a preset belongs to that feed, so its gate hides the chip; a chip on the default preset stays either way
+        if named_preset, do: [], else: [{key, from_preset(key, chip, nil)}]
     end
   end
 
@@ -53,7 +51,7 @@ defmodule Bonfire.UI.Social.NotificationFiltersLive do
       description: e(chip, :description, nil) || e(preset, :description, nil),
       preset: e(chip, :preset, nil),
       # the narrowing only: merged onto the preset's own filters by whoever reloads a mounted feed, but passed alone to a first load, which resolves the preset itself
-      filters: e(chip, :filters, nil) || default_filters(key),
+      filters: %{activity_types: Notifications.activity_types_for(key)},
       path_aliases: e(chip, :path_aliases, [])
     }
   end
@@ -74,6 +72,18 @@ defmodule Bonfire.UI.Social.NotificationFiltersLive do
 
   def chip_path(key, chip) do
     "#{@base_path}/#{List.first(e(chip, :path_aliases, [])) || key}"
+  end
+
+  @doc "The URL of a chip by key, for callers that only know which chip is selected."
+  def path_for(key, context \\ nil) do
+    case find_chip(key, context) do
+      nil -> @base_path
+      chip -> chip_path(key, chip)
+    end
+  end
+
+  defp find_chip(key, context) do
+    Enum.find_value(chips(context), fn {chip_key, chip} -> if chip_key == key, do: chip end)
   end
 
   @doc """
@@ -101,10 +111,6 @@ defmodule Bonfire.UI.Social.NotificationFiltersLive do
       end
     end)
   end
-
-  # the default chip is the whole feed; any other names the verb it filters by
-  defp default_filters(@default_chip), do: %{activity_types: []}
-  defp default_filters(key), do: %{activity_types: [key]}
 
   defp resolve_verb(segment) do
     with verb when is_atom(verb) <- Types.maybe_to_atom!(segment),
@@ -149,5 +155,16 @@ defmodule Bonfire.UI.Social.NotificationFiltersLive do
   @doc "A chip's `icon` OVERRIDE, else the verb's own (most chips declare none and inherit it)."
   def chip_icon(key, chip) do
     e(chip, :icon, nil) || e(Verbs.get(key), :icon, nil)
+  end
+
+  @doc """
+  Whether any chip is for a category this user switched off, so the bar can explain why some are dimmed.
+
+  Without the preset gate `chips/1` applies, since this only decides whether to render one sr-only line.
+  """
+  def any_switched_off?(context) do
+    Enum.any?(Notifications.categories_shown(:chip), fn {key, _category} ->
+      Notifications.hidden_from_centre?(key, context)
+    end)
   end
 end

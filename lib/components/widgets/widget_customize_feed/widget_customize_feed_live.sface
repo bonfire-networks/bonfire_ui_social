@@ -33,7 +33,7 @@
         <select
           id={"feed_order_#{@feed_name || "default"}"}
           name="feed_order"
-          class="select select-md h-auto w-auto min-w-0 max-w-[70%]"
+          class="select select-md min-h-11 focus-ring h-auto w-auto min-w-0 max-w-[70%]"
         >
           {#for {value, label} <- Bonfire.UI.Social.WidgetCustomizeFeedLive.order_options()}
             <option

@@ -15,23 +15,38 @@ defmodule Bonfire.UI.Social.NotificationPreferencesTest do
     |> assert_has("[data-id=feed]")
   end
 
-  test "preview controls are independent native inputs with no settings write bindings" do
-    html = render_component(&Bonfire.UI.Social.NotificationPreferencesLive.render/1, %{})
+  test "the sections that are still previews write no settings" do
+    html =
+      render_component(&Bonfire.UI.Social.NotificationPreferencesLive.render/1, %{
+        __context__: %{}
+      })
+
     doc = Floki.parse_document!(html)
 
-    assert [_] = Floki.find(doc, "#notification-pref-like-centre[checked]")
+    # the live column beside them, so the assertions below mean something
+    assert [_] = Floki.find(doc, "form[phx-change] #notification-pref-like-centre[checked]")
+
     assert [_] = Floki.find(doc, "#notification-pref-like-push")
     assert [] = Floki.find(doc, "#notification-pref-like-push[checked]")
+    assert Floki.attribute(doc, "#notification-pref-like-push", "phx-change") == []
 
     assert Floki.attribute(doc, "#notification-audience-not_followed option", "value") ==
              ["accept", "filter", "ignore"]
 
-    assert [] = Floki.find(doc, "form, [phx-change], input[phx-click], select[phx-change]")
-    assert html =~ "Changes are not saved"
+    for preview <- ["#notification-push-preview", "#notification-audience-preview"] do
+      assert [_] = Floki.find(doc, preview)
+      assert [] = Floki.find(doc, "#{preview} form, #{preview} [phx-change]")
+    end
+
+    assert html =~ "Their changes are not saved"
   end
 
   test "push devices preview has local controls and no push subscription hook" do
-    html = render_component(&Bonfire.UI.Social.NotificationPreferencesLive.render/1, %{})
+    html =
+      render_component(&Bonfire.UI.Social.NotificationPreferencesLive.render/1, %{
+        __context__: %{}
+      })
+
     doc = Floki.parse_document!(html)
 
     assert [_] = Floki.find(doc, "#notification-push-this-browser[type=checkbox]")

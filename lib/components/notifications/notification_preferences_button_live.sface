@@ -1,5 +1,4 @@
 <button
-  :if={show_unimplemented?()}
   id="notification-preferences-toggle"
   type="button"
   class="btn btn-ghost btn-circle"

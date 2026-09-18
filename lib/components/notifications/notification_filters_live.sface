@@ -3,20 +3,26 @@
   aria-label={l("Filter notifications")}
   class="mb-4 min-w-0 border-b border-base-content/10"
 >
+  {!-- read out only when something is dimmed, rather than saying it on every visit --}
+  <p :if={any_switched_off?(@__context__)} id="notification-filters-dimmed" class="sr-only">{l("Dimmed categories are switched off in your preferences. Selecting one still shows it.")}</p>
   <ul class="flex min-w-0 list-none p-0">
     {#for {key, chip} <- chips(@__context__)}
       <li class="min-w-0 flex-1">
+        {!-- a category switched off in preferences greys out but stays a link, since this is the way back to what the default view no longer shows --}
         <LinkPatchLive
           to={chip_path(key, chip)}
           opts={[
             id: "notification-filter-#{key}",
             "data-tip": chip_label(key, chip),
-            "aria-current": if(current?(key, @selected_tab), do: "page", else: nil)
+            "aria-current": if(current?(key, @selected_tab), do: "page", else: nil),
+            "aria-describedby":
+              if(Notifications.hidden_from_centre?(key, @__context__), do: "notification-filters-dimmed")
           ]}
           class={
             "tooltip tooltip-bottom flex min-h-12 w-full items-center justify-center border-b-2 text-base-content/60 hover:bg-base-content/5 focus-visible:outline-2 focus-visible:-outline-offset-2",
             "border-primary text-primary": current?(key, @selected_tab),
-            "border-transparent": !current?(key, @selected_tab)
+            "border-transparent": !current?(key, @selected_tab),
+            "opacity-40": Notifications.hidden_from_centre?(key, @__context__)
           }
         >
           {#if icon = chip_icon(key, chip)}

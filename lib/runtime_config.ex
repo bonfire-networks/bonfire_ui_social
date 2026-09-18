@@ -15,50 +15,20 @@ defmodule Bonfire.UI.Social.RuntimeConfig do
 
     config :bonfire_ui_social, Bonfire.UI.Social.ThreadLive, thread_mode: :nested
 
-    # Notifications feed category chips, ordered. Each key is a verb, and `name_pluralized`/`icon` OVERRIDE what that verb declares; see `Bonfire.UI.Social.NotificationFiltersLive`
-    config :bonfire_ui_social, Bonfire.UI.Social.NotificationFiltersLive,
-      notification_chips: [
-        # not "All": types switched off in preferences are excluded from this view
-        latest: %{name_pluralized: l("Latest")},
-        mention: %{
-          name_pluralized: l("Mentions"),
-          description: l("Posts that mention or address you"),
-          # a non-reply post reaching your notifications feed mentioned or addressed you; a reply that mentions you is stored as a reply, so it shows under Replies until a filter can ask "does a tag point at me", at which point this will become Mentions vs Other replies
-          filters: %{activity_types: [:create]},
-          path_aliases: ["mentions"]
+    config :bonfire_ui_social, Bonfire.UI.Social.NotificationPreferencesLive,
+      # Per-user display switches for the notifications feed, ordered. Each names what it controls: a `filter` key goes into the feed's filters, an `assign` key into the feed's assigns, and `:chips` is this UI's own chip bar. Defaults mirror the `:notifications` preset, so a user who changes nothing sees what the preset intends
+      display_toggles: [
+        highlight: %{
+          name: l("Highlight unread notifications"),
+          assign: :enable_marker,
+          default: false
         },
-        reply: %{
-          name_pluralized: l("Replies"),
-          filters: %{activity_types: [:reply]},
-          path_aliases: ["replies"]
-        },
-        request: %{
-          name_pluralized: l("Requests"),
-          description: l("Follow and quote requests"),
-          filters: %{activity_types: [:request]},
-          path_aliases: ["requests"]
-        },
-        boost: %{
-          name_pluralized: l("Boosts"),
-          filters: %{activity_types: [:boost]},
-          path_aliases: ["boosts"]
-        },
-        like: %{
-          name_pluralized: l("Likes"),
-          filters: %{activity_types: [:like]},
-          path_aliases: ["likes"]
-        },
-        follow: %{
-          name_pluralized: l("New followers"),
-          # overrides the verb's own icon, which the other chips inherit (the `follow` verb declares none)
-          icon: "ph:user-plus",
-          filters: %{activity_types: [:follow]},
-          path_aliases: ["follows", "followers"]
-        },
-
-        # shows the existing mod queue, whose preset supplies the label, icon, filters, opts and the `instance_permission_required: :mediate` gate that hides this chip from everyone else
-        flag: %{preset: :flagged_content, path_aliases: ["flags"]}
-        # TODO: accepted quotes ("X quoted your post") need a home once a filter can read `accepted_at`, or could be combined with mentions
+        chips: %{name: l("Show category filters"), controls: :chips, default: true},
+        group: %{
+          name: l("Group similar notifications"),
+          filter: :show_objects_only_once,
+          default: false
+        }
       ]
 
     config :bonfire, :ui,

@@ -14,10 +14,13 @@
   <StatelessComponent
     :if={@live_action == :notifications}
     module={maybe_component(Bonfire.UI.Social.NotificationPreferencesLive, @__context__)}
+    feed_filters={@feed_filters}
+    feed_assigns={%{enable_marker: @enable_marker}}
   />
 
   <StatelessComponent
-    :if={@live_action == :notifications}
+    :if={@live_action == :notifications and
+      Bonfire.UI.Social.NotificationPreferencesLive.display_on?(:chips, @__context__)}
     module={maybe_component(Bonfire.UI.Social.NotificationFiltersLive, @__context__)}
     selected_tab={@selected_tab}
   />
