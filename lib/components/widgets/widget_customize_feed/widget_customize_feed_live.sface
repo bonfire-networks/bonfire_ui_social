@@ -54,7 +54,7 @@
           form_id={"feed_overrides_form_#{@feed_name || "default"}"}
           form_role="feed_override_toggles"
           form_class="flex flex-col gap-0"
-          row_class="-mx-2 rounded-selector px-2 transition-colors duration-150 ease-out hover:bg-base-content/5 active:bg-base-content/10"
+          row_class="min-h-11 -mx-2 rounded-selector px-2 transition-colors duration-150 ease-out hover:bg-base-content/5 active:bg-base-content/10"
           name_class="text-sm font-normal text-(--stream-text-secondary)"
           rows={Bonfire.UI.Social.WidgetCustomizeFeedLive.override_rows(@feed_filters)}
           field_prefix="scope"
