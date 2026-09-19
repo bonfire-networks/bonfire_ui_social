@@ -9,11 +9,35 @@ defmodule Bonfire.UI.Social.NotificationPreferencesLive do
 
   alias Bonfire.Social.Notifications
 
+  @doc """
+  Where this panel is being shown: `:feed` next to the feed it configures, otherwise on its own (settings).
+
+  Two things differ for `:feed`. It starts collapsed, since the Preferences button is what opens it, and it offers to re-query the feed once switches have been saved. On its own there is no feed to catch up and nothing to expand, so it is open and the offer is not made. Everything else, including every switch, is the same panel.
+  """
+  prop showing_within, :any, default: nil
+
   @doc "The shown feed's filters, so the panel can tell whether saved switches have been applied."
   prop feed_filters, :any, default: %{}
 
   @doc "The shown feed's display assigns, for the same comparison."
   prop feed_assigns, :any, default: %{}
+
+  @doc "Which settings scope the panel is being shown for, when it is shown in settings."
+  prop scope, :any, default: nil
+
+  @doc """
+  The settings key holding whether a category is pushed to this person's devices.
+
+  The same shape as the key beside it in each row (`Notifications.show_in_centre_key/1`), and the same grain: one switch per category per channel, which is what `Bonfire.Notify.Preferences` reads when it decides whether to deliver.
+  """
+  def push_key(key), do: [:notifications, :push, key]
+
+  @doc """
+  Whether to offer the push column at all, which is whether anything would read it.
+
+  Asked of the module that does the reading, since this panel lives with the feed it configures and the delivery side is a separate extension an instance can do without. Offering a switch nothing honours is the same fault as the rows whose own switch is not wired yet.
+  """
+  def push_available?(context), do: module_enabled?(Bonfire.Notify.Preferences, context)
 
   @doc "Display switches to offer, in display order, from config."
   def display_toggles do
