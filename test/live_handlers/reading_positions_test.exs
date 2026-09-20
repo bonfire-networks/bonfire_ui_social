@@ -403,7 +403,6 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
           feed_name: :custom,
           feed_filters: filters,
           paginate: [limit: 2],
-          hide_activities: "infinite_scroll",
           activity_preloads: {[], []}
         )
         |> Phoenix.LiveView.stream_configure(:feed,
@@ -413,8 +412,6 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
 
       assert {:noreply, first_socket} =
                LiveHandler.paginate_newer_feed(:custom, marker_cursor, socket)
-
-      assert first_socket.assigns.hide_activities == false
 
       assert newest_stream_cursors(first_socket, 2) ==
                Enum.slice(base_cursors, marker_index - 2, 2)

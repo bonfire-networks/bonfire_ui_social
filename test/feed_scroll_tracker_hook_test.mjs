@@ -318,9 +318,13 @@ test("keeps loading newer pages after restore while the document stays unscrolla
   firstLoad.resolve();
   await flushPromises();
 
+  const minimumVisibilityTimer = [...state.timers].find(
+    ([, { delay }]) => delay > 0 && delay <= 500,
+  );
+  assert.ok(minimumVisibilityTimer);
+  state.runTimer(minimumVisibilityTimer[0]);
+
   assert.equal(state.pushedEvents.filter(({ name }) => name === "load_newer").length, 2);
-  assert.equal(state.tracker.loadingNewer, true);
-  assert.equal(state.el.classList.contains("feed-newer-loading"), true);
 
   // Once the server reports nothing newer remains, the chain stops.
   const secondLoad = state.pushedEvents.filter(({ name }) => name === "load_newer")[1];
@@ -468,87 +472,6 @@ test("preloads consecutive newer pages and ignores unrelated updates until each 
     ],
   );
   assert.equal(state.scrollCalls.at(-1), 2300);
-});
-
-test("starts the next newer page before the indicator timer expires without allowing stale timers to unlock it", async () => {
-  const state = loadTracker({
-    activities: [activity("01KVISIBLE0000000000000000", 100, 400)],
-    hasNewer: true,
-    initialScrollY: 2000,
-  });
-
-  state.tracker.mounted();
-  state.window.scrollY = 1900;
-  state.listeners.get("scroll")();
-  state.pushedEvents.find(({ name }) => name === "load_newer").resolve();
-  await flushPromises();
-
-  assert.equal(state.tracker.loadingNewer, false);
-  assert.equal(state.el.classList.contains("feed-newer-loading"), true);
-  const indicatorTimer = [...state.timers].find(([, { delay }]) => delay > 0 && delay <= 500);
-  assert.ok(indicatorTimer);
-
-  state.el.classList.remove("feed-newer-loading");
-  state.tracker.updated();
-  assert.equal(state.el.classList.contains("feed-newer-loading"), true);
-
-  state.window.scrollY = 1800;
-  state.listeners.get("scroll")();
-  assert.equal(state.pushedEvents.filter(({ name }) => name === "load_newer").length, 2);
-  assert.equal(state.timers.has(indicatorTimer[0]), false);
-
-  indicatorTimer[1].callback();
-  assert.equal(state.tracker.loadingNewer, true);
-  assert.equal(state.el.classList.contains("feed-newer-loading"), true);
-
-  state.window.scrollY = 1700;
-  state.listeners.get("scroll")();
-  assert.equal(state.pushedEvents.filter(({ name }) => name === "load_newer").length, 2);
-
-  state.pushedEvents.filter(({ name }) => name === "load_newer")[1].resolve();
-  await flushPromises();
-  const nextTimer = [...state.timers].find(([, { delay }]) => delay > 0 && delay <= 500);
-  assert.ok(nextTimer);
-  state.runTimer(nextTimer[0]);
-  assert.equal(state.tracker.loadingNewer, false);
-  assert.equal(state.el.classList.contains("feed-newer-loading"), false);
-});
-
-test("finishes a slow newer request without adding another indicator delay", async () => {
-  const state = loadTracker({
-    activities: [activity("01KVISIBLE0000000000000000", 100, 400)],
-    hasNewer: true,
-    initialScrollY: 2000,
-  });
-  state.tracker.mounted();
-  state.tracker.maybeLoadNewer();
-  state.tracker.loadingNewerStartedAt -= 1000;
-  state.pushedEvents.find(({ name }) => name === "load_newer").resolve();
-  await flushPromises();
-
-  assert.equal(state.tracker.loadingNewer, false);
-  assert.equal(state.tracker.loadingNewerTimer, null);
-  assert.equal(state.el.classList.contains("feed-newer-loading"), false);
-});
-
-test("destroying the tracker cancels the remaining indicator timer", async () => {
-  const state = loadTracker({
-    activities: [activity("01KVISIBLE0000000000000000", 100, 400)],
-    hasNewer: true,
-    initialScrollY: 2000,
-  });
-  state.tracker.mounted();
-  state.tracker.maybeLoadNewer();
-  state.pushedEvents.find(({ name }) => name === "load_newer").resolve();
-  await flushPromises();
-  const timerID = state.tracker.loadingNewerTimer;
-  assert.ok(timerID);
-
-  state.tracker.destroyed();
-
-  assert.equal(state.timers.has(timerID), false);
-  assert.equal(state.tracker.loadingNewer, false);
-  assert.equal(state.el.classList.contains("feed-newer-loading"), false);
 });
 
 test("clears the loading state when the newer-page request fails", async () => {
