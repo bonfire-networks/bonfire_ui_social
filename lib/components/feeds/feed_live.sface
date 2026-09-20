@@ -213,12 +213,16 @@
                                   >
                                     <:if_no_more>
                                       {#if time_limit != 0}
-                                        <p class="text-display py-4 mt-4 text-center font-medium">{lp(
-                                            "That's all for today...",
-                                            "That's all for the last %{number} days...",
-                                            time_limit,
-                                            number: time_limit
-                                          )}</p>
+                                        <div class="flex items-center gap-4 mx-6 mt-6 mb-2 text-xs text-muted">
+                                          <span aria-hidden="true" class="h-px flex-1 bg-base-content/10" />
+                                          <p class="text-center">{lp(
+                                              "Last day",
+                                              "Last %{number} days",
+                                              time_limit,
+                                              number: time_limit
+                                            )}</p>
+                                          <span aria-hidden="true" class="h-px flex-1 bg-base-content/10" />
+                                        </div>
                                       {#else}
                                         {!-- {#if is_nil(@previous_page_info)} --}
                                         {#if @loading}
@@ -266,7 +270,7 @@
                                               target={@myself}
                                               hide_guest_fallback={@hide_guest_fallback}
                                               label={l("Show older activities")}
-                                              button_class="btn-ds-variant-outline"
+                                              button_class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border-0 bg-transparent px-3 py-2 text-sm font-medium text-primary cursor-pointer hover:bg-primary/5 after:content-['↓'] phx-click-loading:after:hidden phx-scroll-loading:after:hidden"
                                               dom_id_suffix="show_older"
                                               opts={%{"phx-value-time_limit" => 0}}
                                               hide_if_no_more
@@ -277,7 +281,7 @@
                                             <div class="w-full flex items-center justify-center mb-4">
                                               <button
                                                 data-id="load_all_time"
-                                                class="btn-ds-variant-outline"
+                                                class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border-0 bg-transparent px-3 py-2 text-sm font-medium text-primary cursor-pointer hover:bg-primary/5 after:content-['↓'] phx-click-loading:after:hidden phx-scroll-loading:after:hidden"
                                                 phx-click="set_filter"
                                                 phx-value-time_limit={0}
                                                 phx-target={@myself}
@@ -293,7 +297,7 @@
                                             <a
                                               :if={!@hide_guest_fallback}
                                               data-id="load_all_time"
-                                              class="btn-ds-outline w-full"
+                                              class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border-0 bg-transparent px-3 py-2 text-sm font-medium text-primary cursor-pointer hover:bg-primary/5 after:content-['↓'] phx-click-loading:after:hidden phx-scroll-loading:after:hidden"
                                               href={append_params_uri(
                                                 @current_url || @__context__[:current_url],
                                                 %{
