@@ -546,7 +546,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       %{edges: edges, page_info: page_info} when is_list(edges) ->
         {:noreply,
          socket
-         |> assign_generic(newer_page_info: page_info)
+         |> assign_generic(newer_page_info: page_info, hide_activities: false)
          |> insert_feed(Enum.reverse(edges), at: 0)}
 
       other ->
