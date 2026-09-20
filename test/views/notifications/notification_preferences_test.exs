@@ -15,6 +15,49 @@ defmodule Bonfire.UI.Social.NotificationPreferencesTest do
     |> assert_has("[data-id=feed]")
   end
 
+  test "each row's two switches are their own form, and both save" do
+    html =
+      render_component(&Bonfire.UI.Social.NotificationPreferencesLive.render/1, %{
+        __context__: %{}
+      })
+
+    doc = Floki.parse_document!(html)
+
+    # one row, two switches, each in a form of its own: what appears in the feed, and what is pushed. Sharing a form's attributes would make them indistinguishable to a selector
+    for column <- ["centre", "push"] do
+      assert [_] =
+               Floki.find(
+                 doc,
+                 "form#notification-pref-like-#{column}-form[phx-change] #notification-pref-like-#{column}[checked]"
+               ),
+             "the #{column} switch has to save, and to be on unless the person said otherwise"
+    end
+
+    refute Floki.attribute(doc, "#notification-pref-like-centre-form", "id") ==
+             Floki.attribute(doc, "#notification-pref-like-push-form", "id")
+  end
+
+  test "with delivery switched off, the feed switches stay and the push column goes" do
+    user = fake_user!()
+
+    # this panel belongs to the feed it configures, and delivery is another extension an instance can do without: a push switch nothing would read must not be offered
+    # `Settings.put/3` hands back a context rather than a user, and what the panel reads its switches from is the recipient it was given
+    disabled_for =
+      current_user(
+        Bonfire.Common.Settings.put([:bonfire_notify, :modularity], :disabled, current_user: user)
+      )
+
+    doc =
+      render_component(&Bonfire.UI.Social.NotificationPreferencesLive.render/1, %{
+        __context__: %{current_user: disabled_for}
+      })
+      |> Floki.parse_document!()
+
+    assert [_] = Floki.find(doc, "#notification-pref-like-centre")
+    assert [] = Floki.find(doc, "#notification-pref-like-push")
+    refute Floki.text(doc) =~ "Push"
+  end
+
   test "the sections that are still previews write no settings" do
     html =
       render_component(&Bonfire.UI.Social.NotificationPreferencesLive.render/1, %{
@@ -23,60 +66,25 @@ defmodule Bonfire.UI.Social.NotificationPreferencesTest do
 
     doc = Floki.parse_document!(html)
 
-    # the live column beside them, so the assertions below mean something
-    assert [_] = Floki.find(doc, "form[phx-change] #notification-pref-like-centre[checked]")
-
-    assert [_] = Floki.find(doc, "#notification-pref-like-push")
-    assert [] = Floki.find(doc, "#notification-pref-like-push[checked]")
-    assert Floki.attribute(doc, "#notification-pref-like-push", "phx-change") == []
-
     assert Floki.attribute(doc, "#notification-audience-not_followed option", "value") ==
              ["accept", "filter", "ignore"]
 
-    for preview <- ["#notification-push-preview", "#notification-audience-preview"] do
-      assert [_] = Floki.find(doc, preview)
-      assert [] = Floki.find(doc, "#{preview} form, #{preview} [phx-change]")
-    end
+    preview = "#notification-audience-preview"
+    assert [_] = Floki.find(doc, preview)
+    assert [] = Floki.find(doc, "#{preview} form, #{preview} [phx-change]")
 
     assert html =~ "Their changes are not saved"
   end
 
-  test "push devices preview has local controls and no push subscription hook" do
-    html =
-      render_component(&Bonfire.UI.Social.NotificationPreferencesLive.render/1, %{
-        __context__: %{}
-      })
+  test "the push section is the real device panel, not a copy of it" do
+    user = fake_user!()
 
-    doc = Floki.parse_document!(html)
-
-    assert [_] = Floki.find(doc, "#notification-push-this-browser[type=checkbox]")
-    assert [] = Floki.find(doc, "#notification-push-this-browser[checked]")
-    assert [_] = Floki.find(doc, "#notification-push-remove-sample")
-    assert [_] = Floki.find(doc, "#notification-push-undo-remove")
-    assert [] = Floki.find(doc, "[phx-hook], [data-vapid-key]")
-
-    for {button, hidden, shown, focus} <- [
-          {"#notification-push-remove-sample", "#notification-push-sample-device",
-           "#notification-push-sample-removed", "#notification-push-undo-remove"},
-          {"#notification-push-undo-remove", "#notification-push-sample-removed",
-           "#notification-push-sample-device", "#notification-push-remove-sample"}
-        ] do
-      commands = doc |> Floki.attribute(button, "phx-click") |> hd() |> Jason.decode!()
-      assert length(commands) == 3
-
-      assert Enum.any?(commands, fn [command, opts] ->
-               command == "hide" and opts["to"] == hidden
-             end)
-
-      assert Enum.any?(commands, fn [command, opts] ->
-               command == "show" and opts["to"] == shown
-             end)
-
-      assert List.last(commands) == ["focus", %{"to" => focus}]
-      for target <- [hidden, shown, focus], do: assert([_] = Floki.find(doc, target))
-    end
-
-    assert html =~ "No browser permission is requested"
+    # the one implementation, which also appears on the settings page: it owns the browser permission flow, so a second copy of these controls could only be a fake
+    conn(user: user, account: user.account)
+    |> visit("/notifications")
+    |> assert_has("#notification-push")
+    |> assert_has("#notification-push [phx-hook=PushSettingsHook]")
+    |> refute_has("#notification-push-sample-device")
   end
 
   test "notification controls do not leak or duplicate when navigating between feeds" do

@@ -14,6 +14,7 @@
   <StatelessComponent
     :if={@live_action == :notifications}
     module={maybe_component(Bonfire.UI.Social.NotificationPreferencesLive, @__context__)}
+    showing_within={:feed}
     feed_filters={@feed_filters}
     feed_assigns={%{enable_marker: @enable_marker}}
   />

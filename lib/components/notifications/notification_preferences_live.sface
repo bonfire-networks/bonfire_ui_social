@@ -1,13 +1,22 @@
+{!-- collapsed to start with only beside the feed, where the Preferences button opens it; on its own it is the page --}
 <section
   id="notification-preferences-panel"
-  aria-labelledby="notification-preferences-title"
-  style="display: none;"
-  class="mb-8 border-b-4 border-base-content/20 pb-6 text-base-content"
+  aria-labelledby={if @showing_within == :feed, do: "notification-preferences-title"}
+  aria-label={if @showing_within != :feed, do: l("Notification preferences")}
+  style={if @showing_within == :feed, do: "display: none;", else: ""}
+  class={
+    "text-base-content",
+    "mb-8 border-b-4 border-base-content/20 pb-6": @showing_within == :feed
+  }
 >
   {!-- no `phx-update="ignore"`: these controls are live, and ignoring updates would freeze their checked state and the Apply button --}
   <div id="notification-preferences-controls" class="p-card space-y-4">
     <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-      <h2 id="notification-preferences-title" class="text-heading font-medium">{l("Notification preferences")}</h2>
+      <h2
+        :if={@showing_within == :feed}
+        id="notification-preferences-title"
+        class="text-heading font-medium"
+      >{l("Notification preferences")}</h2>
       {!-- only the sections that are still unbuilt claim to be a preview, so a live section never says its changes are discarded --}
       <p
         :if={show_unimplemented?()}
@@ -18,138 +27,103 @@
       </p>
     </div>
 
-    <section
-      :if={show_unimplemented?()}
-      id="notification-push-preview"
-      aria-labelledby="notification-push-title"
-      class="relative isolate overflow-hidden rounded-box p-4"
-      style="background: color-mix(in oklch, var(--color-primary) 4%, var(--color-base-100));"
-    >
-      <span
-        aria-hidden="true"
-        class="pointer-events-none absolute inset-0 -z-10"
-        style="background-image: radial-gradient(circle, color-mix(in oklch, var(--color-primary) 30%, transparent) 1px, transparent 1px); background-size: 12px 12px; mask-image: linear-gradient(90deg, transparent 45%, black);"
-      />
-      <h3 id="notification-push-title" class="text-sm font-medium">{l("Push notifications")}</h3>
-      <p id="notification-push-preview-note" class="sr-only">
-        {l(
-          "Sample devices for this preview. No browser permission is requested and no real subscriptions are changed."
-        )}
-      </p>
-
-      <div>
-        <label
-          for="notification-push-this-browser"
-          class="flex min-h-11 cursor-pointer items-center gap-3 py-3 text-sm"
+    {!-- everything about push, only where something would read it: delivery is a separate extension, while this panel configures the feed either way. Asked once here rather than per row --}
+    {#case push_available?(@__context__)}
+      {#match push?}
+        {!-- the real thing, not a copy of it: enabling push means asking the browser and keeping a subscription, which one component owns (`Bonfire.Notify.Settings.PushNotificationsLive`, which settings shows through this same panel) --}
+        <section
+          :if={push?}
+          id="notification-push"
+          aria-labelledby="notification-push-title"
+          class="rounded-box p-4"
+          style="background: color-mix(in oklch, var(--color-primary) 4%, var(--color-base-100));"
         >
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            class="size-6 shrink-0 text-primary"
-          >
-            <rect x="3" y="4" width="18" height="13" rx="2" /><path d="M8 21h8m-4-4v4" />
-          </svg>
-          <span class="flex-1">
-            <span class="block font-medium">{l("This browser")}</span>
-            <span class="block text-xs text-base-content/60">{l("Enable push alerts")}</span>
-          </span>
-          <input
-            id="notification-push-this-browser"
-            type="checkbox"
-            class="toggle toggle-sm toggle-primary shrink-0"
-            aria-describedby="notification-push-preview-note"
+          <h3 id="notification-push-title" class="text-sm font-medium mb-2">{l("Push notifications")}</h3>
+
+          <StatefulComponent
+            module={maybe_component(Bonfire.Notify.Settings.PushNotificationsLive, @__context__)}
+            id="notification-push-devices"
           />
-        </label>
-      </div>
+        </section>
 
-      <details id="notification-push-other-devices">
-        <summary class="min-h-11 cursor-pointer py-3 text-sm text-base-content/70 focus-visible:outline focus-visible:outline-2">{l("Manage other devices")} <span class="text-xs">{l("· Sample")}</span></summary>
-        <div id="notification-push-sample-device" class="flex items-center justify-between gap-4 py-3">
-          <div class="min-w-0 text-sm">
-            <p class="font-medium">{l("Safari on iPhone")}</p>
-            <p class="mt-1 text-xs text-base-content/60">{l("Push enabled")}</p>
+        <fieldset class="border-t border-base-content/10 pt-4">
+          <legend class="sr-only">{l("Notify me about")}</legend>
+          <div class={
+            "grid items-center gap-2 pb-3 text-xs",
+            "grid-cols-[minmax(0,1fr)_5.5rem_3rem] sm:grid-cols-[minmax(0,1fr)_8rem_5rem]": push?,
+            "grid-cols-[minmax(0,1fr)_5.5rem] sm:grid-cols-[minmax(0,1fr)_8rem]": !push?
+          }>
+            <span class="text-base font-medium">{l("Notify me about")}</span>
+            {!-- named after the chip it affects: switching a category off drops it from Latest, while its own chip still shows it --}
+            <span class="text-center text-base-content/70">{l("Show in Latest")}</span>
+            <span :if={push?} class="text-center text-base-content/70">{l("Push")}</span>
           </div>
-          <button
-            id="notification-push-remove-sample"
-            type="button"
-            class="btn btn-ghost btn-sm min-h-11 shrink-0"
-            aria-label={l("Remove sample Safari on iPhone subscription")}
-            phx-click={JS.hide(to: "#notification-push-sample-device")
-            |> JS.show(to: "#notification-push-sample-removed")
-            |> JS.focus(to: "#notification-push-undo-remove")}
-          >{l("Remove")}</button>
-        </div>
-        <div id="notification-push-sample-removed" style="display: none;" role="status">
-          <div class="flex items-center justify-between gap-4 py-3 text-sm">
-            <p class="text-base-content/70">{l("Sample device removed from this preview.")}</p>
-            <button
-              id="notification-push-undo-remove"
-              type="button"
-              class="btn btn-ghost btn-sm min-h-11 shrink-0"
-              phx-click={JS.show(to: "#notification-push-sample-device")
-              |> JS.hide(to: "#notification-push-sample-removed")
-              |> JS.focus(to: "#notification-push-remove-sample")}
-            >{l("Undo")}</button>
-          </div>
-        </div>
-      </details>
-    </section>
-
-    {!-- no `aria-describedby` on the preview notice: the "Show in centre" column saves, and only the Push beside it is still a preview --}
-    <fieldset class="border-t border-base-content/10 pt-4">
-      <legend class="sr-only">{l("Notify me about")}</legend>
-      <div class="grid grid-cols-[minmax(0,1fr)_5.5rem_3rem] sm:grid-cols-[minmax(0,1fr)_8rem_5rem] items-center gap-2 pb-3 text-xs">
-        <span class="text-base font-medium">{l("Notify me about")}</span>
-        {!-- named after the chip it affects: switching a category off drops it from Latest, while its own chip still shows it --}
-        <span class="text-center text-base-content/70">{l("Show in Latest")}</span>
-        <span :if={show_unimplemented?()} class="text-center text-base-content/70">{l("Push")}</span>
-      </div>
-      {#for {key, label, wired?} <- notification_rows()}
-        <div class="grid grid-cols-[minmax(0,1fr)_5.5rem_3rem] sm:grid-cols-[minmax(0,1fr)_8rem_5rem] items-center gap-2 py-1">
-          <span class="text-sm">{label}</span>
-          {!-- a row whose switch nothing honours yet stays inert rather than saving a setting no query reads --}
-          <form
-            :if={wired?}
-            data-scope={key}
-            phx-change="Bonfire.Common.Settings:set"
-            class="flex min-h-8 items-center justify-center"
-          >
-            <label class="flex cursor-pointer items-center justify-center">
-              <span class="sr-only">{l("%{type}: show in Latest notifications", type: label)}</span>
-              <Bonfire.UI.Common.SettingsToggleLive
-                id={"notification-pref-#{key}-centre"}
-                keys={Notifications.show_in_centre_key(key)}
-                default_value
-                compact
-              />
-            </label>
-          </form>
-          <label :if={!wired?} class="flex min-h-8 cursor-pointer items-center justify-center">
-            <span class="sr-only">{l("%{type}: show in Latest notifications", type: label)}</span>
-            <input
-              id={"notification-pref-#{key}-centre"}
-              type="checkbox"
-              class="toggle toggle-sm toggle-primary"
-              checked
-            />
-          </label>
-          <label
-            :if={show_unimplemented?()}
-            class="flex min-h-8 cursor-pointer items-center justify-center"
-          >
-            <span class="sr-only">{l("%{type}: push notifications", type: label)}</span>
-            <input
-              id={"notification-pref-#{key}-push"}
-              type="checkbox"
-              class="toggle toggle-sm toggle-primary"
-            />
-          </label>
-        </div>
-      {/for}
-    </fieldset>
+          {#for {key, label, wired?} <- notification_rows()}
+            <div class={
+              "grid items-center gap-2 py-1",
+              "grid-cols-[minmax(0,1fr)_5.5rem_3rem] sm:grid-cols-[minmax(0,1fr)_8rem_5rem]": push?,
+              "grid-cols-[minmax(0,1fr)_5.5rem] sm:grid-cols-[minmax(0,1fr)_8rem]": !push?
+            }>
+              <span class="text-sm">{label}</span>
+              {!-- a row whose switch nothing honours yet stays inert rather than saving a setting no query reads --}
+              {!-- each switch's form carries its own id: two forms in a row with the same attributes are indistinguishable to a selector, including the ones test helpers build for themselves --}
+              <form
+                :if={wired?}
+                id={"notification-pref-#{key}-centre-form"}
+                data-scope={key}
+                phx-change="Bonfire.Common.Settings:set"
+                class="flex min-h-8 items-center justify-center"
+              >
+                <label class="flex cursor-pointer items-center justify-center">
+                  <span class="sr-only">{l("%{type}: show in Latest notifications", type: label)}</span>
+                  <Bonfire.UI.Common.SettingsToggleLive
+                    id={"notification-pref-#{key}-centre"}
+                    keys={Notifications.show_in_centre_key(key)}
+                    default_value
+                    compact
+                  />
+                </label>
+              </form>
+              <label :if={!wired?} class="flex min-h-8 cursor-pointer items-center justify-center">
+                <span class="sr-only">{l("%{type}: show in Latest notifications", type: label)}</span>
+                <input
+                  id={"notification-pref-#{key}-centre"}
+                  type="checkbox"
+                  class="toggle toggle-sm toggle-primary"
+                  checked
+                />
+              </label>
+              {!-- the switch the delivery path reads: `Bonfire.Notify.Preferences` asks this key for every recipient and channel before a notification is queued --}
+              <form
+                :if={push? and wired?}
+                id={"notification-pref-#{key}-push-form"}
+                data-scope={key}
+                phx-change="Bonfire.Common.Settings:set"
+                class="flex min-h-8 items-center justify-center"
+              >
+                <label class="flex cursor-pointer items-center justify-center">
+                  <span class="sr-only">{l("%{type}: push notifications", type: label)}</span>
+                  <Bonfire.UI.Common.SettingsToggleLive
+                    id={"notification-pref-#{key}-push"}
+                    keys={push_key(key)}
+                    default_value
+                    compact
+                  />
+                </label>
+              </form>
+              <label :if={push? and !wired?} class="flex min-h-8 cursor-pointer items-center justify-center">
+                <span class="sr-only">{l("%{type}: push notifications", type: label)}</span>
+                <input
+                  id={"notification-pref-#{key}-push"}
+                  type="checkbox"
+                  class="toggle toggle-sm toggle-primary"
+                  checked
+                />
+              </label>
+            </div>
+          {/for}
+        </fieldset>
+    {/case}
 
     <details
       :if={show_unimplemented?()}
@@ -198,9 +172,10 @@
         </form>
       {/for}
 
-      {!-- switches save as you flip them; the feed is only re-queried on demand, so one reload covers however many you changed --}
+      {!-- switches save as you flip them; the feed is only re-queried on demand, so one reload covers however many you changed. Nothing to catch up when there is no feed beside the panel --}
       <div
-        :if={display_pending?(@__context__, @feed_filters, @feed_assigns)}
+        :if={@showing_within == :feed and
+          display_pending?(@__context__, @feed_filters, @feed_assigns)}
         id="notification-display-apply"
         class="mt-3 flex items-center justify-between gap-3 border-t border-base-content/10 pt-3"
       >
