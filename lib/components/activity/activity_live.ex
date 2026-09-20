@@ -684,9 +684,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   @doc """
-  Where an activity card renders its publication context ("Posted in <group>"): `:chained` onto a person's boost attribution, `:standalone` as its own top-line row, or `:hidden`.
+  Whether an activity exposes publication context, and its fallback placement: `:chained` in boost attribution, `:standalone` above the post, or `:hidden`.
 
-  Decided once per card and passed down to `Bonfire.UI.Social.Activity.SubjectMinimalLive`, so the two render sites can never both fire or both skip. Only a person's boost chains — a group auto-boosting its own content keeps the standalone row and drops its attribution line instead. `:chained` needs a subject line to attach to, so a card that renders none falls back rather than losing the context.
+  Shared by both subject components. Stream displays visible context beside the author when available; Typographic uses the fallback placement. Both representations remain in the DOM because presets switch client-side. Only a person's boost chains; a group auto-boost keeps the standalone fallback and suppresses its redundant boost attribution.
   """
   def published_in_placement(assigns, subject_id) do
     published_in = assigns[:published_in]
@@ -1107,7 +1107,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             <input type="hidden" name="activity_id" value={@activity_id}>
           </form>
 
-          {!-- "Published in <group>" as a standalone top-line, rendered once per activity card (not per subject component, so group boosts don't double it). Stream lifts it above the reply context with `order: -1` in stream.css, since the preset can change client-side. --}
+          {!-- Fallback for Typographic and cards without an author line; Stream hides it when the author carries the context. --}
           <Bonfire.UI.Social.Activity.PublishedInLive
             :if={@published_in_placement == :standalone}
             context={@published_in}

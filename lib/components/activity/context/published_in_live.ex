@@ -3,8 +3,7 @@ defmodule Bonfire.UI.Social.Activity.PublishedInLive do
 
   prop context, :any, default: nil
 
-  # compact = inline variant chained onto an attribution line; default = standalone top-line row, the only variant using `class`
-  prop compact, :boolean, default: false
+  prop placement, :atom, default: :standalone, values: [:standalone, :attribution, :author]
 
   prop class, :css_class,
     default: [

@@ -31,6 +31,8 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop thread_id, :string, default: nil
   prop thread_title, :any, default: nil
   prop published_in, :any, default: nil
+  prop published_in_placement, :atom, default: :hidden
+  prop published_in_path, :any, default: nil
   prop feed_id, :any, default: nil
   prop path, :string, default: nil
   prop is_answer, :boolean, default: false

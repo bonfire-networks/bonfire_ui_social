@@ -1,26 +1,26 @@
-{!-- Something published in a Category / Topic --}
-{#if @compact}
-  {!-- The separator lives inside this node rather than at the call site, so presets hiding the whole chip (see `[data-role="boosted_by"] [data-role="published_in"]` in stream.css) don't strand a "·". --}
-  <div
-    data-role="published_in"
-    class="inline-flex items-baseline gap-1 min-w-0 max-w-full text-body leading-snug align-baseline"
-  >
-    <span aria-hidden="true" class="mx-1 text-muted">·</span>
-    <span class="text-muted">{l("Posted in")}</span>
-    <LinkLive class="link link-hover text-primary truncate max-w-[160px]" to={@to}>
+<div
+  data-role={if @placement == :author, do: "author_group", else: "published_in"}
+  data-publication-context={@placement}
+  class={case @placement do
+    :author -> "hidden"
+    :attribution -> "inline-flex items-baseline gap-1 min-w-0 max-w-full text-body leading-snug align-baseline"
+    :standalone -> @class
+  end}
+>
+  <span :if={@placement == :attribution} aria-hidden="true" class="mx-1 text-muted">·</span>
+  <#Icon :if={@placement == :standalone} iconify="ph:users-three-fill" class="w-5 h-5 text-primary" />
+  <span class={"flex-1 text-sm text-muted": @placement == :standalone}>
+    <span class="text-muted">{if @placement == :author, do: l("in"), else: l("Posted in")}</span>
+    <LinkLive
+      class={[
+        "link link-hover font-medium",
+        "text-base-content": @placement == :author,
+        "text-primary": @placement != :author,
+        "truncate max-w-[160px]": @placement == :attribution
+      ]}
+      to={@to}
+    >
       {context_label(@context)}
     </LinkLive>
-  </div>
-{#else}
-  <div data-role="published_in" class={@class}>
-    <#Icon iconify="ph:users-three-fill" class="w-5 h-5 text-primary" />
-    <div class="flex-1">
-      <div class="text-sm text-muted">
-        {l("Posted in")}
-        <LinkLive class="font-medium text-primary" to={@to}>
-          {context_label(@context)}
-        </LinkLive>
-      </div>
-    </div>
-  </div>
-{/if}
+  </span>
+</div>

@@ -48,6 +48,13 @@
       >
         {@profile_name}
       </LinkLive>
+      <Bonfire.UI.Social.Activity.PublishedInLive
+        :if={@published_in_placement in [:standalone, :chained] and not is_nil(@profile_name) and
+          is_nil(@activity_inception)}
+        placement={:author}
+        context={@published_in}
+        to={@published_in_path}
+      />
     </div>
     <span
       :if={@showing_within not in [:smart_input, :pinned]}

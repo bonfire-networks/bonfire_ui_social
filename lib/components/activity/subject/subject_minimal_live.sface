@@ -271,7 +271,7 @@
               :if={@published_in_placement == :chained}
               context={@published_in}
               to={@published_in_path}
-              compact
+              placement={:attribution}
             />
           </div>
         </div>

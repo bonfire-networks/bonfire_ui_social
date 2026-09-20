@@ -24,7 +24,7 @@ defmodule Bonfire.UI.Social.Activity.PublishedInLiveTest do
 
   test "compact provenance labels the context after a separator it owns itself" do
     # the separator has to sit inside the chip, so presets hiding the whole chip don't strand it
-    assert [_, after_separator] = String.split(render_published_in(compact: true), "·", parts: 2)
+    assert [_, after_separator] = String.split(render_published_in(placement: :attribution), "·", parts: 2)
     assert after_separator =~ "Posted in"
     assert after_separator =~ "fermo! mutual aid and neighbourhood organising"
   end
