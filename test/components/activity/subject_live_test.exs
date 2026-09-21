@@ -51,6 +51,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLiveTest do
     name = "Fedi Pub — Community Organising & Decentralised Social Networks"
     html = render_subject(published_in: %{profile: %{name: name}})
 
-    assert html |> Floki.find(~s([data-role="author_group"] a)) |> Floki.text() |> String.trim() == name
+    assert html |> Floki.find(~s([data-role="author_group"] a)) |> Floki.text() |> String.trim() ==
+             name
   end
 end
