@@ -106,8 +106,9 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
     # nothing in the fixtures is a boost
     |> click_link("#notification-filter-boost", "Boosts")
     |> wait_async()
-    # the notifications preset queries a 30-day window, so the answer names the window: the preset's "You have no notifications" would claim more than the query asked
-    |> assert_has("[data-id=feed]", text: "That's all for the last")
+    # the notifications preset queries a 30-day window, so the answer names the window and offers to look further back, rather than the preset's "You have no notifications", which would claim more than the query asked
+    |> assert_has("[data-id=feed]", text: "Last 30 days")
+    |> assert_has("[data-id=load_all_time]", text: "Show older activities")
     |> refute_has("[data-verb=Like]")
     |> click_link("#notification-filter-latest", "Latest")
     |> wait_async()

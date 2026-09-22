@@ -2,13 +2,22 @@
   data-role={if @placement == :author, do: "author_group", else: "published_in"}
   data-publication-context={@placement}
   class={case @placement do
-    :author -> "hidden"
-    :attribution -> "inline-flex items-baseline gap-1 min-w-0 max-w-full text-body leading-snug align-baseline"
-    :standalone -> @class
+    :author ->
+      "hidden"
+
+    :attribution ->
+      "inline-flex items-baseline gap-1 min-w-0 max-w-full text-body leading-snug align-baseline"
+
+    :standalone ->
+      @class
   end}
 >
   <span :if={@placement == :attribution} aria-hidden="true" class="mx-1 text-muted">·</span>
-  <#Icon :if={@placement == :standalone} iconify="ph:users-three-fill" class="w-5 h-5 text-primary" />
+  <#Icon
+    :if={@placement == :standalone}
+    iconify="ph:users-three-fill"
+    class="w-5 h-5 text-primary"
+  />
   <span class={"flex-1 text-sm text-muted": @placement == :standalone}>
     <span class="text-muted">{if @placement == :author, do: l("in"), else: l("Posted in")}</span>
     <LinkLive
