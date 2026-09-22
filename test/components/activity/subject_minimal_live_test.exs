@@ -8,14 +8,14 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLiveTest do
 
   describe "hide_boost_reason?/4" do
     test "hides a group's auto-boost of its own content, keeps a person's boost" do
-      assert SubjectMinimalLive.hide_boost_reason?("Boost", "group", %{id: "group"}, :profile)
-      refute SubjectMinimalLive.hide_boost_reason?("Boost", "person", %{id: "group"}, :profile)
+      assert SubjectMinimalLive.hide_boost_reason?(:boost, "group", %{id: "group"}, :profile)
+      refute SubjectMinimalLive.hide_boost_reason?(:boost, "person", %{id: "group"}, :profile)
     end
 
     test "keeps the line on surfaces that exist to say who acted" do
       for showing_within <- [:widget, :notifications] do
         refute SubjectMinimalLive.hide_boost_reason?(
-                 "Boost",
+                 :boost,
                  "group",
                  %{id: "group"},
                  showing_within

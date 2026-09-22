@@ -28,13 +28,13 @@ defmodule Bonfire.UI.Social.NotificationPreferencesTest do
       assert [_] =
                Floki.find(
                  doc,
-                 "form#notification-pref-like-#{column}-form[phx-change] #notification-pref-like-#{column}[checked]"
+                 "form#notification-pref-react-#{column}-form[phx-change] #notification-pref-react-#{column}[checked]"
                ),
              "the #{column} switch has to save, and to be on unless the person said otherwise"
     end
 
-    refute Floki.attribute(doc, "#notification-pref-like-centre-form", "id") ==
-             Floki.attribute(doc, "#notification-pref-like-push-form", "id")
+    refute Floki.attribute(doc, "#notification-pref-react-centre-form", "id") ==
+             Floki.attribute(doc, "#notification-pref-react-push-form", "id")
   end
 
   test "with delivery switched off, the feed switches stay and the push column goes" do
@@ -53,8 +53,8 @@ defmodule Bonfire.UI.Social.NotificationPreferencesTest do
       })
       |> Floki.parse_document!()
 
-    assert [_] = Floki.find(doc, "#notification-pref-like-centre")
-    assert [] = Floki.find(doc, "#notification-pref-like-push")
+    assert [_] = Floki.find(doc, "#notification-pref-react-centre")
+    assert [] = Floki.find(doc, "#notification-pref-react-push")
     refute Floki.text(doc) =~ "Push"
   end
 

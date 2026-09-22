@@ -82,7 +82,7 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
     |> visit("/notifications")
     |> assert_has("article", text: attrs_reply.post_content.html_body)
     |> assert_has("[data-role=subject]", text: bob.profile.name)
-    |> assert_has("[data-verb=Reply]")
+    |> assert_has("[data-verb=reply]")
 
     # |> assert_has("article", text: attrs.post_content.html_body)
   end

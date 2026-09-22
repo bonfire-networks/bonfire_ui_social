@@ -10,7 +10,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop character_username, :string, default: nil
 
   prop verb, :string, default: nil
-  prop verb_display, :string, default: nil
+  prop experienced_as, :atom, default: nil
 
   prop activity_id, :any, default: nil
   prop subject_id, :any, default: nil

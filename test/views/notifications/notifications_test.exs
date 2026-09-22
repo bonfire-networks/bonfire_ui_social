@@ -64,11 +64,12 @@ defmodule Bonfire.UI.Social.Notifications.Test do
 
       conn(user: quoted_author, account: quoted_author.account)
       |> visit("/notifications")
+      # the ask is stored as a plain `request`, so what tells the two kinds apart is what it was for the reader
       |> assert_has(
-        "[data-role=notification_subject][data-verb='Request to Quote'] [data-id=subject_name]",
+        "[data-role=notification_subject][data-experienced-as=quote_request] [data-id=subject_name]",
         text: quoter.profile.name
       )
-      |> assert_has("article[data-verb='Request to Quote']", text: "Quote request post")
+      |> assert_has("article[data-verb=request]", text: "Quote request post")
     end
   end
 
@@ -165,7 +166,7 @@ defmodule Bonfire.UI.Social.Notifications.Test do
       conn
       |> assert_has_or_open_browser("[data-id=feed] article", text: reply_content, timeout: 3000)
       |> assert_has_or_open_browser("[data-role=subject]", text: bob.profile.name)
-      |> assert_has_or_open_browser("[data-verb=Reply]")
+      |> assert_has_or_open_browser("[data-verb=reply]")
     end
 
     @tag :skip_ci
@@ -186,7 +187,7 @@ defmodule Bonfire.UI.Social.Notifications.Test do
       conn
       |> assert_has_or_open_browser("[data-id=feed] article", timeout: 3000)
       |> assert_has_or_open_browser("[data-role=subject]", text: bob.profile.name)
-      |> assert_has_or_open_browser("[data-verb=Follow]")
+      |> assert_has_or_open_browser("[data-verb=follow]")
     end
 
     @tag :skip_ci
@@ -214,7 +215,7 @@ defmodule Bonfire.UI.Social.Notifications.Test do
 
       # Alice should see the like notification appear in real-time
       conn
-      |> assert_has_or_open_browser("[data-verb=Like]", timeout: 3000)
+      |> assert_has_or_open_browser("[data-verb=like]", timeout: 3000)
       |> assert_has_or_open_browser("[data-id=feed] article", timeout: 3000)
       |> assert_has_or_open_browser("[data-role=subject]", text: bob.profile.name)
     end
@@ -246,7 +247,7 @@ defmodule Bonfire.UI.Social.Notifications.Test do
       conn
       |> assert_has_or_open_browser("[data-id=feed] article", timeout: 3000)
       |> assert_has_or_open_browser("[data-role=subject]", text: bob.profile.name)
-      |> assert_has_or_open_browser("[data-verb=Boost]")
+      |> assert_has_or_open_browser("[data-verb=boost]")
     end
 
     @tag :todo

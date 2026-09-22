@@ -66,8 +66,8 @@ defmodule Bonfire.UI.Social.NotificationShowInCentreTest do
     conn
     |> visit("/notifications")
     |> wait_async()
-    |> assert_has("[data-verb=Boost]")
-    |> assert_has("[data-verb=Like]")
+    |> assert_has("[data-verb=boost]")
+    |> assert_has("[data-verb=like]")
 
     Settings.put(Notifications.show_in_centre_key(:boost), false, current_user: me)
 
@@ -75,19 +75,19 @@ defmodule Bonfire.UI.Social.NotificationShowInCentreTest do
       conn(user: me, account: me.account)
       |> visit("/notifications")
       |> wait_async()
-      |> assert_has("[data-verb=Like]")
-      |> refute_has("[data-verb=Boost]")
+      |> assert_has("[data-verb=like]")
+      |> refute_has("[data-verb=boost]")
 
     assert excluded(session) == ["boost"]
 
     # the chips go through the same rebuild, so a visit to two of them doesn't lose the exclusion
     session
-    |> click_link("#notification-filter-like", "Likes")
+    |> click_link("#notification-filter-react", "Reactions")
     |> wait_async()
     |> click_link("#notification-filter-latest", "Latest")
     |> wait_async()
-    |> assert_has("[data-verb=Like]")
-    |> refute_has("[data-verb=Boost]")
+    |> assert_has("[data-verb=like]")
+    |> refute_has("[data-verb=boost]")
   end
 
   test "a switched-off category's chip greys out and stays a link", %{conn: conn, me: me} do
@@ -104,11 +104,11 @@ defmodule Bonfire.UI.Social.NotificationShowInCentreTest do
     |> wait_async()
     |> assert_has("#notification-filter-boost[class*=opacity-40]")
     |> assert_has("#notification-filter-boost[href='/notifications/boosts']")
-    |> refute_has("#notification-filter-like[class*=opacity-40]")
+    |> refute_has("#notification-filter-react[class*=opacity-40]")
     # dimming is colour alone, so the state is spoken too, and only by the chips it applies to
     |> assert_has("#notification-filters-dimmed")
     |> assert_has("#notification-filter-boost[aria-describedby=notification-filters-dimmed]")
-    |> refute_has("#notification-filter-like[aria-describedby=notification-filters-dimmed]")
+    |> refute_has("#notification-filter-react[aria-describedby=notification-filters-dimmed]")
   end
 
   test "the chip of a switched-off category still shows it", %{conn: conn, me: me} do
@@ -117,7 +117,7 @@ defmodule Bonfire.UI.Social.NotificationShowInCentreTest do
     conn(user: me, account: me.account)
     |> visit("/notifications/boosts")
     |> wait_async()
-    |> assert_has("[data-verb=Boost]")
+    |> assert_has("[data-verb=boost]")
   end
 
   test "switching a category off in the panel offers Apply, which catches the feed up", %{
@@ -130,11 +130,11 @@ defmodule Bonfire.UI.Social.NotificationShowInCentreTest do
     |> uncheck("#notification-pref-boost-centre", "Boosts: show in Latest notifications")
     # saved, but the feed is only re-queried on demand
     |> assert_has("#notification-display-apply")
-    |> assert_has("[data-verb=Boost]")
+    |> assert_has("[data-verb=boost]")
     |> click_button("#notification-display-apply button", "Apply to feed")
     |> wait_async()
-    |> refute_has("[data-verb=Boost]")
-    |> assert_has("[data-verb=Like]")
+    |> refute_has("[data-verb=boost]")
+    |> assert_has("[data-verb=like]")
     |> refute_has("#notification-display-apply")
   end
 

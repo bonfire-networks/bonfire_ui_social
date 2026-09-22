@@ -237,9 +237,9 @@ defmodule Bonfire.UI.Social.Feeds.Test do
       conn
       |> visit("/notifications")
       # Notifications render the subject via data-role=notification_subject with the verb on data-verb
-      |> assert_has_or_open_browser("[data-role=notification_subject][data-verb=Boost]")
+      |> assert_has_or_open_browser("[data-role=notification_subject][data-verb=boost]")
       # Check for the booster's name
-      |> assert_has_or_open_browser("[data-role=notification_subject][data-verb=Boost]",
+      |> assert_has_or_open_browser("[data-role=notification_subject][data-verb=boost]",
         text: bob.profile.name || bob.character.username
       )
       # Check for the text 'and X others boosted your activity'. The subject-list
@@ -247,13 +247,13 @@ defmodule Bonfire.UI.Social.Feeds.Test do
       # the "boosted your activity" suffix, so the concatenated text content
       # of the container includes dialog markup (headings, close buttons, etc)
       # in between. Assert each substring separately instead.
-      |> assert_has_or_open_browser("[data-role=notification_subject][data-verb=Boost]",
+      |> assert_has_or_open_browser("[data-role=notification_subject][data-verb=boost]",
         text: "and 1 other"
       )
-      |> assert_has_or_open_browser("[data-role=notification_subject][data-verb=Boost]",
+      |> assert_has_or_open_browser("[data-role=notification_subject][data-verb=boost]",
         text: "boosted"
       )
-      |> assert_has_or_open_browser("[data-role=notification_subject][data-verb=Boost]",
+      |> assert_has_or_open_browser("[data-role=notification_subject][data-verb=boost]",
         text: "your activity"
       )
     end

@@ -6,7 +6,9 @@ defmodule Bonfire.UI.Social.Activity.SubjectListModalLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
   prop id, :string, required: true
-  prop verb, :string, default: nil
+
+  # what the activity was for whoever is reading, since the title turns on a distinction the stored verb cannot make: a reaction and a plain like are both stored as likes
+  prop experienced_as, :atom, default: nil
   prop main_profile_id, :any, default: nil
   prop main_profile_name, :string, default: nil
   prop main_character_username, :string, default: nil
@@ -17,7 +19,14 @@ defmodule Bonfire.UI.Social.Activity.SubjectListModalLive do
   prop trigger_class, :css_class, default: "link link-hover font-bold"
   prop parent_id, :any, default: nil
 
-  def title_for_verb("React"), do: l("Reacted by")
-  def title_for_verb("Boost"), do: l("Boosted by")
-  def title_for_verb(_), do: l("Liked by")
+  @doc """
+  The heading over the list: the word for what they all did, from what the activity was.
+
+  Composed rather than declared, so a kind nobody thought about still reads correctly, and there is no second place to name a like.
+  """
+  def title_for(experience) do
+    experience
+    |> Bonfire.Social.Activities.experience_display()
+    |> String.capitalize()
+  end
 end

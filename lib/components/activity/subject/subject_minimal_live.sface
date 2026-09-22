@@ -11,19 +11,11 @@
     {#match :widget}
       <div class="flex items-center mb-2">
         <div class="flex items-center justify-start w-5 h-5">
-          <#Icon iconify="ph:fire-fill" :if={@verb == "Like"} class="w-5 h-5 text-warning" />
-          <#Icon
-            iconify="ph:user-plus-fill"
-            :if={@verb == "Follow"}
-            class="flex-shrink-0 w-5 h-5 text-info"
+          {!-- both the icon and its colour are declared by the category this kind belongs to, so this is `Iconify.iconify` rather than the `#Icon` macro, which needs its name at compile time --}
+          <Iconify.iconify
+            icon={notification_icon(@experienced_as, @verb)}
+            class={"w-5 h-5 flex-shrink-0", Bonfire.Social.Notifications.icon_class_for(@experienced_as)}
           />
-          <#Icon
-            iconify="ph:arrows-counter-clockwise-fill"
-            :if={@verb == "Boost"}
-            class="w-5 h-5 stroke-1 fill-info"
-          />
-          <#Icon iconify="ph:pencil-fill" :if={@verb == "Reply"} class="w-4 h-4 text-info" />
-          <#Icon iconify="ph:flag-fill" :if={@verb == "Flag"} class="w-4 h-4 text-error" />
         </div>
         <div class="flex-1 ml-3">
           <div class="text-sm font-medium text-muted">
@@ -35,7 +27,7 @@
             >
               {@profile_name}
             </LinkLive>
-            {raw(@verb_display)}
+            {raw(Bonfire.Social.Activities.experience_display(@experienced_as, %{object: @object}))}
           </div>
         </div>
       </div>
@@ -49,7 +41,13 @@
       {!-- Full-bleed bottom divider: -mx-card pulls the row out to the card edges
            (cancelling the wrapper's p-card), px-card puts the content inset back —
            same idiom as the thread_header strip in activity_live. --}
-      <div data-role="notification_subject" data-verb={@verb} class={subject_minimal_line_class()}>
+      {!-- both, because they answer different questions: one ask is stored as `request` whether it was to follow or to quote --}
+      <div
+        data-role="notification_subject"
+        data-verb={@verb}
+        data-experienced-as={@experienced_as}
+        class={subject_minimal_line_class()}
+      >
         {!-- Custom emoji on a Like/React takes precedence over the verb's default icon. --}
         <div class={subject_minimal_icon_box_class()}>
           {#case @emoji}
@@ -64,7 +62,7 @@
               <span class="text-warning text-body leading-none" aria-hidden="true">{emoji}</span>
             {#match _}
               <Iconify.iconify
-                icon={notification_icon(@verb) || Bonfire.Boundaries.Verbs.get(@verb)[:icon]}
+                icon={notification_icon(@experienced_as, @verb)}
                 class="w-[18px] h-[18px] flex-shrink-0 text-primary"
               />
           {/case}
@@ -80,10 +78,10 @@
             {@profile_name || @character_username}
           </LinkLive>
 
-          {#if notification_aggregate?(@verb) and @subjects_more != []}
+          {#if Bonfire.Social.Notifications.aggregate?(@experienced_as) and @subjects_more != []}
             <Bonfire.UI.Social.Activity.SubjectListModalLive
               id={deterministic_dom_id(__MODULE__, @activity_id || @subject_id, "subject_list_modal", @parent_id)}
-              verb={@verb}
+              experienced_as={@experienced_as}
               main_profile_id={@profile_id}
               main_profile_name={@profile_name}
               main_character_username={@character_username}
@@ -97,16 +95,16 @@
             />
           {/if}
 
-          {#case notification_phrase(@verb, @object_id, current_user_id(@__context__), @tagged, @object)}
+          {#case notification_phrase(@experienced_as, @object_id, current_user_id(@__context__), @object)}
             {#match nil}
-              {raw(@verb_display)}
+              {raw(Bonfire.Social.Activities.experience_display(@experienced_as, %{object: @object}))}
             {#match phrase}
               {phrase}
           {/case}
         </div>
 
         <button
-          :if={@verb == "Request to Follow"}
+          :if={@experienced_as == :follow_request}
           :on-click="Bonfire.Social.Graph.Follows:accept"
           phx-value-id={id(@activity_id)}
           type="button"
@@ -116,7 +114,7 @@
         </button>
       </div>
 
-      <div :if={@verb == "Flag" and @thread_title} class="mt-2">
+      <div :if={@verb == :flag and @thread_title} class="mt-2">
         <div class="relative w-full flex-1 text-sm text-base-content flex items-baseline gap-1 alert alert-warning alert-soft alert-sm pl-8 mb-3">
           <#Icon
             iconify="mingcute:quote-left-fill"
@@ -126,11 +124,11 @@
         </div>
       </div>
     {#match _}
-      {#if @verb == "Request to Follow"}
+      {#if @experienced_as == :follow_request}
         <div class={subject_minimal_line_class()}>
           <div class={subject_minimal_icon_box_class()}>
             <Iconify.iconify
-              icon={notification_icon(@verb)}
+              icon={notification_icon(@experienced_as, @verb)}
               class="w-[18px] h-[18px] flex-shrink-0 text-primary"
             />
           </div>
@@ -146,11 +144,11 @@
               else: l("requested to follow")}
           </div>
         </div>
-      {#elseif @verb == "Pin"}
+      {#elseif @verb == :pin}
         <div data-role="pinned" class={subject_minimal_line_class()}>
           <div class={subject_minimal_icon_box_class()}>
             <Iconify.iconify
-              icon={notification_icon(@verb)}
+              icon={notification_icon(@experienced_as, @verb)}
               class="w-[18px] h-[18px] flex-shrink-0 text-primary"
             />
           </div>
@@ -166,7 +164,7 @@
             {l("pinned")}
           </div>
         </div>
-      {#elseif @verb in ["Like", "React"]}
+      {#elseif @experienced_as in [:like, :react]}
         <div data-role="liked_by" class={subject_minimal_line_class()}>
           <div class={subject_minimal_icon_box_class()}>
             {#case @emoji}
@@ -181,7 +179,7 @@
                 <span class="text-warning text-body leading-none" aria-hidden="true">{emoji}</span>
               {#match _}
                 <Iconify.iconify
-                  icon={notification_icon(@verb)}
+                  icon={notification_icon(@experienced_as, @verb)}
                   class="w-[18px] h-[18px] flex-shrink-0 text-primary"
                 />
             {/case}
@@ -198,7 +196,7 @@
             {#if @subjects_more != []}
               <Bonfire.UI.Social.Activity.SubjectListModalLive
                 id={deterministic_dom_id(__MODULE__, @activity_id || @subject_id, "subject_list_modal", @parent_id)}
-                verb={@verb}
+                experienced_as={@experienced_as}
                 main_profile_id={@profile_id}
                 main_profile_name={@profile_name}
                 main_character_username={@character_username}
@@ -210,14 +208,16 @@
                 parent_id={@parent_id}
               />
             {/if}
-            {if @verb == "React", do: l("reacted to this activity"), else: l("liked this activity")}
+            {if @experienced_as == :react,
+              do: l("reacted to this activity"),
+              else: l("liked this activity")}
           </div>
         </div>
-      {#elseif @verb == "Follow"}
+      {#elseif @verb == :follow}
         <div class={subject_minimal_line_class()}>
           <div class={subject_minimal_icon_box_class()}>
             <Iconify.iconify
-              icon={notification_icon(@verb)}
+              icon={notification_icon(@experienced_as, @verb)}
               class="w-[18px] h-[18px] flex-shrink-0 text-primary"
             />
           </div>
@@ -228,17 +228,17 @@
               opts={"data-id": "subject_name"}
               parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
             >{@profile_name || @character_username}</LinkLive>
-            {raw(@verb_display)}
+            {raw(Bonfire.Social.Activities.experience_display(@experienced_as, %{object: @object}))}
             <span :if={@object_id == current_user_id(@__context__)}>{!-- current_user is the one being followed --}{l("you")}</span>
           </div>
         </div>
       {#elseif hide_boost_reason?(@verb, @subject_id, @published_in, @showing_within)}
         {!-- Boost reason-line suppressed as redundant: the group/topic itself auto-boosted the post, or we're already viewing inside it. --}
-      {#elseif @verb == "Boost"}
+      {#elseif @verb == :boost}
         <div data-role="boosted_by" class={subject_minimal_line_class()}>
           <div class={subject_minimal_icon_box_class()}>
             <Iconify.iconify
-              icon={notification_icon(@verb)}
+              icon={notification_icon(@experienced_as, @verb)}
               class="w-[18px] h-[18px] flex-shrink-0 text-primary"
             />
           </div>
@@ -254,7 +254,7 @@
             {#if @subjects_more != []}
               <Bonfire.UI.Social.Activity.SubjectListModalLive
                 id={deterministic_dom_id(__MODULE__, @activity_id || @subject_id, "subject_list_modal", @parent_id)}
-                verb={@verb}
+                experienced_as={@experienced_as}
                 main_profile_id={@profile_id}
                 main_profile_name={@profile_name}
                 main_character_username={@character_username}
@@ -266,7 +266,7 @@
                 parent_id={@parent_id}
               />
             {/if}
-            {raw(@verb_display)}
+            {raw(Bonfire.Social.Activities.experience_display(@experienced_as, %{object: @object}))}
             <Bonfire.UI.Social.Activity.PublishedInLive
               :if={@published_in_placement == :chained}
               context={@published_in}
@@ -275,12 +275,12 @@
             />
           </div>
         </div>
-      {#elseif @verb in ["Reply", "Respond"]}
-      {#elseif @verb == "Flag"}
+      {#elseif @experienced_as in [:reply, :respond]}
+      {#elseif @verb == :flag}
         <div data-role="flagged_by" class={subject_minimal_line_class()}>
           <div class={subject_minimal_icon_box_class()}>
             <Iconify.iconify
-              icon={notification_icon(@verb)}
+              icon={notification_icon(@experienced_as, @verb)}
               class="w-[18px] h-[18px] flex-shrink-0 text-primary"
             />
           </div>
@@ -291,7 +291,7 @@
               opts={"data-id": "subject_name"}
               parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
             >{@profile_name || @character_username}</LinkLive>
-            {raw(@verb_display)}
+            {raw(Bonfire.Social.Activities.experience_display(@experienced_as, %{object: @object}))}
           </div>
         </div>
         <div :if={@thread_title} class="-mx-card px-card mb-content">
@@ -308,7 +308,7 @@
         <div class={subject_minimal_line_class()}>
           <div class={subject_minimal_icon_box_class()}>
             <Iconify.iconify
-              icon={notification_icon(@verb) || Bonfire.Boundaries.Verbs.get(@verb)[:icon]}
+              icon={notification_icon(@experienced_as, @verb)}
               class="w-[18px] h-[18px] flex-shrink-0 text-primary"
             />
           </div>
@@ -322,9 +322,9 @@
             </LinkLive>
             {!-- feed fallback stays third-person-neutral (Schedule/Label/Assign or verb_display) —
                  NOT the notification-framed notification_phrase --}
-            {#case object_state_phrase(@verb, @object)}
+            {#case object_state_phrase(@experienced_as, @object)}
               {#match nil}
-                {raw(@verb_display)}
+                {raw(Bonfire.Social.Activities.experience_display(@experienced_as, %{object: @object}))}
               {#match phrase}
                 {phrase}
             {/case}

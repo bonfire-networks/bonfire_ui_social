@@ -1,1 +1,1 @@
-<%=e(@profile, :name, nil) || e(@character, :username, nil)%> <%=(@verb_display)%>
+<%=e(@profile, :name, nil) || e(@character, :username, nil)%> <%=Bonfire.Social.Activities.experience_display(@experienced_as, %{object: @object})%>

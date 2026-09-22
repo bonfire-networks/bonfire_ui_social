@@ -125,7 +125,7 @@ defmodule Bonfire.UI.Social.ActivityOLDLive do
           object_type_readable={e(component_assigns, :object_type_readable, @object_type_readable)}
           date_ago={e(component_assigns, :date_ago, @date_ago)}
           verb={e(component_assigns, :verb, @verb)}
-          verb_display={e(component_assigns, :verb_display, @verb_display)}
+          experienced_as={e(component_assigns, :experienced_as, @experienced_as)}
           permalink={e(component_assigns, :permalink, @permalink)}
           activity_inception={e(component_assigns, :activity_inception, e(assigns, :activity_inception, nil))}
           viewing_main_object={e(component_assigns, :viewing_main_object, e(assigns, :viewing_main_object, false))}

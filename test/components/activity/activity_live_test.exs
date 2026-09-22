@@ -12,7 +12,7 @@ defmodule Bonfire.UI.Social.ActivityLiveTest do
     test "gives a plain group post its own top-line row" do
       assert :standalone =
                ActivityLive.published_in_placement(
-                 %{published_in: @group, verb: "Create", showing_within: :feed},
+                 %{published_in: @group, verb: :create, showing_within: :feed},
                  nil
                )
     end
@@ -20,13 +20,13 @@ defmodule Bonfire.UI.Social.ActivityLiveTest do
     test "is hidden inside the group or topic itself" do
       assert :hidden =
                ActivityLive.published_in_placement(
-                 %{published_in: @group, verb: "Create", showing_within: :group},
+                 %{published_in: @group, verb: :create, showing_within: :group},
                  nil
                )
     end
 
     test "chains onto a person's boost, but not a group's own auto-boost" do
-      boost = %{published_in: @group, verb: "Boost", showing_within: :feed}
+      boost = %{published_in: @group, verb: :boost, showing_within: :feed}
 
       assert :chained = ActivityLive.published_in_placement(boost, "alice")
       assert :standalone = ActivityLive.published_in_placement(boost, "group")
@@ -37,7 +37,7 @@ defmodule Bonfire.UI.Social.ActivityLiveTest do
                ActivityLive.published_in_placement(
                  %{
                    published_in: @group,
-                   verb: "Boost",
+                   verb: :boost,
                    showing_within: :feed,
                    hide_activity: "subject"
                  },
@@ -52,7 +52,7 @@ defmodule Bonfire.UI.Social.ActivityLiveTest do
                ActivityLive.published_in_placement(
                  %{
                    published_in: "01K36J7G8R4PN6X4FJ9WQ2ZTCE",
-                   verb: "Create",
+                   verb: :create,
                    showing_within: :feed
                  },
                  nil
@@ -62,13 +62,13 @@ defmodule Bonfire.UI.Social.ActivityLiveTest do
     test "is hidden on the group's own feed" do
       assert :hidden =
                ActivityLive.published_in_placement(
-                 %{published_in: @group, verb: "Create", showing_within: :feed, feed_id: "group"},
+                 %{published_in: @group, verb: :create, showing_within: :feed, feed_id: "group"},
                  nil
                )
     end
 
     test "is hidden while the activity is the page's main object, or an inception preview" do
-      base = %{published_in: @group, verb: "Create", showing_within: :feed}
+      base = %{published_in: @group, verb: :create, showing_within: :feed}
 
       assert :hidden =
                ActivityLive.published_in_placement(Map.put(base, :viewing_main_object, true), nil)
@@ -81,7 +81,7 @@ defmodule Bonfire.UI.Social.ActivityLiveTest do
     end
 
     test "is hidden when the card renders no body to attach the context to" do
-      base = %{published_in: @group, verb: "Create", showing_within: :feed}
+      base = %{published_in: @group, verb: :create, showing_within: :feed}
 
       assert :hidden =
                ActivityLive.published_in_placement(
@@ -97,7 +97,7 @@ defmodule Bonfire.UI.Social.ActivityLiveTest do
       for showing_within <- [:widget, :notifications, :smart_input, :pinned, :search] do
         assert :standalone =
                  ActivityLive.published_in_placement(
-                   %{published_in: @group, verb: "Boost", showing_within: showing_within},
+                   %{published_in: @group, verb: :boost, showing_within: showing_within},
                    "alice"
                  ),
                "expected #{showing_within} to keep the standalone row"
