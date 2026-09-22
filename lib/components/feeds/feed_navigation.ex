@@ -1,5 +1,7 @@
 defmodule Bonfire.UI.Social.FeedNavigation do
-  @moduledoc "Feed choices, labels, and paths shared by sidebar navigation and settings."
+  @moduledoc "Feed choices, labels, and paths shared by feed navigation and settings."
+
+  use Bonfire.Common.Settings
 
   @doc "Lists permitted built-in and custom feeds that can be opened without additional parameters."
   def list_presets(opts) do
@@ -7,6 +9,22 @@ defmodule Bonfire.UI.Social.FeedNavigation do
     |> Enum.filter(fn {_slug, preset} ->
       preset[:parameterized] in [nil, %{subjects: [:me]}]
     end)
+    |> sort_presets(Settings.get([Bonfire.UI.Social.FeedLive, :nav_order], [], opts))
+  end
+
+  @doc """
+  Applies saved navigation order, leaving new feeds after the saved entries.
+
+      iex> Bonfire.UI.Social.FeedNavigation.sort_presets([local: %{}, my: %{}, new: %{}], ["my", "deleted", "local"])
+      [my: %{}, local: %{}, new: %{}]
+  """
+  def sort_presets(presets, order) do
+    positions =
+      order
+      |> Enum.with_index()
+      |> Map.new(fn {id, index} -> {to_string(id), index} end)
+
+    Enum.sort_by(presets, fn {id, _} -> Map.get(positions, to_string(id), map_size(positions)) end)
   end
 
   @doc """

@@ -676,62 +676,11 @@
       </div>
     </details>
 
-    <details
+    <Bonfire.UI.Social.SaveFeedPresetLive
       :if={:save_preset in @sections}
-      class="group"
-      data-row="save_preset"
       id={"#{@id}_save_preset_section"}
-      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
-    >
-      <summary class="feed-filter-summary">
-        <span class="text-sm text-base-content">{l("Save as custom feed")}</span>
-        <span
-          aria-hidden="true"
-          class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90"
-        >›</span>
-      </summary>
-      <div class="pb-3">
-        <form
-          id={"#{@id}_create_feed_preset"}
-          class="w-full flex flex-col gap-2"
-          phx-submit="Bonfire.Social.Feeds:preset_create"
-          phx-target={@event_target}
-        >
-          <fieldset class="fieldset">
-            <legend class="fieldset-legend">{l("Feed title")}</legend>
-            <label for={"#{@id}_feed_name"} class="sr-only">{l("Feed title")}</label>
-            <input
-              id={"#{@id}_feed_name"}
-              name="name"
-              class="input w-full"
-              placeholder={l("Add a title...")}
-            />
-          </fieldset>
-
-          <fieldset class="fieldset">
-            <legend class="fieldset-legend">{l("Feed description")}</legend>
-            <textarea
-              name="description"
-              class="textarea w-full h-20"
-              placeholder={l("Optional — what's this feed for?")}
-            />
-          </fieldset>
-
-          <fieldset class="fieldset">
-            <label class="fieldset-label cursor-pointer">
-              <input type="checkbox" name="show_in_nav" checked="checked" class="checkbox checkbox-sm">
-              <span class="text-sm text-base-content">{l("Show in feeds navbar")}</span>
-            </label>
-          </fieldset>
-
-          <div class="flex justify-end">
-            <.button type="submit" variant="primary" loading_text={l("Saving...")}>
-              {l("Save feed")}
-            </.button>
-          </div>
-        </form>
-      </div>
-    </details>
+      event_target={@event_target}
+    />
   </div>
 
   <div class="flex items-center justify-end gap-2 pt-3 shrink-0">

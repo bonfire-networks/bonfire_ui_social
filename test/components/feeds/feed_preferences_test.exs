@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.FeedPreferencesTest do
   use ExUnit.Case, async: true
   @moduletag :ui
-  doctest Bonfire.UI.Social.WidgetCustomizeFeedLive, only: [order_filters: 2]
+  doctest Bonfire.UI.Social.WidgetCustomizeFeedLive, only: [order_filters: 2, preferences_changed?: 2]
 
   test "ranking preserves an explicitly selected time range, including All time" do
     for order <- ["reply_count", "boost_count", "like_count", "popularity_score", "latest_reply"],

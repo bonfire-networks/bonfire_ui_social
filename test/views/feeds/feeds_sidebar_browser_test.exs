@@ -40,20 +40,39 @@ defmodule Bonfire.UI.Social.FeedsSidebarBrowserTest do
     %{session: session}
   end
 
-  test "disclosure stays open through feed navigation and stays closed after another navigation",
-       %{session: session} do
+  test "feed tabs navigate while the sidebar remains a single link", %{session: session} do
     session
-    |> Browser.assert_has(Query.css("#sidebar-feeds-list:not([open]) > summary"))
+    |> Browser.refute_has(Query.css("#sidebar-feeds-list"))
     |> Browser.click(Query.css("#sidebar-feeds-link"))
-    |> Browser.assert_has(Query.css("#sidebar-feed-my[aria-current='page']"))
-    |> Browser.assert_has(Query.css("#sidebar-feeds-list[open]"))
-    |> Browser.click(Query.css("#sidebar-feed-local"))
-    |> Browser.assert_has(Query.css("#sidebar-feed-local[aria-current='page']"))
-    |> Browser.assert_has(Query.css("#sidebar-feeds-list[open]"))
-    |> Browser.click(Query.css("#sidebar-feeds-list > summary"))
-    |> Browser.assert_has(Query.css("#sidebar-feeds-list:not([open]) > summary"))
+    |> Browser.assert_has(Query.css("#feed-tab-my[aria-current='page']"))
+    |> Browser.assert_has(Query.css("h1[data-role=page_title]", text: "Feeds"))
+    |> Browser.click(Query.css("#feed-tab-local"))
+    |> Browser.assert_has(Query.css("#feed-tab-local[aria-current='page']"))
+    |> Browser.refute_has(Query.css("#sidebar-feeds-list"))
     |> Browser.click(Query.link("Dashboard"))
     |> Browser.assert_has(Query.css("#nav_sidebar a[aria-current='page']", text: "Dashboard"))
-    |> Browser.assert_has(Query.css("#sidebar-feeds-list:not([open]) > summary"))
+    |> Browser.refute_has(Query.css("#feed-tabs"))
   end
+
+  test "feed tabs scroll horizontally on a narrow screen", %{session: session} do
+    session
+    |> Browser.visit(@endpoint.url() <> "/feed/local")
+    |> Browser.resize_window(390, 844)
+    |> Browser.assert_has(Query.css("#feed-tab-local[aria-current='page']"))
+    |> Browser.execute_script("""
+    const tabs = document.querySelector('#feed-tabs ul');
+    const first = tabs.querySelector('li').getBoundingClientRect();
+    const last = tabs.querySelector('li:last-child').getBoundingClientRect();
+    return {overflow: getComputedStyle(tabs).overflowX,
+            scrollable: tabs.scrollWidth > tabs.clientWidth,
+            singleRow: first.top === last.top,
+            pageFits: document.documentElement.scrollWidth <= window.innerWidth};
+    """, fn result ->
+      assert result["overflow"] == "auto"
+      assert result["scrollable"]
+      assert result["singleRow"]
+      assert result["pageFits"]
+    end)
+  end
+
 end

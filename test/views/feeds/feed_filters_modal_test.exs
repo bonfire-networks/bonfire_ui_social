@@ -69,12 +69,12 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> assert_has("h4", text: "Filter by circles")
     end
 
-    test "modal shows Apply and Save buttons", %{conn: conn} do
+    test "unchanged preferences keep save hidden in the advanced editor", %{conn: conn} do
       conn
       |> visit("/feed/my")
       |> open_filters_modal()
       |> assert_has("button", text: "Apply filters")
-      |> assert_has("summary", text: "Save as custom feed")
+      |> refute_has("summary", text: "Save as custom feed")
     end
   end
 

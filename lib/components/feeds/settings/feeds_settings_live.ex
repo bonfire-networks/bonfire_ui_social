@@ -3,9 +3,8 @@ defmodule Bonfire.UI.Social.FeedsSettingsLive do
 
   alias Bonfire.UI.Social.FeedNavigation
 
-  prop selected_tab, :any
   prop scope, :atom, default: nil
-  prop presets, :list, default: []
+  data presets, :list, default: []
 
   @doc "Renders feed defaults and permitted built-in and custom preset settings."
   def render(assigns) do
@@ -24,12 +23,10 @@ defmodule Bonfire.UI.Social.FeedsSettingsLive do
           Map.put(preset, :id, id)
         end)
         |> Enum.sort_by(fn preset ->
-          {preset[:built_in] != true, preset[:name] || preset.id}
+          preset[:exclude_from_nav] != false
         end)
 
       assigns
-      |> assign(scoped: scoped)
-      |> assign(page_title: l("Feed presets"))
       |> assign(
         presets: presets,
         default_feed: FeedNavigation.resolve_default(available, preferred),

@@ -328,26 +328,32 @@ defmodule Bonfire.UI.Social.FeedsLive do
     socket =
       socket
       |> assign(feed_assigns |> debug("feed_default_assigns"))
-      |> assign_notification_preferences()
+      |> assign_feed_heading()
       |> maybe_clear_badge_on_visit()
 
     configure_widgets(socket)
   end
 
-  defp assign_notification_preferences(socket) do
+  defp assign_feed_heading(socket) do
+    notifications? = socket.assigns[:live_action] == :notifications
+
     header_aside =
       Enum.reject(socket.assigns.page_header_aside, fn {module, _opts} ->
-        module == Bonfire.UI.Social.NotificationPreferencesButtonLive
+        module in [
+          Bonfire.UI.Social.FeedSettingsButtonLive,
+          Bonfire.UI.Social.NotificationPreferencesButtonLive
+        ]
       end)
 
-    if socket.assigns[:live_action] == :notifications do
-      assign(socket,
-        page_header_aside:
-          header_aside ++ [{Bonfire.UI.Social.NotificationPreferencesButtonLive, []}]
-      )
-    else
-      assign(socket, page_header_aside: header_aside)
-    end
+    button =
+      if notifications?,
+        do: Bonfire.UI.Social.NotificationPreferencesButtonLive,
+        else: Bonfire.UI.Social.FeedSettingsButtonLive
+
+    assign(socket,
+      page_title: if(notifications?, do: socket.assigns.page_title, else: l("Feeds")),
+      page_header_aside: header_aside ++ [{button, []}]
+    )
   end
 
   def handle_info({:feed_filters_changed, component_id, feed_name, filters}, socket) do
@@ -398,7 +404,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
           do: "feed_preferences_#{socket.assigns.feed_component_id}"
         ),
       sidebar_widgets: [
-        users: [secondary: preferences ++ [{Bonfire.Tag.Web.WidgetTagsLive, []}]],
+        users: [secondary: description ++ preferences ++ [{Bonfire.Tag.Web.WidgetTagsLive, []}]],
         guests: [secondary: description]
       ]
     )

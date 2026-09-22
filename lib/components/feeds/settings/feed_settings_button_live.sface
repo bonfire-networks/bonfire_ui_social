@@ -1,0 +1,9 @@
+<LinkLive
+  :if={current_user(@__context__)}
+  to={~p"/settings/user/feeds"}
+  label={l("Feed settings")}
+  opts={[id: "header-feed-settings"]}
+  class="btn btn-ghost btn-circle focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+>
+  <#Icon iconify="ph:gear-six" class="size-5" />
+</LinkLive>

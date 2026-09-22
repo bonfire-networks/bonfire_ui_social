@@ -1,0 +1,23 @@
+<button
+  id={@id}
+  type="button"
+  phx-click="Bonfire.Social.Feeds:preset_nav_toggle"
+  phx-value-id={@feed_name}
+  phx-value-exclude={to_string(@pinned)}
+  aria-pressed={to_string(@pinned)}
+  aria-label={@label}
+  data-tip={@label}
+  class={[
+    "tooltip tooltip-left btn btn-ghost btn-square shrink-0 rounded-lg p-0",
+    @class,
+    "text-primary": @pinned,
+    "text-muted": !@pinned
+  ]}
+>
+  {#if @pinned}
+    <#Icon iconify="ph:push-pin-simple-fill" class={[@icon_class, "shrink-0"]} />
+  {#else}
+    <#Icon iconify="ph:push-pin-simple" class={[@icon_class, "shrink-0"]} />
+  {/if}
+  <span class="sr-only">{@label}</span>
+</button>

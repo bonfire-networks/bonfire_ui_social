@@ -1,54 +1,12 @@
-<div>
-  <!-- <Bonfire.UI.Common.SidebarSectionDividerLive /> -->
-  <ul class="menu relative p-0 w-full px-0 lg:px-card gap-0">
-    <li id="sidebar-feeds" class="!block w-full min-w-0">
-      <div class="group/sidebar-feeds relative !block !p-0 !rounded-none hover:!bg-transparent">
-        <LinkLive
-          to={@default_href}
-          opts={[
-            id: "sidebar-feeds-link",
-            "phx-click":
-              Phoenix.LiveView.JS.dispatch("click", to: "#sidebar-feeds-list:not([open]) > summary")
-          ]}
-          class="flex w-full min-w-0 items-center gap-2 min-h-9 px-3 pr-20 py-1.5 rounded-selector hover:bg-base-content/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary [@media(pointer:coarse)]:min-h-11 [@media(pointer:coarse)]:pr-24"
-        >
-          <#Icon iconify="ph:rss-simple-fill" class="size-5 shrink-0 text-primary" />
-          <span class={["truncate min-w-0 text-base", Bonfire.UI.Common.LinkWidgetLive.active_label_class(@active?)]}>{l("Feeds")}</span>
-        </LinkLive>
-        <LinkLive
-          :if={!Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
-          to={~p"/settings/user/feeds"}
-          label={l("Customize feeds")}
-          opts={[id: "sidebar-feeds-settings"]}
-          class="absolute right-9 top-0 flex size-9 items-center justify-center rounded-md hover:bg-base-content/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary [@media(hover:hover)]:opacity-0 group-hover/sidebar-feeds:opacity-100 group-focus-within/sidebar-feeds:opacity-100 [@media(pointer:coarse)]:size-11 [@media(pointer:coarse)]:right-11"
-        ><#Icon iconify="ph:gear-six-fill" class="size-4 text-muted" /></LinkLive>
-        <details
-          id="sidebar-feeds-list"
-          phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
-          class="group/sidebar-feed-list !block"
-        >
-          <summary
-            aria-label={l("Expand or collapse feeds")}
-            class="absolute right-0 top-0 flex !p-0 !min-h-0 !size-9 items-center justify-center rounded-md cursor-pointer list-none after:!content-none [&::-webkit-details-marker]:hidden hover:bg-base-content/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary [@media(pointer:coarse)]:!size-11"
-          ><#Icon
-              iconify="ph:caret-right"
-              class="size-3.5 text-muted group-open/sidebar-feed-list:rotate-90"
-            /></summary>
-          <ul id="feeds_nav_links" class="sidebar-child-list">
-            <li :for={preset <- @presets} class="!block w-full min-w-0 !pl-7">
-              <LinkLive
-                to={preset.href}
-                opts={[id: "sidebar-feed-" <> preset.slug, "aria-current": if(preset.active?, do: "page", else: nil)]}
-                class={[
-                  "sidebar-child-link",
-                  "bg-base-content/10 text-base-content": preset.active?,
-                  "text-base-content/80": not preset.active?
-                ]}
-              ><span class="min-w-0 truncate">{preset.name}</span></LinkLive>
-            </li>
-          </ul>
-        </details>
-      </div>
-    </li>
-  </ul>
-</div>
+<ul class="menu p-0 w-full px-0 lg:px-card gap-0">
+  <li :for={link <- @links} id={"sidebar-#{link.id}"} class="!block w-full min-w-0">
+    <LinkLive
+      to={link.href}
+      opts={[id: "sidebar-#{link.id}-link", "aria-current": if(link.active?, do: "page", else: nil)]}
+      class="flex w-full min-w-0 items-center gap-2 min-h-9 px-3 py-1.5 rounded-selector hover:bg-base-content/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary [@media(pointer:coarse)]:min-h-11"
+    >
+      <Iconify.iconify icon={link.icon} class="size-5 shrink-0 text-primary" />
+      <span class={["truncate min-w-0 text-base", Bonfire.UI.Common.LinkWidgetLive.active_label_class(link.active?)]}>{link.label}</span>
+    </LinkLive>
+  </li>
+</ul>

@@ -1,0 +1,19 @@
+<nav id="feed-tabs" aria-label={l("Feeds")} class="w-full min-w-0 border-b border-base-content/10">
+  <ul class="flex flex-nowrap justify-around overflow-x-auto overscroll-x-contain">
+    <li :for={preset <- @presets} class="flex-[1_0_auto] min-w-[max(16.666%,7rem)]">
+      <LinkLive
+        to={preset.href}
+        opts={[id: "feed-tab-" <> preset.slug, "aria-current": if(preset.active?, do: "page", else: nil)]}
+        class={[
+          "flex min-h-12 items-stretch justify-center whitespace-nowrap px-3.5 text-base font-semibold hover:bg-base-content/5 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary",
+          "text-base-content": preset.active?,
+          "text-base-content/60 hover:text-base-content": not preset.active?
+        ]}
+      ><span class={[
+          "flex items-center border-b-4 pt-3 pb-3",
+          "border-primary": preset.active?,
+          "border-transparent": not preset.active?
+        ]}>{preset.name}</span></LinkLive>
+    </li>
+  </ul>
+</nav>

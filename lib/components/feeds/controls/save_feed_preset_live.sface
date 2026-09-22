@@ -1,57 +1,27 @@
-<div>
-  <button
-    type="button"
-    class="btn btn-ghost btn-sm text-muted"
-    phx-click={JS.toggle(to: "#save_feed_preset_form", in: "fade-in", out: "fade-out")}
-  >
-    <#Icon iconify="ph:bookmark-simple-fill" class="w-4 h-4" />
+<details id={@id} class="group" data-role="save_custom_feed" phx-mounted={JS.ignore_attributes("open")}>
+  <summary class="min-h-11 flex cursor-pointer items-center gap-2 rounded-lg text-sm text-primary focus-visible:outline focus-visible:outline-2">
+    <#Icon iconify="ph:bookmark-simple" class="size-4 shrink-0" />
     <span>{l("Save as custom feed")}</span>
-  </button>
-
-  <div id="save_feed_preset_form" class="hidden">
-    <div class="border-t border-secondary mt-3 pt-3">
-      <p class="text-sm text-muted mb-3">
-        {l("Save this feed configuration as a preset to access it anytime from your feed navbar.")}
-      </p>
-      <form
-        id="save_feed_preset_create_form"
-        class="w-full flex flex-col gap-2"
-        phx-submit="Bonfire.Social.Feeds:preset_create"
-        phx-target={@event_target}
-      >
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">{l("Feed title")}</legend>
-          <label for="save_feed_preset_name" class="sr-only">{l("Feed title")}</label>
-          <input
-            id="save_feed_preset_name"
-            name="name"
-            class="input w-full"
-            placeholder={l("Add a title...")}
-          />
-        </fieldset>
-
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">{l("Feed description")}</legend>
-          <textarea
-            name="description"
-            class="textarea w-full h-24"
-            placeholder={l("Add a description...")}
-          />
-        </fieldset>
-
-        <fieldset class="fieldset">
-          <label class="fieldset-label">
-            <input type="checkbox" name="show_in_nav" checked="checked" class="checkbox">
-            {l("Show in feeds navbar")}
-          </label>
-        </fieldset>
-
-        <div class="flex justify-end">
-          <.button type="submit" variant="primary" loading_text={l("Saving...")}>
-            {l("Save feed")}
-          </.button>
-        </div>
-      </form>
+  </summary>
+  <.form for={Phoenix.Component.to_form(%{})} id={"#{@id}_form"} class="flex flex-col gap-3 pb-3" phx-submit="Bonfire.Social.Feeds:preset_create" phx-target={@event_target}>
+    <div>
+      <label for={"#{@id}_name"} class="block text-sm font-medium mb-1">{l("Feed title")}</label>
+      <input id={"#{@id}_name"} name="name" required class="input w-full text-base" placeholder={l("Add a title…")} />
     </div>
-  </div>
-</div>
+    <div>
+      <label for={"#{@id}_description"} class="block text-sm font-medium mb-1">{l("Feed description")}</label>
+      <textarea id={"#{@id}_description"} name="description" class="textarea w-full h-20 text-base" placeholder={l("Optional — what's this feed for?")} />
+    </div>
+    <label class="flex items-center gap-3 text-sm cursor-pointer">
+      <input type="hidden" name="show_in_nav" value="false" />
+      <input type="checkbox" value="on" name="show_in_nav" checked class="checkbox checkbox-sm" />
+      <span>{l("Show in feeds navbar")}</span>
+    </label>
+    <label class="flex items-center gap-3 text-sm cursor-pointer">
+      <input type="hidden" name="set_as_default" value="false" />
+      <input type="checkbox" value="on" name="set_as_default" class="checkbox checkbox-sm" />
+      <span>{l("Set as default feed")}</span>
+    </label>
+    <.button type="submit" variant="primary" loading_text={l("Saving…")}>{l("Save feed")}</.button>
+  </.form>
+</details>

@@ -1,58 +1,34 @@
-<div class="flex flex-col">
-  <div class="flex flex-col gap-1 py-6 p-4">
-    <div class="text-muted">{l(
-        "Customize your feed experience by configuring default display settings and managing which feed presets appear in your sidebar navigation."
-      )}</div>
-  </div>
+<div id="feed-settings" class="flex flex-col gap-6 py-4">
+  <p class="text-sm px-4 leading-relaxed text-muted">{l(
+      "Customize your feed experience by configuring default display settings and managing which feeds appear in your feed tabs."
+    )}</p>
 
-  <.form
-    for={@default_feed_form}
-    id="default-feed-form"
-    class="p-4 border-b border-secondary"
-    phx-change="Bonfire.Common.Settings:set"
-  >
-    <Bonfire.UI.Common.SettingsSelectLive
-      keys={[Bonfire.UI.Social.FeedLive, :default_feed]}
-      id="default-feed-select"
-      current_value={@default_feed}
-      label_name={l("Default feed")}
-      name={l("Default feed")}
-      description={l("Choose which feed opens when you click Feeds in the sidebar.")}
-      options={Enum.map(@presets, fn preset -> {preset.id, FeedNavigation.get_name(preset, preset.id)} end)}
-      default_value={:my}
-      scope={@scope}
-    />
-  </.form>
-
-  <div x-data="{open: false}" class="">
-    <div
-      x-on:click="open = !open"
-      x-on:keydown.enter.prevent="open = !open"
-      x-on:keydown.space.prevent="open = !open"
-      x-bind:aria-expanded="open"
-      role="button"
-      tabindex="0"
-      class="p-4 text-lg font-bold flex items-center gap-4 border-b border-secondary cursor-pointer select-none"
-    >
-      <#Icon iconify="ph:list-bullets-fill" class="w-6 h-6 text-primary" />
-      <span class="flex-1">{l("Default settings")}</span>
-      <span class="transition-transform" x-bind:class="{'rotate-180': !open}">
-        <#Icon iconify="ph:caret-down-bold" class="w-4 h-4 text-muted" />
-      </span>
-    </div>
-
-    <div x-show="open" x-cloak x-collapse class="bg-base-100   divide-hair divide-secondary">
-      {!-- <div class="p-4 flex flex-col lg:flex-row lg:items-center gap-4 justify-between"> -->
-      <!-- <div class="flex items-center justify-between gap-4">
-        <div class="flex flex-col gap-1">
-          <div class="text-sm font-medium">{l("Default sort")}</div>
-          <div class="text-sm font-light text-muted">{l(
-              "Select the default sorting options for your feeds (can always change in the feed controls options)"
-            )}</div>
-        </div>
-      </div> --}
-      <form data-scope="reactions_sort" class="p-4" phx-change="Bonfire.Common.Settings:set">
+  <div id="feed-settings-panel" class="m-4 rounded-xl border border-base-content/10 overflow-hidden">
+    <div class="grid grid-cols-1">
+      <.form
+        for={@default_feed_form}
+        id="default-feed-form"
+        class="p-5"
+        phx-change="Bonfire.Common.Settings:set"
+      >
         <Bonfire.UI.Common.SettingsSelectLive
+          stacked
+          keys={[Bonfire.UI.Social.FeedLive, :default_feed]}
+          id="default-feed-select"
+          current_value={@default_feed}
+          label_name={l("Default feed")}
+          name={l("Default feed")}
+          description={l("Choose which feed opens when you click Feeds in the sidebar.")}
+          options={Enum.map(@presets, fn preset -> {preset.id, FeedNavigation.get_name(preset, preset.id)} end)}
+          default_value={:my}
+          scope={@scope}
+        />
+      </.form>
+
+      {!-- Disabled until default-sort behavior has sufficient coverage.
+      <.form for={@default_feed_form} id="default-sort-form" data-scope="reactions_sort" class="p-5" phx-change="Bonfire.Common.Settings:set">
+        <Bonfire.UI.Common.SettingsSelectLive
+          stacked
           keys={[Bonfire.UI.Social.FeedLive, :sort_by]}
           label_name={l("Sort by")}
           id="set_default_sort"
@@ -75,213 +51,104 @@
           )}
           scope={@scope}
         />
-      </form>
-      <!-- <StatelessComponent
-        module={maybe_component(Bonfire.UI.Social.SortItemsLive, @__context__)}
-        scope={@scope}
-      /> -->
-      <!-- </div> -->
-
-      <form class="p-4" phx-change="Bonfire.Common.Settings:set">
-        <Bonfire.UI.Common.Settings.NumberLive
-          scope={@scope}
-          name={l("How many items to show in feeds and other lists")}
-          keys={[:default_pagination_limit]}
-          unit={l("items")}
-        />
-        {!-- name={l("How many items to show in feeds and other lists (maximum %{number})", number: Config.get(:pagination_hard_max_limit, 500))} --}
-      </form>
-
-      <!-- <div x-data="{open: false}" class="p-4 cursor-pointer rounded-b-box">
-        <div x-on:click="open = !open" class="flex items-center justify-between gap-4">
-          <div class="flex flex-col gap-1">
-            <div
-              :if={Settings.get([:ui, :infinite_scroll], :preload,
-                context: @__context__,
-                name: l("Infinite Scrolling"),
-                description: l("Enable infinite scrolling in feeds.")
-              ) == true}
-              class="badge mb-2 !border !border-warning/30 badge-outline badge-warning"
-            >{l("Dark Pattern")}</div>
-            <div class="text-sm font-medium">{l("Infinite scrolling")}</div>
-          </div>
-          <button type="button" x-cloak class="btn btn-circle btn-sm btn-ghost" x-show="open">
-            <#Icon iconify="ph:caret-down-bold" class="w-4 h-4 text-muted" />
-          </button>
-          <button type="button" class="btn btn-circle btn-sm btn-ghost" x-show="!open">
-            <#Icon iconify="ph:caret-up-fill" class="w-4 h-4 text-muted" />
-          </button>
-        </div>
-        <div x-show="open" x-cloak x-collapse class="pt-2">
-          <form phx-change="Bonfire.Common.Settings:set">
-            <Bonfire.UI.Common.SettingsRadiosLive
-              keys={[:ui, :infinite_scroll]}
-              options={[
-                preload: l("Pre-load extra activities, but require clicking on 'Show more' to see them"),
-                true: l("Enable doom scrolling"),
-                false: "Disable"
-              ]}
-              default_value={:preload}
-              scope={@scope}
-            />
-          </form>
-        </div>
-        
-      </div> -->
-      <form class="p-4" data-scope="infinite_scroll" phx-change="Bonfire.Common.Settings:set">
-        <Bonfire.UI.Common.SettingsToggleLive
-          id="infinite_scroll_toggle"
-          show_label={Settings.get([:ui, :infinite_scroll], :preload, context: @__context__) == true}
-          label={l("Dark Pattern")}
-          name={l("Infinite scrolling")}
-          description={l(
-            "Enable infinite scrolling (doom scrolling) instead of pre-loading activities that require clicking 'Show more' to see them"
-          )}
-          keys={[:ui, :infinite_scroll]}
-          disabled_value={:preload}
-          enabled_value
-          default_value={:preload}
-          scope={@scope}
-        />
-      </form>
+      </.form>
+      --}
     </div>
+
+    {!-- Disabled because pagination does not consume the user preference.
+    <.form for={@default_feed_form} id="feed-pagination-form" class="p-5 border-t border-base-content/10" phx-change="Bonfire.Common.Settings:set">
+      <Bonfire.UI.Common.Settings.NumberLive
+        scope={@scope}
+        name={l("How many items to show in feeds and other lists")}
+        keys={[:default_pagination_limit]}
+        unit={l("items")}
+        class="input w-20 min-h-11 rounded-xl text-base shrink-0"
+      />
+    </.form>
+    --}
+
+    <.form for={@default_feed_form} id="feed-infinite-scroll-form" class="p-5 border-t border-base-content/10 [&_label>div>div]:flex-wrap [&_label]:gap-4 [&_input[type=checkbox]]:shrink-0" data-scope="infinite_scroll" phx-change="Bonfire.Common.Settings:set">
+      <Bonfire.UI.Common.SettingsToggleLive
+        id="infinite_scroll_toggle"
+        show_label={Settings.get([:ui, :infinite_scroll], :preload, context: @__context__) == true}
+        label={l("Dark Pattern")}
+        name={l("Infinite scrolling")}
+        description={l(
+          "Enable infinite scrolling (doom scrolling) instead of pre-loading activities that require clicking 'Show more' to see them"
+        )}
+        keys={[:ui, :infinite_scroll]}
+        disabled_value={:preload}
+        enabled_value
+        default_value={:preload}
+        scope={@scope}
+      />
+    </.form>
   </div>
+
   {#if @scope == :instance or
       !Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
-    <div class="">
-      <div>
-        <div class="p-4 text-lg font-bold flex items-start gap-4">
-          <#Icon iconify="ph:list-star-fill" class="w-6 h-6 text-primary" />
-          <div>
-            <div>{l("Feed presets")}</div>
-            <div class="text-sm font-normal text-muted">{l("Decide which feed you want to show in your sidebar.")}</div>
-          </div>
+    <section aria-labelledby="feed-presets-heading" class="flex flex-col gap-3">
+      <div class="flex items-start gap-3 px-4 mb-2">
+        <#Icon iconify="ph:list-star-fill" class="size-5 shrink-0 mt-0.5 text-primary" />
+        <div>
+          <h2 id="feed-presets-heading" class="text-base font-semibold">{l("Feed presets")}</h2>
+          <p class="mt-1 text-sm leading-5 text-muted">{l("Choose which feeds appear in your feed tabs. Drag pinned feeds to reorder them.")}</p>
         </div>
       </div>
-
-      <ul class="flex flex-col bg-base-100 menu-sm w-full">
-        {#for {preset, index} <- Enum.with_index(@presets || [])}
-          <li class="relative">
-            {!-- TODO? Draggable handle outside Alpine component --}
-            {!-- <div
-                data-sortable-handler
-                class="absolute left-0 top-0 bottom-0 w-23 flex items-center place-content-center border-r border-secondary"
-              >
-                <#Icon iconify="ic:baseline-drag-indicator" class="w-5 h-5" />
-              </div> --}
-
-            <div class="flex-col items-start flex w-full p-3">
-              <div class="flex gap-3 lg:items-center flex-1 w-full justify-between">
-                <div class="flex flex-1 items-center gap-3">
-                  <div class="flex items-center gap-3">
-                    <Iconify.iconify icon={preset[:icon] || "ic:baseline-rss-feed"} class="w-7 h-7 opacity-70" />
-                    <div class="flex flex-col gap-0 flex-1">
-                      <div class="font-medium text-sm">{preset[:name] || preset[:description] || preset.id}</div>
-                      <div class="text-xs text-base-content">{preset[:description]}</div>
-                    </div>
-                    {!-- <div class="text-xs text-muted mt-1 flex gap-2 flex-wrap">
-                        {#if preset[:current_user_required]}
-                          <span class="badge badge-info badge-soft badge-sm">{l("Requires login")}</span>
-                        {/if}
-                        {#if preset[:filters][:feed_name]}
-                          <span class="badge badge-sm badge-secondary badge-soft">{preset.filters.feed_name}</span>
-                        {/if}
-                        {#if preset[:filters][:creators]}
-                          <span class="badge badge-sm badge-info badge-soft">By: {Enum.join(preset.filters.creators, ", ")}</span>
-                        {/if}
-                        {#if preset[:filters][:media_types]}
-                          <span class="badge badge-sm badge-info badge-soft">Media: {Enum.join(preset.filters.media_types, ", ")}</span>
-                        {/if}
-                      </div> --}
-                  </div>
-                </div>
-                <div class="flex items-center gap-2">
-                  <!-- TODO: enable subscribing to feeds that require auth, maybe by generating a single-use token? -->
-                  <div :if={!preset[:current_user_required] and
-                    module_enabled?(Bonfire.UI.Social.SubscribeFeedLive, @__context__)}>
-                    <Bonfire.UI.Social.SubscribeFeedLive feed_name={preset.id} as_icon />
-                  </div>
-                  <button
-                    :if={!preset[:built_in]}
-                    phx-click="Bonfire.Social.Feeds:preset_delete"
-                    phx-value-id={preset.id}
-                    class="btn btn-circle btn-error btn-sm rounded-md"
-                  >
-                    <#Icon iconify="ph:trash-bold" class="w-4 h-4" />
-                    <span class="sr-only">{l("Delete")}</span>
-                  </button>
-                  {#if preset[:exclude_from_nav] == false}
-                    <button
-                      phx-click="Bonfire.Social.Feeds:preset_nav_toggle"
-                      phx-value-id={preset.id}
-                      phx-value-exclude="true"
-                      class="btn btn-square btn-sm btn-primary btn-soft rounded-md"
-                      title={l("Unpin from sidebar")}
-                    >
-                      <#Icon iconify="ph:push-pin-simple-fill" class="w-4 h-4" />
-                      <span class="sr-only">{l("Pinned to sidebar")}</span>
-                    </button>
-                  {#else}
-                    <button
-                      phx-click="Bonfire.Social.Feeds:preset_nav_toggle"
-                      phx-value-id={preset.id}
-                      phx-value-exclude="false"
-                      class="btn btn-square btn-sm btn-ghost rounded-md"
-                      title={l("Pin to sidebar")}
-                    >
-                      <#Icon iconify="ph:push-pin-simple" class="w-4 h-4" />
-                      <span class="sr-only">{l("Pin to sidebar")}</span>
-                    </button>
-                  {/if}
-                  {!-- <form phx-change="Bonfire.Social.Feeds:preset_nav_toggle" phx-value-id={preset.id}>
-                      <label>
-                        <input type="checkbox" name="show_in_nav" checked={preset[:exclude_from_nav] == false}>
-                        <span>{l("Show in navigation menu")}</span>
-                      </label>
-                    </form> --}
-                </div>
+      <ul id="feed-presets-panel" phx-hook={if @scope != :instance, do: "Draggable"} data-event="Bonfire.Social.Feeds:preset_nav_reorder" class="w-full divide-hair divide-y divide-secondary overflow-hidden">
+        {#for preset <- @presets || []}
+          <li id={"feed-preset-#{preset.id}"} data-item={preset.id} data-sortable-item={if @scope != :instance and preset[:exclude_from_nav] == false, do: true} class="flex items-center gap-3 px-2 py-2">
+            <span
+              :if={@scope != :instance and preset[:exclude_from_nav] == false}
+              data-sortable-handler
+              data-tip={l("Drag to reorder")}
+              aria-hidden="true"
+              class="tooltip tooltip-right cursor-grab active:cursor-grabbing text-muted p-1 [@media(pointer:coarse)]:hidden"
+            >
+              <#Icon iconify="ph:dots-six-vertical" class="size-4" />
+            </span>
+            <div class="size-8 rounded-lg bg-base-200 shrink-0 grid place-items-center text-muted">
+              <Iconify.iconify icon={preset[:icon] || "ic:baseline-rss-feed"} class="size-5" />
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="text-sm font-semibold leading-5 break-words">{FeedNavigation.get_name(preset, preset.id)}</h3>
+              <p class="mt-0.5 text-[13px] leading-5 text-muted break-words">{preset[:description]}</p>
+            </div>
+            <div class="flex shrink-0 items-center gap-1">
+              <div class="w-9 [@media(pointer:coarse)]:w-11">
+                <Bonfire.UI.Social.SubscribeFeedLive
+                  :if={!preset[:current_user_required] and module_enabled?(Bonfire.UI.Social.SubscribeFeedLive, @__context__)}
+                  feed_name={preset.id}
+                  icon_button_class="btn btn-ghost btn-square size-9 min-h-9 p-0 rounded-lg [@media(pointer:coarse)]:size-11 [@media(pointer:coarse)]:min-h-11 text-muted"
+                  icon_class="size-5 shrink-0"
+                  as_icon
+                />
               </div>
+              <button
+                :if={!preset[:built_in]}
+                id={"delete-feed-preset-#{preset.id}"}
+                type="button"
+                phx-click="Bonfire.Social.Feeds:preset_delete"
+                phx-value-id={preset.id}
+                class="btn btn-ghost btn-square size-9 min-h-9 p-0 rounded-lg [@media(pointer:coarse)]:size-11 [@media(pointer:coarse)]:min-h-11 text-error"
+              >
+                <#Icon iconify="ph:trash-bold" class="size-5 shrink-0" />
+                <span class="sr-only">{l("Delete")}</span>
+              </button>
+              <Bonfire.UI.Social.FeedPinButtonLive
+                id={"pin-feed-preset-#{preset.id}"}
+                feed_name={preset.id}
+                pinned={preset[:exclude_from_nav] == false}
+                class={[
+                  "size-9 min-h-9 [@media(pointer:coarse)]:size-11 [@media(pointer:coarse)]:min-h-11",
+                  "bg-primary/10": preset[:exclude_from_nav] == false
+                ]}
+                icon_class="size-5"
+              />
             </div>
           </li>
         {/for}
       </ul>
-    </div>
+    </section>
   {/if}
-  <!-- </div>
-    </div> -->
-
-  {!-- <form phx-change="Bonfire.Common.Settings:set">
-      <Bonfire.UI.Common.SettingsToggleLive
-        name={l("Simplified feed filters")}
-        description={l(
-          "Simplified feed controls are more compact and allow switching between different types of activities, but you can still expand the full feed controls to show all options and filters."
-        )}
-        keys={[Bonfire.UI.Social, :use_lite_feed_controls]}
-        scope={@scope}
-        default_value={Settings.get([Bonfire.UI.Social, :use_lite_feed_controls], true, context: @__context__)}
-      />
-    </form> --}
-
-  {!-- <div
-      :if={Settings.get([Bonfire.UI.Social, :use_lite_feed_controls], true, context: @__context__)}
-      x-data="{open: false}"
-      class="p-4"
-    >
-      <div x-on:click="open = !open" class="flex items-center justify-between gap-4 cursor-pointer">
-        <div class="flex flex-col gap-1">
-          <div class="text-sm font-medium">{l("Activity and content types")}</div>
-          <div class="text-sm font-light text-muted">{l("Here you can decide which activity and content types you want to include in your feed control tab")}</div>
-        </div>
-
-        <button type="button" x-cloak class="btn btn-circle btn-sm btn-ghost" x-show="open">
-          <#Icon iconify="ph:caret-down-bold" class="w-4 h-4 text-muted" />
-        </button>
-        <button type="button" class="btn btn-circle btn-sm btn-ghost" x-show="!open">
-          <#Icon iconify="ph:caret-up-fill" class="w-4 h-4 text-muted" />
-        </button>
-      </div>
-      <div x-show="open" x-cloak x-collapse>
-      </div>
-    </div> --}
-  <!-- </div> -->
 </div>

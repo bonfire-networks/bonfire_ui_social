@@ -8,11 +8,11 @@ defmodule Bonfire.UI.Social.FeedsNavigation.Test do
 
       conn(user: user, account: account)
       |> visit("/feed")
-      |> click_link("li a", "Following")
+      |> click_link("#feed-tabs a", "Following")
       |> assert_path("/feed/my")
       |> wait_async()
       |> refute_has("[data-role=feed_source_toggle]")
-      |> click_link("li a", "Explore")
+      |> click_link("#feed-tabs a", "Explore")
       |> assert_path("/feed/explore")
       |> wait_async()
       |> refute_has("[data-role=feed_source_toggle]")

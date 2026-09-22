@@ -1,3 +1,9 @@
+<StatelessComponent
+  :if={@live_action != :notifications}
+  module={maybe_component(Bonfire.UI.Social.FeedTabsLive, @__context__)}
+  selected_feed={@selected_tab || @feed_name}
+/>
+
 {#if @feed_component_id}
   <link
     rel="alternate"

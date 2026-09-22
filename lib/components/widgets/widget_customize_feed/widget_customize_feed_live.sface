@@ -61,6 +61,11 @@
           toggle_role="feed_override_toggle"
         />
       </fieldset>
+      <Bonfire.UI.Social.SaveFeedPresetLive
+        :if={current_user(@__context__) && @default_preferences && preferences_changed?(@feed_filters, @default_preferences)}
+        id={"#{@id}_save_custom_feed"}
+        event_target={@event_target}
+      />
       <div
         class="mt-1.5 border-t border-base-content/10 pt-1"
         data-role="feed_advanced_filters_wrapper"
@@ -81,7 +86,7 @@
               id={"feed_preferences_details_#{@feed_name}"}
               module={Bonfire.UI.Social.FeedFiltersModalContentLive}
               show_reset={false}
-              sections={Bonfire.UI.Social.FeedFiltersModalContentLive.sections() -- [:sort_order]}
+              sections={Bonfire.UI.Social.FeedFiltersModalContentLive.sections() -- [:sort_order, :save_preset]}
               {...Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}
             />
           </:default>

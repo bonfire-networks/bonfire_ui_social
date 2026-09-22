@@ -130,79 +130,80 @@ defmodule Bonfire.UI.Social.SettingsTest do
         |> assert_has("[data-id=feed] article", text: "boosted")
     end
 
-    test "feed default sort" do
-      # create 2 users
-      account = fake_account!()
-      alice = fake_user!(account)
-      bob = fake_user!(account)
+    # Suspended with the default-sort setting; retain for re-enabling.
+    # test "feed default sort" do
+    #   # create 2 users
+    #   account = fake_account!()
+    #   alice = fake_user!(account)
+    #   bob = fake_user!(account)
 
-      # create a post that has 2 replies
-      attrs = %{
-        post_content: %{html_body: "alice post"}
-      }
+    #   # create a post that has 2 replies
+    #   attrs = %{
+    #     post_content: %{html_body: "alice post"}
+    #   }
 
-      assert {:ok, post} =
-               Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
+    #   assert {:ok, post} =
+    #            Posts.publish(current_user: alice, post_attrs: attrs, boundary: "public")
 
-      attrs = %{
-        post_content: %{html_body: "reply 1"},
-        reply_to_id: post.id
-      }
+    #   attrs = %{
+    #     post_content: %{html_body: "reply 1"},
+    #     reply_to_id: post.id
+    #   }
 
-      assert {:ok, p1} = Posts.publish(current_user: bob, post_attrs: attrs, boundary: "public")
+    #   assert {:ok, p1} = Posts.publish(current_user: bob, post_attrs: attrs, boundary: "public")
 
-      attrs = %{
-        post_content: %{html_body: "reply 2"},
-        reply_to_id: post.id
-      }
+    #   attrs = %{
+    #     post_content: %{html_body: "reply 2"},
+    #     reply_to_id: post.id
+    #   }
 
-      assert {:ok, p2} = Posts.publish(current_user: bob, post_attrs: attrs, boundary: "public")
+    #   assert {:ok, p2} = Posts.publish(current_user: bob, post_attrs: attrs, boundary: "public")
 
-      # create a post that has 2 likes
-      assert {:ok, like} = Likes.like(alice, p1)
-      assert {:ok, like} = Likes.like(bob, p1)
+    #   # create a post that has 2 likes
+    #   assert {:ok, like} = Likes.like(alice, p1)
+    #   assert {:ok, like} = Likes.like(bob, p1)
 
-      # create a post that has 2 boosts
-      assert {:ok, boost} = Boosts.boost(alice, p2)
-      assert {:ok, boost} = Boosts.boost(bob, p2)
+    #   # create a post that has 2 boosts
+    #   assert {:ok, boost} = Boosts.boost(alice, p2)
+    #   assert {:ok, boost} = Boosts.boost(bob, p2)
 
-      conn = conn(user: alice, account: account)
+    #   conn = conn(user: alice, account: account)
 
-      # Check initial post ordering (newest first)
-      conn = visit(conn, "/feed/local")
-      assert_has(conn, "article", text: "reply 2")
+    #   # Check initial post ordering (newest first)
+    #   conn = visit(conn, "/feed/local")
+    #   assert_has(conn, "article", text: "reply 2")
 
-      conn = visit(conn, "/settings/user/feeds")
+    #   conn = visit(conn, "/settings/user/feeds")
 
-      # Change sort to likes
-      conn =
-        within(conn, "form[data-scope=reactions_sort]", fn c ->
-          # Select "Number of likes" from dropdown
-          c = PhoenixTest.select(c, "Sort by", option: "Amount of likes")
-          # Submit the form
-          c
-        end)
+    #   # Change sort to likes
+    #   conn =
+    #     within(conn, "form[data-scope=reactions_sort]", fn c ->
+    #       # Select "Number of likes" from dropdown
+    #       c = PhoenixTest.select(c, "Sort by", option: "Amount of likes")
+    #       # Submit the form
+    #       c
+    #     end)
 
-      # Check most liked post is first
-      conn = visit(conn, "/feed/local")
-      # PhoenixTest.open_browser(conn)
-      assert_has_or_open_browser(conn, "article", text: "reply 1")
+    #   # Check most liked post is first
+    #   conn = visit(conn, "/feed/local")
+    #   # PhoenixTest.open_browser(conn)
+    #   assert_has_or_open_browser(conn, "article", text: "reply 1")
 
-      # Change sort to replies
-      conn = visit(conn, "/settings/user/feeds")
+    #   # Change sort to replies
+    #   conn = visit(conn, "/settings/user/feeds")
 
-      conn =
-        within(conn, "form[data-scope=reactions_sort]", fn c ->
-          # Select "Amount of replies" from dropdown
-          c = PhoenixTest.select(c, "Sort by", option: "Amount of replies")
-          # Submit the form
-          c
-        end)
+    #   conn =
+    #     within(conn, "form[data-scope=reactions_sort]", fn c ->
+    #       # Select "Amount of replies" from dropdown
+    #       c = PhoenixTest.select(c, "Sort by", option: "Amount of replies")
+    #       # Submit the form
+    #       c
+    #     end)
 
-      # Check post with most replies is first
-      conn = visit(conn, "/feed/local")
-      assert_has(conn, "article", text: "alice post")
-    end
+    #   # Check post with most replies is first
+    #   conn = visit(conn, "/feed/local")
+    #   assert_has(conn, "article", text: "alice post")
+    # end
 
     test "discussion default layout" do
       account = fake_account!()

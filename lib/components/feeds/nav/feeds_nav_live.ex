@@ -3,6 +3,8 @@ defmodule Bonfire.UI.Social.FeedsNavLive do
 
   alias Bonfire.UI.Social.FeedNavigation
 
+  prop selected_tab, :any, default: nil
+
   declare_nav_component("Links to user's feeds", exclude_from_nav: false)
 
   def render(assigns) do
@@ -23,29 +25,40 @@ defmodule Bonfire.UI.Social.FeedsNavLive do
           end
 
         _ ->
-          nil
+          to_string(assigns[:selected_tab])
       end
 
     active? = Enum.any?(available, fn {slug, _} -> to_string(slug) == selected end)
 
-    presets =
-      available
-      |> Enum.filter(fn {_slug, preset} -> preset[:exclude_from_nav] == false end)
-      |> Enum.map(fn {slug, preset} ->
-        %{
-          slug: to_string(slug),
-          name: FeedNavigation.get_name(preset, slug),
-          href: FeedNavigation.build_path(slug),
-          active?: to_string(slug) == selected
-        }
-      end)
+    links = [
+      %{
+        id: "feeds",
+        href: FeedNavigation.build_path(default),
+        label: l("Feeds"),
+        icon: "ph:rss-simple-fill",
+        active?: active? and selected != "bookmarks"
+      }
+    ]
+
+    links =
+      if current_user(assigns) &&
+           Enum.any?(available, fn {slug, _} -> to_string(slug) == "bookmarks" end) do
+        links ++
+          [
+            %{
+              id: "bookmarks",
+              href: FeedNavigation.build_path(:bookmarks),
+              label: l("Bookmarks"),
+              icon: "ph:bookmark-simple-fill",
+              active?: selected == "bookmarks"
+            }
+          ]
+      else
+        links
+      end
 
     assigns
-    |> assign(
-      presets: presets,
-      active?: active?,
-      default_href: FeedNavigation.build_path(default)
-    )
+    |> assign(links: links)
     |> render_sface()
   end
 end

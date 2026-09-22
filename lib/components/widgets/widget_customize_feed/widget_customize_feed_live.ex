@@ -16,6 +16,7 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   prop feed_filters, :any, default: nil
 
   data initial_preferences, :any, default: nil
+  data default_preferences, :any, default: nil
   data reset_revision, :integer, default: 0
 
   def handle_event("reset_preferences", _, %{assigns: %{event_target: "#" <> feed_id}} = socket) do
@@ -24,7 +25,10 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   end
 
   def update(%{preferences: preferences}, socket) do
-    {:ok, assign(socket, preferences)}
+    {:ok,
+     socket
+     |> assign(preferences)
+     |> assign(default_preferences: socket.assigns[:default_preferences] || preferences[:feed_filters])}
   end
 
   def update(assigns, socket) do
@@ -34,8 +38,43 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
     if socket.assigns.initial_preferences == initial_preferences do
       {:ok, assign(socket, Map.drop(assigns, [:feed_name, :feed_filters]))}
     else
-      {:ok, socket |> assign(assigns) |> assign(initial_preferences: initial_preferences)}
+      {:ok,
+       socket
+       |> assign(assigns)
+       |> assign(initial_preferences: initial_preferences, default_preferences: nil)}
     end
+  end
+
+  @doc """
+  Whether preferences differ from their initial values, ignoring equivalent filter representations.
+
+      iex> Bonfire.UI.Social.WidgetCustomizeFeedLive.preferences_changed?(%{sort_by: :date_created, sort_order: :desc}, %{})
+      false
+
+      iex> Bonfire.UI.Social.WidgetCustomizeFeedLive.preferences_changed?(%{sort_order: :asc}, %{})
+      true
+
+      iex> Bonfire.UI.Social.WidgetCustomizeFeedLive.preferences_changed?(%{exclude_activity_types: [:reply]}, %{})
+      true
+
+      iex> Bonfire.UI.Social.WidgetCustomizeFeedLive.preferences_changed?(%{sort_by: :like_count, sort_order: :asc}, %{sort_by: :like_count, sort_order: :desc})
+      true
+
+      iex> Bonfire.UI.Social.WidgetCustomizeFeedLive.preferences_changed?(%{sort_by: :like_count, sort_order: "desc"}, %{sort_by: :like_count})
+      false
+  """
+  def preferences_changed?(filters, defaults) do
+    current_order(filters) != current_order(defaults) or
+      not Bonfire.Social.Feeds.LiveHandler.filter_value_matches?(
+        e(filters, :sort_order, :desc),
+        e(defaults, :sort_order, :desc)
+      ) or
+      Enum.any?(Bonfire.Social.FeedFilters.supported_filters() -- [:feed_name, :sort_by, :sort_order], fn key ->
+        not Bonfire.Social.Feeds.LiveHandler.filter_value_matches?(
+          e(filters, key, nil),
+          e(defaults, key, nil)
+        )
+      end)
   end
 
   @doc "Order choices supported by the feed loader, independent of content filters."

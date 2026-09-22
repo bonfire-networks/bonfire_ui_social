@@ -2934,8 +2934,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
     with %{} = filters <- e(assigns(socket), :feed_filters, nil) || error("no filters"),
          :ok <- validate_feed_name_unique(name, socket),
-         {:ok, settings} <-
-           Bonfire.Common.Settings.put(
+         preset_settings <-
+           Enums.map_put_in(
              [:bonfire_social, Bonfire.Social.Feeds, :feed_presets, maybe_to_atom(name)],
              %{
                name: name,
@@ -2949,9 +2949,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
                    Enum.map(Bonfire.Social.FeedFilters.supported_filters(), &to_string/1) ++
                      Bonfire.Social.FeedFilters.supported_filters()
                  )
-             },
-             current_user: current_user(socket)
-           ) do
+             }
+           ),
+         settings_attrs <-
+           if(params["set_as_default"] == "on",
+             do: Map.put(preset_settings, Bonfire.UI.Social.FeedLive, %{default_feed: name}),
+             else: preset_settings
+           ),
+         {:ok, settings} <-
+           Bonfire.Common.Settings.set(settings_attrs, current_user: current_user(socket)) do
       Bonfire.UI.Common.OpenModalLive.close()
 
       {
@@ -2993,6 +2999,46 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         :noreply,
         socket |> maybe_assign_context(settings)
       }
+    end
+  end
+
+  def handle_event("preset_set_default", %{"id" => id}, socket) do
+    user = current_user_required!(socket)
+
+    preset =
+      Bonfire.UI.Social.FeedNavigation.list_presets(current_user: user)
+      |> Enum.find(fn {slug, _preset} -> to_string(slug) == id end)
+
+    case preset do
+      {slug, _preset} ->
+        with {:ok, settings} <-
+               Bonfire.Common.Settings.put(
+                 [Bonfire.UI.Social.FeedLive, :default_feed], slug, current_user: user
+               ) do
+          {:noreply, maybe_assign_context(socket, settings)}
+        end
+
+      nil ->
+        {:noreply, socket}
+    end
+  end
+
+  def handle_event("preset_nav_reorder", %{"target_order" => order}, socket) when is_list(order) do
+    user = current_user_required!(socket)
+
+    available_ids =
+      Bonfire.UI.Social.FeedNavigation.list_presets(current_user: user)
+      |> Enum.map(fn {id, _preset} -> to_string(id) end)
+
+    if Enum.sort(order) == Enum.sort(available_ids) do
+      with {:ok, settings} <-
+             Bonfire.Common.Settings.put(
+               [Bonfire.UI.Social.FeedLive, :nav_order], order, current_user: user
+             ) do
+        {:noreply, maybe_assign_context(socket, settings)}
+      end
+    else
+      {:noreply, socket}
     end
   end
 
