@@ -351,7 +351,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
         else: Bonfire.UI.Social.FeedSettingsButtonLive
 
     assign(socket,
-      page_title: if(notifications?, do: socket.assigns.page_title, else: l("Feeds")),
+      page_title: socket.assigns[:page_title] || l("Feed"),
       page_header_aside: header_aside ++ [{button, []}]
     )
   end

@@ -915,7 +915,6 @@ defmodule Bonfire.UI.Social.Benchmark do
 
     app_map =
       Map.new(app_names, fn x -> {x, true} end)
-      |> IO.inspect()
 
     Utils.maybe_apply(
       Benchee,

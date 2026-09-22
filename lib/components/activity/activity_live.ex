@@ -649,6 +649,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
   defp show_reply_to?(:boost, %{subject: %{table_id: "2AGSCANBECATEG0RY0RHASHTAG"}}),
     do: true
 
+  # a mention can sit on a reply, and what it answers is part of reading it: the mention is what the activity was for this person, while the parent is what the activity is
+  defp show_reply_to?(:mention, activity),
+    do:
+      not is_nil(
+        e(activity, :replied, :reply_to_id, nil) || e(activity, :replied, :reply_to, nil)
+      )
+
   defp show_reply_to?(_, _), do: false
 
   def maybe_published_in(%{subject: %{table_id: "2AGSCANBECATEG0RY0RHASHTAG"} = subject}, :boost) do

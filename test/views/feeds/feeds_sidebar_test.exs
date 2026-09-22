@@ -14,8 +14,13 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     |> click_button("#feed-description-default", "Set as default feed")
     |> assert_has("#feed-description-default[disabled]", text: "Default feed")
     |> PhoenixTest.unwrap(fn view ->
-      Phoenix.LiveViewTest.render_hook(view, "Bonfire.Social.Feeds:preset_set_default", %{"id" => "local"})
-      Phoenix.LiveViewTest.render_hook(view, "Bonfire.Social.Feeds:preset_set_default", %{"id" => "unknown-feed"})
+      Phoenix.LiveViewTest.render_hook(view, "Bonfire.Social.Feeds:preset_set_default", %{
+        "id" => "local"
+      })
+
+      Phoenix.LiveViewTest.render_hook(view, "Bonfire.Social.Feeds:preset_set_default", %{
+        "id" => "unknown-feed"
+      })
     end)
     |> assert_has("#feed-description-default[disabled]", text: "Default feed")
     |> visit("/settings/user/feeds")
@@ -31,9 +36,18 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
   test "Bookmarks remains in the sidebar when unpinned and has its own active state" do
     user = fake_user!()
 
-    assert {:ok, _} = Bonfire.Common.Settings.put(
-      [:bonfire_social, Bonfire.Social.Feeds, :feed_presets, :bookmarks, :exclude_from_nav],
-      true, current_user: user)
+    assert {:ok, _} =
+             Bonfire.Common.Settings.put(
+               [
+                 :bonfire_social,
+                 Bonfire.Social.Feeds,
+                 :feed_presets,
+                 :bookmarks,
+                 :exclude_from_nav
+               ],
+               true,
+               current_user: user
+             )
 
     conn(user: user)
     |> visit("/feed/my")
@@ -59,12 +73,13 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     |> assert_has("#feed-tab-my[aria-current='page']", text: "Following", timeout: 2000)
   end
 
-  test "feed pages show navigation below the existing Feeds heading" do
+  test "feed pages show navigation below the feed's own heading" do
     conn(user: fake_user!())
     |> visit("/feed/my")
     |> wait_async()
     |> refute_has("#sidebar-feeds-list")
-    |> assert_has("h1[data-role=page_title]", text: "Feeds")
+    # what the preset says it is, which for this one is its name, since it declares no page title of its own
+    |> assert_has("h1[data-role=page_title]", text: "Following")
     |> assert_has("#feed-tabs[aria-label=Feeds]")
     |> assert_has("#feed-tab-my[aria-current='page']", timeout: 2000)
     |> assert_has("aside", text: "Posts and conversations from people you follow.")
@@ -114,7 +129,8 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     |> wait_async()
     |> assert_has("#feed-tab-local[aria-current='page']", text: "Local")
     |> refute_has("#feed-tab-my[aria-current='page']")
-    |> assert_has("h1[data-role=page_title]", text: "Feeds")
+    # switching feeds switches the heading with it
+    |> assert_has("h1[data-role=page_title]", text: "Explore local activities")
   end
 
   test "settings and feed details share the same pin state" do
@@ -155,9 +171,11 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     |> assert_has("#feed-tab-local[aria-current='page']", text: "Local")
     |> refute_has("#feed-tab-my")
     |> refute_has("#sidebar-bookmarks-link")
-    |> assert_has("h1[data-role=page_title]", text: "Feeds")
+    |> assert_has("h1[data-role=page_title]", text: "Explore local activities")
     |> refute_has("#header-feed-settings")
-    |> assert_has("#feed-description", text: "Posts and conversations from people on this server.")
+    |> assert_has("#feed-description",
+      text: "Posts and conversations from people on this server."
+    )
     |> refute_has("#feed-description dl")
     |> refute_has("#feed-description-pin")
     |> refute_has("#feed-description-default")

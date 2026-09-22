@@ -34,6 +34,8 @@ defmodule Bonfire.UI.Social.Feeds.A11y.Test do
     |> assert_has("[data-id=activity].focus-ring")
   end
 
+  # the gear this asserts belongs to `WidgetFeedsLive`, which the feeds nav and settings rework left with no callers: the page header's `FeedSettingsButtonLive` now links to the same settings page, as an icon-only link labelled "Feed settings". Kept rather than retargeted because the widget's fate is undecided, and the label to assert depends on it
+  @tag skip: "WidgetFeedsLive is not rendered anywhere since the feeds nav and settings rework"
   test "the customize-feeds gear is an icon-only link with an accessible name", %{conn: conn} do
     conn
     |> visit("/feed/local")

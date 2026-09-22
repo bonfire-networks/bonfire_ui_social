@@ -1,4 +1,8 @@
-<nav id="feed-tabs" aria-label={l("Feeds")} class="w-full min-w-0 border-b border-base-content/10">
+<nav
+  id="feed-tabs"
+  aria-label={l("Feeds")}
+  class="w-full min-w-0 border-b border-base-content/10"
+>
   <ul class="flex flex-nowrap justify-around overflow-x-auto overscroll-x-contain">
     <li :for={preset <- @presets} class="flex-[1_0_auto] min-w-[max(16.666%,7rem)]">
       <LinkLive

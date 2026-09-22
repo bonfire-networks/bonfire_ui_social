@@ -69,7 +69,10 @@
   <:open_btn>
     <div class={if @as_icon, do: @icon_button_class, else: "text-left cursor-pointer flex items-center w-full"}>
       <span class={"flex-1 text-sm", "sr-only": @as_icon}>{l("Subscribe to feed")}</span>
-      <#Icon iconify="ph:rss-simple-duotone" class={@icon_class || if(@as_icon, do: "size-4", else: "size-5")} />
+      <#Icon
+        iconify="ph:rss-simple-duotone"
+        class={@icon_class || if(@as_icon, do: "size-4", else: "size-5")}
+      />
     </div>
   </:open_btn>
 </Bonfire.UI.Common.OpenModalLive>
