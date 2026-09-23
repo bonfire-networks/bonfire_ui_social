@@ -14,6 +14,7 @@ defmodule Bonfire.UI.Social.FeedTabsLive do
         %{
           slug: to_string(slug),
           name: FeedNavigation.get_name(preset, slug),
+          icon: preset[:icon] || "ph:rss-simple",
           href: FeedNavigation.build_path(slug),
           active?: to_string(slug) == to_string(assigns.selected_feed)
         }
