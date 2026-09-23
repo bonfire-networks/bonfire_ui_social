@@ -132,14 +132,16 @@ defmodule Bonfire.UI.Social.Benchmark do
         sort_order: :desc,
         time_limit: 7
       },
-      "trending_links(disabled)" => %Bonfire.Social.FeedFilters{
-        exclude_activity_types: [:reply, :boost],
-        media_types: [:link],
-        sort_by: :popularity_score,
-        sort_order: :desc,
-        time_limit: 2,
-        show_objects_only_once: false
-      }
+      # built at runtime, since `media_types` is declared by `bonfire_files` and a struct literal would need it at compile time
+      "trending_links(disabled)" =>
+        struct!(Bonfire.Social.FeedFilters,
+          exclude_activity_types: [:reply, :boost],
+          media_types: [:link],
+          sort_by: :popularity_score,
+          sort_order: :desc,
+          time_limit: 2,
+          show_objects_only_once: false
+        )
     }
   end
 
@@ -172,7 +174,7 @@ defmodule Bonfire.UI.Social.Benchmark do
         # activities.ex maybe_filter {:origin, :local}) …
         "local_media" => :local_media,
         # … and the origin-free variant that isolates the media machinery itself
-        "media_all(no_origin)" => %Bonfire.Social.FeedFilters{media_types: ["*"]}
+        "media_all(no_origin)" => struct!(Bonfire.Social.FeedFilters, media_types: ["*"])
       }
       |> Map.merge(disabled_preset_filters())
       |> subset_by_env("BENCH_PRESETS")

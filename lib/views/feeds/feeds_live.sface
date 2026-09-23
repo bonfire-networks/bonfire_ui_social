@@ -22,7 +22,10 @@
     module={maybe_component(Bonfire.UI.Social.NotificationPreferencesLive, @__context__)}
     showing_within={:feed}
     feed_filters={@feed_filters}
-    feed_assigns={%{enable_marker: @enable_marker}}
+    feed_assigns={%{
+      enable_marker: @enable_marker,
+      hidden_notification_categories: @hidden_notification_categories
+    }}
   />
 
   <StatelessComponent

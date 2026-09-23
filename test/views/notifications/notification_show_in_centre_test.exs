@@ -37,9 +37,9 @@ defmodule Bonfire.UI.Social.NotificationShowInCentreTest do
   end
 
   # what the feed was actually queried with, as strings, since the filter accepts atoms or strings
+  # the categories this feed was loaded without, as the page records them; the query gets them from `FeedLoader`, added to whatever the view excludes itself
   defp excluded(session) do
-    live_assigns(session)[:feed_filters]
-    |> e(:exclude_notification_categories, [])
+    (live_assigns(session)[:hidden_notification_categories] || [])
     |> Enum.map(&to_string/1)
   end
 
