@@ -212,7 +212,7 @@
                     count: sub_replies_count(@comment)
                   )}
                 </span>
-                <#Icon iconify="ph:caret-down-bold" class="w-3 h-3 text-base-content/50" />
+                <#Icon iconify="carbon:chevron-down-bold" class="w-3 h-3 text-base-content/50" />
               </button>
             </div>
           </div>

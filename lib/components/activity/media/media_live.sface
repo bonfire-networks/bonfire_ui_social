@@ -96,7 +96,7 @@
                 class="btn btn-circle btn-sm bg-black/50 hover:bg-black/70 border-none text-white transition-opacity"
                 onclick={"document.getElementById('carousel_#{@parent_id}').scrollBy({left: -(document.getElementById('carousel_#{@parent_id}').offsetWidth - 40), behavior: 'smooth'})"}
               >
-                <#Icon iconify="ph:caret-left" class="w-4 h-4" />
+                <#Icon iconify="carbon:chevron-left" class="w-4 h-4" />
               </button>
             </div>
             <div class="absolute inset-y-0 right-2 z-30 flex items-center">
@@ -107,7 +107,7 @@
                 class="btn btn-circle btn-sm bg-black/50 hover:bg-black/70 border-none text-white transition-opacity"
                 onclick={"document.getElementById('carousel_#{@parent_id}').scrollBy({left: document.getElementById('carousel_#{@parent_id}').offsetWidth - 40, behavior: 'smooth'})"}
               >
-                <#Icon iconify="ph:caret-right" class="w-4 h-4" />
+                <#Icon iconify="carbon:chevron-right" class="w-4 h-4" />
               </button>
             </div>
           {/if}

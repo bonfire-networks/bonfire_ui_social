@@ -14,7 +14,7 @@
       <:action :if={length(suggested_profiles) > 1}>
         <div class="flex items-center gap-1.5">
           <.icon_button
-            icon="ph:caret-left"
+            icon="carbon:chevron-left"
             aria_label={l("Scroll left")}
             variant="outline"
             size="sm"
@@ -22,7 +22,7 @@
             phx_click={JS.dispatch("scroll-left", to: "#suggested-profiles-carousel")}
           />
           <.icon_button
-            icon="ph:caret-right"
+            icon="carbon:chevron-right"
             aria_label={l("Scroll right")}
             variant="outline"
             size="sm"

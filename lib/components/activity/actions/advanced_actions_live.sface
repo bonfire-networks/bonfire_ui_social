@@ -35,7 +35,7 @@
                 >
                   <#Icon iconify="ph:text-h-one-fill" class="w-4 h-4 shrink-0 text-muted" />
                   <span class="text-sm font-medium">{l("Edit discussion title")}</span>
-                  <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-base-content/30 ml-auto" />
+                  <#Icon iconify="carbon:chevron-right" class="w-3.5 h-3.5 shrink-0 text-base-content/30 ml-auto" />
                 </button>
               </li>
 
@@ -50,7 +50,7 @@
                   >
                     <#Icon iconify="ph:pencil-simple-line-fill" class="w-4 h-4 shrink-0 text-muted" />
                     <span class="text-sm font-medium">{l("Edit")}</span>
-                    <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-base-content/30 ml-auto" />
+                    <#Icon iconify="carbon:chevron-right" class="w-3.5 h-3.5 shrink-0 text-base-content/30 ml-auto" />
                   </button>
                 </li>
               {/if}
@@ -116,7 +116,7 @@
                     >
                       <#Icon iconify="ph:lock-fill" class="w-4 h-4 shrink-0 text-muted" />
                       <span class="text-sm font-medium">{l("Lock discussion")}</span>
-                      <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-base-content/30 ml-auto" />
+                      <#Icon iconify="carbon:chevron-right" class="w-3.5 h-3.5 shrink-0 text-base-content/30 ml-auto" />
                     </button>
                   </li>
                 {#elseif @creator_id == current_user_id(@__context__) or
@@ -128,7 +128,7 @@
                     >
                       <#Icon iconify="ph:lock-open-fill" class="w-4 h-4 shrink-0 text-muted" />
                       <span class="text-sm font-medium">{l("Unlock discussion")}</span>
-                      <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-base-content/30 ml-auto" />
+                      <#Icon iconify="carbon:chevron-right" class="w-3.5 h-3.5 shrink-0 text-base-content/30 ml-auto" />
                     </button>
                   </li>
                 {/if}
@@ -151,7 +151,7 @@
                       >
                         <#Icon iconify="ph:trash-fill" class="w-4 h-4 shrink-0" />
                         <span class="text-sm font-medium">{l("Delete %{object_or_type}", object_or_type: @object_type_label)}</span>
-                        <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
+                        <#Icon iconify="carbon:chevron-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
                       </button>
                     </li>
                     <li :if={id(@activity)}>
@@ -161,7 +161,7 @@
                       >
                         <#Icon iconify="ph:trash-fill" class="w-4 h-4 shrink-0" />
                         <span class="text-sm font-medium">{l("Delete from feeds")}</span>
-                        <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
+                        <#Icon iconify="carbon:chevron-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
                       </button>
                     </li>
                   {/if}
@@ -173,7 +173,7 @@
                     >
                       <#Icon iconify="ph:trash-fill" class="w-4 h-4 shrink-0" />
                       <span class="text-sm font-medium">{l("Delete %{object_or_type}", object_or_type: @object_type_label)}</span>
-                      <#Icon iconify="ph:caret-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
+                      <#Icon iconify="carbon:chevron-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
                     </button>
                   </li>
                 {/if}
