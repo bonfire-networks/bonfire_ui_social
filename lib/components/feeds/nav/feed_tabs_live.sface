@@ -7,7 +7,8 @@
         class={[
           "flex items-center justify-center gap-2 whitespace-nowrap rounded-full border px-2 py-1 text-sm font-semibold transition-colors duration-150 motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-base-content",
           "border-primary bg-primary text-primary-content": preset.active?,
-          "border-base-content/10 bg-base-200 text-base-content/70 hover:bg-base-300 hover:text-base-content": not preset.active?
+          "border-base-content/10 bg-base-200 text-base-content/70 hover:bg-base-300 hover:text-base-content":
+            not preset.active?
         ]}
       >
         <span aria-hidden="true" class="flex shrink-0 items-center">
