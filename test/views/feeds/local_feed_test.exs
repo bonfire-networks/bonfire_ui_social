@@ -21,7 +21,7 @@ defmodule Bonfire.Social.Feeds.LocalFeed.Test do
 
       conn()
       |> visit("/feed/local")
-      |> assert_has("a", text: "Log in")
+      |> assert_has("a", text: "Sign in")
       |> assert_has("[data-role=page_title]", text: "Explore local activities")
     end
 

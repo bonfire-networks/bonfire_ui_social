@@ -185,4 +185,116 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
     assert Floki.find(doc, "#notification-filter-latest") |> Floki.text() =~ "Everything"
     assert [] = Floki.find(doc, "#notification-filter-boost")
   end
+
+  describe "Mentions" do
+    # a mention is a Tagged row pointing at the person named, whatever kind of post carries it, so the chip asks that rather than which verb stored the post: a reply that names you is a mention too
+    setup %{me: me, other: other} do
+      {:ok, my_post} =
+        Posts.publish(
+          current_user: me,
+          post_attrs: %{post_content: %{html_body: "my post that gets answered"}},
+          boundary: "public"
+        )
+
+      {:ok, _} =
+        Posts.publish(
+          current_user: other,
+          post_attrs: %{
+            post_content: %{html_body: "answering and naming @#{me.character.username} too"},
+            reply_to_id: my_post.id
+          },
+          boundary: "public"
+        )
+
+      bystander = fake_user!("chips_bystander")
+
+      {:ok, _} =
+        Posts.publish(
+          current_user: other,
+          post_attrs: %{
+            post_content: %{
+              html_body: "answering but naming @#{bystander.character.username} instead"
+            },
+            reply_to_id: my_post.id
+          },
+          boundary: "public"
+        )
+
+      :ok
+    end
+
+    test "shows posts and replies that name me", %{conn: conn} do
+      conn
+      |> visit("/notifications/mentions")
+      |> wait_async()
+      |> assert_has("#notification-filter-mention[aria-current=page]")
+      |> assert_has("[data-id=feed]", text: "a mention for you")
+      |> assert_has("[data-id=feed]", text: "answering and naming")
+    end
+
+    test "a reply that names me is not under Replies (without mentioning you), since it is a mention",
+         %{conn: conn} do
+      # the other reply is the positive: it is there, so this one's absence is the filter's doing
+      conn
+      |> visit("/notifications/replies")
+      |> wait_async()
+      |> assert_has("#notification-filter-extra_replies[aria-current=page]")
+      |> assert_has("[data-id=feed]", text: "answering but naming")
+      |> refute_has("[data-id=feed]", text: "answering and naming")
+    end
+
+    test "leaves out a reply to me that names somebody else, which Replies still shows", %{
+      conn: conn
+    } do
+      # the positive first, so the refute below cannot pass just because the reply never arrived
+      conn
+      |> visit("/notifications/replies")
+      |> wait_async()
+      |> assert_has("[data-id=feed]", text: "answering but naming")
+
+      conn
+      |> visit("/notifications/mentions")
+      |> wait_async()
+      |> refute_has("[data-id=feed]", text: "answering but naming")
+    end
+
+    test "leaves out what names nobody, like a like", %{conn: conn} do
+      conn
+      |> visit("/notifications/mentions")
+      |> wait_async()
+      |> refute_has("[data-verb=like]")
+      |> refute_has("[data-verb=follow]")
+    end
+  end
+
+  describe "Requests" do
+    # somebody whose follows arrive as asks, which is the followed person's own setting, and two people asking: one still waiting, one set aside
+    setup do
+      account = fake_account!()
+      asked = Bonfire.Me.Fake.fake_user!(account, %{}, request_before_follow: true)
+
+      {:ok, _} = Follows.follow(fake_user!("Patient Asker"), asked)
+      {:ok, ignored} = Follows.follow(fake_user!("Ignored Asker"), asked)
+      {:ok, _} = Follows.ignore(ignored, current_user: asked)
+
+      {:ok, asked_conn: conn(user: asked, account: account)}
+    end
+
+    test "shows the asks still waiting, and not one already set aside", %{asked_conn: conn} do
+      conn
+      |> visit("/notifications/requests")
+      |> wait_async()
+      |> assert_has("[data-id=feed]", text: "Patient Asker")
+      |> refute_has("[data-id=feed]", text: "Ignored Asker")
+    end
+
+    test "Latest still shows the one set aside, since leaving answered asks out is not the default",
+         %{asked_conn: conn} do
+      conn
+      |> visit("/notifications")
+      |> wait_async()
+      |> assert_has("[data-id=feed]", text: "Patient Asker")
+      |> assert_has("[data-id=feed]", text: "Ignored Asker")
+    end
+  end
 end

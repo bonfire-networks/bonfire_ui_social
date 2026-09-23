@@ -205,6 +205,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
   end
 
   # media quick actions: "Any media" = every media type set to only; "No preference" clears
+  # TODO: these two know what the media filters mean, so they belong with them in `Bonfire.Files.FeedFilters`: a quick action is a named set of filter values, which the owning module can offer
   def handle_event("any_media", _params, socket) do
     {:noreply,
      update_pending_fn(socket, fn filters ->
@@ -275,9 +276,17 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
 
   # --- Hashtags & specific instances (free-text, comma/space separated) ---
 
+  # TODO: turning typed text into filter values belongs to the filter, not to this component: `StringList.cast/1` wraps a bare string in a list and splits nothing, so the same input through an API would become one bogus value. Move the splitting into the list types and the per-filter cleaning into the module that owns each filter (`Bonfire.Tag.FeedFilters` for this one), then this handler hands over raw text and stops being per-filter
   def handle_event("set_tags", params, socket) do
     text = e(params, "tags_text", "")
-    tags = text |> split_words() |> normalise_list(&FeedFilters.normalise_tag/1)
+
+    # the tags filter is `bonfire_tag`'s, and that extension is optional here: without it nothing normalises, the list comes back empty and the filter is left unset
+    tags =
+      text
+      |> split_words()
+      |> normalise_list(
+        &maybe_apply(Bonfire.Tag.FeedFilters, :normalise_tag, [&1], fallback_return: nil)
+      )
 
     {:noreply,
      socket
@@ -287,6 +296,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
      end)}
   end
 
+  # TODO: same as above, and `normalise_instance_domain/1` travels with the `origin` filter it prepares input for, which is federation's vocabulary rather than this component's
   def handle_event("set_instances", params, socket) do
     text = e(params, "instances_text", "")
     domains = text |> split_words() |> normalise_list(&FeedFilters.normalise_instance_domain/1)

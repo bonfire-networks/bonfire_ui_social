@@ -119,8 +119,8 @@ defmodule Bonfire.UI.Social.NotificationPreferencesLive do
 
     {Map.put(
        filters,
-       :exclude_activity_types,
-       Notifications.excluded_activity_types(context, showing)
+       :exclude_notification_categories,
+       Notifications.hidden_categories(context, showing)
      ), assigns}
   end
 

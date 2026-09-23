@@ -39,7 +39,7 @@ defmodule Bonfire.UI.Social.NotificationShowInCentreTest do
   # what the feed was actually queried with, as strings, since the filter accepts atoms or strings
   defp excluded(session) do
     live_assigns(session)[:feed_filters]
-    |> e(:exclude_activity_types, [])
+    |> e(:exclude_notification_categories, [])
     |> Enum.map(&to_string/1)
   end
 
@@ -138,13 +138,48 @@ defmodule Bonfire.UI.Social.NotificationShowInCentreTest do
     |> refute_has("#notification-display-apply")
   end
 
-  test "a category excludes what its chip filters by, not just its key", %{me: me} do
-    # Mentions is `:create` on both surfaces until Phase 4's tagged-me predicate
-    assert Notifications.activity_types_for(:mention) == [:create]
+  test "a category is hidden as exactly what its chip shows, which its verbs could not say", %{
+    me: me
+  } do
+    other = fake_user!("centre_answerer")
 
+    {:ok, mine} =
+      Posts.publish(
+        current_user: me,
+        post_attrs: %{post_content: %{html_body: "a post of mine to answer"}},
+        boundary: "public"
+      )
+
+    {:ok, _} =
+      Posts.publish(
+        current_user: other,
+        post_attrs: %{
+          post_content: %{html_body: "answering and naming @#{me.character.username}"},
+          reply_to_id: mine.id
+        },
+        boundary: "public"
+      )
+
+    {:ok, _} =
+      Posts.publish(
+        current_user: other,
+        post_attrs: %{
+          post_content: %{html_body: "answering without naming anyone"},
+          reply_to_id: mine.id
+        },
+        boundary: "public"
+      )
+
+    # both replies share a verb, so hiding Mentions by verbs would hide both or neither: the one naming me goes, the other stays
     Settings.put(Notifications.show_in_centre_key(:mention), false, current_user: me)
 
-    session = conn(user: me, account: me.account) |> visit("/notifications") |> wait_async()
-    assert excluded(session) == ["create"]
+    session =
+      conn(user: me, account: me.account)
+      |> visit("/notifications")
+      |> wait_async()
+      |> refute_has("[data-id=feed]", text: "answering and naming")
+      |> assert_has("[data-id=feed]", text: "answering without naming anyone")
+
+    assert excluded(session) == ["mention"]
   end
 end
