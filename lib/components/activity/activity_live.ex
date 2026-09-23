@@ -6,24 +6,25 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # alias Bonfire.Data.Social.Activity
   alias Bonfire.Social.Feeds.LiveHandler
 
-  # TODO: autogenerate with Verbs genserver?
-  @reply_verbs Application.compile_env(:bonfire, [:verb_families, :reply]) || ["Respond"]
-  @create_verbs Application.compile_env(:bonfire, [:verb_families, :create]) || ["Write", "Send"]
-  @react_verbs (Application.compile_env(:bonfire, [:verb_families, :react]) || []) ++ ["React"]
+  # Groupings of `Bonfire.Social.Activities.experienced_as/2` answers that this component renders alike, declared in `bonfire_social`'s config. Compile-time, since a guard cannot hold a config call, so changing a family means a rebuild
+  @reply_verbs Application.compile_env(:bonfire, [:verb_families, :reply]) || [:reply, :respond]
+  @create_verbs Application.compile_env(:bonfire, [:verb_families, :create]) || [:create, :write]
+  @react_verbs Application.compile_env(:bonfire, [:verb_families, :react]) || [:like, :react]
   @simple_verbs Application.compile_env(:bonfire, [:verb_families, :simple_action]) || []
   @react_or_simple_verbs @react_verbs ++ @simple_verbs
   # @react_or_reply_verbs @react_verbs ++ @reply_verbs
   @create_or_reply_verbs @create_verbs ++ @reply_verbs
-  @created_verb_display Activities.verb_display("Create")
 
   prop activity, :any, default: nil
   prop activity_id, :string, default: nil
   prop object, :any, default: nil
   prop object_id, :string, default: nil
   prop object_type, :any, default: nil
-  prop verb, :string, default: nil
+
+  # the verb the activity was stored as, and what it was for whoever is reading it (`Bonfire.Social.Activities.experienced_as/2`). Both atoms: the word is computed where it prints, by `Activities.experience_display/2`, so nothing downstream holds a string to compare
+  prop verb, :atom, default: nil
   prop verb_default, :string, default: nil
-  prop verb_display, :string, default: nil
+  prop experienced_as, :atom, default: nil
   prop date_ago, :any, default: nil
   prop feed_id, :any, default: nil
   prop feed_name, :any, default: nil
@@ -54,7 +55,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop show_minimal_subject_and_note, :any, default: false
   prop hide_activity, :any, default: nil
   prop i, :integer, default: nil
-  prop created_verb_display, :string, default: @created_verb_display
   prop object_type_readable, :string, default: nil
   prop reply_count, :any, default: nil
   prop reply_to, :any, default: nil
@@ -171,17 +171,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
   ## Examples
 
       iex> activity = %{edge: %{subject: %{created: %{creator: %{id: "quoter"}}}}}
-      iex> Bonfire.UI.Social.ActivityLive.get_activity_actor("Request to Quote", activity)
+      iex> Bonfire.UI.Social.ActivityLive.get_activity_actor(:quote_request, activity)
       %{id: "quoter"}
 
-      iex> Bonfire.UI.Social.ActivityLive.get_activity_actor("Like", %{subject: %{id: "liker"}})
+      iex> Bonfire.UI.Social.ActivityLive.get_activity_actor(:like, %{subject: %{id: "liker"}})
       %{id: "liker"}
   """
-  def get_activity_actor("Request to Quote", activity) do
+  def get_activity_actor(:quote_request, activity) do
     e(activity, :edge, :subject, :created, :creator, nil) || e(activity, :subject, nil)
   end
 
-  def get_activity_actor(_verb, activity), do: e(activity, :subject, nil)
+  def get_activity_actor(_experience, activity), do: e(activity, :subject, nil)
 
   # can locality be decided without a mid-render preload? (loaded-nil = local, like `AdapterUtils.is_local?`)
   defp peered_loaded?(%{character: %{peered: peered}} = subject),
@@ -212,8 +212,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
         existing -> existing
       end || :feed
 
-    verb = extras[:verb] || prepare_verb(activity, e(assigns, :verb_default, nil) || "Create")
-    activity_actor = get_activity_actor(verb, activity)
+    verb = extras[:verb] || Activities.verb_slug(activity)
+
+    experienced_as =
+      extras[:experienced_as] ||
+        prepare_experience(activity, e(assigns, :verb_default, nil), current_user(assigns))
+
+    activity_actor = get_activity_actor(experienced_as, activity)
 
     # `is_remote`/`peered` describe the *object*, so a remote actor boosting a local post must not flag it as remote: creator info comes from the object only (the boost/like activity's own `:created` is the booster's; created-less objects like Media carry a direct `:creator`)
     object_created = e(object, :created, nil)
@@ -232,7 +237,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           object_creator
 
         # creator differs from the actor but isn't classifiable without a preload: assume local rather than borrow the actor's locality
-        not is_nil(object_creator_id) or verb in @react_or_simple_verbs ->
+        not is_nil(object_creator_id) or experienced_as in @react_or_simple_verbs ->
           :unclassified
 
         # no separate creator info: the actor (or `subject_user` below) speaks for the object
@@ -269,6 +274,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [
       showing_within: showing_within,
       verb: verb,
+      experienced_as: experienced_as,
       thread_mode:
         case e(assigns, :thread_mode, nil) do
           nil -> e(socket_assigns, :thread_mode, nil)
@@ -437,9 +443,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     # debug(object, "object")
 
-    verb = prepare_verb(activity, e(assigns, :verb_default, nil) || "Create")
+    verb = Activities.verb_slug(activity)
 
-    # |> debug("verb (modified)")
+    experienced_as =
+      prepare_experience(activity, e(assigns, :verb_default, nil), current_user(assigns))
 
     replied =
       e(activity, :replied, nil) ||
@@ -452,12 +459,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
       e(assigns, :thread_object, nil) || e(replied, :thread, nil) || e(replied, :thread_id, nil) ||
         e(assigns, :thread_id, nil)
 
-    reply_to = if show_reply_to?(verb, activity), do: prepare_reply_to(replied || activity)
+    reply_to =
+      if show_reply_to?(experienced_as, activity), do: prepare_reply_to(replied || activity)
 
     thread_start =
-      if show_reply_to?(verb, activity), do: prepare_thread_start(replied || activity)
-
-    verb_display = Activities.verb_display(verb)
+      if show_reply_to?(experienced_as, activity), do: prepare_thread_start(replied || activity)
 
     object_type =
       assigns[:object_type] || Types.object_type(object)
@@ -544,6 +550,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     assigns
     |> prepare_mutable_assigns(
       verb: verb,
+      experienced_as: experienced_as,
       thread: thread
     )
     |> Enum.into(debug(assigns, "original passed assigns"))
@@ -566,8 +573,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           else: DatesTimes.date_from_now(object_id, format: :short)
         ),
       verb: verb,
-      verb_display: verb_display,
-      created_verb_display: e(assigns, :created_verb_display, nil),
+      experienced_as: experienced_as,
       permalink: permalink,
       thread_url: thread_url,
       current_url: current_url,
@@ -598,32 +604,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   defp do_prepare_assigns(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
 
-  defp prepare_verb(activity, fallback \\ nil)
+  @doc """
+  What the activity was, for the person being shown it, as an atom.
 
-  defp prepare_verb(%{emoji: %{media_type: "emoji"}}, _fallback) do
-    "React"
-  end
-
-  defp prepare_verb(%{emoji: %{summary: _}}, _fallback) do
-    "React"
-  end
-
-  defp prepare_verb(activity, fallback) do
-    # Debug the activity structure to understand what's available
-    # debug(e(activity, :verb, nil), "prepare_verb: activity.verb")
-    # debug(e(activity, :verb_id, nil), "prepare_verb: activity.verb_id")
-    # debug(e(activity, :table_id, nil), "prepare_verb: activity.table_id")
-    # debug(e(activity, :__struct__, nil), "prepare_verb: activity.__struct__")
-    # debug(e(activity, :edge, nil), "prepare_verb: activity.edge")
-
-    # Extract verb string from nested structure if present
-    raw_verb =
-      e(activity, :verb, :verb, nil) || e(activity, :verb, nil) || e(activity, :verb_id, nil)
-
-    # |> debug("prepare_verb: raw verb before modification")
-
-    Activities.verb_maybe_modify(raw_verb || fallback, activity)
-    |> debug("prepare_verb: final verb after verb_maybe_modify")
+  `recipient` because that decides it: the same post is a mention of the person it names and an ordinary post to everybody else. The wording comes later, from `Activities.experience_display_name/2`, so nothing here compares a word to work out what happened, which is what `verb_maybe_modify/2` did and what cannot work in a language whose word for "Create" is not "Create".
+  """
+  def prepare_experience(activity, fallback \\ nil, recipient \\ nil) do
+    Activities.experienced_as(activity, recipient) || maybe_to_atom!(fallback) || :create
   end
 
   # defp derive_verb_from_table_id(%{table_id: "300STANN0VNCERESHARESH0VTS"}), do: "Boost"
@@ -655,16 +642,23 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   # Reply context is computed for reply verbs, but also when a group/topic boosts a reply
-  # into feeds (posts in groups reach feeds as the category's auto-boost, verb "Boost" with
+  # into feeds (posts in groups reach feeds as the category's auto-boost, a boost with
   # the category as subject) — otherwise a boosted reply renders with no parent at all.
-  defp show_reply_to?(verb, _activity) when verb in @reply_verbs, do: true
+  defp show_reply_to?(experience, _activity) when experience in @reply_verbs, do: true
 
-  defp show_reply_to?("Boost", %{subject: %{table_id: "2AGSCANBECATEG0RY0RHASHTAG"}}),
+  defp show_reply_to?(:boost, %{subject: %{table_id: "2AGSCANBECATEG0RY0RHASHTAG"}}),
     do: true
+
+  # a mention can sit on a reply, and what it answers is part of reading it: the mention is what the activity was for this person, while the parent is what the activity is
+  defp show_reply_to?(:mention, activity),
+    do:
+      not is_nil(
+        e(activity, :replied, :reply_to_id, nil) || e(activity, :replied, :reply_to, nil)
+      )
 
   defp show_reply_to?(_, _), do: false
 
-  def maybe_published_in(%{subject: %{table_id: "2AGSCANBECATEG0RY0RHASHTAG"} = subject}, "Boost") do
+  def maybe_published_in(%{subject: %{table_id: "2AGSCANBECATEG0RY0RHASHTAG"} = subject}, :boost) do
     subject
   end
 
@@ -723,7 +717,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   defp chain_published_in?(assigns, published_in, subject_id) do
-    assigns[:verb] == "Boost" and id(published_in) != subject_id and
+    assigns[:verb] == :boost and id(published_in) != subject_id and
       Bonfire.UI.Social.Activity.PublishedInLive.chainable_context?(assigns[:showing_within]) and
       assigns[:hide_activity] != "subject"
   end
@@ -736,7 +730,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     labelled
   end
 
-  def maybe_labelled(%{subject: %{table_id: "2AGSCANBECATEG0RY0RHASHTAG"} = subject}, "Label") do
+  def maybe_labelled(%{subject: %{table_id: "2AGSCANBECATEG0RY0RHASHTAG"} = subject}, :label) do
     subject
   end
 
@@ -747,7 +741,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def activity_components(
         activity,
-        verb,
+        experience,
         object_override,
         showing_within
       ) do
@@ -760,11 +754,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
     thread =
       e(replied, :thread, nil) || e(replied, :thread_id, nil)
 
-    reply_to = if show_reply_to?(verb, activity), do: prepare_reply_to(replied || activity)
+    reply_to = if show_reply_to?(experience, activity), do: prepare_reply_to(replied || activity)
 
     activity_components(
       activity,
-      verb,
+      experience,
       object,
       Types.object_type(object),
       false,
@@ -782,7 +776,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def activity_components(
         activity,
-        verb,
+        experience,
         object,
         object_type,
         activity_inception,
@@ -806,7 +800,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
 
     object_components =
-      if(verb == "Request to Quote",
+      if(experience == :quote_request,
         do: [],
         else: component_object(object, object_type, %{primary_image: primary_image})
       )
@@ -845,7 +839,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          opts
        ) ++
        (component_activity_subject(
-          verb,
+          experience,
           activity,
           object,
           object_type,
@@ -856,14 +850,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
         |> debug("component_activity_subject result")) ++
        cw_fallback ++
        object_components ++
-       if(verb == "Request to Quote" or showing_within == :media,
+       if(experience == :quote_request or showing_within == :media,
          do: [],
          else: attachments_component
        ) ++
        component_maybe_quote_post(activity_component_id, quotes, opts[:cw]) ++
        component_maybe_hashtags_footer(opts[:hashtags]) ++
        component_actions(
-         verb,
+         experience,
          activity,
          object_type,
          showing_within,
@@ -956,6 +950,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       data-compact={@__context__[:ui_compact]}
       data-answer={not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil))}
       data-verb={@verb}
+      data-experienced-as={@experienced_as}
       data-reply-context={@reply_context?}
       tabIndex={if @custom_preview && @showing_within == :widget, do: nil, else: "0"}
       class={[
@@ -1117,7 +1112,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           {#for {component, component_assigns} when is_atom(component) <-
               activity_components(
                 @activity,
-                @verb,
+                @experienced_as,
                 @object,
                 @object_type,
                 @activity_inception,
@@ -1207,7 +1202,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   published_in_path={@published_in_path}
                   feed_id={@feed_id}
                   verb={maybe_get(component_assigns, :verb, @verb)}
-                  verb_display={maybe_get(component_assigns, :verb_display, @verb_display)}
+                  experienced_as={maybe_get(component_assigns, :experienced_as, @experienced_as)}
                   emoji={@emoji || e(maybe_get(component_assigns, :activity, @activity), :emoji, nil)}
                   reply_to_id={e(@activity, :replied, :reply_to_id, nil)}
                   peered={@peered}
@@ -1367,7 +1362,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   activity_prepared={:defer_to_render}
                   activity_inception={maybe_get(component_assigns, :activity_inception, @activity_inception)}
                   myself={nil}
-                  created_verb_display={@created_verb_display}
                   showing_within={maybe_get(component_assigns, :showing_within, @showing_within)}
                   thread_mode={@thread_mode}
                   activity={maybe_get(component_assigns, :activity, @activity)}
@@ -1378,7 +1372,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   object_type_readable={maybe_get(component_assigns, :object_type_readable, @object_type_readable)}
                   date_ago={maybe_get(component_assigns, :date_ago, @date_ago)}
                   verb={maybe_get(component_assigns, :verb, @verb)}
-                  verb_display={maybe_get(component_assigns, :verb_display, @verb_display)}
+                  experienced_as={maybe_get(component_assigns, :experienced_as, @experienced_as)}
                   permalink={maybe_get(component_assigns, :permalink, @permalink)}
                   thread_url={maybe_get(component_assigns, :thread_url, @thread_url)}
                   thread_id={maybe_get(component_assigns, :thread_id, @thread_id)}
@@ -1443,7 +1437,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # @decorate time()
   def component_activity_subject(
-        verb,
+        experience,
         activity,
         object,
         object_type,
@@ -1453,11 +1447,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
 
   # don't show subject twice
-  def component_activity_subject(verb, activity, _, Bonfire.Data.Identity.User, _, _, _),
+  def component_activity_subject(_experience, activity, _, Bonfire.Data.Identity.User, _, _, _),
     do: [
       {Bonfire.UI.Social.Activity.SubjectMinimalLive,
        %{
-         verb: verb,
          subject_id: e(activity, :subject_id, nil),
          subjects_more: e(activity, :subjects_more, []),
          profile: e(activity, :subject, :profile, nil),
@@ -1499,7 +1492,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # reactions should show the reactor (or requester for requests) + original creator
 
   def component_activity_subject(
-        "Request to Quote" = verb,
+        :quote_request = experience,
         activity,
         object,
         _object_type,
@@ -1507,7 +1500,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
         activity_inception,
         _
       ) do
-    quoter = get_activity_actor(verb, activity)
+    quoter = get_activity_actor(experience, activity)
     quoter_profile = e(quoter, :profile, nil)
     quoter_character = e(quoter, :character, nil)
     quote_post = e(activity, :edge, :subject, nil)
@@ -1521,16 +1514,16 @@ defmodule Bonfire.UI.Social.ActivityLive do
       # Header: "nikita wants to quote your post"
       {Bonfire.UI.Social.Activity.SubjectMinimalLive,
        %{
-         verb: verb,
          subject_id: id(quoter),
          subjects_more: e(activity, :subjects_more, []),
          profile: quoter_profile,
          character: quoter_character
        }},
-      # Quoter's subject line (with avatar)
+      # Quoter's subject line (with avatar), which is about the quote post they wrote rather than about the asking
       {Bonfire.UI.Social.Activity.SubjectLive,
        %{
-         verb: "Create",
+         verb: :create,
+         experienced_as: :create,
          subject_id: id(quoter),
          profile: quoter_profile,
          character: quoter_character
@@ -1554,13 +1547,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
        }
        |> prepare_assigns()}
     ]
-    |> debug("MATCHED react case for verb: #{verb} in component_activity_subject")
+    |> debug("MATCHED quote request in component_activity_subject")
   end
 
   # poll votes (notifications): prepend a minimal "X voted on your poll" header
   # above the poll (the vote activity's object + its creator)
   def component_activity_subject(
-        "Vote" = verb,
+        :vote,
         activity,
         object,
         object_type,
@@ -1571,7 +1564,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [
       {Bonfire.UI.Social.Activity.SubjectMinimalLive,
        %{
-         verb: verb,
          subject_id: e(activity, :subject_id, nil),
          subjects_more: e(activity, :subjects_more, []),
          profile: e(activity, :subject, :profile, nil),
@@ -1580,33 +1572,31 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ] ++ dated_by_object(component_activity_maybe_creator(activity, object, object_type))
   end
 
-  def component_activity_subject(verb, activity, object, object_type, _, _, _)
-      when verb in @react_or_simple_verbs do
+  def component_activity_subject(experience, activity, object, object_type, _, _, _)
+      when experience in @react_or_simple_verbs do
     # activity: repo().maybe_preload(activity, subject: [:character]),
     ([
        {Bonfire.UI.Social.Activity.SubjectMinimalLive,
         %{
-          verb: verb,
           subject_id: e(activity, :subject_id, nil),
           subjects_more: e(activity, :subjects_more, []),
           profile: e(activity, :subject, :profile, nil),
           character: e(activity, :subject, :character, nil)
         }}
      ] ++ dated_by_object(component_activity_maybe_creator(activity, object, object_type)))
-    |> debug("MATCHED react case for verb: #{verb} in component_activity_subject")
+    |> debug("MATCHED react case for #{inspect(experience)} in component_activity_subject")
   end
 
   # replies and mentions (when shown in notifications): prepend a minimal
   # "X replied/mentioned you" header above the standard subject line
-  def component_activity_subject(verb, activity, object, _, :notifications, _, _)
-      when verb in @create_or_reply_verbs do
+  def component_activity_subject(experience, activity, object, _, :notifications, _, _)
+      when experience in @create_or_reply_verbs do
     profile = e(activity, :subject, :profile, nil)
     character = e(activity, :subject, :character, nil)
 
     [
       {Bonfire.UI.Social.Activity.SubjectMinimalLive,
        %{
-         verb: verb,
          tagged: e(object, :tagged, nil),
          subject_id: e(activity, :subject_id, nil),
          subjects_more: e(activity, :subjects_more, []),
@@ -1619,7 +1609,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # create (or reply) activities
   def component_activity_subject(
-        verb,
+        experience,
         %{subject: %{profile: %{id: _} = profile, character: %{id: _} = character}},
         _,
         _,
@@ -1627,15 +1617,23 @@ defmodule Bonfire.UI.Social.ActivityLive do
         _,
         _
       )
-      when verb in @create_or_reply_verbs,
+      when experience in @create_or_reply_verbs,
       do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
 
-  def component_activity_subject(verb, %{subject: %{profile: %{id: _} = profile}}, _, _, _, _, _)
-      when verb in @create_or_reply_verbs,
+  def component_activity_subject(
+        experience,
+        %{subject: %{profile: %{id: _} = profile}},
+        _,
+        _,
+        _,
+        _,
+        _
+      )
+      when experience in @create_or_reply_verbs,
       do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: nil}}]
 
   def component_activity_subject(
-        verb,
+        experience,
         %{subject: %{character: %{id: _} = character}},
         _,
         _,
@@ -1643,15 +1641,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
         _,
         _
       )
-      when verb in @create_or_reply_verbs,
+      when experience in @create_or_reply_verbs,
       do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: nil, character: character}}]
 
-  def component_activity_subject(verb, %{subject_id: id}, _, _, _, _, %{
+  def component_activity_subject(experience, %{subject_id: id}, _, _, _, _, %{
         id: id,
         profile: profile,
         character: character
       })
-      when verb in @create_or_reply_verbs,
+      when experience in @create_or_reply_verbs,
       do: [{Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}]
 
   # def component_activity_subject(verb, %{subject_id: id} = _activity, %{created: %{creator: nil}} = _object, _object_type, _, _, _) when verb in @create_or_reply_verbs, do: [{Bonfire.UI.Social.Activity.SubjectLive, %{subject_id: id}}]
@@ -1782,7 +1780,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
       }),
       do: [
         {Bonfire.UI.Social.Activity.SubjectLive,
-         %{verb: "Create", subject_id: id, profile: profile, character: character}}
+         %{
+           verb: :create,
+           experienced_as: :create,
+           subject_id: id,
+           profile: profile,
+           character: character
+         }}
       ]
 
   # def component_maybe_creator(%{provider: %{id: _} = provider} = object),
@@ -1836,7 +1840,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
       ),
       do: [
         {Bonfire.UI.Social.Activity.SubjectLive,
-         %{verb: "Create", subject_id: id, profile: profile, character: character}}
+         %{
+           verb: :create,
+           experienced_as: :create,
+           subject_id: id,
+           profile: profile,
+           character: character
+         }}
       ]
 
   # def component_maybe_creator(
@@ -1919,7 +1929,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
             } ->
               [
                 {Bonfire.UI.Social.Activity.SubjectLive,
-                 %{verb: "Create", subject_id: id, profile: profile, character: character}}
+                 %{
+                   verb: :create,
+                   experienced_as: :create,
+                   subject_id: id,
+                   profile: profile,
+                   character: character
+                 }}
               ]
 
             creator_id when is_binary(creator_id) ->
@@ -1928,14 +1944,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
               # debug(object)
               [
                 {Bonfire.UI.Social.Activity.SubjectLive,
-                 %{verb: "Create", subject_id: creator_id}}
+                 %{verb: :create, experienced_as: :create, subject_id: creator_id}}
               ]
 
             other ->
               error(other, "invalid creator")
 
               # [Bonfire.UI.Social.Activity.NoSubjectLive]
-              [{Bonfire.UI.Social.Activity.SubjectLive, %{verb: "Create"}}]
+              [
+                {Bonfire.UI.Social.Activity.SubjectLive,
+                 %{verb: :create, experienced_as: :create}}
+              ]
           end
         )
 
@@ -2698,7 +2717,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # @decorate time()
   def component_actions(
-        verb,
+        experience,
         activity,
         object_type,
         showing_within,
@@ -2716,14 +2735,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
       do: []
 
   # Quote request notifications show a custom footer with quote preview + accept/decline buttons
-  def component_actions("Request to Quote", activity, _, _, _, _) do
+  def component_actions(:quote_request, activity, _, _, _, _) do
     [{Bonfire.UI.Social.Activity.QuoteRequestFooterLive, %{activity: activity}}]
   end
 
   # WIP: THIS NEEDS TO BE REFACTORED ACCORDING TO actions_for_object_type
   # Flag activities get the moderation action menu (Mediate / Take action),
   # not the regular post actions.
-  def component_actions("Flag", _, _, _, _, _), do: [Bonfire.UI.Moderation.FlaggedActionsLive]
+  def component_actions(:flag, _, _, _, _, _), do: [Bonfire.UI.Moderation.FlaggedActionsLive]
 
   # def component_actions(_, activity, _, _, _, true) do
   #   [Bonfire.UI.Social.Activity.MainObjectInfoLive] ++ component_actions(nil, activity, nil)

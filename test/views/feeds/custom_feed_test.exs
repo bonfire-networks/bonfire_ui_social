@@ -96,7 +96,11 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
     conn
     |> visit("/feed")
     |> wait_async()
+    # saving is offered once something differs from the defaults, so the filter change is what brings the form into the page rather than incidental setup
     |> click_button("[data-role=open_modal]", "More filters")
+    |> click_button("Last Day")
+    |> click_button("Apply filters")
+    |> wait_async()
     |> fill_in("Feed title", with: preset_name)
     |> click_button("Save feed")
     |> visit("/settings/user/feeds")

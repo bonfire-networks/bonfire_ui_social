@@ -10,7 +10,9 @@ defmodule Bonfire.UI.Social.FeedPinButtonLive do
   @doc "Renders the shared feed-tab pin action and its accessible state."
   def render(assigns) do
     assigns
-    |> assign(label: if(assigns.pinned, do: l("Unpin from feed tabs"), else: l("Pin to feed tabs")))
+    |> assign(
+      label: if(assigns.pinned, do: l("Unpin from feed tabs"), else: l("Pin to feed tabs"))
+    )
     |> render_sface()
   end
 end

@@ -6,7 +6,7 @@
 >{@trigger_text}</button>
 <dialog id={@id} class="modal">
   <div class="modal-box">
-    <h3 class="text-lg font-bold mb-4">{title_for_verb(@verb)}</h3>
+    <h3 class="text-lg font-bold mb-4">{title_for(@experienced_as)}</h3>
     <ul data-role="subject_list" class="flex flex-col gap-3 py-2">
       <li :if={@main_profile_id} class="flex items-center gap-3">
         <LinkLive

@@ -141,10 +141,10 @@ defmodule Bonfire.UI.Social.NotificationFiltersLive do
       if(chip_key?(selected_tab), do: to_string(selected_tab), else: to_string(@default_chip))
   end
 
-  # a chip key is the default chip or a verb, which distinguishes it from a feed name without needing the context a gated chip would (`chips/1` hides those)
+  # a chip key is the default chip or a declared category, which distinguishes it from a feed name without needing the context a gated chip would (`chips/1` hides those). Asking the categories rather than the verb registry, since a category's key need not name a verb: `react` covers likes and emoji reactions, and nothing declares a `react` verb
   defp chip_key?(name) do
     to_string(name) == to_string(@default_chip) or
-      not is_nil(Verbs.get(Types.maybe_to_atom!(name) || :none))
+      not is_nil(Notifications.category(Types.maybe_to_atom!(name) || :none))
   end
 
   @doc "A chip's `name_pluralized` OVERRIDE, else the verb's own (singular) name, else its key."

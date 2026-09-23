@@ -1,25 +1,47 @@
-<details id={@id} class="group" data-role="save_custom_feed" phx-mounted={JS.ignore_attributes("open")}>
+<details
+  id={@id}
+  class="group"
+  data-role="save_custom_feed"
+  phx-mounted={JS.ignore_attributes("open")}
+>
   <summary class="min-h-11 flex cursor-pointer items-center gap-2 rounded-lg text-sm text-primary focus-visible:outline focus-visible:outline-2">
     <#Icon iconify="ph:bookmark-simple" class="size-4 shrink-0" />
     <span>{l("Save as custom feed")}</span>
   </summary>
-  <.form for={Phoenix.Component.to_form(%{})} id={"#{@id}_form"} class="flex flex-col gap-3 pb-3" phx-submit="Bonfire.Social.Feeds:preset_create" phx-target={@event_target}>
+  <.form
+    for={Phoenix.Component.to_form(%{})}
+    id={"#{@id}_form"}
+    class="flex flex-col gap-3 pb-3"
+    phx-submit="Bonfire.Social.Feeds:preset_create"
+    phx-target={@event_target}
+  >
     <div>
       <label for={"#{@id}_name"} class="block text-sm font-medium mb-1">{l("Feed title")}</label>
-      <input id={"#{@id}_name"} name="name" required class="input w-full text-base" placeholder={l("Add a title…")} />
+      <input
+        id={"#{@id}_name"}
+        name="name"
+        required
+        class="input w-full text-base"
+        placeholder={l("Add a title…")}
+      />
     </div>
     <div>
       <label for={"#{@id}_description"} class="block text-sm font-medium mb-1">{l("Feed description")}</label>
-      <textarea id={"#{@id}_description"} name="description" class="textarea w-full h-20 text-base" placeholder={l("Optional — what's this feed for?")} />
+      <textarea
+        id={"#{@id}_description"}
+        name="description"
+        class="textarea w-full h-20 text-base"
+        placeholder={l("Optional — what's this feed for?")}
+      />
     </div>
     <label class="flex items-center gap-3 text-sm cursor-pointer">
-      <input type="hidden" name="show_in_nav" value="false" />
-      <input type="checkbox" value="on" name="show_in_nav" checked class="checkbox checkbox-sm" />
+      <input type="hidden" name="show_in_nav" value="false">
+      <input type="checkbox" value="on" name="show_in_nav" checked class="checkbox checkbox-sm">
       <span>{l("Show in feeds navbar")}</span>
     </label>
     <label class="flex items-center gap-3 text-sm cursor-pointer">
-      <input type="hidden" name="set_as_default" value="false" />
-      <input type="checkbox" value="on" name="set_as_default" class="checkbox checkbox-sm" />
+      <input type="hidden" name="set_as_default" value="false">
+      <input type="checkbox" value="on" name="set_as_default" class="checkbox checkbox-sm">
       <span>{l("Set as default feed")}</span>
     </label>
     <.button type="submit" variant="primary" loading_text={l("Saving…")}>{l("Save feed")}</.button>

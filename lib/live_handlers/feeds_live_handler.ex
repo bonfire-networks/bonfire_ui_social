@@ -3013,7 +3013,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       {slug, _preset} ->
         with {:ok, settings} <-
                Bonfire.Common.Settings.put(
-                 [Bonfire.UI.Social.FeedLive, :default_feed], slug, current_user: user
+                 [Bonfire.UI.Social.FeedLive, :default_feed],
+                 slug,
+                 current_user: user
                ) do
           {:noreply, maybe_assign_context(socket, settings)}
         end
@@ -3023,7 +3025,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  def handle_event("preset_nav_reorder", %{"target_order" => order}, socket) when is_list(order) do
+  def handle_event("preset_nav_reorder", %{"target_order" => order}, socket)
+      when is_list(order) do
     user = current_user_required!(socket)
 
     available_ids =
@@ -3033,7 +3036,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     if Enum.sort(order) == Enum.sort(available_ids) do
       with {:ok, settings} <-
              Bonfire.Common.Settings.put(
-               [Bonfire.UI.Social.FeedLive, :nav_order], order, current_user: user
+               [Bonfire.UI.Social.FeedLive, :nav_order],
+               order,
+               current_user: user
              ) do
         {:noreply, maybe_assign_context(socket, settings)}
       end

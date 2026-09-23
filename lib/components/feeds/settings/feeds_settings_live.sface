@@ -3,7 +3,10 @@
       "Customize your feed experience by configuring default display settings and managing which feeds appear in your feed tabs."
     )}</p>
 
-  <div id="feed-settings-panel" class="m-4 rounded-xl border border-base-content/10 overflow-hidden">
+  <div
+    id="feed-settings-panel"
+    class="m-4 rounded-xl border border-base-content/10 overflow-hidden"
+  >
     <div class="grid grid-cols-1">
       <.form
         for={@default_feed_form}
@@ -67,7 +70,13 @@
     </.form>
     --}
 
-    <.form for={@default_feed_form} id="feed-infinite-scroll-form" class="p-5 border-t border-base-content/10 [&_label>div>div]:flex-wrap [&_label]:gap-4 [&_input[type=checkbox]]:shrink-0" data-scope="infinite_scroll" phx-change="Bonfire.Common.Settings:set">
+    <.form
+      for={@default_feed_form}
+      id="feed-infinite-scroll-form"
+      class="p-5 border-t border-base-content/10 [&_label>div>div]:flex-wrap [&_label]:gap-4 [&_input[type=checkbox]]:shrink-0"
+      data-scope="infinite_scroll"
+      phx-change="Bonfire.Common.Settings:set"
+    >
       <Bonfire.UI.Common.SettingsToggleLive
         id="infinite_scroll_toggle"
         show_label={Settings.get([:ui, :infinite_scroll], :preload, context: @__context__) == true}
@@ -95,9 +104,19 @@
           <p class="mt-1 text-sm leading-5 text-muted">{l("Choose which feeds appear in your feed tabs. Drag pinned feeds to reorder them.")}</p>
         </div>
       </div>
-      <ul id="feed-presets-panel" phx-hook={if @scope != :instance, do: "Draggable"} data-event="Bonfire.Social.Feeds:preset_nav_reorder" class="w-full divide-hair divide-y divide-secondary overflow-hidden">
+      <ul
+        id="feed-presets-panel"
+        phx-hook={if @scope != :instance, do: "Draggable"}
+        data-event="Bonfire.Social.Feeds:preset_nav_reorder"
+        class="w-full divide-hair divide-y divide-secondary overflow-hidden"
+      >
         {#for preset <- @presets || []}
-          <li id={"feed-preset-#{preset.id}"} data-item={preset.id} data-sortable-item={if @scope != :instance and preset[:exclude_from_nav] == false, do: true} class="flex items-center gap-3 px-2 py-2">
+          <li
+            id={"feed-preset-#{preset.id}"}
+            data-item={preset.id}
+            data-sortable-item={if @scope != :instance and preset[:exclude_from_nav] == false, do: true}
+            class="flex items-center gap-3 px-2 py-2"
+          >
             <span
               :if={@scope != :instance and preset[:exclude_from_nav] == false}
               data-sortable-handler
@@ -117,7 +136,8 @@
             <div class="flex shrink-0 items-center gap-1">
               <div class="w-9 [@media(pointer:coarse)]:w-11">
                 <Bonfire.UI.Social.SubscribeFeedLive
-                  :if={!preset[:current_user_required] and module_enabled?(Bonfire.UI.Social.SubscribeFeedLive, @__context__)}
+                  :if={!preset[:current_user_required] and
+                    module_enabled?(Bonfire.UI.Social.SubscribeFeedLive, @__context__)}
                   feed_name={preset.id}
                   icon_button_class="btn btn-ghost btn-square size-9 min-h-9 p-0 rounded-lg [@media(pointer:coarse)]:size-11 [@media(pointer:coarse)]:min-h-11 text-muted"
                   icon_class="size-5 shrink-0"

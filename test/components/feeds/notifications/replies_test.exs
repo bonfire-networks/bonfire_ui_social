@@ -87,7 +87,7 @@ defmodule Bonfire.UI.Social.Feeds.Notifications.ReplyTest do
       # Alice checks her notifications - should see the Reply verb indicator
       conn_alice
       |> visit("/notifications")
-      |> assert_has("[data-verb=Reply]")
+      |> assert_has("[data-verb=reply]")
     end
   end
 end

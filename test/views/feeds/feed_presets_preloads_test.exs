@@ -126,7 +126,7 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
       conn
       |> visit("/@#{user.character.username}")
       |> assert_has_or_open_browser("[data-role=boosted_by]")
-      |> assert_has_or_open_browser("[data-verb=Boost]")
+      |> assert_has_or_open_browser("[data-verb=boost]")
     end
   end
 
@@ -300,9 +300,8 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
 
   defp verify_verb(conn, expected?, activity) do
     if expected? do
-      if verb = e(activity, :verb, nil) do
-        # Check if activity verb is displayed
-        # The HTML example shows this as a data-verb attribute
+      if verb = Bonfire.Social.Activities.verb_slug(activity) do
+        # the row carries the verb it was stored as, and `data-experienced-as` what it was for the reader
         conn
         |> assert_has_or_open_browser("[data-verb=#{verb}]")
       end

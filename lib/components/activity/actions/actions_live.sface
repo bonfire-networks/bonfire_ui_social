@@ -31,7 +31,7 @@
         </div>
       </div>
 
-      {#if @verb == "Flag" && @showing_within != :thread}
+      {#if @verb == :flag && @showing_within != :thread}
         <StatelessComponent
           module={maybe_component(Bonfire.UI.Moderation.FlaggedActionsLive, @__context__)}
           object={@object}

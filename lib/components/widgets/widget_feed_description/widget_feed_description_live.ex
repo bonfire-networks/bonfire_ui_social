@@ -10,7 +10,10 @@ defmodule Bonfire.UI.Social.WidgetFeedDescriptionLive do
     preset = preset(assigns.feed_name, assigns.__context__)
     user = current_user(assigns)
     available = if user, do: FeedNavigation.list_presets(current_user: user), else: []
-    preferred = Settings.get([Bonfire.UI.Social.FeedLive, :default_feed], :my, assigns.__context__)
+
+    preferred =
+      Settings.get([Bonfire.UI.Social.FeedLive, :default_feed], :my, assigns.__context__)
+
     default = FeedNavigation.resolve_default(available, preferred)
     default? = not is_nil(default) and to_string(default) == to_string(assigns.feed_name)
 

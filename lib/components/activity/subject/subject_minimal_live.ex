@@ -2,21 +2,13 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   @moduledoc """
   The subject line of a notification row.
 
-  TODO: `notification_icon/1` and `notification_aggregate?/1` both dispatch on localised verb DISPLAY
-  STRINGS ("Boost", "Request to Quote"), which breaks in any other locale and duplicates what is
-  already declared elsewhere: the verb registry declares an icon per verb (in `-duotone` variants,
-  where these are `-fill`), and `Bonfire.UI.Social.NotificationFiltersLive` already resolves
-  icon-override-then-verb for the chip bar. Refactor both to be config-based and keyed on the verb
-  ATOM, with the registry as the default and config as the single override point, once
-  `Activities.experienced_verb/2` exists to supply that atom.
+  Everything it renders per kind is declared rather than written here: the icon, the sentence, and whether several collapse into one row all come from the notification categories and the verb registry, read through `Bonfire.Social.Notifications`, keyed by what `Bonfire.Social.Activities.experienced_as/2` answered. So a kind reads the same in a row, a chip, a push and a digest, and adding one is a config entry.
+
+  What stays here is wording that depends on an object's own state (a due date, whether a task finished), which nothing else can answer.
   """
   use Bonfire.UI.Common.Web, :stateless_component
 
-  # Source the verb families from the same compile-env keys ActivityLive uses,
-  # so operator overrides in :verb_families stay consistent across the activity UI.
-  @reply_verbs Application.compile_env(:bonfire, [:verb_families, :reply]) || ["Respond"]
-  @create_verbs Application.compile_env(:bonfire, [:verb_families, :create]) || ["Write", "Send"]
-  @react_verbs (Application.compile_env(:bonfire, [:verb_families, :react]) || []) ++ ["React"]
+  alias Bonfire.Social.Notifications
 
   prop activity_id, :any, default: nil
   prop object, :any, default: nil
@@ -27,8 +19,9 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   # prop reply_to_id, :any, default: nil
   # prop profile, :any, default: nil
   # prop character, :any, default: nil
-  prop verb, :string, default: nil
-  prop verb_display, :string, default: nil
+  # the verb the activity was stored as, and what it was for whoever is reading it. Both atoms: this component's own decisions turn on the second, and the word it prints is computed here rather than handed down
+  prop verb, :atom, default: nil
+  prop experienced_as, :atom, default: nil
   prop permalink, :string, default: nil
   prop showing_within, :atom, default: nil
   prop object_type, :any, default: nil
@@ -55,24 +48,17 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   # def render(assigns),
   #   do: Bonfire.UI.Social.Activity.SubjectLive.prepare(assigns, __MODULE__) |> render_sface()
 
-  def notification_icon(verb) when verb in @reply_verbs, do: "ph:chat-circle-fill"
-  def notification_icon(verb) when verb in @create_verbs, do: "ph:at-fill"
-  def notification_icon("Boost"), do: "ph:arrows-counter-clockwise-fill"
-  def notification_icon(verb) when verb in @react_verbs, do: "ph:fire-fill"
+  @doc """
+  The icon for what the activity was, from the same declarations the chip bar reads.
 
-  def notification_icon(verb) when verb in ["Follow", "Request to Follow"],
-    do: "ph:user-plus-fill"
-
-  def notification_icon("Request to Quote"), do: "ph:quotes-fill"
-  def notification_icon("Pin"), do: "ph:push-pin-fill"
-  def notification_icon("Flag"), do: "ph:flag-fill"
-  def notification_icon("Vote"), do: "ph:chart-bar-fill"
-  def notification_icon(_), do: nil
-
-  def notification_aggregate?(verb) when verb in @react_verbs, do: true
-  def notification_aggregate?("Boost"), do: true
-  def notification_aggregate?("Vote"), do: true
-  def notification_aggregate?(_), do: false
+  Nothing is listed here: `Bonfire.Social.Notifications.icon_for/2` resolves the category's icon, then the verb's, and the stored verb is the last fallback for a kind no verb declares (something written is a `create`). These rows want the filled variant of whatever it finds, since the registry declares `-duotone` for the boundaries UI.
+  """
+  def notification_icon(experience, verb \\ nil) do
+    case Bonfire.Social.Notifications.icon_for(experience, verb) do
+      icon when is_binary(icon) -> String.replace_suffix(icon, "-duotone", "-fill")
+      _ -> nil
+    end
+  end
 
   # Shared layout classes so the `:notifications` header and every feed
   # reason-line (boosted/liked/pinned/flagged/…) render identically: a full-bleed
@@ -89,7 +75,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
     do: "flex-shrink-0 w-[18px] flex items-start justify-center mt-px"
 
   @doc "Whether a boost's attribution line is redundant here: the group or topic auto-boosted its own content (the publication context row already says so), or we're viewing inside it. A person's manual boost still needs attribution, and notification/widget rows always keep the line since they exist to say who acted."
-  def hide_boost_reason?("Boost", subject_id, published_in, showing_within)
+  def hide_boost_reason?(:boost, subject_id, published_in, showing_within)
       when showing_within not in [:widget, :notifications] do
     Bonfire.UI.Social.Activity.PublishedInLive.published_in_implied_by_context?(showing_within) or
       (not is_nil(published_in) and subject_id == id(published_in))
@@ -98,60 +84,30 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   def hide_boost_reason?(_verb, _subject_id, _published_in, _showing_within), do: false
 
   @doc """
-  The notification verb phrase ("liked your activity", "voted on your poll", …).
+  What a row says happened ("liked your activity", "scheduled for tomorrow").
 
-  Returns `nil` for unhandled verbs (and for verbs whose object precondition
-  isn't met, e.g. a `Schedule` with no due date) so the caller falls back to the
-  raw `verb_display`. `current_user_id` is passed in (already resolved from the
-  context) so the relationship-aware phrases can say "you".
+  The categories declare the sentence per kind, read by `Bonfire.Social.Notifications.phrase_for/3`, so a push body and a digest line say the same thing as this row. What stays here is the wording that reads an object's own state, since only something holding the object can say whether a task finished or when it is due.
+
+  `nil` when neither has anything to say, and the caller shows the plain word instead. `current_user_id` comes in already resolved from the context, so "followed you" can differ from "followed".
   """
-  def notification_phrase(verb, _object_id, _current_user_id, _tagged, _object)
-      when verb in ["Reply", "Respond", "Annotate"],
-      do: l("replied to you")
-
-  def notification_phrase(verb, _object_id, _current_user_id, tagged, _object)
-      when verb in ["Create", "Write"] and tagged not in [nil, []],
-      do: l("mentioned you")
-
-  def notification_phrase("React", _, _, _, _), do: l("reacted to your activity")
-  def notification_phrase("Like", _, _, _, _), do: l("liked your activity")
-  def notification_phrase("Boost", _, _, _, _), do: l("boosted your activity")
-  def notification_phrase("Vote", _, _, _, _), do: l("voted on your poll")
-
-  def notification_phrase("Follow", object_id, current_user_id, _, _),
-    do: if(object_id == current_user_id, do: l("followed you"), else: l("followed"))
-
-  def notification_phrase("Request to Follow", object_id, current_user_id, _, _),
-    do:
-      if(object_id == current_user_id,
-        do: l("requested to follow you"),
-        else: l("requested to follow")
-      )
-
-  def notification_phrase("Request to Quote", _, _, _, _), do: l("wants to quote your post")
-  def notification_phrase("Pin", _, _, _, _), do: l("pinned")
-
-  def notification_phrase(verb, _, _, _, object)
-      when verb in ["Schedule", "Label", "Assign", "Appoint"],
-      do: object_state_phrase(verb, object)
-
-  def notification_phrase(_, _, _, _, _), do: nil
+  def notification_phrase(experience, object_id, current_user_id, object) do
+    Notifications.phrase_for(experience, object_id, current_user_id) ||
+      object_state_phrase(experience, object)
+  end
 
   @doc """
-  Object-state phrases — `Schedule` (due date), `Label` (finished?),
-  `Assign`/`Appoint` (provider). Third-person-neutral (no "you"/"your"), so the
-  feed reason-line fallback can share them with the notifications header without
-  leaking notification framing. Returns `nil` when the precondition isn't met
-  (e.g. a `Schedule` with no due date) → the caller shows the raw `verb_display`.
+  Wording that reads the object's own state: a schedule's due date, whether a label finished, who an assignment names. Not declarable alongside the others, since the sentence depends on data only the object carries.
+
+  Third-person-neutral (no "you"/"your"), so a feed reason-line can share it with the notifications header without borrowing notification framing. `nil` when the object says nothing (a schedule with no due date), and the caller shows the plain word.
   """
-  def object_state_phrase("Schedule", object) do
+  def object_state_phrase(:schedule, object) do
     case e(object, :due, nil) do
       nil -> nil
       due -> l("scheduled for %{date}", date: DatesTimes.date_from_now(due))
     end
   end
 
-  def object_state_phrase("Label", object) do
+  def object_state_phrase(:label, object) do
     case e(object, :finished, nil) do
       true -> l("completed")
       false -> l("re-opened")
@@ -159,7 +115,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
     end
   end
 
-  def object_state_phrase(verb, object) when verb in ["Assign", "Appoint"] do
+  def object_state_phrase(experience, object) when experience in [:assign, :appoint] do
     case e(object, :provider, nil) do
       nil ->
         nil

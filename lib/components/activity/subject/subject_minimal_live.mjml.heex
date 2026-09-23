@@ -1,5 +1,5 @@
 <mjml>
   {e(@profile, :name, nil) || e(@character, :username, nil)}
 
-  {raw(@verb_display)}
+  {raw(Bonfire.Social.Activities.experience_display(@experienced_as, %{object: @object}))}
 </mjml>

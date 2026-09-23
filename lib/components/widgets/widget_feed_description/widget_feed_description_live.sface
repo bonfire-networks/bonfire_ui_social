@@ -1,13 +1,23 @@
 <Bonfire.UI.Common.WidgetBlockLive :if={@preset} class="p-card">
   <section id="feed-description" aria-labelledby="feed-description-title">
     <div class="flex items-center gap-3">
-      <span class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary" aria-hidden="true">
+      <span
+        class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"
+        aria-hidden="true"
+      >
         <Iconify.iconify icon={e(@preset, :icon, "ph:rss-duotone")} class="size-6" />
       </span>
-      <h2 id="feed-description-title" class="min-w-0 flex-1 text-lg font-semibold leading-6 break-words truncate">
+      <h2
+        id="feed-description-title"
+        class="min-w-0 flex-1 text-lg font-semibold leading-6 break-words truncate"
+      >
         {Bonfire.UI.Social.FeedNavigation.get_name(@preset, @feed_name)}
       </h2>
-      <span :if={@can_set_default? and @feed_name not in [:notifications, "notifications"]} class="tooltip tooltip-left" data-tip={@default_label}>
+      <span
+        :if={@can_set_default? and @feed_name not in [:notifications, "notifications"]}
+        class="tooltip tooltip-left"
+        data-tip={@default_label}
+      >
         <button
           id="feed-description-default"
           type="button"

@@ -3,18 +3,4 @@ import Config
 config :bonfire_common,
   localisation_path: "priv/localisation"
 
-config :bonfire, :ui,
-  # used by ActivityLive - TODO: autogenerate?
-  verb_families: [
-    reply: ["Reply", "Respond", "Annotate"],
-    create: ["Create", "Write"],
-    react: ["Like", "Boost", "Flag", "Tag", "Pin"],
-    simple_action: [
-      "Assign",
-      "Label",
-      "Schedule",
-      "Request",
-      "Request to Quote",
-      "Request to Follow"
-    ]
-  ]
+# Verb families moved to `bonfire_social`, with the kinds they group: this copy nested them under `:ui`, which no reader looks at.

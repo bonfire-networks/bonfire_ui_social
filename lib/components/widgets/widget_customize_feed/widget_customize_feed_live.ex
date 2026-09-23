@@ -28,7 +28,9 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
     {:ok,
      socket
      |> assign(preferences)
-     |> assign(default_preferences: socket.assigns[:default_preferences] || preferences[:feed_filters])}
+     |> assign(
+       default_preferences: socket.assigns[:default_preferences] || preferences[:feed_filters]
+     )}
   end
 
   def update(assigns, socket) do
@@ -69,12 +71,15 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
         e(filters, :sort_order, :desc),
         e(defaults, :sort_order, :desc)
       ) or
-      Enum.any?(Bonfire.Social.FeedFilters.supported_filters() -- [:feed_name, :sort_by, :sort_order], fn key ->
-        not Bonfire.Social.Feeds.LiveHandler.filter_value_matches?(
-          e(filters, key, nil),
-          e(defaults, key, nil)
-        )
-      end)
+      Enum.any?(
+        Bonfire.Social.FeedFilters.supported_filters() -- [:feed_name, :sort_by, :sort_order],
+        fn key ->
+          not Bonfire.Social.Feeds.LiveHandler.filter_value_matches?(
+            e(filters, key, nil),
+            e(defaults, key, nil)
+          )
+        end
+      )
   end
 
   @doc "Order choices supported by the feed loader, independent of content filters."

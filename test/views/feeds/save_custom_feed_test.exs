@@ -23,7 +23,8 @@ defmodule Bonfire.UI.Social.SaveCustomFeedTest do
 
   for show_in_nav <- [true, false], set_as_default <- [true, false] do
     test "save with navbar=#{show_in_nav} and default=#{set_as_default}" do
-      name = "saved-" <> Faker.Lorem.word() <> "-" <> to_string(System.unique_integer([:positive]))
+      name =
+        "saved-" <> Faker.Lorem.word() <> "-" <> to_string(System.unique_integer([:positive]))
 
       session =
         conn(user: fake_user!())

@@ -52,8 +52,8 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
     |> visit("/notifications")
     |> wait_async()
     |> assert_has("#notification-filter-latest[aria-current=page]")
-    |> assert_has("[data-verb=Like]")
-    |> assert_has("[data-verb=Follow]")
+    |> assert_has("[data-verb=like]")
+    |> assert_has("[data-verb=follow]")
     |> assert_has("[data-id=feed]", text: "a mention for you")
   end
 
@@ -61,24 +61,24 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
     conn
     |> visit("/notifications/likes")
     |> wait_async()
-    |> assert_has("#notification-filter-like[aria-current=page]")
-    |> assert_has("[data-verb=Like]")
+    |> assert_has("#notification-filter-react[aria-current=page]")
+    |> assert_has("[data-verb=like]")
     |> refute_has("#notification-filter-latest[aria-current=page]")
-    |> refute_has("[data-verb=Follow]")
+    |> refute_has("[data-verb=follow]")
   end
 
   test "chips link to their plural path, with the bare verb still resolving", %{conn: conn} do
     conn
     |> visit("/notifications")
     |> wait_async()
-    |> assert_has("#notification-filter-like[href='/notifications/likes']")
+    |> assert_has("#notification-filter-react[href='/notifications/reactions']")
 
     conn
     |> visit("/notifications/like")
     |> wait_async()
-    |> assert_has("#notification-filter-like[aria-current=page]")
-    |> assert_has("[data-verb=Like]")
-    |> refute_has("[data-verb=Follow]")
+    |> assert_has("#notification-filter-react[aria-current=page]")
+    |> assert_has("[data-verb=like]")
+    |> refute_has("[data-verb=follow]")
   end
 
   test "clicking a chip filters the already-loaded feed, and clicking Latest restores it", %{
@@ -87,15 +87,15 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
     conn
     |> visit("/notifications")
     |> wait_async()
-    |> click_link("#notification-filter-like", "Likes")
+    |> click_link("#notification-filter-react", "Reactions")
     |> wait_async()
-    |> assert_path("/notifications/likes")
-    |> assert_has("[data-verb=Like]")
-    |> refute_has("[data-verb=Follow]")
+    |> assert_path("/notifications/reactions")
+    |> assert_has("[data-verb=like]")
+    |> refute_has("[data-verb=follow]")
     |> click_link("#notification-filter-latest", "Latest")
     |> wait_async()
     |> assert_path("/notifications")
-    |> assert_has("[data-verb=Follow]")
+    |> assert_has("[data-verb=follow]")
   end
 
   test "a chip with no matching notifications says so, and going back restores the feed",
@@ -109,18 +109,18 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
     # the notifications preset queries a 30-day window, so the answer names the window and offers to look further back, rather than the preset's "You have no notifications", which would claim more than the query asked
     |> assert_has("[data-id=feed]", text: "Last 30 days")
     |> assert_has("[data-id=load_all_time]", text: "Show older activities")
-    |> refute_has("[data-verb=Like]")
+    |> refute_has("[data-verb=like]")
     |> click_link("#notification-filter-latest", "Latest")
     |> wait_async()
-    |> assert_has("[data-verb=Like]")
-    |> assert_has("[data-verb=Follow]")
+    |> assert_has("[data-verb=like]")
+    |> assert_has("[data-verb=follow]")
   end
 
   test "a preset-backed chip is hidden from users the preset's own gate excludes", %{conn: conn} do
     conn
     |> visit("/notifications")
     |> wait_async()
-    |> assert_has("#notification-filter-like")
+    |> assert_has("#notification-filter-react")
     |> refute_has("#notification-filter-flag")
   end
 
@@ -152,8 +152,8 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
     conn
     |> visit("/notifications/follow")
     |> wait_async()
-    |> assert_has("[data-verb=Follow]")
-    |> refute_has("[data-verb=Like]")
+    |> assert_has("[data-verb=follow]")
+    |> refute_has("[data-verb=like]")
   end
 
   test "a segment matching no verb redirects to the unfiltered feed", %{conn: conn} do
@@ -162,7 +162,7 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
     |> wait_async()
     |> assert_path("/notifications")
     |> assert_has("#notification-filter-latest[aria-current=page]")
-    |> assert_has("[data-verb=Like]")
+    |> assert_has("[data-verb=like]")
   end
 
   test "chips render from config, in config order, falling back to the key for the path" do

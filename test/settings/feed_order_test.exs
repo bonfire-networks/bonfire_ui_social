@@ -14,11 +14,15 @@ defmodule Bonfire.UI.Social.FeedOrderTest do
     |> refute_has("[phx-click=\"Bonfire.Social.Feeds:preset_nav_move\"]")
     |> assert_has("#feed-preset-my[data-sortable-item] [data-sortable-handler]")
     |> PhoenixTest.unwrap(fn view ->
-      Phoenix.LiveViewTest.render_hook(view, "Bonfire.Social.Feeds:preset_nav_reorder", %{"target_order" => order})
+      Phoenix.LiveViewTest.render_hook(view, "Bonfire.Social.Feeds:preset_nav_reorder", %{
+        "target_order" => order
+      })
     end)
     |> assert_has("#feed-presets-panel > li:first-child#feed-preset-my")
     |> PhoenixTest.unwrap(fn view ->
-      Phoenix.LiveViewTest.render_hook(view, "Bonfire.Social.Feeds:preset_nav_reorder", %{"target_order" => ["unknown"]})
+      Phoenix.LiveViewTest.render_hook(view, "Bonfire.Social.Feeds:preset_nav_reorder", %{
+        "target_order" => ["unknown"]
+      })
     end)
     |> visit("/feed/my")
     |> wait_async()
