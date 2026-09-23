@@ -182,4 +182,57 @@ defmodule Bonfire.UI.Social.NotificationShowInCentreTest do
 
     assert excluded(session) == ["mention"]
   end
+
+  describe "Other" do
+    # a vote on my poll, which no named chip shows, beside the like and boost from the main setup
+    setup %{me: me} do
+      {:ok, question} =
+        Bonfire.Poll.Fake.fake_question_with_choices(
+          %{
+            post_content: %{html_body: "a poll of mine"},
+            voting_format: "single",
+            voting_dates: [DateTime.utc_now()]
+          },
+          [%{name: "alpha"}, %{name: "beta"}],
+          current_user: me,
+          boundary: "public"
+        )
+
+      {:ok, _} =
+        Bonfire.Poll.Votes.vote(fake_user!("centre_voter"), question, [
+          %{choice_id: hd(question.choices).id, weight: 1}
+        ])
+
+      :ok
+    end
+
+    test "switched off, what no named chip shows leaves the feed, and the rest stays", %{
+      conn: conn,
+      me: me
+    } do
+      # the positive first: the vote did arrive
+      conn
+      |> visit("/notifications")
+      |> wait_async()
+      |> assert_has("[data-verb=vote]")
+
+      Settings.put(Notifications.show_in_centre_key(:other), false, current_user: me)
+
+      conn(user: me, account: me.account)
+      |> visit("/notifications")
+      |> wait_async()
+      |> refute_has("[data-verb=vote]")
+      |> assert_has("[data-verb=like]")
+      |> assert_has("[data-verb=boost]")
+    end
+
+    test "switched off, its own chip still shows it", %{me: me} do
+      Settings.put(Notifications.show_in_centre_key(:other), false, current_user: me)
+
+      conn(user: me, account: me.account)
+      |> visit("/notifications/other")
+      |> wait_async()
+      |> assert_has("[data-verb=vote]")
+    end
+  end
 end

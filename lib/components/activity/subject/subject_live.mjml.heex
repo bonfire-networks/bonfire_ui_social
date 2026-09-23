@@ -1,3 +1,8 @@
 <mjml>
-  {e(@profile, :name, nil)} - @{e(@character, :username, nil)}: {@thread_title}
+  {e(assigns, :profile, :name, nil) || e(assigns, :activity, :subject, :profile, :name, nil)} - @{e(
+    assigns,
+    :character,
+    :username,
+    nil
+  ) || e(assigns, :activity, :subject, :character, :username, nil)}: {assigns[:thread_title]}
 </mjml>

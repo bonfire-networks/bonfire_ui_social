@@ -440,6 +440,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         end
         |> reject_ids([id(current_user), published_in_id])
 
+      # Whoever is being answered is GRANTED the reply, whatever its boundary, even outside a private group's audience: you are answering them, so they can read the answer. This is deliberate, and the one way a reply widens its audience, to exactly the people it answers. An @-mention, by contrast, only notifies them (see `Acls`' `custom_recipients/3`)
       to_circles =
         if participants != [],
           do:

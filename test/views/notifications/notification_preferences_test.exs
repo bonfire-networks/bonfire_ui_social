@@ -102,6 +102,69 @@ defmodule Bonfire.UI.Social.NotificationPreferencesTest do
     assert [_] = Floki.find(doc, "#notification-filters")
   end
 
+  describe "the Email column" do
+    # each row chooses when that kind is emailed; how often the digest goes out is a separate setting
+    test "offers Off, In the digest and Immediately, in that order, with the digest lit until chosen" do
+      user = fake_user!()
+
+      doc =
+        render_component(&Bonfire.UI.Social.NotificationPreferencesLive.render/1, %{
+          __context__: %{current_user: user}
+        })
+        |> Floki.parse_document!()
+
+      assert doc
+             |> Floki.find("#notification-pref-react-email button")
+             |> Enum.map(&String.trim(Floki.text(&1))) == ["Off", "Digest", "Instant"]
+
+      assert [_] =
+               Floki.find(doc, "#notification-pref-react-email button.active[data-id=default]")
+    end
+
+    test "choosing Instant saves it for that kind alone" do
+      user = fake_user!()
+
+      conn(user: user, account: user.account)
+      |> visit("/notifications")
+      |> wait_async()
+      |> click_button("#notification-pref-react-email [data-id=enabled]", "Instant")
+
+      user = Bonfire.Me.Users.get_current(user.id)
+
+      assert Bonfire.Common.Settings.get([:notifications, :email, :react], nil,
+               current_user: user
+             ) in [true, "true"]
+
+      assert Bonfire.Common.Settings.get([:notifications, :email, :boost], nil,
+               current_user: user
+             ) == nil
+    end
+
+    test "choosing Digest after another choice goes back to no choice at all" do
+      user = fake_user!()
+
+      session =
+        conn(user: user, account: user.account)
+        |> visit("/notifications")
+        |> wait_async()
+        |> click_button("#notification-pref-react-email [data-id=enabled]", "Instant")
+
+      # the positive first: the other choice did take
+      assert Bonfire.Common.Settings.get([:notifications, :email, :react], nil,
+               current_user: Bonfire.Me.Users.get_current(user.id)
+             ) in [true, "true"]
+
+      session
+      |> click_button("#notification-pref-react-email [data-id=default]", "Digest")
+      |> assert_has("#notification-pref-react-email button.active[data-id=default]")
+
+      # unset rather than a stored blank, since unset is what the digest means
+      assert Bonfire.Common.Settings.get([:notifications, :email, :react], nil,
+               current_user: Bonfire.Me.Users.get_current(user.id)
+             ) == nil
+    end
+  end
+
   test "preferences are absent from the public feed" do
     user = fake_user!()
 

@@ -28,8 +28,8 @@
     </div>
 
     {!-- everything about push, only where something would read it: delivery is a separate extension, while this panel configures the feed either way. Asked once here rather than per row --}
-    {#case push_available?(@__context__)}
-      {#match push?}
+    {#case {push_available?(@__context__), email_available?(@__context__)}}
+      {#match {push?, email?}}
         {!-- the real thing, not a copy of it: enabling push means asking the browser and keeping a subscription, which one component owns (`Bonfire.Notify.Settings.PushNotificationsLive`, which settings shows through this same panel) --}
         <section
           :if={push?}
@@ -48,22 +48,15 @@
 
         <fieldset class="border-t border-base-content/10 pt-4">
           <legend class="sr-only">{l("Notify me about")}</legend>
-          <div class={
-            "grid items-center gap-2 pb-3 text-xs",
-            "grid-cols-[minmax(0,1fr)_5.5rem_3rem] sm:grid-cols-[minmax(0,1fr)_8rem_5rem]": push?,
-            "grid-cols-[minmax(0,1fr)_5.5rem] sm:grid-cols-[minmax(0,1fr)_8rem]": !push?
-          }>
+          <div class={"grid items-center gap-2 pb-3 text-xs", grid_cols(push?, email?)}>
             <span class="text-base font-medium">{l("Notify me about")}</span>
             {!-- named after the chip it affects: switching a category off drops it from Latest, while its own chip still shows it --}
             <span class="text-center text-base-content/70">{l("Show in Latest")}</span>
             <span :if={push?} class="text-center text-base-content/70">{l("Push")}</span>
+            <span :if={email?} class="text-center text-base-content/70">{l("Email")}</span>
           </div>
           {#for {key, label, wired?} <- notification_rows()}
-            <div class={
-              "grid items-center gap-2 py-1",
-              "grid-cols-[minmax(0,1fr)_5.5rem_3rem] sm:grid-cols-[minmax(0,1fr)_8rem_5rem]": push?,
-              "grid-cols-[minmax(0,1fr)_5.5rem] sm:grid-cols-[minmax(0,1fr)_8rem]": !push?
-            }>
+            <div class={"grid items-center gap-2 py-1", grid_cols(push?, email?)}>
               <span class="text-sm">{label}</span>
               {!-- a row whose switch nothing honours yet stays inert rather than saving a setting no query reads --}
               {!-- each switch's form carries its own id: two forms in a row with the same attributes are indistinguishable to a selector, including the ones test helpers build for themselves --}
@@ -120,6 +113,24 @@
                   checked
                 />
               </label>
+              {!-- when this kind is emailed: never, in the digest (unset, the default), or as it happens. How often the digest goes out is its own setting, which comes with the digest --}
+              <div
+                :if={email? and wired?}
+                id={"notification-pref-#{key}-email"}
+                role="group"
+                aria-label={l("%{type}: email", type: label)}
+                class="flex min-h-8 items-center justify-center"
+              >
+                <Bonfire.UI.Common.SettingsToggleThroupleLive
+                  keys={email_key(key)}
+                  label_no={l("Off")}
+                  label_default={l("Digest")}
+                  label_yes={l("Instant")}
+                  reversed
+                  compact
+                />
+              </div>
+              <div :if={email? and !wired?} />
             </div>
           {/for}
         </fieldset>

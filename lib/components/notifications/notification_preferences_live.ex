@@ -39,6 +39,34 @@ defmodule Bonfire.UI.Social.NotificationPreferencesLive do
   """
   def push_available?(context), do: module_enabled?(Bonfire.Notify.Preferences, context)
 
+  @doc """
+  The settings key holding when a category is emailed: `true` as it happens, `false` never, unset in the digest.
+
+  One key per category, like `push_key/1`, read by `Bonfire.Notify.Preferences`. How often the digest goes out is a separate setting.
+  """
+  def email_key(key), do: [:notifications, :email, key]
+
+  @doc "Whether to offer the Email column, which is whether this instance can send notification email at all."
+  def email_available?(context),
+    do:
+      push_available?(context) and
+        maybe_apply(Bonfire.Notify.Email, :configured?, [], fallback_return: false) == true
+
+  @doc "The row grid for the columns shown. Written out in full, since Tailwind finds classes by reading the source"
+  def grid_cols(push?, email?)
+
+  def grid_cols(true, true),
+    do: "grid-cols-[minmax(0,1fr)_5.5rem_3rem_9rem] sm:grid-cols-[minmax(0,1fr)_8rem_5rem_14rem]"
+
+  def grid_cols(true, _),
+    do: "grid-cols-[minmax(0,1fr)_5.5rem_3rem] sm:grid-cols-[minmax(0,1fr)_8rem_5rem]"
+
+  def grid_cols(_, true),
+    do: "grid-cols-[minmax(0,1fr)_5.5rem_9rem] sm:grid-cols-[minmax(0,1fr)_8rem_14rem]"
+
+  def grid_cols(_, _),
+    do: "grid-cols-[minmax(0,1fr)_5.5rem] sm:grid-cols-[minmax(0,1fr)_8rem]"
+
   @doc "Display switches to offer, in display order, from config."
   def display_toggles do
     Config.get([__MODULE__, :display_toggles], [],

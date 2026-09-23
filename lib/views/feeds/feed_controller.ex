@@ -4,7 +4,6 @@ defmodule Bonfire.UI.Social.FeedController do
 
   alias Bonfire.Social.Feeds
   alias Bonfire.Social.FeedLoader
-  alias Bonfire.Me.Users
   alias Bonfire.UI.Social.FeedView
   alias Bonfire.Common.Config
 
@@ -34,24 +33,26 @@ defmodule Bonfire.UI.Social.FeedController do
 
     # |> debug("oopts")
 
-    # Get feed preset configuration
-    with {:ok, %{filters: preset_filters} = preset} <-
-           Feeds.feed_preset_if_permitted(feed_name, opts),
-         merged_filters =
-           Map.merge(preset_filters, extract_param_filters(params, opts)),
+    # the preset is looked up here only for the permission check and its `assigns`: `FeedLoader` looks it up again by name and merges its filters itself. Merging them in here handed it a `%FeedFilters{}`, which it takes as already prepared, so the URL's `by:` never became a subject filter and every feed showed everything
+    with {:ok, preset} <- Feeds.feed_preset_if_permitted(feed_name, opts),
          %{edges: activities, page_info: page_info} <-
-           FeedLoader.feed(feed_name, merged_filters, opts) do
+           FeedLoader.feed(feed_name, param_filters(opts), opts) do
       # the atom/rss views call `URIs.canonical_url/1` on the object and author, which needs
       # :peered (locality) and :shared_user (org vs person actor URL) — batch-preload here
       # (one query per assoc per page) rather than lazily per entry
       author_assocs = [:shared_user, character: [:peered]]
 
+      # `prune: true` because a subject is not always a person: a group's feed carries the group's own boosts of what was posted in it, and a group has no `:shared_user`
       activities =
-        repo().maybe_preload(activities,
-          activity: [
-            subject: author_assocs,
-            object: [:peered, created: [creator: author_assocs]]
-          ]
+        repo().maybe_preload(
+          activities,
+          [
+            activity: [
+              subject: author_assocs,
+              object: [:peered, created: [creator: author_assocs]]
+            ]
+          ],
+          prune: true
         )
 
       feed_data =
@@ -80,17 +81,27 @@ defmodule Bonfire.UI.Social.FeedController do
     |> maybe_add_tag_context(params)
   end
 
-  defp extract_param_filters(params, opts) do
-    params
-    # TODO: support more types
-    |> Map.put(:object_type, Bonfire.Data.Social.Post)
+  # only what a URL is meant to filter by, rather than every request param ("param", "format", "feed_name"...) passed through as a filter. The tag and cursor go in `opts` instead
+  defp param_filters(opts) do
+    %{}
+    # never applied: `:object_type` is not a `FeedFilters` field (`:object_types` is), so it was dropped. Setting `object_types` instead would start limiting these feeds to posts, which is a change to decide on rather than a fix
+    # |> Map.put(:object_type, Bonfire.Data.Social.Post)
     |> maybe_add_by_filter(opts)
   end
 
+  # any character, not only users, since a group page offers this feed too, and a username that resolved to nothing left the feed unscoped. Not boundary-checked, matching the `Users.by_username/1` it replaces: the feed itself is served to anyone, and it is `FeedLoader` that keeps each post to those allowed to read it
   defp maybe_add_user_context(opts, %{"param" => username}) do
-    case Users.by_username(username) do
-      {:ok, user} -> Keyword.put(opts, :subject_user, user)
-      _ -> opts
+    case Bonfire.Common.Needles.get(username, skip_boundary_check: true) do
+      {:ok, character} ->
+        # what the feed's author header needs for its URL, the same as each entry's author below (`Users.by_username/1` used to load it). `prune: true` because a group has no `:shared_user`
+        Keyword.put(
+          opts,
+          :subject_user,
+          repo().maybe_preload(character, [:shared_user, character: [:peered]], prune: true)
+        )
+
+      _ ->
+        opts
     end
   end
 

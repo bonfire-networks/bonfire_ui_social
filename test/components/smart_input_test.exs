@@ -25,25 +25,6 @@ defmodule Bonfire.UI.Social.SmartInputTest do
     {:ok, conn: conn, account: account, me: me}
   end
 
-  @doc """
-  Submit the composer form with the given content via LiveViewTest.
-  PhoenixTest can't fill hidden inputs directly (the editor uses a hidden input
-  populated by JS), so we submit the form directly with the content.
-  """
-  defp submit_post(session, content, extra_params \\ %{}) do
-    session
-    |> PhoenixTest.unwrap(fn view ->
-      view
-      |> Phoenix.LiveViewTest.element("#smart_input_form")
-      |> Phoenix.LiveViewTest.render_submit(
-        Map.merge(
-          %{"post" => %{"post_content" => %{"html_body" => content}}},
-          extra_params
-        )
-      )
-    end)
-  end
-
   describe "composer rendering" do
     test "form renders on feed page", %{conn: conn} do
       conn
@@ -90,7 +71,7 @@ defmodule Bonfire.UI.Social.SmartInputTest do
 
       conn
       |> visit("/feed/local")
-      |> submit_post(content)
+      |> submit_composer(content)
       |> wait_async()
       |> assert_has_or_open_browser("[data-id=feed] article", text: content)
     end
@@ -100,7 +81,7 @@ defmodule Bonfire.UI.Social.SmartInputTest do
 
       conn
       |> visit("/feed/local")
-      |> submit_post(content)
+      |> submit_composer(content)
       |> wait_async()
       |> visit("/user")
       |> assert_has_or_open_browser("[data-id=feed] article", text: content)
@@ -111,7 +92,7 @@ defmodule Bonfire.UI.Social.SmartInputTest do
 
       conn
       |> visit("/feed")
-      |> submit_post(content)
+      |> submit_composer(content)
       |> wait_async()
       |> assert_has_or_open_browser("[data-id=feed]", text: content)
     end
@@ -196,7 +177,7 @@ defmodule Bonfire.UI.Social.SmartInputTest do
       conn
       |> visit("/write")
       |> upload("Upload an attachment", file)
-      |> submit_post(content)
+      |> submit_composer(content)
       |> visit("/feed/local")
       |> assert_has_or_open_browser("[data-id=feed] article", text: content)
     end
@@ -214,7 +195,7 @@ defmodule Bonfire.UI.Social.SmartInputTest do
       conn
       |> visit("/post/#{id(post)}")
       |> assert_has("article", text: original)
-      |> submit_post(reply_content, %{"reply_to" => %{"reply_to_id" => id(post)}})
+      |> submit_composer(reply_content, %{"reply_to" => %{"reply_to_id" => id(post)}})
       |> wait_async()
       |> assert_has_or_open_browser("article", text: reply_content)
     end
@@ -254,7 +235,7 @@ defmodule Bonfire.UI.Social.SmartInputTest do
       # the reply appears nested under the original on the post page
       conn
       |> visit("/post/#{id(post)}")
-      |> submit_post(reply_content, %{"reply_to" => %{"reply_to_id" => id(post)}})
+      |> submit_composer(reply_content, %{"reply_to" => %{"reply_to_id" => id(post)}})
       |> wait_async()
       # Both original and reply should be on the thread page
       |> assert_has_or_open_browser("article", text: original)
@@ -439,7 +420,7 @@ defmodule Bonfire.UI.Social.SmartInputTest do
 
       conn
       |> visit("/feed/local")
-      |> submit_post(content)
+      |> submit_composer(content)
       |> wait_async()
       |> assert_has("#submit_btn[disabled]")
     end
@@ -518,7 +499,7 @@ defmodule Bonfire.UI.Social.SmartInputTest do
 
       conn
       |> visit("/feed/local")
-      |> submit_post(content, %{"to_boundaries" => ["public"]})
+      |> submit_composer(content, %{"to_boundaries" => ["public"]})
       |> wait_async()
 
       # Another user should see it in local feed
@@ -536,7 +517,7 @@ defmodule Bonfire.UI.Social.SmartInputTest do
 
       conn
       |> visit("/feed/local")
-      |> submit_post(content, %{"to_boundaries" => ["local"]})
+      |> submit_composer(content, %{"to_boundaries" => ["local"]})
       |> wait_async()
 
       # Another local user should see it
@@ -557,7 +538,7 @@ defmodule Bonfire.UI.Social.SmartInputTest do
 
       conn
       |> visit("/feed/local")
-      |> submit_post(content, %{"to_boundaries" => ["mentions"]})
+      |> submit_composer(content, %{"to_boundaries" => ["mentions"]})
       |> wait_async()
 
       # Another user who is NOT mentioned should NOT see it
@@ -579,7 +560,7 @@ defmodule Bonfire.UI.Social.SmartInputTest do
 
       conn
       |> visit("/feed/local")
-      |> submit_post("check out #{url}")
+      |> submit_composer("check out #{url}")
       |> wait_async()
       |> assert_has_or_open_browser("[data-id=feed] article a[rel~='nofollow'][href='#{url}']")
     end
@@ -589,7 +570,7 @@ defmodule Bonfire.UI.Social.SmartInputTest do
 
       conn
       |> visit("/feed/local")
-      |> submit_post("mention @#{other.character.username}")
+      |> submit_composer("mention @#{other.character.username}")
       |> wait_async()
       |> assert_has_or_open_browser("[data-id=feed] article a[data-phx-link='redirect']")
     end
@@ -598,7 +579,7 @@ defmodule Bonfire.UI.Social.SmartInputTest do
     # test "hashtag links keep rel=tag and also get LiveView navigation", %{conn: conn} do
     #   conn
     #   |> visit("/feed/local")
-    #   |> submit_post("post with #elixir tag")
+    #   |> submit_composer("post with #elixir tag")
     #   |> wait_async()
     #   |> assert_has_or_open_browser("[data-id=feed] article a.hashtag[rel~='tag']")
     #   |> assert_has_or_open_browser(

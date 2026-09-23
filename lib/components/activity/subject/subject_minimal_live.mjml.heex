@@ -1,5 +1,9 @@
 <mjml>
-  {e(@profile, :name, nil) || e(@character, :username, nil)}
+  {e(assigns, :profile, :name, nil) || e(assigns, :character, :username, nil)}
 
-  {raw(Bonfire.Social.Activities.experience_display(@experienced_as, %{object: @object}))}
+  {raw(
+    Bonfire.Social.Activities.experience_display(assigns[:experienced_as], %{
+      object: assigns[:object]
+    })
+  )}
 </mjml>

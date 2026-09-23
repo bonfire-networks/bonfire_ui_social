@@ -25,6 +25,36 @@ defmodule Bonfire.UI.Social.FeedControllerTest do
     assert response(conn, 200) =~ "an atom feed entry"
   end
 
+  for format <- ["rss", "atom"] do
+    test "a person's #{format} feed holds their posts, and not somebody else's" do
+      author = fake_user!()
+      somebody_else = fake_user!()
+
+      {:ok, _} =
+        Posts.publish(
+          current_user: author,
+          post_attrs: %{post_content: %{html_body: "written by the author"}},
+          boundary: "public"
+        )
+
+      {:ok, _} =
+        Posts.publish(
+          current_user: somebody_else,
+          post_attrs: %{post_content: %{html_body: "written by somebody else"}},
+          boundary: "public"
+        )
+
+      body =
+        conn()
+        |> get("/feed/user_activities/#{author.character.username}/feed.#{unquote(format)}")
+        |> response(200)
+
+      # the positive first, so an empty feed cannot pass the refute below
+      assert body =~ "written by the author"
+      refute body =~ "written by somebody else"
+    end
+  end
+
   test "an unknown feed name renders a 404 instead of crashing (was: uncaught throw :not_found)" do
     # Bonfire.Fail implements Plug.Exception, so in prod it renders a 404 page;
     # in tests the raise surfaces wrapped with the 404 plug_status
