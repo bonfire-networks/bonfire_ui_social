@@ -97,11 +97,7 @@ defmodule Bonfire.UI.Social.NotificationPreferencesLive do
   @doc """
   Feed filters and assigns implied by this user's display switches and "Notify me about" switches.
 
-  `FeedLoader` already applies the "Notify me about" exclusions to every notifications read, so the
-  query does not need them from here. This page does: the `feed_filters` assign is built from the
-  preset's filters (`feed_default_assigns_from_preset/2`) rather than from what the loader prepared,
-  and the Apply button works by comparing these against that assign. The loader unions, so saying it
-  twice changes no query.
+  The "Notify me about" exclusions are applied in one place, `FeedLoader`, on every notifications read, where they are added to whatever the view excludes itself (the Other chip excludes every other chip's category through the same field). So they are not a filter from here, which would overwrite that field rather than add to it. What this page needs is to know whether the feed it shows is out of date, so they come back as the `hidden_notification_categories` assign, recording what the feed was loaded with, which is what the Apply button compares.
 
   `showing` is the activity types the view asks for, which outrank a "Notify me about" switch.
   """
@@ -117,11 +113,12 @@ defmodule Bonfire.UI.Social.NotificationPreferencesLive do
         end
       end)
 
-    {Map.put(
-       filters,
-       :exclude_activity_types,
-       Notifications.excluded_activity_types(context, showing)
-     ), assigns}
+    {filters,
+     Keyword.put(
+       assigns,
+       :hidden_notification_categories,
+       Notifications.hidden_categories(context, showing)
+     )}
   end
 
   @doc """

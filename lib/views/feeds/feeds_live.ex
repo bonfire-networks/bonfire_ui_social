@@ -130,6 +130,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
          ],
          sidebar_widgets: [],
          preferences_widget_id: nil,
+         # which "Notify me about" categories the shown feed was loaded without, so the panel can tell when a switch has changed since; set with each notifications load
+         hidden_notification_categories: nil,
          maybe_rss_or_atom: maybe_rss_or_atom(session)
        )}
     end

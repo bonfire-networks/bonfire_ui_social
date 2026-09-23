@@ -39,7 +39,7 @@
 
       {#if is_nil(current_user_id(@__context__))}
         <LinkLive to={path(:login, :index)} class="btn btn-outline" data-role="restricted_login">
-          {l("Log in")}
+          {l("Sign in")}
         </LinkLive>
       {/if}
     </div>

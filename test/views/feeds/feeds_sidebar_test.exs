@@ -120,7 +120,7 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     |> assert_has("#feed-description-pin[aria-pressed=true]", text: "Unpin from feed tabs")
   end
 
-  test "tabs navigate between feeds and keep the Feeds heading" do
+  test "tabs navigate between feeds and bring each feed's heading with them" do
     conn(user: fake_user!())
     |> visit("/feed/my")
     |> wait_async()

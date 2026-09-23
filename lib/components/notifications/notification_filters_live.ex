@@ -36,22 +36,22 @@ defmodule Bonfire.UI.Social.NotificationFiltersLive do
     case Bonfire.Social.Feeds.feed_preset_if_permitted(named_preset || default_preset(), context) do
       {:ok, preset} ->
         # only a chip's OWN preset lends it a label and icon; the default preset is the feed every chip narrows, so borrowing from it puts the notifications bell on every category that declares neither icon nor verb
-        [{key, from_preset(key, chip, if(named_preset, do: preset))}]
+        [{key, from_preset(key, chip, if(named_preset, do: preset), context)}]
 
       _not_permitted ->
         # a chip that NAMES a preset belongs to that feed, so its gate hides the chip; a chip on the default preset stays either way
-        if named_preset, do: [], else: [{key, from_preset(key, chip, nil)}]
+        if named_preset, do: [], else: [{key, from_preset(key, chip, nil, context)}]
     end
   end
 
-  defp from_preset(key, chip, preset) do
+  defp from_preset(key, chip, preset, context) do
     %{
       name_pluralized: e(chip, :name_pluralized, nil) || e(preset, :name, nil),
       icon: e(chip, :icon, nil) || e(preset, :icon, nil),
       description: e(chip, :description, nil) || e(preset, :description, nil),
       preset: e(chip, :preset, nil),
-      # the narrowing only: merged onto the preset's own filters by whoever reloads a mounted feed, but passed alone to a first load, which resolves the preset itself
-      filters: %{activity_types: Notifications.activity_types_for(key)},
+      # the narrowing only: merged onto the preset's own filters by whoever reloads a mounted feed, but passed alone to a first load, which resolves the preset itself. What a category selects is defined once, in `Notifications.query_filters_for/2`
+      filters: Notifications.query_filters_for(key, current_user: current_user(context)),
       path_aliases: e(chip, :path_aliases, [])
     }
   end
