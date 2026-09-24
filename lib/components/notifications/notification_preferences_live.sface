@@ -143,7 +143,7 @@
         >
           <Bonfire.UI.Common.SettingsSelectLive
             id="notification-email-digest"
-            scope={@scope}
+            scope={if @scope in [:instance, "instance"], do: :instance, else: :account}
             keys={[:notifications, :email_digest]}
             name={l("Email digest")}
             label_name={l("Email digest")}
