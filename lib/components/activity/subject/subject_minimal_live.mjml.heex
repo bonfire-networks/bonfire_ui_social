@@ -5,5 +5,7 @@
     Bonfire.Social.Activities.experience_display(assigns[:experienced_as], %{
       object: assigns[:object]
     })
+  )} · {Bonfire.Common.DatesTimes.format_date(
+    Bonfire.Common.DatesTimes.date_from_pointer(assigns[:activity])
   )}
 </mjml>
