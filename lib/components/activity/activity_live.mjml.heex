@@ -1,23 +1,35 @@
-<%= for {component, component_assigns} <- activity_components(
-                @activity,
-                @experienced_as,
-                @object,
-                @object_type,
-                false,
-                :email,
-                false,
-                @thread_mode,
-                @thread_id,
-                @thread_title,
-                nil,
-                nil,
-                @reply_to,
-                []
-              ) || [] do %>
-  {maybe_apply(
-    component,
-    "#{filename_for_module_template(component)}_mjml",
-    [Map.merge(assigns, component_assigns || %{})],
-    fallback_return: "skip #{component}"
-  )}
+<%= if assigns[:activity_inception] do %>
+  <%!-- nested in another row's text (a quote request's quoted post): lines only, since a section cannot go inside a section --%>
+  <div style="border-left: 2px solid #dddddd; padding-left: 10px; margin-top: 6px;">
+    <div :for={part <- email_parts(assigns, "mjml")}>{part}</div>
+  </div>
+<% else %>
+  <%!-- a block per notification: who did it on the left, then a line per part (what they did, whose post, what it says) and a link to it --%>
+  <mj-section padding="0" border-bottom="1px solid #eeeeee">
+    <mj-column>
+      <mj-text padding="16px 24px">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td width="44" valign="top" style="width: 44px; padding-top: 2px;">
+              <img
+                src={email_avatar(assigns)}
+                alt=""
+                width="32"
+                height="32"
+                style="display: block; width: 32px; height: 32px; border-radius: 50%;"
+              />
+            </td>
+            <td valign="top">
+              <div :for={part <- email_parts(assigns, "mjml")} style="margin-bottom: 4px;">
+                {part}
+              </div>
+              <div :if={email_link(assigns)} style="font-size: 13px; font-weight: 600;">
+                <a href={email_link(assigns)} style="text-decoration: none;">{l("View")} →</a>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </mj-text>
+    </mj-column>
+  </mj-section>
 <% end %>

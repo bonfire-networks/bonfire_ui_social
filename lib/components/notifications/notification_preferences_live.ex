@@ -56,16 +56,16 @@ defmodule Bonfire.UI.Social.NotificationPreferencesLive do
   def grid_cols(push?, email?)
 
   def grid_cols(true, true),
-    do: "grid-cols-[minmax(0,1fr)_5.5rem_3rem_9rem] sm:grid-cols-[minmax(0,1fr)_8rem_5rem_14rem]"
+    do: "grid-cols-[minmax(9rem,1fr)_5.5rem_3rem_9rem] sm:grid-cols-[minmax(9rem,1fr)_8rem_5rem_11rem]"
 
   def grid_cols(true, _),
-    do: "grid-cols-[minmax(0,1fr)_5.5rem_3rem] sm:grid-cols-[minmax(0,1fr)_8rem_5rem]"
+    do: "grid-cols-[minmax(9rem,1fr)_5.5rem_3rem] sm:grid-cols-[minmax(9rem,1fr)_8rem_5rem]"
 
   def grid_cols(_, true),
-    do: "grid-cols-[minmax(0,1fr)_5.5rem_9rem] sm:grid-cols-[minmax(0,1fr)_8rem_14rem]"
+    do: "grid-cols-[minmax(9rem,1fr)_5.5rem_9rem] sm:grid-cols-[minmax(9rem,1fr)_8rem_11rem]"
 
   def grid_cols(_, _),
-    do: "grid-cols-[minmax(0,1fr)_5.5rem] sm:grid-cols-[minmax(0,1fr)_8rem]"
+    do: "grid-cols-[minmax(9rem,1fr)_5.5rem] sm:grid-cols-[minmax(9rem,1fr)_8rem]"
 
   @doc "Display switches to offer, in display order, from config."
   def display_toggles do

@@ -95,6 +95,19 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
       object_state_phrase(experience, object)
   end
 
+  @doc "What an email of this row says happened, as `notification_phrase/4` or else the plain word, the way the row's template does."
+  def email_phrase(assigns) do
+    notification_phrase(
+      assigns[:experienced_as],
+      assigns[:object_id],
+      current_user_id(assigns[:__context__]),
+      assigns[:object]
+    ) ||
+      Bonfire.Social.Activities.experience_display(assigns[:experienced_as], %{
+        object: assigns[:object]
+      })
+  end
+
   @doc """
   Wording that reads the object's own state: a schedule's due date, whether a label finished, who an assignment names. Not declarable alongside the others, since the sentence depends on data only the object carries.
 

@@ -1,17 +1,2 @@
-<%= for {component, component_assigns} <- activity_components(
-                @activity,
-                @experienced_as,
-                @object,
-                @object_type,
-                @activity_inception,
-                @showing_within,
-                @viewing_main_object,
-                @thread_mode,
-                @thread_id,
-                @thread_title,
-                @activity_component_id,
-                @subject_user,
-                @reply_to,
-                @quotes
-              ) || [] do %><%= maybe_apply(component, "#{filename_for_module_template(component)}_text", [Map.merge(assigns, component_assigns || %{})], fallback_return: "skip #{component}") %><% end %>
-<%= @permalink %>
+<%= for part <- email_parts(assigns, "text") do %><%= part %>
+<% end %><%= email_link(assigns) %>

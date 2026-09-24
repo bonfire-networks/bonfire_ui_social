@@ -1,2 +1,1 @@
-<%= e(@profile, :name, nil) %> - @<%= e(@character, :username, nil) %> · <%= Bonfire.Common.DatesTimes.format_date(Bonfire.Common.DatesTimes.date_from_pointer(assigns[:object])) %>:
-<%=@thread_title%>
+<%= unless email_about_reader?(assigns) do %><%= email_name(assigns) %> @<%= email_username(assigns) %> · <%= Bonfire.Common.DatesTimes.format_date(Bonfire.Common.DatesTimes.date_from_pointer(assigns[:object])) %><%= if assigns[:thread_title] do %>: <%= assigns[:thread_title] %><% end %><% end %>

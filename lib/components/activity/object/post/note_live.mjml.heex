@@ -1,8 +1,2 @@
-<mjml>
-  {rich(e(@object, :post_content, :name, nil))}
-
-  {rich(
-    e(@object, :post_content, :summary, nil) ||
-      e(@object, :post_content, :html_body, nil)
-  )}
-</mjml>
+<div :if={email_title(@object, assigns[:cw])}><strong>{email_title(@object, assigns[:cw])}</strong></div>
+<div>{email_excerpt(@object, assigns[:cw])}</div>

@@ -1,5 +1,6 @@
 
 
-<%= Text.text_only(rich(e(@object, :post_content, :name, nil))) %>
 
-<%= Text.text_only(rich(e(@object, :post_content, :summary, nil))) || Text.text_only(rich(e(@object, :post_content, :html_body, nil))) %>
+<%= email_title(@object, assigns[:cw]) %>
+
+<%= email_excerpt(@object, assigns[:cw]) %>

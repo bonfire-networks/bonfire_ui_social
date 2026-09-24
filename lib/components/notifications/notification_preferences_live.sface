@@ -10,8 +10,8 @@
   }
 >
   {!-- no `phx-update="ignore"`: these controls are live, and ignoring updates would freeze their checked state and the Apply button --}
-  <div id="notification-preferences-controls" class="p-card space-y-4">
-    <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+  <div id="notification-preferences-controls" class="p-4 space-y-4">
+    <div class="space-y-1.5">
       <h2
         :if={@showing_within == :feed}
         id="notification-preferences-title"
@@ -35,10 +35,9 @@
           :if={push?}
           id="notification-push"
           aria-labelledby="notification-push-title"
-          class="rounded-box p-4"
-          style="background: color-mix(in oklch, var(--color-primary) 4%, var(--color-base-100));"
+          class="notification-push-section"
         >
-          <h3 id="notification-push-title" class="text-sm font-medium mb-2">{l("Push notifications")}</h3>
+          <h3 id="notification-push-title" class="sr-only">{l("Push notifications")}</h3>
 
           <StatefulComponent
             module={maybe_component(Bonfire.Notify.Settings.PushNotificationsLive, @__context__)}
@@ -46,9 +45,9 @@
           />
         </section>
 
-        <fieldset class="border-t border-base-content/10 pt-4">
+        <fieldset class="notification-preference-matrix min-w-0 overflow-x-auto border-t border-base-content/10 pt-5 pb-1">
           <legend class="sr-only">{l("Notify me about")}</legend>
-          <div class={"grid items-center gap-2 pb-3 text-xs", grid_cols(push?, email?)}>
+          <div class={"grid items-center gap-3 pb-3 text-xs", grid_cols(push?, email?)}>
             <span class="text-base font-medium">{l("Notify me about")}</span>
             {!-- named after the chip it affects: switching a category off drops it from Latest, while its own chip still shows it --}
             <span class="text-center text-base-content/70">{l("Show in Latest")}</span>
@@ -56,8 +55,8 @@
             <span :if={email?} class="text-center text-base-content/70">{l("Email")}</span>
           </div>
           {#for {key, label, wired?} <- notification_rows()}
-            <div class={"grid items-center gap-2 py-1", grid_cols(push?, email?)}>
-              <span class="text-sm">{label}</span>
+            <div class={"grid min-h-12 items-center gap-3", grid_cols(push?, email?)}>
+              <span class="text-sm leading-snug">{label}</span>
               {!-- a row whose switch nothing honours yet stays inert rather than saving a setting no query reads --}
               {!-- each switch's form carries its own id: two forms in a row with the same attributes are indistinguishable to a selector, including the ones test helpers build for themselves --}
               <form
@@ -65,7 +64,7 @@
                 id={"notification-pref-#{key}-centre-form"}
                 data-scope={key}
                 phx-change="Bonfire.Common.Settings:set"
-                class="flex min-h-8 items-center justify-center"
+                class="flex min-h-6 w-full items-center justify-center"
               >
                 <label class="flex cursor-pointer items-center justify-center">
                   <span class="sr-only">{l("%{type}: show in Latest notifications", type: label)}</span>
@@ -163,11 +162,11 @@
     <details
       :if={show_unimplemented?()}
       id="notification-audience-preview"
-      class="border-t border-base-content/10 pt-4"
+      class="border-t border-base-content/10 pt-5"
     >
       <summary
         id="notification-audience-toggle"
-        class="min-h-8 cursor-pointer py-2 text-base font-medium focus-visible:outline-2"
+        class="min-h-11 cursor-pointer py-2 text-base font-medium focus-visible:outline-2"
       >
         {l("Manage who you hear from")}
       </summary>
@@ -182,7 +181,7 @@
           </label>
           <select
             id={"notification-audience-#{key}"}
-            class="select select-bordered min-h-8 w-auto shrink-0 text-base"
+            class="select select-bordered select-sm w-auto shrink-0 text-base"
           >
             <option value="accept">{l("Accept")}</option>
             <option value="filter">{l("Filter")}</option>
@@ -192,7 +191,7 @@
       {/for}
     </details>
 
-    <fieldset class="border-t border-base-content/10 pt-6">
+    <fieldset class="border-t border-base-content/10 pt-5">
       <legend class="sr-only">{l("Display")}</legend>
       <h3 class="mb-3 text-base font-medium">{l("Display")}</h3>
       {#for {key, toggle} <- display_toggles()}

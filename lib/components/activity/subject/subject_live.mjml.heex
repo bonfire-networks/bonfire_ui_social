@@ -1,10 +1,5 @@
-<mjml>
-  {e(assigns, :profile, :name, nil) || e(assigns, :activity, :subject, :profile, :name, nil)} - @{e(
-    assigns,
-    :character,
-    :username,
-    nil
-  ) || e(assigns, :activity, :subject, :character, :username, nil)} · {Bonfire.Common.DatesTimes.format_date(
+<span :if={not email_about_reader?(assigns)} class="muted" style="font-size: 13px;">
+  {email_name(assigns)} @{email_username(assigns)} · {Bonfire.Common.DatesTimes.format_date(
     Bonfire.Common.DatesTimes.date_from_pointer(assigns[:object])
-  )}: {assigns[:thread_title]}
-</mjml>
+  )}<span :if={assigns[:thread_title]}>: {assigns[:thread_title]}</span>
+</span>

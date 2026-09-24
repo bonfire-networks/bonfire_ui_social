@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.NotificationEmailFormatTest do
   @moduledoc """
   `?_email_format=mjml` shows a page as email: every component that has an email template renders that instead of its HTML, so the notifications feed, with its chips and filters, can be browsed as the emails it would send.
 
-  An email renders the activity's line with its date ("liked · Sep 24, 2026"), where the page shows a relative time, so that is what tells an email rendering apart from the normal one.
+  An email renders the activity's line with its date ("liked your activity · Sep 24, 2026", worded as the notifications row words it), where the page shows a relative time, so that is what tells an email rendering apart from the normal one.
   """
   use Bonfire.UI.Social.ConnCase, async: true
   @moduletag :ui
@@ -24,7 +24,8 @@ defmodule Bonfire.UI.Social.NotificationEmailFormatTest do
   end
 
   # the like was made just now
-  defp as_email, do: "liked · " <> Bonfire.Common.DatesTimes.format_date(Date.utc_today())
+  defp as_email,
+    do: "liked your activity · " <> Bonfire.Common.DatesTimes.format_date(Date.utc_today())
 
   defp rendered(conn, path) do
     {:ok, view, _html} = live(conn, path)
@@ -32,18 +33,22 @@ defmodule Bonfire.UI.Social.NotificationEmailFormatTest do
     render(view)
   end
 
+  # what a reader sees, since the email's line styles its parts (the date is a span of its own)
+  defp text_of(html),
+    do: html |> Floki.parse_document!() |> Floki.text(sep: " ") |> String.replace(~r/\s+/u, " ")
+
   test "without it, the notifications feed is HTML", %{conn: conn} do
     html = rendered(conn, "/notifications")
 
     # the positive first: the like is in the feed
     assert html =~ "a post of mine that gets liked"
-    refute html =~ as_email()
+    refute text_of(html) =~ as_email()
   end
 
   test "with it, the notifications feed's rows are their emails", %{conn: conn} do
     html = rendered(conn, "/notifications?_email_format=mjml")
 
-    assert html =~ as_email()
+    assert text_of(html) =~ as_email()
     assert html =~ "a post of mine that gets liked"
   end
 
@@ -56,10 +61,10 @@ defmodule Bonfire.UI.Social.NotificationEmailFormatTest do
     # a chip's link carries no `_email_format`, which is what used to switch it back to HTML
     render_patch(view, "/notifications/reactions")
     render_async(view)
-    assert render(view) =~ as_email()
+    assert text_of(render(view)) =~ as_email()
 
     render_patch(view, "/notifications?_email_format=html")
     render_async(view)
-    refute render(view) =~ as_email()
+    refute text_of(render(view)) =~ as_email()
   end
 end

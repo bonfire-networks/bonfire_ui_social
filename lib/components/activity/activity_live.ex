@@ -739,6 +739,55 @@ defmodule Bonfire.UI.Social.ActivityLive do
     nil
   end
 
+  @doc "Where an email row leads, at an address an inbox can load. Worked out here rather than by the caller, since a nested row (a quote request's quoted post) is prepared on its own, with a path."
+  def email_link(assigns), do: Bonfire.UI.Common.SEOImage.absolute_url(assigns[:permalink])
+
+  @doc "The avatar of whoever did it (`get_activity_actor/2`), for an email row, at an address an inbox can load."
+  def email_avatar(assigns) do
+    assigns[:experienced_as]
+    |> get_activity_actor(assigns[:activity])
+    |> Bonfire.Common.Media.avatar_url()
+    |> Bonfire.UI.Common.SEOImage.absolute_url()
+  end
+
+  @doc """
+  The activity as `format` ("mjml" or "text"): each of its components rendered through its own email template, for `activity_live.mjml.heex` and `activity_live.text.eex` to join up.
+
+  The components are the ones the page would show in the same place (`showing_within`), so an email of a notification is the notifications row it came from. A component with no template in this format (a post's buttons and menus) is left out.
+  """
+  def email_parts(assigns, format) do
+    activity_components(
+      assigns[:activity],
+      assigns[:experienced_as],
+      assigns[:object],
+      assigns[:object_type],
+      assigns[:activity_inception],
+      assigns[:showing_within],
+      assigns[:viewing_main_object],
+      assigns[:thread_mode],
+      assigns[:thread_id],
+      assigns[:thread_title],
+      assigns[:activity_component_id],
+      assigns[:subject_user],
+      assigns[:reply_to],
+      assigns[:quotes] || []
+    )
+    |> Enum.flat_map(fn {component, component_assigns} ->
+      template = :"#{filename_for_module_template(component)}_#{format}"
+
+      # a component the page shows but an email cannot (its buttons and menus) has no template, and is left out without a warning; one that has a template and fails is reported by `maybe_apply/3`
+      with true <- Code.ensure_loaded?(component) and function_exported?(component, template, 1),
+           rendered when not is_nil(rendered) <-
+             maybe_apply(component, template, [Map.merge(assigns, component_assigns || %{})],
+               fallback_return: nil
+             ) do
+        [rendered]
+      else
+        _ -> []
+      end
+    end)
+  end
+
   def activity_components(
         activity,
         experience,

@@ -1,1 +1,1 @@
-<%=e(@profile, :name, nil) || e(@character, :username, nil)%> <%=Bonfire.Social.Activities.experience_display(@experienced_as, %{object: @object})%> · <%=Bonfire.Common.DatesTimes.format_date(Bonfire.Common.DatesTimes.date_from_pointer(assigns[:activity]))%>
+<%= e(assigns, :profile, :name, nil) || e(assigns, :character, :username, nil) %> <%= email_phrase(assigns) %> · <%= Bonfire.Common.DatesTimes.format_date(Bonfire.Common.DatesTimes.date_from_pointer(assigns[:activity])) %>
