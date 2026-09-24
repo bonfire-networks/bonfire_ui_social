@@ -171,14 +171,32 @@ defmodule Bonfire.UI.Social.NotificationPreferencesTest do
              ) in [:weekly, "weekly"]
     end
 
+    test "how often the digest comes is one choice for the whole account, whichever persona makes it" do
+      account = fake_account!()
+      chooser = fake_user!(account)
+      other_persona = fake_user!(account)
+
+      conn(user: chooser, account: account)
+      |> visit("/notifications")
+      |> wait_async()
+      |> within("#notification-email-digest-form", fn session ->
+        select(session, "#notification-email-digest", "Weekly", from: "Email digest")
+      end)
+
+      # one email per account, so the other persona's digest comes as often
+      assert Bonfire.Common.Settings.get([:notifications, :email_digest], nil,
+               current_user: Bonfire.Me.Users.get_current(other_persona.id)
+             ) in [:weekly, "weekly"]
+    end
+
     test "choosing Never cancels the digest waiting to go out" do
-      # someone who asked for a daily digest, since Never is the default
-      user =
-        current_user(
-          Bonfire.Common.Settings.put([:notifications, :email_digest], :daily,
-            current_user: fake_user!()
-          )
-        )
+      # an account that asked for a daily digest, since Never is the default
+      user = fake_user!()
+
+      Bonfire.Common.Settings.put([:notifications, :email_digest], :daily,
+        current_account: user.account,
+        scope: :account
+      )
 
       account_id = user.account.id
 

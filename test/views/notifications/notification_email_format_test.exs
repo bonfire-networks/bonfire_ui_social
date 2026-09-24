@@ -48,7 +48,8 @@ defmodule Bonfire.UI.Social.NotificationEmailFormatTest do
   end
 
   # rows already on the page keep their first render (chips filter what is loaded rather than render it again), so switching the view needs the page rendered again: waiting on how the choice is kept (a session toggle, read at mount, is the proposal in the notifications plan), since doing it in the per-navigation params hook was turned down
-  @tag skip: "switching the email view on a page already shown needs the page rendered again; how the choice is kept is still to be decided"
+  @tag skip:
+         "switching the email view on a page already shown needs the page rendered again; how the choice is kept is still to be decided"
   test "it stays on while browsing between chips, and goes off when asked", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/notifications?_email_format=mjml")
     render_async(view)
