@@ -103,7 +103,7 @@
             </div>
           </div>
           <button type="button" x-cloak class="rounded btn btn-square btn-sm btn-ghost" x-show="open">
-            <#Icon iconify="carbon:chevron-down-bold" class="w-5 h-5 text-base-content" />
+            <#Icon iconify="carbon:chevron-down" class="w-5 h-5 text-base-content" />
           </button>
           <button type="button" class="rounded btn btn-square btn-sm btn-ghost" x-show="!open">
             <#Icon iconify="carbon:chevron-up-fill" class="w-5 h-5 text-base-content" />
