@@ -17,6 +17,9 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   # the reacting actor's own peered (@peered describes the object's creator)
   prop subject_peered, :any, default: nil
   # prop reply_to_id, :any, default: nil
+
+  @doc "For a reply, whose post it answered: the id its category's `self`/`other` wording is decided on, in place of the object's."
+  prop reply_to_creator_id, :any, default: nil
   # prop profile, :any, default: nil
   # prop character, :any, default: nil
   # the verb the activity was stored as, and what it was for whoever is reading it. Both atoms: this component's own decisions turn on the second, and the word it prints is computed here rather than handed down

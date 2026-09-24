@@ -1650,7 +1650,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
          subject_id: e(activity, :subject_id, nil),
          subjects_more: e(activity, :subjects_more, []),
          profile: profile,
-         character: character
+         character: character,
+         # whose post a reply answered, which decides between its category's `self` and `other` wording ("replied to you", or in a thread you follow)
+         reply_to_creator_id:
+           e(activity, :replied, :reply_to, :created, :creator_id, nil) ||
+             e(object, :replied, :reply_to, :created, :creator_id, nil)
        }},
       {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}
     ]

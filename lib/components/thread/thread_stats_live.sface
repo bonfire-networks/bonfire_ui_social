@@ -25,6 +25,16 @@
     >
       <#slot />
 
+      {!-- "notify me about replies", on the thread's first post, needing no follow --}
+      <StatefulComponent
+        :if={current_user_id(@__context__)}
+        module={maybe_component(Bonfire.Notify.Web.BellButtonLive, @__context__)}
+        id={"thread_bell_#{@thread_id || id(@object)}"}
+        object={@thread_id || id(@object)}
+        label={l("Notify me about replies")}
+        label_enabled={l("Stop notifying me about replies")}
+      />
+
       {#case e(@object, :peered, :canonical_uri, nil) || @is_remote}
         {#match nil}
         {#match false}

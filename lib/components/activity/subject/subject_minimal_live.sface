@@ -95,7 +95,12 @@
             />
           {/if}
 
-          {#case notification_phrase(@experienced_as, @object_id, current_user_id(@__context__), @object)}
+          {#case notification_phrase(
+              @experienced_as,
+              @reply_to_creator_id || @object_id,
+              current_user_id(@__context__),
+              @object
+            )}
             {#match nil}
               {raw(Bonfire.Social.Activities.experience_display(@experienced_as, %{object: @object}))}
             {#match phrase}
@@ -140,9 +145,12 @@
               opts={"data-id": "subject_name"}
               parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
             >{@profile_name || @character_username}</LinkLive>
-            {if @object_id == current_user_id(@__context__),
-              do: l("requested to follow you"),
-              else: l("requested to follow")}
+            {!-- the Requests category's own `self`/`other` wording, rather than a copy of it --}
+            {Bonfire.Social.Notifications.phrase_for(
+              :follow_request,
+              @object_id,
+              current_user_id(@__context__)
+            )}
           </div>
         </div>
       {#elseif @verb == :pin}
