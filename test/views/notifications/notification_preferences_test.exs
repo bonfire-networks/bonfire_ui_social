@@ -140,6 +140,69 @@ defmodule Bonfire.UI.Social.NotificationPreferencesTest do
              ) == nil
     end
 
+    test "how often the digest comes is one choice below the table, never until changed" do
+      user = fake_user!()
+
+      doc =
+        render_component(&Bonfire.UI.Social.NotificationPreferencesLive.render/1, %{
+          __context__: %{current_user: user}
+        })
+        |> Floki.parse_document!()
+
+      assert Floki.attribute(doc, "#notification-email-digest option", "value") ==
+               ["daily", "weekly", "monthly", "never"]
+
+      assert Floki.attribute(doc, "#notification-email-digest option[selected]", "value") ==
+               ["never"]
+    end
+
+    test "choosing how often the digest comes saves it" do
+      user = fake_user!()
+
+      conn(user: user, account: user.account)
+      |> visit("/notifications")
+      |> wait_async()
+      |> within("#notification-email-digest-form", fn session ->
+        select(session, "#notification-email-digest", "Weekly", from: "Email digest")
+      end)
+
+      assert Bonfire.Common.Settings.get([:notifications, :email_digest], nil,
+               current_user: Bonfire.Me.Users.get_current(user.id)
+             ) in [:weekly, "weekly"]
+    end
+
+    test "choosing Never cancels the digest waiting to go out" do
+      # someone who asked for a daily digest, since Never is the default
+      user =
+        current_user(
+          Bonfire.Common.Settings.put([:notifications, :email_digest], :daily,
+            current_user: fake_user!()
+          )
+        )
+
+      account_id = user.account.id
+
+      # as the fan-out queues one when a notification left to the digest arrives
+      {:ok, _} =
+        Bonfire.Notify.Worker.enqueue_digest(
+          account_id,
+          DateTime.add(DateTime.utc_now(), 1, :day),
+          DateTime.utc_now()
+        )
+
+      # the positive first: one is waiting
+      assert [_] = waiting_digests(account_id)
+
+      conn(user: user, account: user.account)
+      |> visit("/notifications")
+      |> wait_async()
+      |> within("#notification-email-digest-form", fn session ->
+        select(session, "#notification-email-digest", "Never", from: "Email digest")
+      end)
+
+      assert [] = waiting_digests(account_id)
+    end
+
     test "choosing Digest after another choice goes back to no choice at all" do
       user = fake_user!()
 
@@ -163,6 +226,11 @@ defmodule Bonfire.UI.Social.NotificationPreferencesTest do
                current_user: Bonfire.Me.Users.get_current(user.id)
              ) == nil
     end
+  end
+
+  defp waiting_digests(account_id) do
+    Oban.Testing.all_enqueued(Bonfire.Common.Repo, worker: Bonfire.Notify.Worker)
+    |> Enum.filter(&(&1.args["op"] == "digest" and &1.args["account_id"] == account_id))
   end
 
   test "preferences are absent from the public feed" do

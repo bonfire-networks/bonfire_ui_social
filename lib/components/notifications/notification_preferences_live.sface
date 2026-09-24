@@ -134,6 +134,30 @@
             </div>
           {/for}
         </fieldset>
+
+        {!-- how often the digest comes, for the kinds left to it (Digest in the Email column): one choice for all of them. `Bonfire.Notify.Digest` reads it for its subject and schedule, and its own event saves it then moves the waiting digest to match. Never until chosen, here or as the instance's default (this same dropdown at instance scope) --}
+        <form
+          :if={email?}
+          id="notification-email-digest-form"
+          phx-change="Bonfire.Notify:set_email_digest"
+          class="border-t border-base-content/10 pt-4"
+        >
+          <Bonfire.UI.Common.SettingsSelectLive
+            id="notification-email-digest"
+            scope={@scope}
+            keys={[:notifications, :email_digest]}
+            name={l("Email digest")}
+            label_name={l("Email digest")}
+            description={l("How often the kinds you left to the digest are emailed together")}
+            options={[
+              daily: l("Daily"),
+              weekly: l("Weekly"),
+              monthly: l("Monthly"),
+              never: l("Never")
+            ]}
+            default_value={:never}
+          />
+        </form>
     {/case}
 
     <details
