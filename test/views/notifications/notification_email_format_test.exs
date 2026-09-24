@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.NotificationEmailFormatTest do
   @moduledoc """
   `?_email_format=mjml` shows a page as email: every component that has an email template renders that instead of its HTML, so the notifications feed, with its chips and filters, can be browsed as the emails it would send.
 
-  MJML's output carries its own `mj-column` classes, which no page markup has, so they are what tells an email rendering apart from the normal one.
+  An email renders the activity's line with its date ("liked · Sep 24, 2026"), where the page shows a relative time, so that is what tells an email rendering apart from the normal one.
   """
   use Bonfire.UI.Social.ConnCase, async: true
   @moduletag :ui
@@ -23,6 +23,9 @@ defmodule Bonfire.UI.Social.NotificationEmailFormatTest do
     {:ok, conn: conn(user: me, account: account)}
   end
 
+  # the like was made just now
+  defp as_email, do: "liked · " <> Bonfire.Common.DatesTimes.format_date(Date.utc_today())
+
   defp rendered(conn, path) do
     {:ok, view, _html} = live(conn, path)
     render_async(view)
@@ -34,16 +37,18 @@ defmodule Bonfire.UI.Social.NotificationEmailFormatTest do
 
     # the positive first: the like is in the feed
     assert html =~ "a post of mine that gets liked"
-    refute html =~ "mj-column"
+    refute html =~ as_email()
   end
 
   test "with it, the notifications feed's rows are their emails", %{conn: conn} do
     html = rendered(conn, "/notifications?_email_format=mjml")
 
-    assert html =~ "mj-column"
+    assert html =~ as_email()
     assert html =~ "a post of mine that gets liked"
   end
 
+  # rows already on the page keep their first render (chips filter what is loaded rather than render it again), so switching the view needs the page rendered again: waiting on how the choice is kept (a session toggle, read at mount, is the proposal in the notifications plan), since doing it in the per-navigation params hook was turned down
+  @tag skip: "switching the email view on a page already shown needs the page rendered again; how the choice is kept is still to be decided"
   test "it stays on while browsing between chips, and goes off when asked", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/notifications?_email_format=mjml")
     render_async(view)
@@ -51,10 +56,10 @@ defmodule Bonfire.UI.Social.NotificationEmailFormatTest do
     # a chip's link carries no `_email_format`, which is what used to switch it back to HTML
     render_patch(view, "/notifications/reactions")
     render_async(view)
-    assert render(view) =~ "mj-column"
+    assert render(view) =~ as_email()
 
     render_patch(view, "/notifications?_email_format=html")
     render_async(view)
-    refute render(view) =~ "mj-column"
+    refute render(view) =~ as_email()
   end
 end

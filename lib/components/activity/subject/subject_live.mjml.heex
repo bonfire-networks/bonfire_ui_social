@@ -4,5 +4,7 @@
     :character,
     :username,
     nil
-  ) || e(assigns, :activity, :subject, :character, :username, nil)}: {assigns[:thread_title]}
+  ) || e(assigns, :activity, :subject, :character, :username, nil)} · {Bonfire.Common.DatesTimes.format_date(
+    Bonfire.Common.DatesTimes.date_from_pointer(assigns[:object])
+  )}: {assigns[:thread_title]}
 </mjml>

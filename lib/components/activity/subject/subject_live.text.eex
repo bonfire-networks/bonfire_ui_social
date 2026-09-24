@@ -1,2 +1,2 @@
-<%= e(@profile, :name, nil) %> - @<%= e(@character, :username, nil) %>:
+<%= e(@profile, :name, nil) %> - @<%= e(@character, :username, nil) %> · <%= Bonfire.Common.DatesTimes.format_date(Bonfire.Common.DatesTimes.date_from_pointer(assigns[:object])) %>:
 <%=@thread_title%>
