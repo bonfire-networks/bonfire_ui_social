@@ -29,7 +29,7 @@
           phx-value-toggle_value={if state == :only, do: "default", else: "true"}
           phx-target={@event_target}
           class={
-            "relative min-h-11 min-w-11 px-3 rounded-full transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
+            "relative px-2 rounded-full transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
             "text-muted hover:text-base-content": state != :only,
             "bg-base-100 text-primary shadow-sm": state == :only
           }
@@ -49,7 +49,7 @@
           phx-value-toggle_value="default"
           phx-target={@event_target}
           class={
-            "relative min-h-11 min-w-11 px-3 rounded-full transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
+            "relative px-2 rounded-full transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
             "text-muted hover:text-base-content": state != :default,
             "bg-base-100 text-base-content shadow-sm": state == :default
           }
@@ -69,7 +69,7 @@
           phx-value-toggle_value={if state == :hide, do: "default", else: "false"}
           phx-target={@event_target}
           class={
-            "relative min-h-11 min-w-11 px-3 rounded-full transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
+            "relative px-2 rounded-full transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
             "text-muted hover:text-base-content": state != :hide,
             "bg-base-100 text-error shadow-sm": state == :hide
           }

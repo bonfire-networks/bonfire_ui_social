@@ -57,6 +57,16 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
     |> assert_has("[data-id=feed]", text: "a mention for you")
   end
 
+  test "the mobile dock keeps notifications active while category chips change", %{conn: conn} do
+    conn
+    |> visit("/notifications")
+    |> assert_has("a[href='/notifications'].dock-active")
+
+    conn
+    |> visit("/notifications/likes")
+    |> assert_has("a[href='/notifications'].dock-active")
+  end
+
   test "a chip path filters the feed to that verb and marks that chip current", %{conn: conn} do
     conn
     |> visit("/notifications/likes")

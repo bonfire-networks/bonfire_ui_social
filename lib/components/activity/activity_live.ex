@@ -459,11 +459,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
       e(assigns, :thread_object, nil) || e(replied, :thread, nil) || e(replied, :thread_id, nil) ||
         e(assigns, :thread_id, nil)
 
-    reply_to =
-      if show_reply_to?(experienced_as, activity), do: prepare_reply_to(replied || activity)
+    show_reply_to? = show_reply_to?(experienced_as, activity, assigns[:showing_within])
 
-    thread_start =
-      if show_reply_to?(experienced_as, activity), do: prepare_thread_start(replied || activity)
+    reply_to = if show_reply_to?, do: prepare_reply_to(replied || activity)
+
+    thread_start = if show_reply_to?, do: prepare_thread_start(replied || activity)
 
     object_type =
       assigns[:object_type] || Types.object_type(object)
@@ -641,6 +641,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
     end
   end
 
+  # search results stand alone: a matching reply shows without the post it answers
+  defp show_reply_to?(_experience, _activity, :search), do: false
+  defp show_reply_to?(experience, activity, _showing_within), do: show_reply_to?(experience, activity)
+
   # Reply context is computed for reply verbs, but also when a group/topic boosts a reply
   # into feeds (posts in groups reach feeds as the category's auto-boost, a boost with
   # the category as subject) — otherwise a boosted reply renders with no parent at all.
@@ -803,7 +807,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
     thread =
       e(replied, :thread, nil) || e(replied, :thread_id, nil)
 
-    reply_to = if show_reply_to?(experience, activity), do: prepare_reply_to(replied || activity)
+    reply_to =
+      if show_reply_to?(experience, activity, showing_within),
+        do: prepare_reply_to(replied || activity)
 
     activity_components(
       activity,
