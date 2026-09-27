@@ -643,7 +643,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # search results stand alone: a matching reply shows without the post it answers
   defp show_reply_to?(_experience, _activity, :search), do: false
-  defp show_reply_to?(experience, activity, _showing_within), do: show_reply_to?(experience, activity)
+
+  defp show_reply_to?(experience, activity, _showing_within),
+    do: show_reply_to?(experience, activity)
 
   # Reply context is computed for reply verbs, but also when a group/topic boosts a reply
   # into feeds (posts in groups reach feeds as the category's auto-boost, a boost with

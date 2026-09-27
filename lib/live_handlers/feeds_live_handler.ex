@@ -537,11 +537,19 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     filters = e(opts, :feed_filters, %{})
     preloads = e(opts, :activity_preloads, {[], []})
 
-    case FeedLoader.feed_newer(
+    # only the page size carries over from the restored window: `before` alone asks for the page just newer than the cursor (`FeedLoader.feed_filtered/3`)
+    limit =
+      case opts[:paginate] do
+        paginate when is_list(paginate) -> paginate[:limit]
+        _ -> nil
+      end
+
+    case FeedLoader.feed(
            feed_id || :default,
            filters,
-           cursor,
-           Keyword.put(opts, :preload, elem(preloads, 0))
+           opts
+           |> Keyword.put(:preload, elem(preloads, 0))
+           |> Keyword.put(:paginate, [before: cursor] ++ if(limit, do: [limit: limit], else: []))
          ) do
       %{edges: edges, page_info: page_info} when is_list(edges) ->
         {:noreply,

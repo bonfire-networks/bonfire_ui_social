@@ -277,6 +277,141 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
     end
   end
 
+  describe "Replies and bells" do
+    # a reply reaches me for answering my post, or through a bell on someone else's thread, and only the first is a reply to me. Replies holds that one, and the other is under Other until bells have a category of their own
+    setup %{me: me, other: other} do
+      {:ok, my_post} =
+        Posts.publish(
+          current_user: me,
+          post_attrs: %{post_content: %{html_body: "my post that gets a direct answer"}},
+          boundary: "public"
+        )
+
+      {:ok, _} =
+        Posts.publish(
+          current_user: other,
+          post_attrs: %{
+            post_content: %{html_body: "a direct answer to my post"},
+            reply_to_id: my_post.id
+          },
+          boundary: "public"
+        )
+
+      someone = fake_user!("chips_thread_starter")
+
+      {:ok, their_thread} =
+        Posts.publish(
+          current_user: someone,
+          post_attrs: %{post_content: %{html_body: "someone else's thread"}},
+          boundary: "public"
+        )
+
+      {:ok, _} = Bonfire.Notify.Bells.enable(me, their_thread)
+
+      {:ok, _} =
+        Posts.publish(
+          current_user: other,
+          post_attrs: %{
+            post_content: %{html_body: "an answer in a thread I only have a bell on"},
+            reply_to_id: their_thread.id
+          },
+          boundary: "public"
+        )
+
+      :ok
+    end
+
+    test "Replies shows a reply to my post, and not one that reached me through a bell", %{
+      conn: conn
+    } do
+      # the positive first: the bell reply did reach me, so its absence under Replies is the chip's doing
+      conn
+      |> visit("/notifications")
+      |> wait_async()
+      |> assert_has("[data-id=feed]", text: "an answer in a thread I only have a bell on")
+
+      conn
+      |> visit("/notifications/replies")
+      |> wait_async()
+      |> assert_has("[data-id=feed]", text: "a direct answer to my post")
+      |> refute_has("[data-id=feed]", text: "an answer in a thread I only have a bell on")
+    end
+
+    test "Other shows a reply that reached me through a bell, and not a reply to my post", %{
+      conn: conn
+    } do
+      conn
+      |> visit("/notifications/other")
+      |> wait_async()
+      |> assert_has("[data-id=feed]", text: "an answer in a thread I only have a bell on")
+      |> refute_has("[data-id=feed]", text: "a direct answer to my post")
+    end
+
+    test "a new post from a person I have a bell on is under Other, and no named chip", %{
+      conn: conn,
+      me: me
+    } do
+      # a local person, whose posts are here whether or not I follow them
+      poster = fake_user!("chips_bell_person")
+      {:ok, _} = Bonfire.Notify.Bells.enable(me, poster)
+
+      {:ok, _} =
+        Posts.publish(
+          current_user: poster,
+          post_attrs: %{post_content: %{html_body: "news from a person I have a bell on"}},
+          boundary: "public"
+        )
+
+      assert_only_under_other(conn, "news from a person I have a bell on")
+    end
+
+    test "a new post in a group I have a bell on is under Other, and no named chip", %{
+      conn: conn,
+      me: me
+    } do
+      group =
+        Bonfire.Classify.Simulate.fake_group!(fake_user!("chips_group_owner"), %{
+          membership: "open",
+          visibility: "global:discoverable"
+        })
+
+      # posts come from members, and the group's own boundaries decide who may read them, so I join too
+      {:ok, _} = Bonfire.Classify.Categories.join_group(me, group)
+      {:ok, _} = Bonfire.Notify.Bells.enable(me, group)
+
+      member = fake_user!("chips_group_member")
+      {:ok, _} = Bonfire.Classify.Categories.join_group(member, group)
+
+      Bonfire.Classify.Simulate.fake_post_in_group!(
+        member,
+        group,
+        "<p>news from a group I have a bell on</p>"
+      )
+
+      assert_only_under_other(conn, "news from a group I have a bell on")
+    end
+  end
+
+  # in Latest (the positive, so the rest can't pass on something that never arrived), under Other, and under none of the named chips
+  defp assert_only_under_other(conn, text) do
+    conn
+    |> visit("/notifications")
+    |> wait_async()
+    |> assert_has("[data-id=feed]", text: text)
+
+    conn
+    |> visit("/notifications/other")
+    |> wait_async()
+    |> assert_has("[data-id=feed]", text: text)
+
+    for path <- ["mentions", "replies", "reactions", "boosts", "requests"] do
+      conn
+      |> visit("/notifications/#{path}")
+      |> wait_async()
+      |> refute_has("[data-id=feed]", text: text)
+    end
+  end
+
   describe "Other" do
     # a vote on my poll reaches my notifications, and the `vote` category has no chip, so it is exactly what Other exists for
     setup %{me: me, other: other} do
