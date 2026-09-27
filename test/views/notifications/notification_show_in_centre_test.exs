@@ -51,12 +51,25 @@ defmodule Bonfire.UI.Social.NotificationShowInCentreTest do
     rows = NotificationPreferencesLive.notification_rows()
 
     assert Floki.attribute(doc, "[id$=-centre]", "id") ==
-             Enum.map(rows, fn {key, _label, _wired?} -> "notification-pref-#{key}-centre" end)
+             for({key, _label, _wired?, true} <- rows, do: "notification-pref-#{key}-centre")
 
-    for {key, label, _wired?} <- rows do
-      assert [_] = Floki.find(doc, "#notification-pref-#{key}-centre")
+    for {key, label, _wired?, centre?} <- rows do
+      if centre?, do: assert([_] = Floki.find(doc, "#notification-pref-#{key}-centre"))
       assert Floki.raw_html(doc) =~ label
     end
+  end
+
+  test "messages have their own row, with Push and Email but no Show in Latest, since they never reach the notifications feed" do
+    doc =
+      render_component(&NotificationPreferencesLive.render/1, %{
+        __context__: %{current_user: fake_user!()}
+      })
+      |> Floki.parse_document!()
+
+    assert Floki.raw_html(doc) =~ "Messages"
+    assert [] = Floki.find(doc, "#notification-pref-message-centre")
+    assert [_] = Floki.find(doc, "#notification-pref-message-push")
+    assert [_] = Floki.find(doc, "#notification-pref-message-email")
   end
 
   test "a switched-off category is excluded from the feed, and stays excluded across chips", %{

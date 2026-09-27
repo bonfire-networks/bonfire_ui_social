@@ -54,13 +54,15 @@
             <span :if={push?} class="text-center text-base-content/70">{l("Push")}</span>
             <span :if={email?} class="text-center text-base-content/70">{l("Email")}</span>
           </div>
-          {#for {key, label, wired?} <- notification_rows()}
+          {#for {key, label, wired?, centre?} <- notification_rows()}
             <div class={"grid min-h-12 items-center gap-3", grid_cols(push?, email?)}>
               <span class="text-sm leading-snug">{label}</span>
+              {!-- a kind that never reaches the notifications feed (messages) has nothing to show in Latest, so its cell stays empty and the columns still line up --}
+              <div :if={!centre?} />
               {!-- a row whose switch nothing honours yet stays inert rather than saving a setting no query reads --}
               {!-- each switch's form carries its own id: two forms in a row with the same attributes are indistinguishable to a selector, including the ones test helpers build for themselves --}
               <form
-                :if={wired?}
+                :if={centre? and wired?}
                 id={"notification-pref-#{key}-centre-form"}
                 data-scope={key}
                 phx-change="Bonfire.Common.Settings:set"
@@ -76,7 +78,7 @@
                   />
                 </label>
               </form>
-              <label :if={!wired?} class="flex min-h-8 cursor-pointer items-center justify-center">
+              <label :if={centre? and !wired?} class="flex min-h-8 cursor-pointer items-center justify-center">
                 <span class="sr-only">{l("%{type}: show in Latest notifications", type: label)}</span>
                 <input
                   id={"notification-pref-#{key}-centre"}

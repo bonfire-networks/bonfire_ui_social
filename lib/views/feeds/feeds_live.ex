@@ -99,6 +99,8 @@ defmodule Bonfire.UI.Social.FeedsLive do
        socket
        |> assign(
          selected_tab: nil,
+         # set by `handle_params`, but the template reads it even when that fails and the page renders with the error flash
+         feed_name: nil,
          #  page: :explore,
          page_title: nil,
          page_header_icon: "ph:house-fill",

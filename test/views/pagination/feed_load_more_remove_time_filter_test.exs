@@ -240,4 +240,35 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       )
     end
   end
+
+  # deferred joins are left on here as in prod
+  describe "Show older activities when nothing is recent" do
+    setup do
+      repo().delete_all(Bonfire.Data.Social.FeedPublish)
+
+      alice = fake_user!()
+
+      for days <- [7, 30, 60] do
+        fake_post!(alice, "public", %{
+          post_content: %{
+            summary: "post from #{days} days ago",
+            html_body: "<p>Post from #{days} days ago</p>"
+          },
+          id: DatesTimes.past(days, :day) |> DatesTimes.generate_ulid()
+        })
+      end
+
+      :ok
+    end
+
+    test "As a guest with no socket, the load_all_time link shows older activities on the default feed" do
+      conn()
+      |> visit("/feed/?time_limit=1")
+      |> refute_has("[data-id=feed] article")
+      |> assert_has_or_open_browser("[data-id=load_all_time]")
+      |> click_link("[data-id=load_all_time]", "Show older activities")
+      |> wait_async()
+      |> assert_has_or_open_browser("[data-id=feed] article", text: "days ago")
+    end
+  end
 end

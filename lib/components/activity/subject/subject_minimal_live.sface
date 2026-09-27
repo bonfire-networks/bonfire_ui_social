@@ -97,7 +97,7 @@
 
           {#case notification_phrase(
               @experienced_as,
-              @reply_to_creator_id || @object_id,
+              @about_id || @object_id,
               current_user_id(@__context__),
               @object
             )}
@@ -117,6 +117,17 @@
           class="flex-shrink-0 normal-case border !border-secondary btn btn-sm btn-primary"
         >
           {l("Accept")}
+        </button>
+
+        {!-- declining is ignoring: the request is only marked ignored, and nothing is sent to the requester --}
+        <button
+          :if={@experienced_as in [:follow_request, :join_request]}
+          :on-click="Bonfire.Social.Graph.Follows:ignore"
+          phx-value-id={id(@activity_id)}
+          type="button"
+          class="flex-shrink-0 normal-case btn btn-sm btn-ghost"
+        >
+          {l("Ignore")}
         </button>
       </div>
 

@@ -1,2 +1,4 @@
-<div :if={email_title(@object, assigns[:cw])}><strong>{email_title(@object, assigns[:cw])}</strong></div>
+<div :if={email_title(@object, assigns[:cw])}>
+  <strong>{email_title(@object, assigns[:cw])}</strong>
+</div>
 <div>{email_excerpt(@object, assigns[:cw])}</div>

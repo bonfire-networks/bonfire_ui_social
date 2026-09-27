@@ -1,5 +1,7 @@
 <strong>{e(assigns, :profile, :name, nil) || e(assigns, :character, :username, nil)}</strong>
 {email_phrase(assigns)}
 <span class="muted">
-  · {Bonfire.Common.DatesTimes.format_date(Bonfire.Common.DatesTimes.date_from_pointer(assigns[:activity]))}
+  · {Bonfire.Common.DatesTimes.format_date(
+    Bonfire.Common.DatesTimes.date_from_pointer(assigns[:activity])
+  )}
 </span>

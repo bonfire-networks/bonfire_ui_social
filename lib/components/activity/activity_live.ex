@@ -1260,6 +1260,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   experienced_as={maybe_get(component_assigns, :experienced_as, @experienced_as)}
                   emoji={@emoji || e(maybe_get(component_assigns, :activity, @activity), :emoji, nil)}
                   reply_to_id={e(@activity, :replied, :reply_to_id, nil)}
+                  about_id={maybe_get(component_assigns, :about_id, nil)}
                   peered={@peered}
                   is_remote={@is_remote}
                   thread_title={maybe_get(component_assigns, :thread_title, @thread_title)}
@@ -1657,10 +1658,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
          subjects_more: e(activity, :subjects_more, []),
          profile: profile,
          character: character,
-         # whose post a reply answered, which decides between its category's `self` and `other` wording ("replied to you", or in a thread you follow)
-         reply_to_creator_id:
-           e(activity, :replied, :reply_to, :created, :creator_id, nil) ||
-             e(object, :replied, :reply_to, :created, :creator_id, nil)
+         # decides between its category's `self` and `other` wording ("replied to you", or in a thread you follow), as a push and an email decide it
+         about_id: Bonfire.Social.Notifications.about_id(activity, object)
        }},
       {Bonfire.UI.Social.Activity.SubjectLive, %{profile: profile, character: character}}
     ]

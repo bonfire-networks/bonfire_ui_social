@@ -248,4 +248,34 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
       # NOTE: visiting "/" as guest redirects to /login which doesn't work with PhoenixTest static pages
     end
   end
+
+  # deferred joins are left on here as in prod, so the next page link carries `multiply_limit` too
+  describe "Load More in Feeds with the default query config" do
+    test "As a guest, the next page of the default feed (with no feed in the path) shows the next activities" do
+      limit = Bonfire.Common.Config.get(:default_pagination_limit, 2)
+      alice = fake_user!()
+
+      for n <- 1..(limit * 4) do
+        assert {:ok, _post} =
+                 Posts.publish(current_user: alice, post_attrs: post_attrs(n), boundary: "public")
+      end
+
+      conn()
+      |> visit("/feed")
+      |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
+      |> click_link("a[data-id=next_page]", "Next page")
+      |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
+    end
+
+    test "As a guest, an old next page link with a cursor in a format the feed query no longer accepts still renders the page" do
+      # a crawler replaying an old link, whose cursor is keyed by `{:activity, :id}` where the feed query now paginates by `:id`
+      cursor = "g3QAAAABaAJ3CGFjdGl2aXR5dwJpZG0AAAAaMDFLNFZaNTZSSzlNUFI1VjNWSzRFTlYyUEo="
+
+      conn()
+      |> visit(
+        "/feed/?Elixir.Bonfire.Social.Feeds[after]=#{cursor}&Elixir.Bonfire.Social.Feeds[multiply_limit]=4&Elixir.Bonfire.Social.Feeds[time_limit]=0"
+      )
+      |> assert_has("#main-content")
+    end
+  end
 end
