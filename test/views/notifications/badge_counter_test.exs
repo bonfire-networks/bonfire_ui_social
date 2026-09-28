@@ -41,6 +41,25 @@ defmodule Bonfire.UI.Social.BadgeCounter.Test do
       |> assert_has("[id^=unseen_count_]")
     end
 
+    test "exposes the loaded count of the current user's feeds for the app icon badge", %{
+      alice: alice,
+      bob: bob,
+      conn_alice: conn_alice
+    } do
+      Posts.publish(
+        current_user: bob,
+        post_attrs: %{post_content: %{html_body: "Hey @alice check this out"}},
+        boundary: "public"
+      )
+
+      conn_alice
+      |> visit("/conduct")
+      |> wait_async()
+      |> assert_has(
+        "[data-app-badge-feed='#{alice.character.notifications_id}'][data-app-badge-count='1']"
+      )
+    end
+
     @tag :todo
     test "badge counter increments when new notification arrives in real-time", %{
       alice: alice,
