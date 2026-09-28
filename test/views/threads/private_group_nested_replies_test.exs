@@ -156,14 +156,14 @@ defmodule Bonfire.UI.Social.PrivateGroupNestedRepliesTest do
     render(persistent)
     render(view)
 
-    assert live_assigns(view)[:__context__][:child_pid] == persistent.pid
+    assert live_assigns(view)[:__context__][:persistent_child_pid] == persistent.pid
   end
 
   # Who made the group is a real branch: its creator holds `:administer` over it, a plain member holds only what membership grants, so a reply readable by one may not be by the other
   for group_creator <- [:me, :other] do
-    # Parked: a Reply press reaches the composer through `PersistentLive.maybe_send/2`, which needs the composer's `child_pid` in the pressing handler's context, or a session token a LiveViewTest session does not have. The page now keeps `child_pid` in its own context (the test above), but the Reply runs in the activity's COMPONENT, whose context is a copy that never receives it, so the state still falls back to a `send_update` in the page process and the form keeps its defaults. Restore once `maybe_send/2` can find the pid from any component on the page (keeping it in the page process, OPEN in the plan), or as a browser test
+    # Parked: a Reply press reaches the composer through `PersistentLive.maybe_send/2`, which needs the composer's `persistent_child_pid` in the pressing handler's context, or a session token a LiveViewTest session does not have. The page now keeps `persistent_child_pid` in its own context (the test above), but the Reply runs in the activity's COMPONENT, whose context is a copy that never receives it, so the state still falls back to a `send_update` in the page process and the form keeps its defaults. Restore once `maybe_send/2` can find the pid from any component on the page (keeping it in the page process, OPEN in the plan), or as a browser test
     @tag skip:
-           "the Reply runs in a component whose context copy lacks the composer's child_pid, and a LiveViewTest session has no token for the fallback"
+           "the Reply runs in a component whose context copy lacks the composer's persistent_child_pid, and a LiveViewTest session has no token for the fallback"
     test "through the composer, my reply to someone's reply is readable by me and by them (group made by #{group_creator})",
          %{me: me, me_conn: me_conn, other: other, other_conn: other_conn} do
       {creator, member} =
