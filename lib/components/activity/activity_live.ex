@@ -927,6 +927,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
       c when is_atom(c) -> {c, nil}
       other -> other
     end)
+    |> Enum.filter(fn {component, _assigns} ->
+      experience != :join_request or showing_within != :notifications or
+        component == Bonfire.UI.Social.Activity.SubjectMinimalLive
+    end)
     |> debug("preview_components - #{activity_inception}")
   end
 
@@ -1244,6 +1248,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       # never borrow the activity subject's (eg. booster's) peered
                       e(character, :peered, nil)
                   end}
+                  object={maybe_get(component_assigns, :object, @object)}
                   object_boundary={@object_boundary}
                   object_type={maybe_get(component_assigns, :object_type, @object_type)}
                   date_ago={maybe_get(component_assigns, :date_ago, @date_ago)}

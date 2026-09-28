@@ -38,6 +38,40 @@
     {#match :search}
       <div />
     {#match :notifications}
+      {#if @experienced_as == :join_request}
+        <div data-role="join-request-notification" class="flex items-start gap-3 py-2">
+          <LinkLive to={@path} class="shrink-0 focus-ring rounded-full" label={l("%{username}'s profile", username: @profile_name || @character_username || "")}>
+            <Bonfire.UI.Common.AvatarLive
+              parent_id={deterministic_dom_id(__MODULE__, @subject_id, "requester_avatar", @parent_id)}
+              user_id={@subject_id}
+              src={@profile_media}
+              title={@profile_name || @character_username}
+              class="rounded-full w-10 h-10"
+            />
+          </LinkLive>
+          <div class="min-w-0 flex-1 space-y-2">
+            <p class="text-body leading-snug break-words">
+              <LinkLive to={@path} class="font-semibold link link-hover focus-ring">{@profile_name || @character_username}</LinkLive>
+              {l("requested to join")}
+            </p>
+            <div class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+              <LinkLive to={path(@object)} class="font-medium link link-hover focus-ring break-words">
+                {e(@object, :profile, :name, nil) || e(@object, :name, nil) || l("Group")}
+              </LinkLive>
+              <span class="text-sm text-muted">
+                <Bonfire.UI.Social.Activity.DateAgoLive
+                  activity_id={@activity_id}
+                  parent_id={deterministic_dom_id(__MODULE__, @activity_id, "request_time", @parent_id)}
+                />
+              </span>
+            </div>
+            <Bonfire.UI.Social.Activity.JoinRequestActionsLive
+              id={deterministic_dom_id(__MODULE__, @activity_id, "join_request_actions", @parent_id)}
+              request_id={id(@activity_id)}
+            />
+          </div>
+        </div>
+      {#else}
       {!-- Full-bleed bottom divider: -mx-card pulls the row out to the card edges
            (cancelling the wrapper's p-card), px-card puts the content inset back —
            same idiom as the thread_header strip in activity_live. --}
@@ -46,7 +80,7 @@
         data-role="notification_subject"
         data-verb={@verb}
         data-experienced-as={@experienced_as}
-        class={subject_minimal_line_class()}
+        class={subject_minimal_line_class(), "flex-wrap"}
       >
         {!-- Custom emoji on a Like/React takes precedence over the verb's default icon. --}
         <div class={subject_minimal_icon_box_class()}>
@@ -108,9 +142,9 @@
           {/case}
         </div>
 
-        {!-- `Follows.accept/2` reads what was asked for from the request itself, and hands a join request on to the group --}
+        {!-- join requests have their own controls (`JoinRequestActionsLive`) --}
         <button
-          :if={@experienced_as in [:follow_request, :join_request]}
+          :if={@experienced_as == :follow_request}
           :on-click="Bonfire.Social.Graph.Follows:accept"
           phx-value-id={id(@activity_id)}
           type="button"
@@ -121,7 +155,7 @@
 
         {!-- declining is ignoring: the request is only marked ignored, and nothing is sent to the requester --}
         <button
-          :if={@experienced_as in [:follow_request, :join_request]}
+          :if={@experienced_as == :follow_request}
           :on-click="Bonfire.Social.Graph.Follows:ignore"
           phx-value-id={id(@activity_id)}
           type="button"
@@ -140,6 +174,7 @@
           {@thread_title}
         </div>
       </div>
+      {/if}
     {#match _}
       {#if @experienced_as == :follow_request}
         <div class={subject_minimal_line_class()}>

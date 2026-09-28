@@ -5,6 +5,7 @@
     id={"#{@id}_main"}
     data-id="feed"
     data-page="feed"
+    tabindex="-1"
     phx-hook="Bonfire.UI.Common.PreviewContentLive#MainFeed"
     class="w-full flex flex-col feed mx-auto"
   >

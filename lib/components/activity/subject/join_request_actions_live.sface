@@ -1,0 +1,38 @@
+<div id={@id} data-request-status={@request_status} data-request-error={to_string(not is_nil(@request_error))} :hook="JoinRequestFocus" class="flex flex-wrap items-center gap-x-3 gap-y-2 max-w-full">
+  <p :if={@request_status in [:approved, :declined, :unavailable]} role="status" class={"text-sm font-medium text-muted", "badge badge-soft badge-neutral": @request_status == :declined}>
+    {case @request_status do
+      :approved -> l("Approved")
+      :declined -> l("Declined")
+      _ -> l("Request no longer available")
+    end}
+  </p>
+  <Phoenix.Component.form
+    :if={@request_status in [:pending, :declined]}
+    for={Phoenix.Component.to_form(%{})}
+    id={"#{@id}-form"}
+    phx-submit="Bonfire.Social.Graph.Follows:review_join_request"
+    phx-target={@myself}
+    class="flex flex-wrap items-center gap-2"
+  >
+    <input type="hidden" name="request_id" value={@request_id} />
+    <button
+      id={"#{@id}-approve"}
+      type="submit"
+      name="decision"
+      value="approve"
+      phx-value-id={@request_id}
+      class={"btn btn-sm", "btn-primary": @request_status == :pending}
+    >{if @request_status == :declined, do: l("Approve instead"), else: l("Approve")}</button>
+    <button
+      :if={@request_status == :pending}
+      id={"#{@id}-decline"}
+      type="submit"
+      name="decision"
+      value="decline"
+      phx-value-id={@request_id}
+      class="btn btn-sm"
+    >{l("Decline")}</button>
+    <span role="status" class="hidden phx-submit-loading:inline basis-full text-right text-sm text-muted">{l("Saving decision…")}</span>
+  </Phoenix.Component.form>
+  <p :if={@request_error} role="alert" class="text-sm text-error max-w-xs">{@request_error}</p>
+</div>
