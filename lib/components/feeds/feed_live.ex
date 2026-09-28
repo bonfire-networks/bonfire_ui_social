@@ -1277,7 +1277,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   end
 
   # The cursor of the not-yet-loaded page above a resumed reading position, or nil once
-  # exhausted (the fork sets start_cursor nil on the first page — see FeedLoader.feed_newer/4).
+  # exhausted (the fork sets start_cursor nil on the first page — see FeedLoader.feed_filtered/3).
   defp newer_cursor(assigns) do
     case LoadMoreLive.start_cursor(assigns[:newer_page_info]) do
       cursor when is_binary(cursor) and cursor != "" -> cursor

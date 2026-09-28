@@ -54,9 +54,24 @@
             <span :if={push?} class="text-center text-base-content/70">{l("Push")}</span>
             <span :if={email?} class="text-center text-base-content/70">{l("Email")}</span>
           </div>
-          {#for {key, label, wired?, centre?} <- notification_rows()}
+          {#for {key, label, wired?, centre?, description} <- notification_rows()}
             <div class={"grid min-h-12 items-center gap-3", grid_cols(push?, email?)}>
-              <span class="text-sm leading-snug">{label}</span>
+              <span class="flex items-center gap-1 text-sm leading-snug">
+                {label}
+                {!-- what the row covers, from the category's `description`: a tooltip to hover, and the same words for a screen reader, which a tooltip alone doesn't reach --}
+                {#if description}
+                  <span
+                    id={"notification-pref-#{key}-info"}
+                    class="tooltip tooltip-right inline-flex cursor-help text-base-content/50"
+                    data-tip={description}
+                    aria-describedby={"notification-pref-#{key}-description"}
+                    tabindex="0"
+                  >
+                    <#Icon iconify="ph:info" class="size-4" aria-hidden="true" />
+                  </span>
+                  <span id={"notification-pref-#{key}-description"} class="sr-only">{description}</span>
+                {/if}
+              </span>
               {!-- a kind that never reaches the notifications feed (messages) has nothing to show in Latest, so its cell stays empty and the columns still line up --}
               <div :if={!centre?} />
               {!-- a row whose switch nothing honours yet stays inert rather than saving a setting no query reads --}

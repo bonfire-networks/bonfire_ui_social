@@ -151,16 +151,17 @@ defmodule Bonfire.UI.Social.NotificationPreferencesLive do
   end
 
   @doc """
-  Rows of the "Notify me about" table: `{key, label, whether its switch is wired, whether it has a "Show in Latest" switch}`, in config order. A category that never reaches the notifications feed (messages) declares `centre: false`, and its row has no such switch.
+  Rows of the "Notify me about" table: `{key, label, whether its switch is wired, whether it has a "Show in Latest" switch, its description or nil}`, in config order. Each category is read once, from the list `categories_shown/1` returns. A category that never reaches the notifications feed (messages) declares `centre: false`, and its row has no such switch.
 
   The categories, their order and their labels come from `Bonfire.Social.Notifications`, the same
   declaration the chips read, so a switch can't hide something other than what its chip shows.
   """
   def notification_rows do
     Notifications.categories_shown(:row)
-    |> Enum.map(fn {key, category} ->
-      {key, Notifications.label_for(key), Notifications.implemented?(key, :row),
-       e(category, :centre, true) != false}
+    |> Enum.map(fn {key, category} = key_and_category ->
+      {key, Notifications.label_for(key_and_category),
+       Notifications.implemented?(key_and_category, :row), e(category, :centre, true) != false,
+       Notifications.description_for(key_and_category)}
     end)
   end
 

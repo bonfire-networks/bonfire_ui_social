@@ -51,12 +51,36 @@ defmodule Bonfire.UI.Social.NotificationShowInCentreTest do
     rows = NotificationPreferencesLive.notification_rows()
 
     assert Floki.attribute(doc, "[id$=-centre]", "id") ==
-             for({key, _label, _wired?, true} <- rows, do: "notification-pref-#{key}-centre")
+             for(
+               {key, _label, _wired?, true, _description} <- rows,
+               do: "notification-pref-#{key}-centre"
+             )
 
-    for {key, label, _wired?, centre?} <- rows do
+    for {key, label, _wired?, centre?, _description} <- rows do
       if centre?, do: assert([_] = Floki.find(doc, "#notification-pref-#{key}-centre"))
       assert Floki.raw_html(doc) =~ label
     end
+  end
+
+  test "a row whose category has a description explains it beside its label, for sighted and screen reader users alike" do
+    doc =
+      render_component(&NotificationPreferencesLive.render/1, %{
+        __context__: %{current_user: fake_user!()}
+      })
+      |> Floki.parse_document!()
+
+    # Other is what no other row covers, which its name can't say, so it says what that is
+    assert [info] = Floki.find(doc, "#notification-pref-other-info")
+    assert Floki.attribute(info, "data-tip") |> List.first() =~ "asked to be notified about"
+
+    # the same words for a screen reader, which a tooltip alone doesn't reach
+    assert [described_by] =
+             Floki.attribute(doc, "#notification-pref-other-info", "aria-describedby")
+
+    assert Floki.find(doc, "##{described_by}") |> Floki.text() =~ "asked to be notified about"
+
+    # a category with no description has no icon
+    assert [] = Floki.find(doc, "#notification-pref-boost-info")
   end
 
   test "messages have their own row, with Push and Email but no Show in Latest, since they never reach the notifications feed" do
