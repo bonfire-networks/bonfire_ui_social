@@ -44,8 +44,12 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
         reply_to_id: post.id
       }
 
-      # Private reply - Bob shouldn't be able to see this
-      assert {:ok, _post_reply} = Posts.publish(current_user: carl, post_attrs: attrs_reply)
+      # Private reply - Bob shouldn't be able to see this: readable by the people it mentions, and it mentions nobody. (Published with no boundary, a reply is readable by the author it answers, so that isn't a private one)
+      assert {:ok, post_reply} =
+               Posts.publish(current_user: carl, post_attrs: attrs_reply, boundary: "mentions")
+
+      # the premise, checked rather than assumed
+      refute Bonfire.Boundaries.can?(bob, :read, post_reply)
 
       # Bob checks notifications - should NOT see Carl's private reply
       conn_bob

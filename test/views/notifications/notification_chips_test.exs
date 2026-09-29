@@ -57,6 +57,51 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
     |> assert_has("[data-id=feed]", text: "a mention for you")
   end
 
+  test "someone who hides nobody isn't offered the Hidden chip, and its URL takes them to Latest",
+       %{conn: conn} do
+    conn
+    |> visit("/notifications")
+    |> wait_async()
+    # the positive first: the chip bar is there
+    |> assert_has("#notification-filter-latest")
+    |> refute_has("#notification-filter-hidden")
+
+    # a view they aren't offered is an unknown segment for them, rather than a page that would always be empty
+    conn
+    |> visit("/notifications/hidden")
+    |> wait_async()
+    |> assert_path("/notifications")
+    |> assert_has("#notification-filter-latest[aria-current]")
+  end
+
+  test "with an audience hidden, the Hidden chip is offered and shows what Latest doesn't", %{
+    conn: conn,
+    me: me
+  } do
+    # `other` isn't followed by `me`, so hiding people you don't follow hides their like
+    me =
+      current_user(
+        Bonfire.Common.Settings.put(
+          Bonfire.Social.Notifications.audience_key(:not_followed),
+          :hide,
+          current_user: me
+        )
+      )
+
+    conn = conn(user: me, account: me.account)
+
+    conn
+    |> visit("/notifications")
+    |> wait_async()
+    |> assert_has("#notification-filter-hidden")
+    |> refute_has("[data-verb=like]")
+
+    conn
+    |> visit("/notifications/hidden")
+    |> wait_async()
+    |> assert_has("[data-verb=like]")
+  end
+
   test "the mobile dock keeps notifications active while category chips change", %{conn: conn} do
     conn
     |> visit("/notifications")
@@ -444,6 +489,23 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
 
       conn
       |> visit("/notifications/other")
+      |> wait_async()
+      |> assert_has("#notification-filter-other[aria-current=page]")
+      |> assert_has("[data-verb=vote]")
+      |> refute_has("[data-verb=like]")
+      |> refute_has("[data-verb=follow]")
+      |> refute_has("[data-id=feed]", text: "a mention for you")
+    end
+
+    # clicking the chip patches the feed already mounted by Latest, which merges the chip's filters onto the preset's instead of loading them alone
+    test "clicked from Latest, it shows what no other chip covers, and none of what they do", %{
+      conn: conn
+    } do
+      conn
+      |> visit("/notifications")
+      |> wait_async()
+      |> assert_has("[data-verb=like]")
+      |> click_link("#notification-filter-other", "Other activity")
       |> wait_async()
       |> assert_has("#notification-filter-other[aria-current=page]")
       |> assert_has("[data-verb=vote]")

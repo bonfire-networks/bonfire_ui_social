@@ -176,52 +176,66 @@
         </form>
     {/case}
 
-    <details
-      :if={show_unimplemented?()}
-      id="notification-audience-preview"
+    {!-- who you hear from: one switch per audience, declared beside the categories (`Bonfire.Social.Notifications.audiences/0`), hiding that audience's notifications from every normal view, and from push and email. Two tiers, so a switch rather than the preview's three-way select, whose "held for review" queue isn't built --}
+    <fieldset
+      :if={current_user_id(@__context__)}
+      id="notification-audiences"
       class="border-t border-base-content/10 pt-5"
     >
-      <summary
-        id="notification-audience-toggle"
-        class="min-h-11 cursor-pointer py-2 text-base font-medium focus-visible:outline-2"
-      >
-        {l("Manage who you hear from")}
-      </summary>
-      <p class="mt-1 mb-4 text-sm leading-relaxed text-base-content/70">{l(
-          "Accept shows notifications normally. Filter holds them for review without push alerts. Ignore hides them and suppresses push alerts."
+      {!-- worded as what the switches do (on hides), rather than "who you hear from", which reads the other way round --}
+      <legend class="text-base font-medium">{l("Hide notifications from")}</legend>
+      <p class="mt-1 mb-2 text-sm leading-relaxed text-base-content/70">{l(
+          "Hidden notifications aren't pushed or emailed, and appear under Hidden instead of your other views."
         )}</p>
-      {#for {key, label, description} <- audience_types()}
-        <div class="flex items-center justify-between gap-4 py-3">
-          <label for={"notification-audience-#{key}"} class="min-w-0 text-sm">
-            <span class="block font-medium">{label}</span>
-            <span class="mt-1 block text-sm leading-relaxed text-base-content/70">{description}</span>
-          </label>
-          <select
+      {#for {key, audience} <- Bonfire.Social.Notifications.audiences()}
+        <form data-scope={key} phx-change="Bonfire.Common.Settings:set" class="py-2">
+          <Bonfire.UI.Common.SettingsToggleLive
             id={"notification-audience-#{key}"}
-            class="select select-bordered select-sm w-auto shrink-0 text-base"
-          >
-            <option value="accept">{l("Accept")}</option>
-            <option value="filter">{l("Filter")}</option>
-            <option value="ignore">{l("Ignore")}</option>
-          </select>
-        </div>
+            name={e(audience, :name, key)}
+            description={e(audience, :description, nil)}
+            description_tooltip
+            keys={Bonfire.Social.Notifications.audience_key(key)}
+            enabled_value={:hide}
+            disabled_value={:accept}
+            default_value={:accept}
+          />
+        </form>
       {/for}
-    </details>
+    </fieldset>
 
     <fieldset class="border-t border-base-content/10 pt-5">
-      <legend class="sr-only">{l("Display")}</legend>
-      <h3 class="mb-3 text-base font-medium">{l("Display")}</h3>
-      {#for {key, toggle} <- display_toggles()}
+      {!-- <legend class="sr-only">{l("Display")}</legend>
+      <h3 class="mb-3 text-base font-medium">{l("Display")}</h3> --}
+      {#for {key, toggle} <- extra_toggles()}
         <form data-scope={key} phx-change="Bonfire.Common.Settings:set" class="py-2">
           <Bonfire.UI.Common.SettingsToggleLive
             id={"notification-display-#{key}"}
             name={e(toggle, :name, key)}
             description={e(toggle, :description, nil)}
+            description_tooltip
             keys={display_setting_key(key)}
             default_value={e(toggle, :default, false)}
           />
         </form>
       {/for}
+
+      {!-- turning notifications off in bulk: the modal's component is mounted only when it opens, so its counts cost nothing until then --}
+      <div :if={unsubscribe_available?(@__context__)} class="py-2">
+        <Bonfire.UI.Common.OpenModalLive
+          id="notification-unsubscribe"
+          title_text={l("Unsubscribe")}
+          no_actions
+          open_btn_wrapper_class="btn btn-sm btn-ghost"
+          modal_assigns={[
+            modal_component: Bonfire.Notify.Web.UnsubscribeLive,
+            modal_component_stateful?: true
+          ]}
+        >
+          <:open_btn>
+            {l("Unsubscribe…")}
+          </:open_btn>
+        </Bonfire.UI.Common.OpenModalLive>
+      </div>
 
       {!-- switches save as you flip them; the feed is only re-queried on demand, so one reload covers however many you changed. Nothing to catch up when there is no feed beside the panel --}
       <div
@@ -231,10 +245,13 @@
         class="mt-3 flex items-center justify-between gap-3 border-t border-base-content/10 pt-3"
       >
         <p role="status" class="text-sm text-base-content/70">{l("Saved. The feed below hasn't caught up yet.")}</p>
+        {!-- applying is done with the panel, so it closes it, as the Preferences button would --}
         <button
           type="button"
           class="btn btn-sm btn-primary shrink-0"
-          phx-click="apply_notification_display"
+          phx-click={JS.push("apply_notification_display")
+          |> JS.hide(to: "#notification-preferences-panel")
+          |> JS.set_attribute({"aria-expanded", "false"}, to: "#notification-preferences-toggle")}
         >{l("Apply to feed")}</button>
       </div>
     </fieldset>

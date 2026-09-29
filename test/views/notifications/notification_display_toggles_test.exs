@@ -37,9 +37,10 @@ defmodule Bonfire.UI.Social.NotificationDisplayTogglesTest do
       render_component(&NotificationPreferencesLive.render/1, %{__context__: %{}})
       |> Floki.parse_document!()
 
-    for {key, toggle} <- NotificationPreferencesLive.display_toggles() do
+    for {key, toggle} <- NotificationPreferencesLive.extra_toggles() do
       assert [_] = Floki.find(doc, "#notification-display-#{key}")
-      assert Floki.raw_html(doc) =~ toggle[:name]
+      # the text, since raw HTML escapes a label's apostrophes (`I&#39;m`)
+      assert Floki.text(doc) =~ toggle[:name]
 
       checked? = Floki.find(doc, "#notification-display-#{key}[checked]") != []
       assert checked? == (toggle[:default] == true)
@@ -61,6 +62,44 @@ defmodule Bonfire.UI.Social.NotificationDisplayTogglesTest do
     # already applied on a fresh visit, so nothing is pending
     assert live_assigns(session)[:enable_marker] == true
     refute_has(session, "#notification-display-apply")
+  end
+
+  # not about the feed at all: whether what you write enables notifications of the replies below it, which the write path reads (`Bonfire.Notify.Bells.enable_thread_notifications_changeset/3`)
+  test "the replies switch is on by default, turns off what your new posts enable, and never asks to Apply",
+       %{conn: conn, me: me} do
+    assert NotificationPreferencesLive.display_setting_key(:notify_any_replies) ==
+             [:notifications, :notify_any_replies]
+
+    # the positive first: on by default, so a new post of mine enables them
+    {:ok, before} =
+      Posts.publish(
+        current_user: me,
+        post_attrs: %{post_content: %{html_body: "replies welcome"}},
+        boundary: "public"
+      )
+
+    assert Bonfire.Notify.Bells.enabled?(me, before)
+
+    me =
+      Bonfire.Common.Utils.current_user(
+        Settings.put(NotificationPreferencesLive.display_setting_key(:notify_any_replies), false,
+          current_user: me
+        )
+      )
+
+    {:ok, after_off} =
+      Posts.publish(
+        current_user: me,
+        post_attrs: %{post_content: %{html_body: "quiet please"}},
+        boundary: "public"
+      )
+
+    refute Bonfire.Notify.Bells.enabled?(me, after_off)
+
+    conn(user: me, account: me.account)
+    |> visit("/notifications")
+    |> wait_async()
+    |> refute_has("#notification-display-apply")
   end
 
   test "the chip bar switch hides and shows the chips", %{conn: conn, me: me} do

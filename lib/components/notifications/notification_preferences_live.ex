@@ -39,6 +39,12 @@ defmodule Bonfire.UI.Social.NotificationPreferencesLive do
   """
   def push_available?(context), do: module_enabled?(Bonfire.Notify.Preferences, context)
 
+  @doc "Whether to offer turning notifications off in bulk: signed in, with the notify extension's component available."
+  def unsubscribe_available?(context) do
+    not is_nil(current_user_id(context)) and
+      module_enabled?(Bonfire.Notify.Web.UnsubscribeLive, context)
+  end
+
   @doc """
   The settings key holding when a category is emailed: `true` as it happens, `false` never, unset in the digest.
 
@@ -69,8 +75,8 @@ defmodule Bonfire.UI.Social.NotificationPreferencesLive do
     do: "grid-cols-[minmax(9rem,1fr)_5.5rem] sm:grid-cols-[minmax(9rem,1fr)_8rem]"
 
   @doc "Display switches to offer, in display order, from config."
-  def display_toggles do
-    Config.get([__MODULE__, :display_toggles], [],
+  def extra_toggles do
+    Config.get([__MODULE__, :extra_toggles], [],
       name: l("Notification display options"),
       description: l("Which display switches to offer on the notifications feed.")
     )
@@ -78,20 +84,21 @@ defmodule Bonfire.UI.Social.NotificationPreferencesLive do
 
   @doc "Whether a display switch is on for this user, falling back to the switch's own default."
   def display_on?(key, context) do
-    Settings.get([__MODULE__, :display, key], default_for(key), context)
+    Settings.get(display_setting_key(key), default_for(key), context)
   end
 
-  defp default_for(key), do: display_toggles() |> e(key, :default, false)
+  defp default_for(key), do: extra_toggles() |> e(key, :default, false)
 
-  @doc "The settings key a display switch writes to, so the UI and the feed read the same place."
-  def display_setting_key(key), do: [__MODULE__, :display, key]
+  @doc "The settings key a display switch writes to, so the UI and whatever reads it use the same place: its own `keys:` where the switch declares them (one read outside this UI, like `[:notifications, :notify_any_replies]` when a post is written), else one under this module."
+  def display_setting_key(key),
+    do: extra_toggles() |> e(key, :keys, nil) || [__MODULE__, :display, key]
 
   @doc """
   What a display switch controls: `{:filter, key}` for a feed filter, `{:assign, key}` for a feed
   assign, or `{:controls, key}` for something this UI handles itself (eg. the chip bar).
   """
   def display_target(key) do
-    toggle = display_toggles() |> e(key, nil)
+    toggle = extra_toggles() |> e(key, nil)
 
     cond do
       filter = e(toggle, :filter, nil) -> {:filter, filter}
@@ -132,7 +139,7 @@ defmodule Bonfire.UI.Social.NotificationPreferencesLive do
   """
   def display_overrides(context, showing \\ []) do
     {filters, assigns} =
-      Enum.reduce(display_toggles(), {%{}, []}, fn {key, _toggle}, {filters, assigns} ->
+      Enum.reduce(extra_toggles(), {%{}, []}, fn {key, _toggle}, {filters, assigns} ->
         on? = display_on?(key, context)
 
         case display_target(key) do
@@ -142,12 +149,14 @@ defmodule Bonfire.UI.Social.NotificationPreferencesLive do
         end
       end)
 
+    # the "Hide notifications from" switches likewise, applied in `FeedLoader` and recorded here only so the Apply button sees them change
     {filters,
-     Keyword.put(
-       assigns,
+     assigns
+     |> Keyword.put(
        :hidden_notification_categories,
        Notifications.hidden_categories(context, showing)
-     )}
+     )
+     |> Keyword.put(:hidden_notification_audiences, Notifications.hidden_audiences(context))}
   end
 
   @doc """
@@ -166,16 +175,17 @@ defmodule Bonfire.UI.Social.NotificationPreferencesLive do
   end
 
   @doc "Audience options shown as a design preview, not implemented policies."
-  def audience_types do
-    [
-      {"not_followed", l("People you don’t follow"),
-       l("Accounts outside the people you follow.")},
-      {"not_following", l("People not following you"), l("Accounts that don’t follow you.")},
-      {"new", l("New accounts"), l("Accounts created in the past 30 days.")},
-      {"private", l("Unsolicited private mentions"),
-       l("Private mentions outside an existing conversation.")},
-      {"moderated", l("Moderated accounts"), l("Accounts limited by instance moderators.")},
-      {"bots", l("Bots"), l("Accounts marked as automated.")}
-    ]
-  end
+  # replaced by `Bonfire.Social.Notifications.audiences/0`, declared in config beside the categories, where each audience is also what it selects. This preview list offered "moderated accounts" (out of scope: no such state exists) and private mentions (messages, which go to the inbox)
+  # def audience_types do
+  #   [
+  #     {"not_followed", l("People you don’t follow"),
+  #      l("Accounts outside the people you follow.")},
+  #     {"not_following", l("People not following you"), l("Accounts that don’t follow you.")},
+  #     {"new", l("New accounts"), l("Accounts created in the past 30 days.")},
+  #     {"private", l("Unsolicited private mentions"),
+  #      l("Private mentions outside an existing conversation.")},
+  #     {"moderated", l("Moderated accounts"), l("Accounts limited by instance moderators.")},
+  #     {"bots", l("Bots"), l("Accounts marked as automated.")}
+  #   ]
+  # end
 end

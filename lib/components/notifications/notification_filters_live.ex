@@ -26,7 +26,11 @@ defmodule Bonfire.UI.Social.NotificationFiltersLive do
   A chip may name its own `preset` to show a different feed, and then that preset's gate decides whether the chip appears at all (`Feeds.feed_preset_if_permitted/2`, which is how `instance_permission_required` and `current_user_required` are enforced for presets), so a chip needs no permission vocabulary of its own. Chips that don't name one use `default_preset/0` purely as a source of filters, and stay visible regardless of its gate.
   """
   def chips(context \\ nil) do
+    # the Hidden chip only for someone who hides something: for anyone else it would always be empty
+    hides_any? = Notifications.hidden_audiences(context) != []
+
     Notifications.categories_shown(:chip)
+    |> Enum.reject(fn {key, _chip} -> Notifications.audience_view?(key) and not hides_any? end)
     |> Enum.flat_map(&from_feed_preset(&1, context))
   end
 

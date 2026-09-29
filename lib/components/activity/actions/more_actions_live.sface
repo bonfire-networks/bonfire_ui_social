@@ -7,6 +7,16 @@
   trigger_class="btn btn-ghost group hover:bg-primary/10 btn-circle btn-sm"
   label={l("More actions")}
   wrapper_opts={["data-id": "more_menu", "data-rendered": @showing_within]}
+  trigger_opts={if current_user_id(@__context__) &&
+       module_enabled?(Bonfire.Notify.Web.BellButtonLive, @__context__),
+     do: [
+       "phx-click":
+         JS.push("load",
+           target:
+             "##{deterministic_dom_id(__MODULE__, id(@activity || @object), "bell", @parent_id)}"
+         )
+     ],
+     else: []}
 >
   <:trigger>
     <#Icon
@@ -40,6 +50,21 @@
   <#slot {@extra_items} />
 
   {#if current_user_id(@__context__)}
+    {!-- whether you're notified of the replies below this post, asked only when this menu is opened (its trigger pushes `load`), so a page of posts asks nothing up front --}
+    <li>
+      <StatefulComponent
+        module={maybe_component(Bonfire.Notify.Web.BellButtonLive, @__context__)}
+        id={deterministic_dom_id(__MODULE__, id(@activity || @object), "bell", @parent_id)}
+        object={id(@object)}
+        lazy
+        menu_item
+        label={l("Notify me about replies")}
+        label_enabled={l("Stop notifying me about replies")}
+        hint={l("Replies between people on other servers only arrive if they reach this one")}
+      />
+    </li>
+
+    {!-- TODO: the pin/unpin items below could load their state the same way, when the menu opens, rather than for every post on the page --}
     <li
       :if={module_enabled?(Bonfire.Social.Answers, @__context__) and @showing_within == :thread and
         @thread_id != id(@object)}

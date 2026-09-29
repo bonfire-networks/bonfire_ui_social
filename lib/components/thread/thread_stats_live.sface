@@ -33,6 +33,7 @@
         object={@thread_id || id(@object)}
         label={l("Notify me about replies")}
         label_enabled={l("Stop notifying me about replies")}
+        hint={l("You will only be notified of replies from people on other servers if they reach this one")}
       />
 
       {#case e(@object, :peered, :canonical_uri, nil) || @is_remote}

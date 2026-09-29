@@ -58,22 +58,62 @@ defmodule Bonfire.UI.Social.NotificationPreferencesTest do
     refute Floki.text(doc) =~ "Push"
   end
 
-  test "the sections that are still previews write no settings" do
-    html =
+  # was "the sections that are still previews write no settings", when who you hear from was a preview of selects offering accept/filter/ignore; it now saves, one switch per audience (two tiers: hidden or not)
+  test "who you hear from: a switch per audience from config, each saving, on only where hidden" do
+    user = fake_user!()
+
+    user =
+      current_user(
+        Bonfire.Common.Settings.put(
+          Bonfire.Social.Notifications.audience_key(:not_followed),
+          :hide,
+          current_user: user
+        )
+      )
+
+    doc =
       render_component(&Bonfire.UI.Social.NotificationPreferencesLive.render/1, %{
-        __context__: %{}
+        __context__: %{current_user: user}
       })
+      |> Floki.parse_document!()
 
-    doc = Floki.parse_document!(html)
+    for {key, _audience} <- Bonfire.Social.Notifications.audiences() do
+      assert [_] =
+               Floki.find(doc, "form[phx-change] #notification-audience-#{key}"),
+             "#{key} has a switch that saves"
 
-    assert Floki.attribute(doc, "#notification-audience-not_followed option", "value") ==
-             ["accept", "filter", "ignore"]
+      checked? = Floki.find(doc, "#notification-audience-#{key}[checked]") != []
+      assert checked? == (key == :not_followed), "#{key} is on only if hidden"
+    end
 
-    preview = "#notification-audience-preview"
-    assert [_] = Floki.find(doc, preview)
-    assert [] = Floki.find(doc, "#{preview} form, #{preview} [phx-change]")
+    # not the preview's three-way choice, which described a held queue that isn't built
+    assert [] = Floki.find(doc, "#notification-audience-not_followed option")
+  end
 
-    assert html =~ "Their changes are not saved"
+  # through the form, which posts the value as a string, rather than `Settings.put/3` with the atom
+  test "an audience switch flipped on in the panel stays on, hides that audience, and waits for Apply" do
+    user = fake_user!()
+    name = Bonfire.Social.Notifications.audiences()[:not_followed][:name]
+
+    conn(user: user, account: user.account)
+    |> visit("/notifications")
+    |> wait_async()
+    |> assert_has("#notification-audience-not_followed")
+    |> refute_has("#notification-audience-not_followed[checked]")
+    |> refute_has("#notification-display-apply")
+    |> check("#notification-audience-not_followed", name)
+    |> assert_has("#notification-audience-not_followed[checked]")
+    # saved, while the feed beside it is re-queried only on demand
+    |> assert_has("#notification-display-apply")
+
+    # re-read, so what was saved is what's shown on the next visit
+    user = Bonfire.Me.Users.get_current(user.id)
+    assert :not_followed in Bonfire.Social.Notifications.hidden_audiences(current_user: user)
+
+    conn(user: user, account: user.account)
+    |> visit("/notifications")
+    |> wait_async()
+    |> assert_has("#notification-audience-not_followed[checked]")
   end
 
   test "the push section is the real device panel, not a copy of it" do
