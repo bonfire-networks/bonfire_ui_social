@@ -40,7 +40,11 @@
     {#match :notifications}
       {#if @experienced_as == :join_request}
         <div data-role="join-request-notification" class="flex items-start gap-3 py-2">
-          <LinkLive to={@path} class="shrink-0 focus-ring rounded-full" label={l("%{username}'s profile", username: @profile_name || @character_username || "")}>
+          <LinkLive
+            to={@path}
+            class="shrink-0 focus-ring rounded-full"
+            label={l("%{username}'s profile", username: @profile_name || @character_username || "")}
+          >
             <Bonfire.UI.Common.AvatarLive
               parent_id={deterministic_dom_id(__MODULE__, @subject_id, "requester_avatar", @parent_id)}
               user_id={@subject_id}
@@ -72,108 +76,108 @@
           </div>
         </div>
       {#else}
-      {!-- Full-bleed bottom divider: -mx-card pulls the row out to the card edges
+        {!-- Full-bleed bottom divider: -mx-card pulls the row out to the card edges
            (cancelling the wrapper's p-card), px-card puts the content inset back —
            same idiom as the thread_header strip in activity_live. --}
-      {!-- both, because they answer different questions: one ask is stored as `request` whether it was to follow or to quote --}
-      <div
-        data-role="notification_subject"
-        data-verb={@verb}
-        data-experienced-as={@experienced_as}
-        class={subject_minimal_line_class(), "flex-wrap"}
-      >
-        {!-- Custom emoji on a Like/React takes precedence over the verb's default icon. --}
-        <div class={subject_minimal_icon_box_class()}>
-          {#case @emoji}
-            {#match %{media_type: "emoji"} = emoji}
-              <LazyImage
-                parent_id={deterministic_dom_id(__MODULE__, id(emoji), "emoji", @parent_id)}
-                class="w-[18px] h-[18px]"
-                media={emoji}
-                alt={e(emoji, :metadata, "shortcode", nil) <> " " <> e(emoji, :metadata, "label", nil)}
-              />
-            {#match %{summary: emoji}}
-              <span class="text-warning text-body leading-none" aria-hidden="true">{emoji}</span>
-            {#match _}
-              <Iconify.iconify
-                icon={notification_icon(@experienced_as, @verb)}
-                class="w-[18px] h-[18px] flex-shrink-0 text-primary"
-              />
-          {/case}
-        </div>
+        {!-- both, because they answer different questions: one ask is stored as `request` whether it was to follow or to quote --}
+        <div
+          data-role="notification_subject"
+          data-verb={@verb}
+          data-experienced-as={@experienced_as}
+          class={subject_minimal_line_class(), "flex-wrap"}
+        >
+          {!-- Custom emoji on a Like/React takes precedence over the verb's default icon. --}
+          <div class={subject_minimal_icon_box_class()}>
+            {#case @emoji}
+              {#match %{media_type: "emoji"} = emoji}
+                <LazyImage
+                  parent_id={deterministic_dom_id(__MODULE__, id(emoji), "emoji", @parent_id)}
+                  class="w-[18px] h-[18px]"
+                  media={emoji}
+                  alt={e(emoji, :metadata, "shortcode", nil) <> " " <> e(emoji, :metadata, "label", nil)}
+                />
+              {#match %{summary: emoji}}
+                <span class="text-warning text-body leading-none" aria-hidden="true">{emoji}</span>
+              {#match _}
+                <Iconify.iconify
+                  icon={notification_icon(@experienced_as, @verb)}
+                  class="w-[18px] h-[18px] flex-shrink-0 text-primary"
+                />
+            {/case}
+          </div>
 
-        <div class="flex-1 min-w-0 text-body leading-snug">
-          <LinkLive
-            to={@path}
-            opts={"data-id": "subject_name"}
-            parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-            class="inline link link-hover font-medium text-base-content"
-          >
-            {@profile_name || @character_username}
-          </LinkLive>
+          <div class="flex-1 min-w-0 text-body leading-snug">
+            <LinkLive
+              to={@path}
+              opts={"data-id": "subject_name"}
+              parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
+              class="inline link link-hover font-medium text-base-content"
+            >
+              {@profile_name || @character_username}
+            </LinkLive>
 
-          {#if Bonfire.Social.Notifications.aggregate?(@experienced_as) and @subjects_more != []}
-            <Bonfire.UI.Social.Activity.SubjectListModalLive
-              id={deterministic_dom_id(__MODULE__, @activity_id || @subject_id, "subject_list_modal", @parent_id)}
-              experienced_as={@experienced_as}
-              main_profile_id={@profile_id}
-              main_profile_name={@profile_name}
-              main_character_username={@character_username}
-              main_profile_media={@profile_media}
-              main_is_remote={not is_nil(@subject_peered)}
-              subjects_more={@subjects_more}
-              trigger_text={lp("and %{number} other", "and %{number} others", length(@subjects_more),
-                number: length(@subjects_more)
+            {#if Bonfire.Social.Notifications.aggregate?(@experienced_as) and @subjects_more != []}
+              <Bonfire.UI.Social.Activity.SubjectListModalLive
+                id={deterministic_dom_id(__MODULE__, @activity_id || @subject_id, "subject_list_modal", @parent_id)}
+                experienced_as={@experienced_as}
+                main_profile_id={@profile_id}
+                main_profile_name={@profile_name}
+                main_character_username={@character_username}
+                main_profile_media={@profile_media}
+                main_is_remote={not is_nil(@subject_peered)}
+                subjects_more={@subjects_more}
+                trigger_text={lp("and %{number} other", "and %{number} others", length(@subjects_more),
+                  number: length(@subjects_more)
+                )}
+                parent_id={@parent_id}
+              />
+            {/if}
+
+            {#case notification_phrase(
+                @experienced_as,
+                @about_id || @object_id,
+                current_user_id(@__context__),
+                @object
               )}
-              parent_id={@parent_id}
+              {#match nil}
+                {raw(Bonfire.Social.Activities.experience_display(@experienced_as, %{object: @object}))}
+              {#match phrase}
+                {phrase}
+            {/case}
+          </div>
+
+          {!-- join requests have their own controls (`JoinRequestActionsLive`) --}
+          <button
+            :if={@experienced_as == :follow_request}
+            :on-click="Bonfire.Social.Graph.Follows:accept"
+            phx-value-id={id(@activity_id)}
+            type="button"
+            class="flex-shrink-0 normal-case border !border-secondary btn btn-sm btn-primary"
+          >
+            {l("Accept")}
+          </button>
+
+          {!-- declining is ignoring: the request is only marked ignored, and nothing is sent to the requester --}
+          <button
+            :if={@experienced_as == :follow_request}
+            :on-click="Bonfire.Social.Graph.Follows:ignore"
+            phx-value-id={id(@activity_id)}
+            type="button"
+            class="flex-shrink-0 normal-case btn btn-sm btn-ghost"
+          >
+            {l("Ignore")}
+          </button>
+        </div>
+
+        <div :if={@verb == :flag and @thread_title} class="mt-2">
+          <div class="relative w-full flex-1 text-sm text-base-content flex items-baseline gap-1 alert alert-warning alert-soft alert-sm pl-8 mb-3">
+            <#Icon
+              iconify="mingcute:quote-left-fill"
+              class="w-8 h-8 absolute top-[-12px] left-[-4px] text-warning/70"
             />
-          {/if}
-
-          {#case notification_phrase(
-              @experienced_as,
-              @about_id || @object_id,
-              current_user_id(@__context__),
-              @object
-            )}
-            {#match nil}
-              {raw(Bonfire.Social.Activities.experience_display(@experienced_as, %{object: @object}))}
-            {#match phrase}
-              {phrase}
-          {/case}
+            {@thread_title}
+          </div>
         </div>
-
-        {!-- join requests have their own controls (`JoinRequestActionsLive`) --}
-        <button
-          :if={@experienced_as == :follow_request}
-          :on-click="Bonfire.Social.Graph.Follows:accept"
-          phx-value-id={id(@activity_id)}
-          type="button"
-          class="flex-shrink-0 normal-case border !border-secondary btn btn-sm btn-primary"
-        >
-          {l("Accept")}
-        </button>
-
-        {!-- declining is ignoring: the request is only marked ignored, and nothing is sent to the requester --}
-        <button
-          :if={@experienced_as == :follow_request}
-          :on-click="Bonfire.Social.Graph.Follows:ignore"
-          phx-value-id={id(@activity_id)}
-          type="button"
-          class="flex-shrink-0 normal-case btn btn-sm btn-ghost"
-        >
-          {l("Ignore")}
-        </button>
-      </div>
-
-      <div :if={@verb == :flag and @thread_title} class="mt-2">
-        <div class="relative w-full flex-1 text-sm text-base-content flex items-baseline gap-1 alert alert-warning alert-soft alert-sm pl-8 mb-3">
-          <#Icon
-            iconify="mingcute:quote-left-fill"
-            class="w-8 h-8 absolute top-[-12px] left-[-4px] text-warning/70"
-          />
-          {@thread_title}
-        </div>
-      </div>
       {/if}
     {#match _}
       {#if @experienced_as == :follow_request}

@@ -176,32 +176,10 @@
         </form>
     {/case}
 
-    {!-- who you hear from: one switch per audience, declared beside the categories (`Bonfire.Social.Notifications.audiences/0`), hiding that audience's notifications from every normal view, and from push and email. Two tiers, so a switch rather than the preview's three-way select, whose "held for review" queue isn't built --}
-    <fieldset
-      :if={current_user_id(@__context__)}
-      id="notification-audiences"
-      class="border-t border-base-content/10 pt-5"
-    >
-      {!-- worded as what the switches do (on hides), rather than "who you hear from", which reads the other way round --}
-      <legend class="text-base font-medium">{l("Hide notifications from")}</legend>
-      <p class="mt-1 mb-2 text-sm leading-relaxed text-base-content/70">{l(
-          "Hidden notifications aren't pushed or emailed, and appear under Hidden instead of your other views."
-        )}</p>
-      {#for {key, audience} <- Bonfire.Social.Notifications.audiences()}
-        <form data-scope={key} phx-change="Bonfire.Common.Settings:set" class="py-2">
-          <Bonfire.UI.Common.SettingsToggleLive
-            id={"notification-audience-#{key}"}
-            name={e(audience, :name, key)}
-            description={e(audience, :description, nil)}
-            description_tooltip
-            keys={Bonfire.Social.Notifications.audience_key(key)}
-            enabled_value={:hide}
-            disabled_value={:accept}
-            default_value={:accept}
-          />
-        </form>
-      {/for}
-    </fieldset>
+    {!-- the same switches the messages list and Privacy & Safety show --}
+    <div class="border-t border-base-content/10 pt-5">
+      <Bonfire.UI.Social.HiddenAudiencesLive />
+    </div>
 
     <fieldset class="border-t border-base-content/10 pt-5">
       {!-- <legend class="sr-only">{l("Display")}</legend>

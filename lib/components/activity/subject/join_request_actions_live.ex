@@ -13,7 +13,11 @@ defmodule Bonfire.UI.Social.Activity.JoinRequestActionsLive do
 
     # only rows not loaded yet: re-rendering the activity must neither re-query nor overwrite a decision just made (an approved request no longer exists)
     requests =
-      for({assigns, socket} <- assigns_sockets, is_nil(socket.assigns.request_status), do: assigns.request_id)
+      for(
+        {assigns, socket} <- assigns_sockets,
+        is_nil(socket.assigns.request_status),
+        do: assigns.request_id
+      )
       |> Bonfire.Social.Requests.list_by_ids(current_user: reviewer)
       |> Map.new(fn request -> {request.id, request} end)
 

@@ -1,0 +1,22 @@
+{!-- one switch per audience, declared beside the categories (`Bonfire.Social.Notifications.audiences/0`), hiding that audience's notifications and messages from every normal view, and from push and email. Two tiers, so a switch rather than the preview's three-way select, whose "held for review" queue isn't built --}
+<fieldset :if={current_user_id(@__context__)} id="notification-audiences">
+  {!-- worded as what the switches do (on hides), rather than "who you hear from", which reads the other way round --}
+  <legend class="text-base font-medium">{l("Hide notifications and messages from")}</legend>
+  <p class="mt-1 mb-2 text-sm leading-relaxed text-base-content/70">{l(
+      "Hidden notifications and messages aren't pushed or emailed, and appear in a separate tab instead of the main list."
+    )}</p>
+  {#for {key, audience} <- Bonfire.Social.Notifications.audiences()}
+    <form data-scope={key} phx-change="Bonfire.Common.Settings:set" class="py-2">
+      <Bonfire.UI.Common.SettingsToggleLive
+        id={"notification-audience-#{key}"}
+        name={e(audience, :name, key)}
+        description={e(audience, :description, nil)}
+        description_tooltip
+        keys={Bonfire.Social.Notifications.audience_key(key)}
+        enabled_value={:hide}
+        disabled_value={:accept}
+        default_value={:accept}
+      />
+    </form>
+  {/for}
+</fieldset>
