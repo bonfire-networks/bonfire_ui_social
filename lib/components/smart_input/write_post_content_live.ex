@@ -17,8 +17,8 @@ defmodule Bonfire.UI.Social.WritePostContentLive do
   def smart_input_icon(_), do: "ph:note-pencil-fill"
 
   def smart_input_label(:message), do: l("Message")
-  def smart_input_label(:broadcast), do: l("Broadcast")
-  def smart_input_label(_), do: l("Note")
+  def smart_input_label(:broadcast), do: l("Create broadcast")
+  def smart_input_label(_), do: l("Create post")
 
   prop reply_to_id, :any, default: nil
   prop context_id, :string, default: nil

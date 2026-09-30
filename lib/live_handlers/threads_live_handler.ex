@@ -474,6 +474,12 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         smart_input_opts: [
           create_object_type: create_object_type,
           recipients_editable: false,
+          reply_destination: reply_destination(published_in, current_user),
+          reply_audiences:
+            if(create_object_type == :message,
+              do: [],
+              else: Bonfire.UI.Common.SmartInput.LiveHandler.reply_audiences(published_in, reply_to, current_user)
+            ),
           cw:
             if(summary_is_cw?,
               do:
@@ -485,11 +491,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
               e(activity, :sensitive, :is_sensitive, nil) || false
         ],
         to_boundaries: [
-          if(published_in_id,
+          if(create_object_type != :message,
             do:
-              {:clone_context,
-               Bonfire.UI.Social.Activity.PublishedInLive.context_label(published_in) ||
-                 e(published_in, :name, nil)},
+              {:clone_context, Bonfire.UI.Common.SmartInputLive.reply_audience_label("clone_context")},
             else:
               Bonfire.Boundaries.Presets.preset_boundary_tuple_from_acl(
                 object_boundary,
@@ -505,6 +509,33 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       ]
     end
   end
+
+  # Display metadata must not replace the thread ID used to inherit reply permissions.
+  defp reply_destination(%{type: type} = context, current_user) when type in [:group, :topic] do
+    group_name =
+      if type == :topic do
+        parent_id = context |> repo().maybe_preload(:tree) |> e(:tree, :parent_id, nil)
+
+        with parent_id when is_binary(parent_id) <- parent_id,
+             {:ok, parent} <- Bonfire.Classify.Categories.get(parent_id, current_user: current_user) do
+          context_name(parent)
+        else
+          _ -> nil
+        end
+      end
+
+    %{
+      id: id(context),
+      type: type,
+      name: context_name(context),
+      group_name: group_name
+    }
+  end
+
+  defp reply_destination(_, _), do: nil
+
+  defp context_name(context),
+    do: Bonfire.UI.Social.Activity.PublishedInLive.context_label(context) || e(context, :name, nil)
 
   # The context (group/topic) an activity was published in comes from `activity.tree.parent`,
   # which feed pages preload in the `feed_postload` phase — surfaces that render activities
