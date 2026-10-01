@@ -156,7 +156,10 @@ defmodule Bonfire.UI.Social.PrivateGroupNestedRepliesTest do
     render(persistent)
     render(view)
 
-    assert live_assigns(view)[:__context__][:persistent_child_pid] == persistent.pid
+    # kept in the page's process rather than its assigns, since writing `__context__` re-renders the page and undid a like the moment it was clicked (`LiveHandlers.handle_info({:persistent_live_context_request, _}, …)`)
+    # assert live_assigns(view)[:__context__][:persistent_child_pid] == persistent.pid
+    {:dictionary, dictionary} = Process.info(view.pid, :dictionary)
+    assert dictionary[:persistent_child_pid] == persistent.pid
   end
 
   # Who made the group is a real branch: its creator holds `:administer` over it, a plain member holds only what membership grants, so a reply readable by one may not be by the other

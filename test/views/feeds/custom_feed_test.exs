@@ -120,6 +120,7 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
   } do
     # First, create a feed preset with Day time limit
     preset_name = "daily"
+
     # for this test process (and the LiveViews it starts) only, so async tests running alongside keep the global value
     Process.put([:bonfire_ui_social, Bonfire.UI.Social.FeedLive, :time_limit], 0)
     # Create the feed preset in a separate visit/session

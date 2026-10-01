@@ -116,8 +116,11 @@ defmodule Bonfire.UI.Social.WidgetTrendingReplyBoundaryTest do
 
     assert assigns[:reply_to_id] == id(post)
 
-    assert "local" in boundary_slugs(assigns),
-           "expected local boundary in composer, got: #{inspect(assigns[:to_boundaries])}"
+    # the composer now opens a reply with "Same as original post" (no audience chosen), which publishing turns into the parent's audience (here `local`), rather than pre-selecting the parent's preset
+    # assert "local" in boundary_slugs(assigns),
+    #        "expected local boundary in composer, got: #{inspect(assigns[:to_boundaries])}"
+    assert Enum.any?(List.wrap(assigns[:to_boundaries]), &match?({:clone_context, _}, &1)),
+           "expected the \"Same as original post\" default in composer, got: #{inspect(assigns[:to_boundaries])}"
   end
 
   test "trending discussions widget opens the discussion preview with a navigation fallback",
