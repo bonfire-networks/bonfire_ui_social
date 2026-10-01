@@ -40,6 +40,12 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
     |> render_sface()
   end
 
+  @doc "Whether the menu offers the \"notify me about replies\" bell: not on a thread's root when it's the main object, since the page (or preview) header already has the bell for that thread."
+  def show_bell?(%{viewing_main_object: true, thread_id: thread_id, object: object}),
+    do: not is_nil(thread_id) and thread_id != id(object)
+
+  def show_bell?(_), do: true
+
   def has_my_first_quote(quotes, my_id) when is_list(quotes) and not is_nil(my_id) do
     Enum.find_value(quotes, fn quote ->
       e(quote, :created, :creator_id, nil) == my_id && id(quote)

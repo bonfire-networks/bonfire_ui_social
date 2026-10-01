@@ -351,6 +351,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
       hide_actions: false,
       label: "",
       showing_within: :thread,
+      # rendered in the preview's header by PreviewContentLive
+      page_header_aside:
+        Bonfire.Social.Objects.LiveHandler.thread_bell_aside(
+          thread_id || object_id,
+          "preview_thread_bell"
+        ),
       modal_component: Bonfire.UI.Social.ObjectThreadLive,
       modal_component_stateful?: true,
       check_object_boundary: true,

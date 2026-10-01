@@ -274,6 +274,36 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     # |> debug
   end
 
+  def assign_thread_bell(socket) do
+    thread_id = e(assigns(socket), :thread_id, nil) || e(assigns(socket), :object_id, nil)
+
+    if thread_id && current_user_id(socket) &&
+         module_enabled?(Bonfire.Notify.Web.BellButtonLive, socket) do
+      assign(socket, page_header_aside: thread_bell_aside(thread_id))
+    else
+      socket
+    end
+  end
+
+  def thread_bell_aside(thread_id, id_prefix \\ "thread_bell")
+
+  def thread_bell_aside(thread_id, id_prefix) when is_binary(thread_id) do
+    [
+      {Bonfire.Notify.Web.BellButtonLive,
+       [
+         id: "#{id_prefix}_#{thread_id}",
+         object: thread_id,
+         label: l("Notify me about replies"),
+         label_enabled: l("Stop notifying me about replies"),
+         button_class:
+           "btn btn-ghost btn-circle tooltip-left",
+         button_class_enabled: "btn btn-primary btn-circle tooltip-left"
+       ]}
+    ]
+  end
+
+  def thread_bell_aside(_, _), do: []
+
   defp maybe_seo_assign(socket, %{post_content: %{} = post_content} = object, activity) do
     post_content
     |> Map.put(:pointer, object |> Map.drop([:post_content]))

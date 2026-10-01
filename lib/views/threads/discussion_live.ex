@@ -101,7 +101,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
 
     with %Phoenix.LiveView.Socket{} = socket <-
            Bonfire.Social.Objects.LiveHandler.load_object_assigns(socket) do
-      {:noreply, socket}
+      {:noreply, Bonfire.Social.Objects.LiveHandler.assign_thread_bell(socket)}
     else
       {:error, e} ->
         {:noreply, assign_error(socket, e)}

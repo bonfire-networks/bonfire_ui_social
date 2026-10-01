@@ -7,7 +7,7 @@
   trigger_class="btn btn-ghost group hover:bg-primary/10 btn-circle btn-sm"
   label={l("More actions")}
   wrapper_opts={["data-id": "more_menu", "data-rendered": @showing_within]}
-  trigger_opts={if current_user_id(@__context__) &&
+  trigger_opts={if current_user_id(@__context__) && show_bell?(assigns) &&
        module_enabled?(Bonfire.Notify.Web.BellButtonLive, @__context__),
      do: [
        "phx-click":
@@ -51,7 +51,7 @@
 
   {#if current_user_id(@__context__)}
     {!-- whether you're notified of the replies below this post, asked only when this menu is opened (its trigger pushes `load`), so a page of posts asks nothing up front --}
-    <li>
+    <li :if={show_bell?(assigns)}>
       <StatefulComponent
         module={maybe_component(Bonfire.Notify.Web.BellButtonLive, @__context__)}
         id={deterministic_dom_id(__MODULE__, id(@activity || @object), "bell", @parent_id)}
