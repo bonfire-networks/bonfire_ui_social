@@ -1,12 +1,18 @@
-<ul class="menu p-0 w-full px-0 lg:px-card gap-0">
-  <li :for={link <- @links} id={"sidebar-#{link.id}"} class="!block w-full min-w-0">
+<ul class="menu p-0 w-full gap-0 px-0 lg:px-card">
+  {!-- mirrors Bonfire.UI.Common.LinkWidgetLive markup/classes so these rows match the other nav links --}
+  <li :for={link <- @links} id={"sidebar-#{link.id}"}>
     <LinkLive
       to={link.href}
       opts={[id: "sidebar-#{link.id}-link", "aria-current": if(link.active?, do: "page", else: nil)]}
-      class="flex w-full min-w-0 items-center gap-2 min-h-9 px-3 py-1.5 rounded-selector hover:bg-base-content/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary [@media(pointer:coarse)]:min-h-11"
+      class={[
+        "rounded-selector transition-colors duration-150",
+        Bonfire.UI.Common.LinkWidgetLive.active_link_class(link.active?)
+      ]}
     >
-      <Iconify.iconify icon={link.icon} class="size-5 shrink-0 text-primary" />
-      <span class={["truncate min-w-0 text-base", Bonfire.UI.Common.LinkWidgetLive.active_label_class(link.active?)]}>{link.label}</span>
+      <div class="shrink-0 flex items-center">
+        <Iconify.iconify icon={link.icon} class="w-5 h-5 text-primary" />
+      </div>
+      <span class={["text-body", Bonfire.UI.Common.LinkWidgetLive.active_label_class(link.active?)]}>{link.label}</span>
     </LinkLive>
   </li>
 </ul>
