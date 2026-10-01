@@ -1,8 +1,6 @@
-<div id={@id} class="bg-[var(--stream-surface)] rounded-box" data-role="feed_preferences_widget">
+<div id={@id} data-role="feed_preferences_widget">
   <Bonfire.UI.Common.WidgetBlockLive
     widget_title={@widget_title || l("Feed preferences")}
-    title_class="flex min-h-11 mb-0.5 items-center justify-between text-base font-semibold text-base-content"
-    class="w-full flex-auto mx-auto px-4 py-3 border-y-hair border-secondary"
   >
     <:action>
       <button

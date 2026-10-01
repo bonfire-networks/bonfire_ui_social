@@ -19,7 +19,8 @@
             variant="outline"
             size="sm"
             class="border-secondary"
-            phx_click={JS.dispatch("scroll-left", to: "#suggested-profiles-carousel")}
+            data-carousel-scroll="previous"
+            aria-controls="suggested-profiles-carousel"
           />
           <.icon_button
             icon="carbon:chevron-right"
@@ -27,7 +28,8 @@
             variant="outline"
             size="sm"
             class="border-secondary"
-            phx_click={JS.dispatch("scroll-right", to: "#suggested-profiles-carousel")}
+            data-carousel-scroll="next"
+            aria-controls="suggested-profiles-carousel"
           />
         </div>
       </:action>

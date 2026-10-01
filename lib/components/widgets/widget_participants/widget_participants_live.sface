@@ -3,12 +3,10 @@
     {#case e(assigns, :reply_counts, %{})}
       {#match reply_counts}
         <Bonfire.UI.Common.WidgetBlockLive
-          class="w-full overflow-hidden border-hair border-secondary bg-base-100 px-[18px] pb-2 pt-[14px]"
-          title_class="pb-2 text-xs font-normal uppercase tracking-wide text-base-content"
           widget_title={e(assigns, :widget_title, l("Participants"))}
         >
           <:action>
-            <span class="text-xs leading-[1.2] tabular-nums text-muted">{length(participants)}</span>
+            <span class="text-xs tabular-nums text-muted">{length(participants)}</span>
           </:action>
 
           <Bonfire.UI.Social.ParticipantsListLive

@@ -1,7 +1,5 @@
 <Bonfire.UI.Common.WidgetBlockLive
   :if={@presets != []}
-  class="pt-card border-y border-y-secondary border-y-hair pb-0"
-  title_class="flex items-center justify-between pb-card text-xs font-normal uppercase tracking-wide text-base-content px-base"
   widget_title={e(@widget_title, l("Feeds"))}
 >
   <:action :if={!Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}>

@@ -1,4 +1,4 @@
-<Bonfire.UI.Common.WidgetBlockLive :if={@preset} class="p-card">
+<Bonfire.UI.Common.WidgetBlockLive :if={@preset}>
   <section id="feed-description" aria-labelledby="feed-description-title">
     <div class="flex items-center gap-3">
       <span
