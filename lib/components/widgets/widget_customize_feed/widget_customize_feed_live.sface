@@ -1,7 +1,5 @@
 <div id={@id} data-role="feed_preferences_widget">
-  <Bonfire.UI.Common.WidgetBlockLive
-    widget_title={@widget_title || l("Feed preferences")}
-  >
+  <Bonfire.UI.Common.WidgetBlockLive widget_title={@widget_title || l("Feed preferences")}>
     <:action>
       <button
         id={"feed_reset_#{@feed_name}"}

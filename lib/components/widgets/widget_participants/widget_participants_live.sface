@@ -2,9 +2,7 @@
   {#match participants when is_list(participants) and participants != []}
     {#case e(assigns, :reply_counts, %{})}
       {#match reply_counts}
-        <Bonfire.UI.Common.WidgetBlockLive
-          widget_title={e(assigns, :widget_title, l("Participants"))}
-        >
+        <Bonfire.UI.Common.WidgetBlockLive widget_title={e(assigns, :widget_title, l("Participants"))}>
           <:action>
             <span class="text-xs tabular-nums text-muted">{length(participants)}</span>
           </:action>

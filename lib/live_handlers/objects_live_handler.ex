@@ -295,8 +295,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
          object: thread_id,
          label: l("Notify me about replies"),
          label_enabled: l("Stop notifying me about replies"),
-         button_class:
-           "btn btn-ghost btn-circle tooltip-left",
+         button_class: "btn btn-ghost btn-circle tooltip-left",
          button_class_enabled: "btn btn-primary btn-circle tooltip-left"
        ]}
     ]
