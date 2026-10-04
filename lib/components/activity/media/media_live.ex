@@ -11,6 +11,9 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop activity_inception, :boolean, default: false
   prop parent_id, :any, default: nil
 
+  # the media is the activity's object rather than an attachment, so also show its title and body above it (not only in the modal)
+  prop media_text_up_font?, :boolean, default: false
+
   prop cw, :any, default: nil
   prop muted, :boolean, default: false
   prop autoplay, :any, default: nil
@@ -18,6 +21,12 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop css_borders, :css_class, default: "border border-hair border-secondary rounded-box"
   prop small_icon, :boolean, default: false
   prop disable_lazy, :boolean, default: false
+
+  # media keeps its own `creator` rather than the `created` mixin, so the feed's `:with_creator` preload doesn't reach it
+  def preloads(),
+    do: [
+      creator: [character: [:peered], profile: :icon]
+    ]
 
   # TODO: move all these to config (and move to Bonfire.Files)
   @image_types ["image", "photo"]

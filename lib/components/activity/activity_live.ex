@@ -1343,6 +1343,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   showing_within={maybe_get(component_assigns, :showing_within, @showing_within)}
                   viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
                   media={maybe_get(component_assigns, :media, [])}
+                  media_text_up_font?={maybe_get(component_assigns, :media_text_up_font?, false)}
                   cw={@cw}
                   autoplay={@autoplay}
                 />
@@ -2662,7 +2663,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     do: [Bonfire.UI.Me.Preview.CharacterLive]
 
   defp component_object_fallback(type, %{} = object) when type == Bonfire.Files.Media,
-    do: [{Bonfire.UI.Social.Activity.MediaLive, %{media: object}}]
+    do: [{Bonfire.UI.Social.Activity.MediaLive, %{media: object, media_text_up_font?: true}}]
 
   defp component_object_fallback(type, %{named: %{name: name}} = object)
        when type == Bonfire.Tag.Hashtag do

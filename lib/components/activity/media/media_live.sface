@@ -86,6 +86,26 @@
           </Bonfire.UI.Common.OpenModalLive>
         {/if}
 
+        {!-- the modal caption shows these too, but when the media is the object itself in needs to be shown up-front --}
+        {#if @media_text_up_font?}
+          {#for m <- @visual_list}
+            <div class="flex flex-col gap-half mb-2">
+              {#case Bonfire.Files.Media.media_label(m)}
+                {#match nil}
+                {#match label}
+                  <h2 data-id="media_title" class="font-medium text-base-content text-pretty">{rich(label)}</h2>
+              {/case}
+              {#case Bonfire.Files.Media.description(m)}
+                {#match nil}
+                {#match description}
+                  <div data-id="media_description" class="prose prose-sm max-w-prose wrap-break-word">
+                    {raw(Text.maybe_sane_html(description))}
+                  </div>
+              {/case}
+            </div>
+          {/for}
+        {/if}
+
         <div class="relative">
           {#if num_medias > 1}
             <div class="absolute inset-y-0 left-2 z-30 flex items-center">
