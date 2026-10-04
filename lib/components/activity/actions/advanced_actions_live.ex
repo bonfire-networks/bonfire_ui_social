@@ -20,6 +20,7 @@ defmodule Bonfire.UI.Social.Activity.AdvancedActionsLive do
   prop quotes, :list, default: []
 
   data panel_prefix, :string, default: ""
+  data can_remove_from_group, :boolean, default: false
   data post_content, :any, default: nil
   data object_type_label, :string, default: ""
 
@@ -32,15 +33,18 @@ defmodule Bonfire.UI.Social.Activity.AdvancedActionsLive do
       {assigns, socket} ->
         socket
         |> Phoenix.Component.assign(assigns)
+        |> assign_derived()
 
       socket ->
-        socket
+        assign_derived(socket)
     end)
   end
 
-  def render(assigns) do
-    assigns
-    |> assign(
+  # worked out when the assigns change, rather than in `render/1` on every re-render
+  defp assign_derived(socket) do
+    assigns = socket.assigns
+
+    Phoenix.Component.assign(socket,
       creator_id: id(assigns[:creator]),
       creator_name:
         e(assigns[:creator], :profile, :name, nil) ||
@@ -55,8 +59,17 @@ defmodule Bonfire.UI.Social.Activity.AdvancedActionsLive do
             assigns[:parent_id]
           ),
       post_content: Bonfire.UI.Social.Activity.NoteLive.post_content(assigns[:object]),
-      object_type_label: e(assigns[:object_type_readable], l("object"))
+      object_type_label: e(assigns[:object_type_readable], l("object")),
+      # for both the menu item and its confirmation panel: the post's author, or whoever moderates the group it's in, may take it out of the group (the context decides)
+      can_remove_from_group:
+        not is_nil(assigns[:published_in]) and not is_nil(id(assigns[:object])) and
+          maybe_apply(
+            Bonfire.Classify.Categories,
+            :can_remove_post_from_group?,
+            [current_user(assigns[:__context__]), assigns[:published_in], assigns[:object]],
+            fallback_return: false
+          ) == true
     )
-    |> render_sface()
   end
+
 end
