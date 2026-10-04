@@ -71,5 +71,4 @@ defmodule Bonfire.UI.Social.Activity.AdvancedActionsLive do
           ) == true
     )
   end
-
 end

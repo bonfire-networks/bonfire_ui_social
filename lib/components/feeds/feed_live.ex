@@ -66,8 +66,12 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   prop activity_class, :string, default: nil
   prop feed_filters, :any, default: nil
+
   # keep flags in the feed (they're left out by default), for a page only moderators reach, eg. a group's moderation page. Reaches the loader as an option through the socket's assigns (`to_options/1`), on every page load; never a feed filter, which a request could set
   prop include_flags, :any, default: nil
+
+  # likewise for requests (to join, follow, quote) about someone other than the viewer, which are left out otherwise (`Activities.maybe_filter/3`, `:exclude_verb_ids`), eg. a group's join requests on its moderation page
+  prop include_requests, :boolean, default: nil
   # prop time_limit, :any, default: nil
   # prop sort_order, :any, default: false
   prop activity_preloads, :tuple, default: {nil, nil}

@@ -417,7 +417,7 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
       group =
         Bonfire.Classify.Simulate.fake_group!(fake_user!("chips_group_owner"), %{
           membership: "open",
-          visibility: "global:discoverable"
+          visibility: "global"
         })
 
       # posts come from members, and the group's own boundaries decide who may read them, so I join too
