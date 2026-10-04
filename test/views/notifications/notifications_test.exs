@@ -169,7 +169,7 @@ defmodule Bonfire.UI.Social.Notifications.Test do
       |> assert_has_or_open_browser("[data-verb=reply]")
     end
 
-    @tag :skip_ci
+    @tag Bonfire.Common.RuntimeConfig.skip_in_ci()
     test "receives real-time notification when someone follows user", %{
       alice: alice,
       bob: bob,
@@ -190,7 +190,7 @@ defmodule Bonfire.UI.Social.Notifications.Test do
       |> assert_has_or_open_browser("[data-verb=follow]")
     end
 
-    @tag :skip_ci
+    @tag Bonfire.Common.RuntimeConfig.skip_in_ci()
     test "receives real-time notification when someone likes user's post", %{
       alice: alice,
       bob: bob,
@@ -220,7 +220,7 @@ defmodule Bonfire.UI.Social.Notifications.Test do
       |> assert_has_or_open_browser("[data-role=subject]", text: bob.profile.name)
     end
 
-    @tag :skip_ci
+    @tag Bonfire.Common.RuntimeConfig.skip_in_ci()
     test "receives real-time notification when someone boosts user's post", %{
       alice: alice,
       bob: bob,
