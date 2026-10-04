@@ -74,4 +74,39 @@ defmodule Bonfire.UI.Social.CommentsEmbedDevTest do
     object = Bonfire.Common.Needles.get!(media.id, skip_boundary_check: true)
     assert Bonfire.Boundaries.can?(nil, :read, object)
   end
+
+  # `embed_parent` is supplied by the client, so anyone can claim a localhost page: in production that mustn't let them create anchors for any URL
+  test "in production, a localhost origin doesn't bypass the allowlisted domains" do
+    Process.put([:bonfire_ui_social, :embed_loopback_previews], false)
+
+    uri = "https://not-allowlisted.example.com/post/"
+    parent = "http://localhost:4000/blog/post/"
+
+    {:ok, _view, _html} =
+      live(
+        conn(),
+        "/comments/embed/interactive?media_uri=#{URI.encode_www_form(uri)}&embed_parent=#{URI.encode_www_form(parent)}"
+      )
+
+    assert {:error, _} = Media.get_by_path(uri)
+  end
+
+  test "a private media_uri is never fetched, even from a localhost page" do
+    test_pid = self()
+
+    Tesla.Mock.mock_global(fn env ->
+      send(test_pid, {:hit, env.url})
+      {:ok, %Tesla.Env{status: 200, body: "<html><head><title>internal</title></head></html>"}}
+    end)
+
+    uri = "http://10.0.0.1/admin/"
+    parent = "http://localhost:4000/blog/post/"
+
+    live(
+      conn(),
+      "/comments/embed/interactive?media_uri=#{URI.encode_www_form(uri)}&embed_parent=#{URI.encode_www_form(parent)}"
+    )
+
+    refute_receive {:hit, "http://10.0.0.1" <> _}, 500
+  end
 end

@@ -919,6 +919,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
        ) ++
        component_maybe_quote_post(activity_component_id, quotes, opts[:cw]) ++
        component_maybe_hashtags_footer(opts[:hashtags]) ++
+       component_maybe_activity_name(activity) ++
        component_actions(
          experience,
          activity,
@@ -1424,6 +1425,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   module={Bonfire.UI.Social.Activity.HashtagsFooterLive}
                   {...component_assigns}
                 />
+              {#match Bonfire.UI.Social.Activity.ActivityNameLive}
+                <StatelessComponent module={Bonfire.UI.Social.Activity.ActivityNameLive} {...component_assigns} />
               {#match _}
                 <StatelessComponent
                   :if={@hide_activity != "dynamic"}
@@ -3044,6 +3047,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
         [{:html, "<div id=\"cw_quotes_#{activity_component_id}\" class=\"#{hidden_class}\">"}] ++
           quote_components ++
           [{:html, "</div>"}]
+    end
+  end
+
+  # an activity's own name (a lock's reason, a flag's comment, …), shown whenever a feed preloaded it (`:activity_name`), whatever it means for that verb
+  defp component_maybe_activity_name(activity) do
+    case e(activity, :named, :name, nil) do
+      name when is_binary(name) and name != "" ->
+        [{Bonfire.UI.Social.Activity.ActivityNameLive, %{name: name}}]
+
+      _ ->
+        []
     end
   end
 

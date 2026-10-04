@@ -226,8 +226,9 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
       is_nil(creator) ->
         {:noreply, socket}
 
-      # the domain must be operator-allowlisted (for everyone, no bypass), unless a loopback preview
-      not (loopback_origin?(params) or Bonfire.UI.Common.EmbedOrigins.host_allowed?(uri)) ->
+      # the domain must be operator-allowlisted (for everyone, no bypass), unless a loopback preview on a dev/test instance
+      not (loopback_preview_allowed?(params) or
+               Bonfire.UI.Common.EmbedOrigins.host_allowed?(uri)) ->
         warn(
           uri,
           "Not creating a thread anchor: the URI's host is not allowlisted in IFRAME_ALLOWED_ORIGINS"
@@ -285,6 +286,12 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
       _ ->
         nil
     end
+  end
+
+  # `embed_parent` is supplied by the client, so anyone can claim a loopback page: only skip the allowlisted domains for one on a dev/test instance (it's still created local-only, see `embed_boundary/1`)
+  defp loopback_preview_allowed?(params) do
+    Config.get([:bonfire_ui_social, :embed_loopback_previews], Config.env() in [:dev, :test]) and
+      loopback_origin?(params)
   end
 
   # is the embedding page (or the media URI it points at) served from a loopback host?
