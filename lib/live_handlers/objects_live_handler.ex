@@ -274,6 +274,24 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     # |> debug
   end
 
+  @doc """
+  Where to send a page that loaded a reply as if it started a thread: its place in the thread (`Bonfire.Social.Threads.permalink/2`), or nil for the start of a thread, anything not in one, or a page already showing a reply within its thread (`reply_id`).
+
+  Without it, a reply's own page shows the reply as the start of a thread, and again below that.
+  """
+  def reply_in_thread(socket, nil = _reply_id) do
+    assigns = assigns(socket)
+    object = assigns[:object]
+    replied = e(object, :replied, nil) || e(assigns[:activity], :replied, nil)
+    thread_id = e(replied, :thread_id, nil) || id(e(replied, :thread, nil))
+
+    # only a reply, ie. in a thread started by something else: decided on the object rather than on the link's shape, since what starts a thread can have a `/discussion/` page of its own, which would redirect to itself
+    if object && thread_id && thread_id != id(object),
+      do: Bonfire.Social.Threads.permalink(object, replied)
+  end
+
+  def reply_in_thread(_socket, _reply_id), do: nil
+
   def assign_thread_bell(socket) do
     thread_id = e(assigns(socket), :thread_id, nil) || e(assigns(socket), :object_id, nil)
 

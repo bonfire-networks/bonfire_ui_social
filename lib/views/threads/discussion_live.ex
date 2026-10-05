@@ -101,7 +101,10 @@ defmodule Bonfire.UI.Social.DiscussionLive do
 
     with %Phoenix.LiveView.Socket{} = socket <-
            Bonfire.Social.Objects.LiveHandler.load_object_assigns(socket) do
-      {:noreply, Bonfire.Social.Objects.LiveHandler.assign_thread_bell(socket)}
+      case Bonfire.Social.Objects.LiveHandler.reply_in_thread(socket, reply_id) do
+        nil -> {:noreply, Bonfire.Social.Objects.LiveHandler.assign_thread_bell(socket)}
+        in_thread -> {:noreply, redirect_to(socket, in_thread)}
+      end
     else
       {:error, e} ->
         {:noreply, assign_error(socket, e)}
