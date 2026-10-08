@@ -10,9 +10,9 @@
       empty_icon="ph:user-plus-fill"
       empty_message={l("No suggestions yet")}
     >
-      {!-- Carousel navigation arrows, shown in the header to the right of the title --}
-      <:action :if={length(suggested_profiles) > 1}>
-        <div class="flex items-center gap-1.5">
+      {!-- Carousel navigation arrows, shown in the header to the right of the title. Slot entries don't support `:if` in Surface (only `:let`), so the gate goes inside --}
+      <:action>
+        <div :if={length(suggested_profiles) > 1} class="flex items-center gap-1.5">
           <.icon_button
             icon="carbon:chevron-left"
             aria_label={l("Scroll left")}

@@ -2,8 +2,10 @@
   :if={@presets != []}
   widget_title={e(@widget_title, l("Feeds"))}
 >
-  <:action :if={!Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}>
+  {!-- slot entries don't support `:if` in Surface (only `:let`), so the gate goes inside --}
+  <:action>
     <LinkLive
+      :if={!Bonfire.Common.Settings.get([:ui, :sidebar, :disable_feeds_customization], false, :instance)}
       to={~p"/settings/user/feeds"}
       label={l("Customize feeds")}
       class="tooltip-button btn btn-circle btn-outline border-primary btn-xs"
