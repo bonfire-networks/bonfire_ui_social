@@ -1,11 +1,17 @@
-<nav id="feed-tabs" aria-label={l("Feeds")} class="w-full min-w-0">
-  <ul class="flex flex-nowrap gap-2 overflow-x-auto overscroll-x-contain p-2">
-    <li :for={preset <- @presets} class="shrink-0 min-w-[max(16%,7rem)]">
+<nav
+  id="feed-tabs"
+  :hook
+  data-selected={@selected_feed}
+  aria-label={l("Feeds")}
+  class="sticky top-[calc(env(safe-area-inset-top)+3.75rem)] lg:top-page-header z-sticky w-full min-w-0 bg-base-100/80 lg:bg-base-200/70 backdrop-blur-md before:absolute before:inset-x-0 before:bottom-full before:h-4 before:bg-base-100 lg:before:hidden transition-[translate] duration-200 ease-out motion-reduce:transition-none max-lg:data-scroll-hidden:-translate-y-full [html:has(&)]:scroll-pt-[calc(env(safe-area-inset-top)+6.75rem)] lg:[html:has(&)]:scroll-pt-[calc(var(--spacing-page-header)+3rem)] border-none"
+>
+  <ul class="flex flex-nowrap gap-2 overflow-x-auto overscroll-x-contain scroll-smooth motion-reduce:scroll-auto snap-x snap-proximity px-3 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [mask-image:linear-gradient(to_right,transparent,black_0.5rem,black_calc(100%-0.5rem),transparent)]">
+    <li :for={preset <- @presets} class="shrink-0 snap-center min-w-[max(16%,7rem)]">
       <LinkLive
         to={preset.href}
         opts={[id: "feed-tab-" <> preset.slug, "aria-current": if(preset.active?, do: "page", else: nil)]}
         class={[
-          "flex items-center justify-center gap-2 whitespace-nowrap rounded-full border px-2 py-1 text-sm font-semibold transition-colors duration-150 motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-base-content",
+          "flex h-7.5 items-center justify-center gap-2 whitespace-nowrap rounded-full border px-3 text-sm font-semibold transition-[color,background-color,border-color,scale] duration-150 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-base-content",
           "border-primary bg-primary text-primary-content": preset.active?,
           "border-base-content/10 bg-base-200 text-base-content/70 hover:bg-base-300 hover:text-base-content":
             not preset.active?

@@ -82,10 +82,16 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     |> assert_has("h1[data-role=page_title]", text: "Following")
     |> assert_has("#feed-tabs[aria-label=Feeds]")
     |> assert_has("#feed-tab-my[aria-current='page']", timeout: 2000)
-    |> assert_has("aside", text: "Posts and conversations from people you follow.")
+    |> assert_has(
+      "header #header-feed-details_trigger[aria-controls=header-feed-details_panel][aria-expanded=false]"
+    )
+    |> assert_has("header #header-feed-details_panel #feed-description",
+      text: "Posts and conversations from people you follow."
+    )
+    |> refute_has("aside #feed-description")
   end
 
-  test "the feed header gear opens settings even when sidebar customization is disabled" do
+  test "feed details link to settings even when sidebar customization is disabled" do
     Process.put(
       [Bonfire.Common.Config.top_level_otp_app(), :ui, :sidebar, :disable_feeds_customization],
       true
@@ -94,10 +100,10 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     conn(user: fake_user!())
     |> visit("/feed/my")
     |> wait_async()
-    |> assert_has("header #header-feed-settings[href='/settings/user/feeds']")
+    |> assert_has("#feed-description-settings[href='/settings/user/feeds']")
     |> refute_has("#feed-description-pin")
     |> assert_has("#feed-description-default")
-    |> click_link("#header-feed-settings", "Feed settings")
+    |> click_link("#feed-description-settings", "Feed settings")
     |> assert_path("/settings/user/feeds")
     |> assert_has("#default-feed-select")
     |> refute_has("#feed-presets-panel")
@@ -110,14 +116,14 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     |> assert_has("#feed-description-title", text: "Following")
     |> assert_has("#feed-description", text: "Posts and conversations from people you follow.")
     |> refute_has("#feed-description dl")
-    |> click_button("#feed-description-pin", "Unpin from feed tabs")
+    |> click_button("#feed-description-pin", "Show in feed tabs")
     |> refute_has("#feed-tab-my")
-    |> assert_has("#feed-description-pin[aria-pressed=false]", text: "Pin to feed tabs")
-    |> click_button("#feed-description-pin", "Pin to feed tabs")
+    |> assert_has("#feed-description-pin[role=switch][aria-checked=false]", text: "Show in feed tabs")
+    |> click_button("#feed-description-pin", "Show in feed tabs")
     |> assert_has("#feed-tab-my")
     |> visit("/feed/my")
     |> wait_async()
-    |> assert_has("#feed-description-pin[aria-pressed=true]", text: "Unpin from feed tabs")
+    |> assert_has("#feed-description-pin[role=switch][aria-checked=true]", text: "Show in feed tabs")
   end
 
   test "tabs navigate between feeds and bring each feed's heading with them" do
@@ -147,8 +153,8 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     |> visit("/feed/my")
     |> wait_async()
     |> refute_has("#feed-tab-my")
-    |> assert_has("#feed-description-pin[aria-pressed=false]", text: "Pin to feed tabs")
-    |> click_button("#feed-description-pin", "Pin to feed tabs")
+    |> assert_has("#feed-description-pin[role=switch][aria-checked=false]", text: "Show in feed tabs")
+    |> click_button("#feed-description-pin", "Show in feed tabs")
     |> visit("/settings/user/feeds")
     |> assert_has("#pin-feed-preset-my[aria-pressed=true]", text: "Unpin from feed tabs")
   end
@@ -159,7 +165,8 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     |> wait_async()
     |> assert_has("h1[data-role=page_title]", text: "Notifications")
     |> refute_has("#feed-tabs")
-    |> refute_has("#header-feed-settings")
+    |> refute_has("#header-feed-details")
+    |> refute_has("#header-feed-details_panel")
     |> refute_has("#feed-description-pin")
     |> refute_has("#feed-description-default")
   end
@@ -172,8 +179,11 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     |> refute_has("#feed-tab-my")
     |> refute_has("#sidebar-bookmarks-link")
     |> assert_has("h1[data-role=page_title]", text: "Explore local activities")
-    |> refute_has("#header-feed-settings")
-    |> assert_has("#feed-description",
+    # the page header shows no actions to guests, so there is no details toggle: the sidebar describes the feed instead
+    |> refute_has("#header-feed-details")
+    |> refute_has("#header-feed-details_panel")
+    |> refute_has("#feed-description-settings")
+    |> assert_has("aside #feed-description",
       text: "Posts and conversations from people on this server."
     )
     |> refute_has("#feed-description dl")

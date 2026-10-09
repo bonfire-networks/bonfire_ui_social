@@ -341,22 +341,23 @@ defmodule Bonfire.UI.Social.FeedsLive do
   defp assign_feed_heading(socket) do
     notifications? = socket.assigns[:live_action] == :notifications
 
+    # the feed details toggle is added by `configure_widgets`, once it knows the feed has a preset to describe
     header_aside =
       Enum.reject(socket.assigns.page_header_aside, fn {module, _opts} ->
         module in [
-          Bonfire.UI.Social.FeedSettingsButtonLive,
+          Bonfire.UI.Social.FeedDetailsButtonLive,
           Bonfire.UI.Social.NotificationPreferencesButtonLive
         ]
       end)
 
-    button =
+    buttons =
       if notifications?,
-        do: Bonfire.UI.Social.NotificationPreferencesButtonLive,
-        else: Bonfire.UI.Social.FeedSettingsButtonLive
+        do: [{Bonfire.UI.Social.NotificationPreferencesButtonLive, []}],
+        else: []
 
     assign(socket,
       page_title: socket.assigns[:page_title] || l("Feed"),
-      page_header_aside: header_aside ++ [{button, []}]
+      page_header_aside: header_aside ++ buttons
     )
   end
 
@@ -377,7 +378,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
   defp configure_widgets(socket) do
     feed_name = FeedLive.feed_name(assigns(socket))
 
-    {preferences, description} =
+    {preferences, details_feed} =
       case Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, assigns(socket)) do
         {:ok, _preset} when feed_name != :curated ->
           preferences =
@@ -396,20 +397,36 @@ defmodule Bonfire.UI.Social.FeedsLive do
               ]
             end
 
-          {preferences, [{Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: feed_name]}]}
+          {preferences, feed_name}
 
         _ ->
-          {[], []}
+          {[], nil}
       end
 
+    guest_description =
+      if details_feed,
+        do: [{Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: details_feed, boxed: true]}],
+        else: []
+
+    # the details popover hangs off a page header toggle, which only shows actions to signed-in users (guests get the sidebar widget instead), and isn't shown on notifications
+    details_feed =
+      if socket.assigns[:live_action] != :notifications and current_user_id(socket),
+        do: details_feed
+
+    details_button =
+      if details_feed,
+        do: [{Bonfire.UI.Social.FeedDetailsButtonLive, [feed_name: details_feed]}],
+        else: []
+
     assign(socket,
+      page_header_aside: socket.assigns.page_header_aside ++ details_button,
       preferences_widget_id:
         if(preferences != [] and not is_nil(current_user_id(socket)),
           do: "feed_preferences_#{socket.assigns.feed_component_id}"
         ),
       sidebar_widgets: [
-        users: [secondary: description ++ preferences ++ [{Bonfire.Tag.Web.WidgetTagsLive, []}]],
-        guests: [secondary: description]
+        users: [secondary: preferences ++ [{Bonfire.Tag.Web.WidgetTagsLive, []}]],
+        guests: [secondary: guest_description]
       ]
     )
   end

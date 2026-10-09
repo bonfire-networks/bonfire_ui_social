@@ -7,6 +7,9 @@ defmodule Bonfire.UI.Social.FeedPinButtonLive do
   prop class, :css_class, default: "btn-sm"
   prop icon_class, :css_class, default: "size-4"
 
+  @doc "Render as a menu row switch named by its visible text (feed details popover), instead of an icon button with a tooltip."
+  prop show_label, :boolean, default: false
+
   @doc "Renders the shared feed-tab pin action and its accessible state."
   def render(assigns) do
     assigns

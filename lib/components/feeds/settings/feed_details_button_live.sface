@@ -1,0 +1,14 @@
+{!-- The page header's "more" menu for a feed: its description plus default, pin and settings actions. --}
+<Dropdown
+  id="header-feed-details"
+  position="bottom-end"
+  menu={false}
+  trigger_class="btn btn-ghost btn-circle aria-expanded:bg-base-content/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+  panel_class="!w-80 max-w-[calc(100vw-2rem)] !p-0"
+  label={l("Feed details")}
+>
+  <:trigger>
+    <#Icon iconify="ph:dots-three-bold" class="size-5" />
+  </:trigger>
+  <Bonfire.UI.Social.WidgetFeedDescriptionLive feed_name={@feed_name} />
+</Dropdown>

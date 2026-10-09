@@ -533,7 +533,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> apply_filters()
       |> assert_has("button", text: "Apply filters")
       # collapsing unmounts the editor again
-      |> click_button("[data-role=open_modal]", "More filters")
+      |> click_button("[data-role=open_modal]", "Hide filters")
       |> assert_has("button[aria-expanded='false'] [data-role=feed_advanced_filters]")
       |> refute_has("button", text: "Apply filters")
       |> click_button("[data-role=open_modal]", "More filters")

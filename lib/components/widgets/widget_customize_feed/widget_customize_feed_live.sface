@@ -29,7 +29,7 @@
         <select
           id={"feed_order_#{@feed_name || "default"}"}
           name="feed_order"
-          class="select select-md min-h-11 focus-ring h-auto w-auto min-w-0 max-w-[70%]"
+          class="min-h-11 min-w-0 max-w-[70%] cursor-pointer appearance-none truncate border-0 bg-transparent p-0 text-right text-sm text-base-content underline decoration-base-content/30 underline-offset-4 transition-colors duration-150 ease-out hover:decoration-base-content focus-ring rounded-sm"
         >
           {#for {value, label} <- Bonfire.UI.Social.WidgetCustomizeFeedLive.order_options()}
             <option
@@ -57,26 +57,37 @@
           toggle_role="feed_override_toggle"
         />
       </fieldset>
-      <Bonfire.UI.Social.SaveFeedPresetLive
-        :if={current_user(@__context__) && @default_preferences &&
-          preferences_changed?(@feed_filters, @default_preferences)}
-        id={"#{@id}_save_custom_feed"}
-        event_target={@event_target}
-      />
       <div
-        class="mt-1.5 border-t border-base-content/10 pt-1"
+        class="mt-1.5 flex flex-wrap items-center gap-x-3 border-t border-base-content/10 pt-1"
         data-role="feed_advanced_filters_wrapper"
       >
+        {!-- Both actions share one line. The expander's wrappers are `contents`, so its toggle stays on that
+             line and only its expanded editor (`basis-full`) wraps onto a full-width line below; an opened
+             save form takes the full width the same way. --}
+        <div
+          :if={current_user(@__context__) && @default_preferences &&
+            preferences_changed?(@feed_filters, @default_preferences)}
+          class="min-w-0 has-[details[open]]:basis-full"
+        >
+          <Bonfire.UI.Social.SaveFeedPresetLive
+            id={"#{@id}_save_custom_feed"}
+            event_target={@event_target}
+            show_icon={false}
+            summary_class="-ml-2 flex min-h-11 cursor-pointer items-center whitespace-nowrap rounded-selector px-2 text-sm font-medium text-primary transition-colors duration-150 ease-out hover:bg-primary/5 motion-reduce:transition-none focus-ring"
+          />
+        </div>
         <Bonfire.UI.Common.OpenExpanderLive
           parent_id={"feed_filters_#{@feed_name}"}
           modal_assigns={Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}
-          open_btn_wrapper_class="-mx-2 rounded-selector focus-ring"
-          expander_wrapper_class=""
-          open_btn_class="min-h-11 w-full px-2 py-1 text-sm font-normal text-base-content/80 flex items-center gap-2 cursor-pointer hover:bg-base-content/5 hover:text-base-content"
-          caret_class="size-4 text-base-content/70"
+          open_modal_wrapper_class="contents"
+          open_btn_wrapper_class="!w-auto ml-auto -mr-2 block rounded-selector focus-ring"
+          expander_wrapper_class="basis-full"
+          open_btn_class="flex min-h-11 cursor-pointer items-center whitespace-nowrap rounded-selector px-2 text-sm text-base-content/80 transition-colors duration-150 ease-out hover:bg-base-content/5 hover:text-base-content motion-reduce:transition-none"
+          caret_class="hidden"
         >
-          <:open_btn>
-            <span class="flex-1 text-left" data-role="feed_advanced_filters">{l("More filters")}</span>
+          {!-- no caret: the label itself says which way the toggle goes --}
+          <:open_btn :let={show: show}>
+            <span data-role="feed_advanced_filters">{if show, do: l("Hide filters"), else: l("More filters")}</span>
           </:open_btn>
           <:default>
             <StatefulComponent
