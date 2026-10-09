@@ -405,7 +405,9 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
     guest_description =
       if details_feed,
-        do: [{Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: details_feed, boxed: true]}],
+        do: [
+          {Bonfire.UI.Social.WidgetFeedDescriptionLive, [feed_name: details_feed, boxed: true]}
+        ],
         else: []
 
     # the details popover hangs off a page header toggle, which only shows actions to signed-in users (guests get the sidebar widget instead), and isn't shown on notifications
