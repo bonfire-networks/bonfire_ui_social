@@ -9,8 +9,8 @@
       id={@container_id}
       position="bottom-end"
       wrapper_class="flex w-full"
-      trigger_class="btn btn-circle btn-outline border-secondary btn-sm"
-      panel_class="divide-hair divide-secondary"
+      trigger_class="btn btn-circle btn-outline border-divider btn-sm"
+      panel_class="divide-hair divide-divider"
     >
       <:trigger>
         <div class="sr-only">{l("Filter by circles")}</div>

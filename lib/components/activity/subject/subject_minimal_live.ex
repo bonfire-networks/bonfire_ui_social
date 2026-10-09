@@ -71,7 +71,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   @doc false
   def subject_minimal_line_class,
     do:
-      "flex items-start gap-half -mx-card px-card -mt-1.5 pb-content mb-content border-b-hair border-secondary"
+      "flex items-start gap-half -mx-card px-card -mt-1.5 pb-content mb-content border-b-hair border-divider"
 
   @doc false
   def subject_minimal_icon_box_class,

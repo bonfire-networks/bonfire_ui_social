@@ -1,8 +1,8 @@
 {#case load(current_user(@__context__), @limit)}
   {#match discussions}
     <Bonfire.UI.Common.WidgetBlockLive
-      class="w-full flex-auto mx-auto border-y-hair border-secondary overflow-hidden"
-      title_class="px-card py-card text-xs font-semibold uppercase tracking-[0.06em] text-base-content/80"
+      class="w-full flex-auto mx-auto border-y-hair border-divider overflow-hidden"
+      title_class="px-card py-card text-xs font-semibold uppercase tracking-[0.06em] text-muted"
       widget_title={@widget_title || l("Top discussions")}
       reset_cache_event="Bonfire.UI.Social.WidgetTrendingDiscussionsLive:reset_trending_discussions"
       reset_cache_values={%{limit: @limit}}
@@ -22,14 +22,14 @@
       </:action>
 
       <ul
-        class="flex flex-col mx-(--stream-content-padding) rounded-box bg-(--stream-surface) overflow-hidden"
+        class="flex flex-col mx-(--stream-content-padding) rounded-box bg-surface overflow-hidden"
         role="list"
         data-id="trending_discussions"
       >
         {#for fp <- discussions}
           <li
             id={"trending_discussion_#{id(fp.activity) || id(fp.activity.object)}"}
-            class="p-0 border-0 bg-transparent [&+li]:border-t-hair [&+li]:border-t-(--stream-object-outline)"
+            class="p-0 border-0 bg-transparent [&+li]:border-t-hair [&+li]:border-t-divider"
           >
             <Bonfire.UI.Social.ActivityLive
               id={Bonfire.UI.Social.ActivityLive.component_id(

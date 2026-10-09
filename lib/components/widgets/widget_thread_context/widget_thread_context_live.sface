@@ -23,12 +23,12 @@
 
           <p
             :if={e(category, :profile, :summary, "") != ""}
-            class="mt-1 text-sm text-base-content/65 leading-snug line-clamp-2"
+            class="mt-1 text-sm text-muted leading-snug line-clamp-2"
           >{e(category, :profile, :summary, "")}</p>
 
           {#case e(category, :type, nil)}
             {#match :group}
-              <p class="mt-1.5 text-xs text-base-content/45">
+              <p class="mt-1.5 text-xs text-subtle">
                 {members_count(category)} {l("members")}
               </p>
             {#match _}

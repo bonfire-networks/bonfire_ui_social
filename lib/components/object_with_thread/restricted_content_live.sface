@@ -17,7 +17,7 @@
     )}
   </h2>
 
-  <p class="mt-1 text-sm text-base-content/80 max-w-prose">
+  <p class="mt-1 text-sm text-muted max-w-prose">
     {get_setting(@rc_settings, :message, l("It was shared with a limited audience."))}
   </p>
 

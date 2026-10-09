@@ -2,12 +2,12 @@
   href={@media_url}
   target="_blank"
   data-id="pdf-link"
-  class="order-last w-full p-2 rounded bg-base-content/5 media_container hover:bg-base-content/5"
+  class="order-last w-full p-2 rounded bg-fill media_container hover:bg-fill"
 >
   {#case Media.thumbnail_url(@media)}
     {#match nil}
       <div class="flex gap-3 overflow-hidden items-center">
-        <div class="flex border border-secondary p-4 items-center rounded shrink-0 place-content-center">
+        <div class="flex border border-divider p-4 items-center rounded shrink-0 place-content-center">
           <#Icon iconify="bxs:file-pdf" class="w-8 h-8 text-muted" />
         </div>
         <div class={"text font-medium", "line-clamp-2": @showing_within in [:feed, :profile]}>

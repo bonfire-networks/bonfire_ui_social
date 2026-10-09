@@ -1,8 +1,8 @@
 <div class="py-2">
   {#case the_data(@object)}
     {#match nil}
-      <div class="rounded-box border border-secondary p-4">
-        <div class="mb-2 text-sm font-medium text-base-content text-opacity-80">
+      <div class="rounded-box border border-divider p-4">
+        <div class="mb-2 text-sm font-medium text-muted">
           {l("Unknown object")}
         </div>
         <div class="text-sm text-muted">
@@ -10,7 +10,7 @@
         </div>
       </div>
     {#match object}
-      <div class="mb-2 text-sm font-medium text-base-content text-opacity-80">
+      <div class="mb-2 text-sm font-medium text-muted">
         <span :if={@object_type_readable && @object_type_readable != "" && @object_type_readable != "apactivity"}>
           {String.capitalize(@object_type_readable || "Unknown")}:
         </span>

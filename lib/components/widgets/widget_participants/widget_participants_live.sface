@@ -57,7 +57,7 @@
                 hide_icon
                 container_class="flex w-[76px] items-center justify-end"
                 loading_class="skeleton h-8 w-[76px] rounded-[var(--radius-button,var(--button-radius-default,0.625rem))]"
-                class="btn btn-outline !h-8 !min-h-8 !w-[76px] !border-secondary !px-2 text-xs leading-none text-muted hover:text-base-content"
+                class="btn btn-outline !h-8 !min-h-8 !w-[76px] !border-divider !px-2 text-xs leading-none text-muted hover:text-base-content"
                 class_already="btn btn-ghost !h-8 !min-h-8 !w-[76px] !border-transparent !bg-base-content/[0.08] !px-2 text-xs leading-none text-muted hover:text-base-content"
               />
             </div>

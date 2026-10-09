@@ -1,15 +1,15 @@
 <div class="flex items-center p-3 py-1">
   <div class="flex items-center flex-1">
-    {!-- <LinkPatchLive to="#" class="ml-2 text-sm link link-hover text-base-content text-opacity-60"><span class="font-bold">4</span> {l "likes"}</LinkPatchLive>
-    <span class="ml-2 text-sm text-base-content text-opacity-60">·</span>
-    <LinkPatchLive to="#" class="ml-2 text-sm link link-hover text-base-content text-opacity-60"><span class="font-bold">4</span> {l "boosts"}</LinkPatchLive> 
-    <span class="ml-2 text-sm text-base-content text-opacity-60">·</span> --}
+    {!-- <LinkPatchLive to="#" class="ml-2 text-sm link link-hover text-muted"><span class="font-bold">4</span> {l "likes"}</LinkPatchLive>
+    <span class="ml-2 text-sm text-muted">·</span>
+    <LinkPatchLive to="#" class="ml-2 text-sm link link-hover text-muted"><span class="font-bold">4</span> {l "boosts"}</LinkPatchLive> 
+    <span class="ml-2 text-sm text-muted">·</span> --}
     <div :if={length(e(@participants, [])) > 1}>
-      <span class="text-sm text-base-content text-opacity-60">·</span>
+      <span class="text-sm text-muted">·</span>
       <LinkPatchLive
         :if={length(e(@participants, [])) > 1}
         to="#"
-        class="ml-2 text-sm link link-hover text-base-content text-opacity-60"
+        class="ml-2 text-sm link link-hover text-muted"
       ><span class="font-bold">{length(e(@participants, []))}</span> {l("participants")}</LinkPatchLive>
     </div>
   </div>

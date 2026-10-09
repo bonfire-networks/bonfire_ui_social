@@ -1050,7 +1050,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       <div
         :if={@reply_context? and e(@reply_to, :object, :id, nil) != @thread_id}
         data-role="thread_header"
-        class="-mx-card -mt-[16px] mb-2 px-card py-2 bg-base-200 border-b-hair border-secondary rounded-t-[var(--radius-box)] flex items-center justify-end"
+        class="-mx-card -mt-[16px] mb-2 px-card py-2 bg-base-200 border-b-hair border-divider rounded-t-[var(--radius-box)] flex items-center justify-end"
       >
         {!-- plain anchor with `preview_activity_link` so the PreviewActivity hook
              opens the PreviewContent modal instead of navigating (real link as fallback) --}
@@ -2417,9 +2417,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #          """
   #          <div role="status" class="space-y-2.5 animate-pulse max-w-[50%] mb-2">
   #          <div class="flex items-center w-full space-x-2">
-  #          <div class="h-2.5 bg-base-content/10 rounded-full w-10"></div>
-  #          <div class="h-2.5 bg-base-content/10 rounded-full w-24"></div>
-  #          <div class="h-2.5 bg-base-content/10 rounded-full w-full"></div>
+  #          <div class="h-2.5 bg-fill-strong rounded-full w-10"></div>
+  #          <div class="h-2.5 bg-fill-strong rounded-full w-24"></div>
+  #          <div class="h-2.5 bg-fill-strong rounded-full w-full"></div>
   #          </div>
   #          <span class="sr-only">Loading...</span>
   #          </div>

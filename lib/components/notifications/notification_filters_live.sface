@@ -1,7 +1,7 @@
 <nav
   id="notification-filters"
   aria-label={l("Filter notifications")}
-  class="mb-4 min-w-0 border-b border-base-content/10"
+  class="mb-4 min-w-0 border-b border-divider"
 >
   {!-- read out only when something is dimmed, rather than saying it on every visit --}
   <p :if={any_switched_off?(@__context__)} id="notification-filters-dimmed" class="sr-only">{l("Dimmed categories are switched off in your preferences. Selecting one still shows it.")}</p>
@@ -19,7 +19,7 @@
               if(Notifications.hidden_from_centre?(key, @__context__), do: "notification-filters-dimmed")
           ]}
           class={
-            "tooltip tooltip-bottom flex min-h-12 w-full items-center justify-center border-b-2 text-base-content/60 hover:bg-base-content/5 focus-visible:outline-2 focus-visible:-outline-offset-2",
+            "tooltip tooltip-bottom flex min-h-12 w-full items-center justify-center border-b-2 text-muted hover:bg-fill focus-visible:outline-2 focus-visible:-outline-offset-2",
             "border-primary text-primary": current?(key, @selected_tab),
             "border-transparent": !current?(key, @selected_tab),
             "opacity-40": Notifications.hidden_from_centre?(key, @__context__)

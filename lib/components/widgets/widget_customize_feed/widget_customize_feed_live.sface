@@ -4,7 +4,7 @@
       <button
         id={"feed_reset_#{@feed_name}"}
         type="button"
-        class="btn btn-ghost btn-square !btn-sm tooltip tooltip-left text-(--stream-text-secondary)"
+        class="btn btn-ghost btn-square !btn-sm tooltip tooltip-left text-muted"
         data-tip={l("Reset")}
         data-role="feed_preferences_reset"
         aria-label={l("Reset feed preferences")}
@@ -24,7 +24,7 @@
       >
         <label
           for={"feed_order_#{@feed_name || "default"}"}
-          class="text-sm font-normal text-(--stream-text-secondary)"
+          class="text-sm font-normal text-muted"
         >{l("Sort")}</label>
         <select
           id={"feed_order_#{@feed_name || "default"}"}
@@ -50,15 +50,15 @@
           form_id={"feed_overrides_form_#{@feed_name || "default"}"}
           form_role="feed_override_toggles"
           form_class="flex flex-col gap-0"
-          row_class="min-h-11 -mx-2 rounded-selector px-2 transition-colors duration-150 ease-out hover:bg-base-content/5 active:bg-base-content/10"
-          name_class="text-sm font-normal text-(--stream-text-secondary)"
+          row_class="min-h-11 -mx-2 rounded-selector px-2 transition-colors duration-150 ease-out hover:bg-fill active:bg-fill-strong"
+          name_class="text-sm font-normal text-muted"
           rows={Bonfire.UI.Social.WidgetCustomizeFeedLive.override_rows(@feed_filters)}
           field_prefix="scope"
           toggle_role="feed_override_toggle"
         />
       </fieldset>
       <div
-        class="mt-1.5 flex flex-wrap items-center gap-x-3 border-t border-base-content/10 pt-1"
+        class="mt-1.5 flex flex-wrap items-center gap-x-3 border-t border-divider pt-1"
         data-role="feed_advanced_filters_wrapper"
       >
         {!-- Both actions share one line. The expander's wrappers are `contents`, so its toggle stays on that
@@ -82,7 +82,7 @@
           open_modal_wrapper_class="contents"
           open_btn_wrapper_class="!w-auto ml-auto -mr-2 block rounded-selector focus-ring"
           expander_wrapper_class="basis-full"
-          open_btn_class="flex min-h-11 cursor-pointer items-center whitespace-nowrap rounded-selector px-2 text-sm text-base-content/80 transition-colors duration-150 ease-out hover:bg-base-content/5 hover:text-base-content motion-reduce:transition-none"
+          open_btn_class="flex min-h-11 cursor-pointer items-center whitespace-nowrap rounded-selector px-2 text-sm text-muted transition-colors duration-150 ease-out hover:bg-fill hover:text-base-content motion-reduce:transition-none"
           caret_class="hidden"
         >
           {!-- no caret: the label itself says which way the toggle goes --}

@@ -5,7 +5,7 @@
 
   <div
     id="feed-settings-panel"
-    class="m-4 rounded-xl border border-base-content/10 overflow-hidden"
+    class="m-4 rounded-xl border border-divider overflow-hidden"
   >
     <div class="grid grid-cols-1">
       <.form
@@ -59,7 +59,7 @@
     </div>
 
     {!-- Disabled because pagination does not consume the user preference.
-    <.form for={@default_feed_form} id="feed-pagination-form" class="p-5 border-t border-base-content/10" phx-change="Bonfire.Common.Settings:set">
+    <.form for={@default_feed_form} id="feed-pagination-form" class="p-5 border-t border-divider" phx-change="Bonfire.Common.Settings:set">
       <Bonfire.UI.Common.Settings.NumberLive
         scope={@scope}
         name={l("How many items to show in feeds and other lists")}
@@ -73,7 +73,7 @@
     <.form
       for={@default_feed_form}
       id="feed-infinite-scroll-form"
-      class="p-5 border-t border-base-content/10 [&_label>div>div]:flex-wrap [&_label]:gap-4 [&_input[type=checkbox]]:shrink-0"
+      class="p-5 border-t border-divider [&_label>div>div]:flex-wrap [&_label]:gap-4 [&_input[type=checkbox]]:shrink-0"
       data-scope="infinite_scroll"
       phx-change="Bonfire.Common.Settings:set"
     >
@@ -108,7 +108,7 @@
         id="feed-presets-panel"
         phx-hook={if @scope != :instance, do: "Draggable"}
         data-event="Bonfire.Social.Feeds:preset_nav_reorder"
-        class="w-full divide-hair divide-y divide-secondary overflow-hidden"
+        class="w-full divide-hair divide-y divide-divider overflow-hidden"
       >
         {#for preset <- @presets || []}
           <li

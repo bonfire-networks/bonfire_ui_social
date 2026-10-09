@@ -1,5 +1,5 @@
 <div class="py-2">
-  <span :if={@object_type_readable} class="text-opacity-70">
+  <span :if={@object_type_readable} class="text-muted">
     {@object_type_readable}:
   </span>
 

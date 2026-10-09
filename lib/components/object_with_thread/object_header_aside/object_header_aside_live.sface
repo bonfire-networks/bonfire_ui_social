@@ -36,7 +36,7 @@
         <Field name={:thread} class="my-4">
           <TextInput
             name="name"
-            class="w-full bg-base-content/10 input input-bordered"
+            class="w-full bg-fill-strong input input-bordered"
             value={e(@page_title, "")}
             opts={[placeholder: "Set a name for the thread..."]}
           />
@@ -59,7 +59,7 @@
           id="object_header_participants"
           title_text={to_string(length(e(@participants, []))) <> " " <> l("participants")}
         >
-          <div class="flex flex-col   divide-hair divide-secondary">
+          <div class="flex flex-col   divide-hair divide-divider">
             {#for p <- e(@participants, [])}
               <div class="py-2">
                 <StatelessComponent

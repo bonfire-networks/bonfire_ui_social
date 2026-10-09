@@ -11,7 +11,7 @@
             {!-- <code>{inspect(@media.metadata, pretty: true)}</code> --}
             <div class={
               "w-full media_container text-base-content",
-              @css_borders || "border border-secondary rounded-lg p-2",
+              @css_borders || "border border-divider rounded-lg p-2",
               "p-4 bg-base-100 ": @showing_within != :media
             }>
               <div class="relative w-full">
@@ -30,7 +30,7 @@
                   {e(@metadata, "citation_title", nil) || Bonfire.Files.Media.media_label_and_alt(@media)}
                 </div>
 
-                <div class="flex flex-wrap mt-3 gap-2 text-sm text-base-content/80">
+                <div class="flex flex-wrap mt-3 gap-2 text-sm text-muted">
                   {#for {author, i} <-
                       Enum.with_index(
                         List.wrap(

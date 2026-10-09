@@ -2,7 +2,7 @@
 <fieldset :if={current_user_id(@__context__)} id="notification-audiences">
   {!-- worded as what the switches do (on hides), rather than "who you hear from", which reads the other way round --}
   <legend class="text-base font-medium">{l("Hide notifications and messages from")}</legend>
-  <p class="mt-1 mb-2 text-sm leading-relaxed text-base-content/70">{l(
+  <p class="mt-1 mb-2 text-sm leading-relaxed text-muted">{l(
       "Hidden notifications and messages aren't pushed or emailed, and appear in a separate tab instead of the main list."
     )}</p>
   {#for {key, audience} <- Bonfire.Social.Notifications.audiences()}

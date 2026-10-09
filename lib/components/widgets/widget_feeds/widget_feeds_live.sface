@@ -15,15 +15,15 @@
     </LinkLive>
   </:action>
   {!--  --}
-  <ul class="flex flex-col divide-hair border-t-hair border-secondary divide-secondary">
+  <ul class="flex flex-col divide-hair border-t-hair border-divider divide-divider">
     {#for preset <- @presets}
       <li class="p-1">
         <LinkLive
           to={preset[:href]}
           class={[
-            "group inline-flex items-center gap-3 bg-base-100 w-full px-2 py-1.5 rounded-box border-hair border-secondary text-secondary",
+            "group inline-flex items-center gap-3 bg-base-100 w-full px-2 py-1.5 rounded-box border-hair border-divider text-secondary",
             "bg-primary/20": preset[:selected?],
-            "hover:bg-base-content/5": !preset[:selected?]
+            "hover:bg-fill": !preset[:selected?]
           ]}
           label={preset[:name] || preset[:text] || preset[:description]}
         >

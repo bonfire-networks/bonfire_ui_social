@@ -10,7 +10,7 @@
          }
        }"}
     >
-      <div class="text-base text-base-content/80">
+      <div class="text-base text-muted">
         {l("Download this post as a Markdown file. You can choose to include frontmatter and replies.")}
       </div>
       <!-- <form phx-change="update_download_options" phx-target={@myself}> -->

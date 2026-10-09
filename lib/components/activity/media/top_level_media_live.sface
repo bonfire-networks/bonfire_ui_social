@@ -3,7 +3,7 @@
   <div
     data-id="top_level_media"
     data-object_id={id(@link)}
-    class={"flex flex-col bg-base-100 rounded-box border-hair border-secondary overflow-hidden", @class}
+    class={"flex flex-col bg-base-100 rounded-box border-hair border-divider overflow-hidden", @class}
   >
     {!-- hero: full-width, rounded-box, hairline border, neutral placeholder --}
     {#case MediaLive.preview_img(@link)}
@@ -12,7 +12,7 @@
           <LinkLive
             to={@link.path}
             target="_blank"
-            class="block rounded-box border-hair border-secondary overflow-hidden bg-placeholder aspect-[1.91/1]"
+            class="block rounded-box border-hair border-divider overflow-hidden bg-placeholder aspect-[1.91/1]"
           >
             <LazyImage
               parent_id={deterministic_dom_id("trending_featured", @link.path)}
@@ -25,8 +25,8 @@
           </LinkLive>
         </Bonfire.UI.Common.OpenExternalLinkLive>
       {#match _}
-        <div class="rounded-box border-hair border-secondary bg-placeholder aspect-[1.91/1] flex items-center justify-center">
-          <#Icon iconify="ion:newspaper-outline" class="w-12 h-12 text-base-content/30" />
+        <div class="rounded-box border-hair border-divider bg-placeholder aspect-[1.91/1] flex items-center justify-center">
+          <#Icon iconify="ion:newspaper-outline" class="w-12 h-12 text-subtle" />
         </div>
     {/case}
 
@@ -102,7 +102,7 @@
             <LinkLive to={@link.path} target="_blank" class="block">
               <LazyImage
                 parent_id={deterministic_dom_id("trending_thumb", @link.path)}
-                class="w-[120px] h-[120px] rounded-box border-hair border-secondary object-cover"
+                class="w-[120px] h-[120px] rounded-box border-hair border-divider object-cover"
                 fallback_class="w-6 h-6 text-muted"
                 src={preview_img}
                 media={@link}
@@ -111,8 +111,8 @@
             </LinkLive>
           </Bonfire.UI.Common.OpenExternalLinkLive>
         {#match _}
-          <div class="w-[120px] h-[120px] rounded-box border-hair border-secondary bg-placeholder flex items-center justify-center shrink-0">
-            <#Icon iconify="ion:newspaper-outline" class="w-6 h-6 text-base-content/30" />
+          <div class="w-[120px] h-[120px] rounded-box border-hair border-divider bg-placeholder flex items-center justify-center shrink-0">
+            <#Icon iconify="ion:newspaper-outline" class="w-6 h-6 text-subtle" />
           </div>
       {/case}
     {/if}

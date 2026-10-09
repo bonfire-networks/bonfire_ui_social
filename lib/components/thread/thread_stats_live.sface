@@ -32,7 +32,7 @@
           {!-- Divider separating view controls from remote actions --}
           <div
             :if={current_user_id(@__context__)}
-            class="w-px h-6 bg-base-content/10 mx-0.5"
+            class="w-px h-6 bg-fill-strong mx-0.5"
             aria-hidden="true"
           />
 

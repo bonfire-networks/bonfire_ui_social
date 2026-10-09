@@ -44,7 +44,7 @@
       :if={!@hide_filters}
       selected_tab={@selected_tab}
       selected_name={@feed_title || @page_title}
-      class="flex items-center gap-2 w-full tabs border-b border-secondary"
+      class="flex items-center gap-2 w-full tabs border-b border-divider"
       tab_class={@tab_class}
       item_class={@item_class}
       tab_primary_class={@tab_primary_class}
@@ -67,7 +67,7 @@
         phx-click={JS.show(to: ".fresh_hidden")
         |> JS.push("show_fresh", target: @myself)
         |> JS.add_class("hidden")}
-        class="flex justify-center w-full mx-auto btn btn-ghost text-primary z-50 border-0 border-b border-(color:--divider-color) rounded-none py-6 font-light"
+        class="flex justify-center w-full mx-auto btn btn-ghost text-primary z-50 border-0 border-b border-divider rounded-none py-6 font-light"
         phx-show={JS.remove_class("hidden")}
       >
         <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
@@ -215,14 +215,14 @@
                                     <:if_no_more>
                                       {#if time_limit != 0}
                                         <div class="flex items-center gap-4 mx-6 mt-6 mb-2 text-xs text-muted">
-                                          <span aria-hidden="true" class="h-px flex-1 bg-base-content/10" />
+                                          <span aria-hidden="true" class="h-px flex-1 bg-fill-strong" />
                                           <p class="text-center">{lp(
                                               "Last day",
                                               "Last %{number} days",
                                               time_limit,
                                               number: time_limit
                                             )}</p>
-                                          <span aria-hidden="true" class="h-px flex-1 bg-base-content/10" />
+                                          <span aria-hidden="true" class="h-px flex-1 bg-fill-strong" />
                                         </div>
                                       {#else}
                                         {!-- {#if is_nil(@previous_page_info)} --}
@@ -350,7 +350,7 @@
           phx-target={@myself}
           phx-click={JS.show(to: ".fresh_hidden") |> JS.push("jump_to_top", target: @myself)}
           title={jump_to_top_label(@fresh_ids)}
-          class="btn btn-circle bg-base-100 border-hair border-secondary shadow-lg translate-y-2 opacity-0 pointer-events-none transition duration-200 ease-out motion-reduce:transition-none feed-jump-visible:translate-y-0 feed-jump-visible:opacity-100 feed-jump-visible:pointer-events-auto"
+          class="btn btn-circle bg-base-100 border-hair border-divider shadow-lg translate-y-2 opacity-0 pointer-events-none transition duration-200 ease-out motion-reduce:transition-none feed-jump-visible:translate-y-0 feed-jump-visible:opacity-100 feed-jump-visible:pointer-events-auto"
         >
           <#Icon iconify="ph:arrow-up" class="size-5 text-base-content" />
           <span

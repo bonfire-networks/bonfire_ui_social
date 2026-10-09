@@ -32,7 +32,7 @@
             modal_assigns={Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}
           >
             <:open_btn>
-              <div class="btn btn-sm btn-outline border-hair rounded-field border border-secondary bg-base-100 gap-2 pr-1">
+              <div class="btn btn-sm btn-outline border-hair rounded-field border border-divider bg-base-100 gap-2 pr-1">
                 <#Icon iconify="ph:funnel-fill" class="w-4 h-4 text-secondary" />
                 <span>{l("Filters")}</span>
                 {#if active_filters != []}

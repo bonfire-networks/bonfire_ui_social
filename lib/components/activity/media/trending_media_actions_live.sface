@@ -24,7 +24,7 @@
                 {/if}
               </div> -->
 {#if to_int(@media.object_count) > 0}
-  <!-- <span class="text-base-content/30">·</span> -->
+  <!-- <span class="text-subtle">·</span> -->
   <LinkLive to={URIs.path(@media.newest_activity_id)}>
     <span class="flex items-center gap-1" title={l("Shares")}>
       <#Icon iconify="ph:note-fill" class="w-4 h-4" />
@@ -33,21 +33,21 @@
   </LinkLive>
 {/if}
 {#if to_int(@media.reply_count) > 0}
-  <span class="text-base-content/30">·</span>
+  <span class="text-subtle">·</span>
   <span class="flex items-center gap-1" title={l("Replies")}>
     <#Icon iconify="ph:chat-teardrop-text-fill" class="w-4 h-4" />
     {@media.reply_count}
   </span>
 {/if}
 {#if to_int(@media.boost_count) > 0}
-  <span class="text-base-content/30">·</span>
+  <span class="text-subtle">·</span>
   <span class="flex items-center gap-1" title={l("Boosts")}>
     <#Icon iconify="ph:rocket-launch-fill" class="w-4 h-4" />
     {@media.boost_count}
   </span>
 {/if}
 {#if to_int(@media.like_count) > 0}
-  <span class="text-base-content/30">·</span>
+  <span class="text-subtle">·</span>
   <span class="flex items-center gap-1" title={l("Likes")}>
     <#Icon iconify="ph:fire-fill" class="w-4 h-4" />
     {@media.like_count}

@@ -23,14 +23,14 @@
       </h2>
       <p
         :if={e(@preset, :description, nil)}
-        class="mt-1 text-sm leading-relaxed text-base-content/70 text-pretty break-words"
+        class="mt-1 text-sm leading-relaxed text-muted text-pretty break-words"
       >
         {e(@preset, :description, nil)}
       </p>
     </div>
     <div
       :if={current_user(@__context__)}
-      class="flex flex-col border-t border-(color:--divider-color) p-1.5"
+      class="flex flex-col border-t border-divider p-1.5"
     >
       <button
         :if={@can_set_default? and @feed_name not in [:notifications, "notifications"]}
@@ -44,7 +44,7 @@
         {#if @default?}
           <#Icon iconify="ph:house-fill" class="size-[18px] shrink-0 text-primary" />
         {#else}
-          <#Icon iconify="ph:house" class="size-[18px] shrink-0 text-base-content/60" />
+          <#Icon iconify="ph:house" class="size-[18px] shrink-0 text-muted" />
         {/if}
         <span>{@default_label}</span>
         <#Icon :if={@default?} iconify="ph:check" class="ml-auto size-4 shrink-0 text-primary" />
@@ -64,9 +64,9 @@
         opts={[id: "feed-description-settings"]}
         class={@row_class}
       >
-        <#Icon iconify="ph:gear-six" class="size-[18px] shrink-0 text-base-content/60" />
+        <#Icon iconify="ph:gear-six" class="size-[18px] shrink-0 text-muted" />
         <span>{l("Feed settings")}</span>
-        <#Icon iconify="ph:arrow-right" class="ml-auto size-4 shrink-0 text-base-content/60" />
+        <#Icon iconify="ph:arrow-right" class="ml-auto size-4 shrink-0 text-muted" />
       </LinkLive>
     </div>
   </section>

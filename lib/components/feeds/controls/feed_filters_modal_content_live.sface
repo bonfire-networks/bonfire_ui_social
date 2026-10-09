@@ -8,7 +8,7 @@
           type="button"
           phx-click="reset_pending"
           phx-target={@myself}
-          class="h-8 px-2 rounded-selector text-sm text-muted hover:text-base-content hover:bg-base-content/5 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100"
+          class="h-8 px-2 rounded-selector text-sm text-muted hover:text-base-content hover:bg-fill transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100"
           data-role="reset_filters"
         >
           {l("Reset %{count}", count: length(@active_filters))}
@@ -29,7 +29,7 @@
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
       <summary class="feed-filter-summary">
-        <h4 id={"#{@id}_origin_label"} class="text-sm font-normal text-(--stream-text-secondary)">{l("Origin")}</h4>
+        <h4 id={"#{@id}_origin_label"} class="text-sm font-normal text-muted">{l("Origin")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"
@@ -77,7 +77,7 @@
                   phx-value-origin={value}
                   phx-target={@myself}
                   class={
-                    "flex items-center justify-between gap-3 min-h-10 px-2 -mx-2 rounded-selector text-sm text-left transition-colors duration-150 hover:bg-base-content/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
+                    "flex items-center justify-between gap-3 min-h-10 px-2 -mx-2 rounded-selector text-sm text-left transition-colors duration-150 hover:bg-fill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-base-100",
                     "text-primary font-medium":
                       Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, value),
                     "text-base-content":
@@ -120,7 +120,7 @@
 
     <div :if={:hide_own in @sections and current_user_id(@__context__)} data-row="hide_own">
       <label class="flex min-h-10 [@media(pointer:coarse)]:min-h-11 cursor-pointer items-center justify-between gap-3">
-        <span class="text-sm font-normal text-(--stream-text-secondary)">{l("Hide my own activities")}</span>
+        <span class="text-sm font-normal text-muted">{l("Hide my own activities")}</span>
         <input
           id={"feed_filter_hide_own_activities_#{@feed_name || "custom"}"}
           type="checkbox"
@@ -144,7 +144,7 @@
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
       <summary class="feed-filter-summary">
-        <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("From people")}</h4>
+        <h4 class="text-sm font-normal text-muted">{l("From people")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"
@@ -186,7 +186,7 @@
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
       <summary class="feed-filter-summary">
-        <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("Not from people")}</h4>
+        <h4 class="text-sm font-normal text-muted">{l("Not from people")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"
@@ -243,7 +243,7 @@
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
       <summary class="feed-filter-summary">
-        <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("Filter by circles")}</h4>
+        <h4 class="text-sm font-normal text-muted">{l("Filter by circles")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"
@@ -294,7 +294,7 @@
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
       <summary class="feed-filter-summary">
-        <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("Hashtags")}</h4>
+        <h4 class="text-sm font-normal text-muted">{l("Hashtags")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"
@@ -346,7 +346,7 @@
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
       <summary class="feed-filter-summary">
-        <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("Time range")}</h4>
+        <h4 class="text-sm font-normal text-muted">{l("Time range")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"
@@ -390,7 +390,7 @@
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
       <summary class="feed-filter-summary">
-        <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("Sort order")}</h4>
+        <h4 class="text-sm font-normal text-muted">{l("Sort order")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"
@@ -437,7 +437,7 @@
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
       <summary class="feed-filter-summary">
-        <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("Content types")}</h4>
+        <h4 class="text-sm font-normal text-muted">{l("Content types")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"
@@ -498,7 +498,7 @@
             label_default={l("Include")}
           />
         {/for}
-        <p class="pt-1 text-xs text-muted"><b class="font-medium text-base-content/70">{l("Only")}</b> {l("shows just these")} · <b class="font-medium text-base-content/70">{l("Hide")}</b> {l("leaves them out")}</p>
+        <p class="pt-1 text-xs text-muted"><b class="font-medium text-muted">{l("Only")}</b> {l("shows just these")} · <b class="font-medium text-muted">{l("Hide")}</b> {l("leaves them out")}</p>
       </div>
     </details>
 
@@ -510,7 +510,7 @@
         phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
       >
         <summary class="feed-filter-summary">
-          <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("Activity types")}</h4>
+          <h4 class="text-sm font-normal text-muted">{l("Activity types")}</h4>
           <span class="flex items-center gap-2 min-w-0">
             <span
               data-role="row_value"
@@ -575,7 +575,7 @@
       phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
     >
       <summary class="feed-filter-summary">
-        <h4 class="text-sm font-normal text-(--stream-text-secondary)">{l("Media")}</h4>
+        <h4 class="text-sm font-normal text-muted">{l("Media")}</h4>
         <span class="flex items-center gap-2 min-w-0">
           <span
             data-role="row_value"

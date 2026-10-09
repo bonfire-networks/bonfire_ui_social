@@ -67,7 +67,7 @@
                   data-role="thread-spine"
                   aria-hidden="true"
                   style="left: calc(var(--comment-base-indent, 0px) + 20px)"
-                  class="absolute top-0 bottom-0 z-0 border-l-hair border-secondary pointer-events-none"
+                  class="absolute top-0 bottom-0 z-0 border-l-hair border-divider pointer-events-none"
                 />
                 {!-- manually assigned threaded_replies (without using stream) --}
                 <div

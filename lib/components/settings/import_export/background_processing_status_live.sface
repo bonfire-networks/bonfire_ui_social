@@ -2,7 +2,7 @@
   <div :if={@stats != %{}} class="mb-6">
     {!-- Overview Stats Grid with clickable filters --}
     <div class="flex flex-col gap-2">
-      <div class="stats bg-base-200 border-secondary border w-full">
+      <div class="stats bg-base-200 border-divider border w-full">
         {!-- Total Progress --}
         <div class="stat">
           <div class="stat-figure text-primary">
@@ -46,7 +46,7 @@
           <div class="stat-desc">{l("Running & queued")}</div>
         </div>
       </div>
-      <div class="stats bg-base-200 border-secondary border w-full">
+      <div class="stats bg-base-200 border-divider border w-full">
         {!-- Success Rate (clickable) --}
         <div
           class="stat cursor-pointer hover:bg-base-300/50"
@@ -69,7 +69,7 @@
           phx-click="filter"
           phx-value-status="failed"
         >
-          <div class={"stat-figure " <> if(@stats.failed > 0, do: "text-error", else: "text-base-content/40")}>
+          <div class={"stat-figure " <> if(@stats.failed > 0, do: "text-error", else: "text-subtle")}>
             <#Icon iconify="ph:exclamation-mark-fill" class="w-6 h-6" />
           </div>
           <div class="stat-title text-xs">{l("Issues")}</div>
@@ -84,7 +84,7 @@
     {!-- Operation Type Breakdown (clickable) --}
     <div :if={@stats.by_operation} class="my-6">
       {!-- <h3 class="text-sm font-medium text-muted mb-3">{l("Type")}</h3> --}
-      <div class="stats bg-base-200 border-secondary border w-full">
+      <div class="stats bg-base-200 border-divider border w-full">
         <div
           :for={{op_code, operation, count} <- @stats.by_operation}
           class={"stat cursor-pointer hover:bg-base-300/50 " <> if(count == 0, do: "opacity-70", else: "")}
@@ -139,7 +139,7 @@
       <button
         phx-target={@myself}
         phx-click="clear_filters"
-        class="btn btn-sm btn-outline border-secondary"
+        class="btn btn-sm btn-outline border-divider"
       >{l("Clear all")}</button>
     </div>
   </div>
@@ -189,7 +189,7 @@
       {!-- Job List --}
       <div
         :for={job <- @jobs}
-        class={"card bg-base-100 border mb-2 border-secondary shadow-sm " <> state_border_class(job.state)}
+        class={"card bg-base-100 border mb-2 border-divider shadow-sm " <> state_border_class(job.state)}
         title={"Job ##{job.id}"}
       >
         <div class="p-4 flex items-start gap-3">

@@ -1,1 +1,1 @@
-<div data-role="activity_name" class="text-sm text-base-content/70">{@name}</div>
+<div data-role="activity_name" class="text-sm text-muted">{@name}</div>

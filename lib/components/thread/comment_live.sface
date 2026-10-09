@@ -13,7 +13,7 @@
       >
         <i
           :class="!show_replies ? 'bg-primary bottom-[0px]' : 'bottom-[0px]'"
-          class="bg-base-content/10 top-0 bottom-0 z-10 w-[2px] absolute"
+          class="bg-fill-strong top-0 bottom-0 z-10 w-[2px] absolute"
         />
       </div> --}
 
@@ -58,7 +58,7 @@
         :if={e(@comment, :stub, nil)}
         data-role="comment-unavailable"
         role="note"
-        class="mx-4 my-2 flex items-center gap-2 text-sm text-base-content/70"
+        class="mx-4 my-2 flex items-center gap-2 text-sm text-muted"
       >
         <#Icon iconify="ph:eye-slash-duotone" class="w-4 h-4 shrink-0" />
         <span>{l("This comment is unavailable. It may have been deleted or is not visible to you.")}</span>

@@ -152,7 +152,7 @@
             :on-click="Bonfire.Social.Graph.Follows:accept"
             phx-value-id={id(@activity_id)}
             type="button"
-            class="flex-shrink-0 normal-case border !border-secondary btn btn-sm btn-primary"
+            class="flex-shrink-0 normal-case border !border-divider btn btn-sm btn-primary"
           >
             {l("Accept")}
           </button>

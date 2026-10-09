@@ -57,7 +57,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   prop tab_class, :css_class,
     default:
-      "flex flex-1 pt-4 px-2 text-base capitalize hover:bg-base-content hover:bg-opacity-10 place-content-center lined_tab"
+      "flex flex-1 pt-4 px-2 text-base capitalize hover:bg-fill-strong place-content-center lined_tab"
 
   prop item_class, :css_class,
     default: "text-muted text-sm pb-4 border-b-4 border-transparent font-medium"

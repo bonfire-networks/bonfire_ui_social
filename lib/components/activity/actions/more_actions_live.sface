@@ -170,7 +170,7 @@
 
   {#if current_user_id(@__context__) != @creator_id and @verb != "Flag" and
       module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}
-    <li class="m-1 border-t-hair border-secondary" />
+    <li class="m-1 border-t-hair border-divider" />
 
     {#if !current_user_id(@__context__)}
       <li>

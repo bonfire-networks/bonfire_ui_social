@@ -97,14 +97,14 @@
                         <div
                           data-role="media-fallback"
                           style="display: none;"
-                          class="relative aspect-video rounded-box overflow-hidden border border-secondary"
+                          class="relative aspect-video rounded-box overflow-hidden border border-divider"
                         >
                           {#case MediaLive.preview_img(@media)}
                             {#match poster when is_binary(poster)}
                               <img src={poster} alt="" class="w-full h-full object-cover">
                             {#match _}
                               <div class="w-full h-full bg-base-200 flex items-center justify-center">
-                                <#Icon iconify="heroicons:video-camera" class="w-12 h-12 text-base-content/30" />
+                                <#Icon iconify="heroicons:video-camera" class="w-12 h-12 text-subtle" />
                               </div>
                           {/case}
                           <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-3">
@@ -170,7 +170,7 @@
                       <div
                         data-role="media-fallback"
                         style="display: none;"
-                        class="flex items-center gap-3 p-3 rounded-box border border-secondary bg-base-200"
+                        class="flex items-center gap-3 p-3 rounded-box border border-divider bg-base-200"
                       >
                         <div class="flex-shrink-0">
                           <#Icon iconify="heroicons:musical-note" class="w-10 h-10 text-muted" />
@@ -191,7 +191,7 @@
                     </div>
                   {#elseif MediaLive.preview_img(@media) || MediaLive.peertube_embed_url(@media)}
                     {!-- Handle media with preview images (like video.movie, video.other, etc.) --}
-                    <div class="rounded-box border border-secondary overflow-hidden">
+                    <div class="rounded-box border border-divider overflow-hidden">
                       {#case MediaLive.peertube_embed_url(@media) ||
                           MediaLive.extract_oembed_url(e(@media, :metadata, "oembed", "html", nil)) ||
                           e(@media, :metadata, "facebook", "video", nil) ||

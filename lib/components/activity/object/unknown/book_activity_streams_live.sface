@@ -1,4 +1,4 @@
-<div class="border border-secondary rounded-box">
+<div class="border border-divider rounded-box">
   <div class="flex p-3 gap-4">
     <!-- {inspect(@json)} -->
     {#case object_field(@json, "cover")}
@@ -25,7 +25,7 @@
               l("Untitled book")
           )}
         </h2>
-        <h3 :if={object_field(debug(@json, "apjson"), "subtitle")} class="text-sm text-base-content/80">
+        <h3 :if={object_field(debug(@json, "apjson"), "subtitle")} class="text-sm text-muted">
           {object_field(debug(@json, "apjson"), "subtitle")}
         </h3>
       </a>
@@ -42,7 +42,7 @@
         </div>
       {/if}
       {!-- TYPE --}
-      <div class="flex items-center mt-1 gap-2 text-sm font-medium text-base-content/80">
+      <div class="flex items-center mt-1 gap-2 text-sm font-medium text-muted">
         {object_field(@json, "physicalFormat")} {object_field(@json, "type")}
       </div>
 

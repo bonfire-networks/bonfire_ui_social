@@ -9,12 +9,12 @@
     </h2>
   </div>
 {#else}
-  <div class="rounded-box border border-secondary bg-base-100 overflow-hidden">
+  <div class="rounded-box border border-divider bg-base-100 overflow-hidden">
     {!-- Calendar chip + Event badge. The poster is an `attachment`, so it is already shown as Media
     alongside this card. --}
     <div class="relative">
       <div
-        class="flex items-center justify-center h-24 bg-base-200 border-b border-secondary"
+        class="flex items-center justify-center h-24 bg-base-200 border-b border-divider"
         aria-hidden="true"
       >
         <#Icon iconify="ph:calendar-blank-bold" class="w-10 h-10 text-base-content/10" />
@@ -90,7 +90,7 @@
         {#match ""}
         {#match content}
           <article class={
-            "mt-4 text-base-content/80 prose max-w-prose",
+            "mt-4 text-muted prose max-w-prose",
             "prose-sm line-clamp-2 !text-muted": !@viewing_main_object
           }>
             {rich(content)}
