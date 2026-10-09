@@ -118,12 +118,16 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     |> refute_has("#feed-description dl")
     |> click_button("#feed-description-pin", "Show in feed tabs")
     |> refute_has("#feed-tab-my")
-    |> assert_has("#feed-description-pin[role=switch][aria-checked=false]", text: "Show in feed tabs")
+    |> assert_has("#feed-description-pin[role=switch][aria-checked=false]",
+      text: "Show in feed tabs"
+    )
     |> click_button("#feed-description-pin", "Show in feed tabs")
     |> assert_has("#feed-tab-my")
     |> visit("/feed/my")
     |> wait_async()
-    |> assert_has("#feed-description-pin[role=switch][aria-checked=true]", text: "Show in feed tabs")
+    |> assert_has("#feed-description-pin[role=switch][aria-checked=true]",
+      text: "Show in feed tabs"
+    )
   end
 
   test "tabs navigate between feeds and bring each feed's heading with them" do
@@ -153,7 +157,9 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     |> visit("/feed/my")
     |> wait_async()
     |> refute_has("#feed-tab-my")
-    |> assert_has("#feed-description-pin[role=switch][aria-checked=false]", text: "Show in feed tabs")
+    |> assert_has("#feed-description-pin[role=switch][aria-checked=false]",
+      text: "Show in feed tabs"
+    )
     |> click_button("#feed-description-pin", "Show in feed tabs")
     |> visit("/settings/user/feeds")
     |> assert_has("#pin-feed-preset-my[aria-pressed=true]", text: "Unpin from feed tabs")

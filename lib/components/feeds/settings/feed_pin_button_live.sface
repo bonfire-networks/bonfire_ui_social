@@ -9,16 +9,14 @@
   aria-checked={if @show_label, do: to_string(@pinned)}
   aria-pressed={if !@show_label, do: to_string(@pinned)}
   data-tip={if !@show_label, do: @label}
-  class={
-    if @show_label,
-      do: ["group", @class],
-      else: [
-        "tooltip tooltip-left btn btn-ghost btn-square shrink-0 rounded-lg p-0",
-        @class,
-        "text-primary": @pinned,
-        "text-muted": !@pinned
-      ]
-  }
+  class={if @show_label,
+    do: ["group", @class],
+    else: [
+      "tooltip tooltip-left btn btn-ghost btn-square shrink-0 rounded-lg p-0",
+      @class,
+      "text-primary": @pinned,
+      "text-muted": !@pinned
+    ]}
 >
   <#Icon
     iconify={if @pinned, do: "ph:push-pin-simple-fill", else: "ph:push-pin-simple"}
