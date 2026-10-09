@@ -5,7 +5,7 @@
   aria-label={l("Feeds")}
   class="sticky top-[calc(env(safe-area-inset-top)+3.75rem)] lg:top-page-header z-sticky w-full min-w-0 bg-base-100/80 lg:bg-base-200/70 backdrop-blur-md before:absolute before:inset-x-0 before:bottom-full before:h-4 before:bg-base-100 lg:before:hidden transition-[translate] duration-200 ease-out motion-reduce:transition-none max-lg:data-scroll-hidden:-translate-y-full [html:has(&)]:scroll-pt-[calc(env(safe-area-inset-top)+6.75rem)] lg:[html:has(&)]:scroll-pt-[calc(var(--spacing-page-header)+3rem)] border-none"
 >
-  <ul class="flex flex-nowrap gap-2 overflow-x-auto overscroll-x-contain scroll-smooth motion-reduce:scroll-auto snap-x snap-proximity px-3 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [mask-image:linear-gradient(to_right,transparent,black_0.5rem,black_calc(100%-0.5rem),transparent)]">
+  <ul class="flex flex-nowrap gap-2 overflow-x-auto overscroll-x-contain scroll-smooth motion-reduce:scroll-auto snap-x snap-proximity px-3 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [mask-image:linear-gradient(to_right,transparent,black_0.5rem,black_calc(100%-0.5rem),transparent)]">
     <li :for={preset <- @presets} class="shrink-0 snap-center min-w-[max(16%,7rem)]">
       <LinkLive
         to={preset.href}
