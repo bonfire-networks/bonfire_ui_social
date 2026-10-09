@@ -71,7 +71,7 @@
       {#match provider}
         <span class="text-sm text-left text-muted">{provider}</span>
     {/case}
-    <div class="font-bold text-lg text-left">{@media_label}</div>
+    <div class="type-heading text-left">{@media_label}</div>
     {#case MediaLive.author(@media)}
       {#match nil}
       {#match author}

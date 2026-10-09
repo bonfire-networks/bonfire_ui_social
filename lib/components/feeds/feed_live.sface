@@ -67,7 +67,7 @@
         phx-click={JS.show(to: ".fresh_hidden")
         |> JS.push("show_fresh", target: @myself)
         |> JS.add_class("hidden")}
-        class="flex justify-center w-full mx-auto btn btn-ghost text-primary z-50 border-0 border-b border-divider rounded-none py-6 font-light"
+        class="flex justify-center w-full mx-auto btn btn-ghost text-primary z-50 border-0 border-b border-divider rounded-none py-6 font-normal"
         phx-show={JS.remove_class("hidden")}
       >
         <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
@@ -271,7 +271,7 @@
                                               target={@myself}
                                               hide_guest_fallback={@hide_guest_fallback}
                                               label={l("Show older activities")}
-                                              button_class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border-0 bg-transparent px-3 py-2 text-sm font-medium text-primary cursor-pointer hover:bg-primary/5 after:content-['↓'] phx-click-loading:after:hidden phx-scroll-loading:after:hidden"
+                                              button_class="inline-flex min-h-11 items-center justify-center gap-2 rounded-selector border-0 bg-transparent px-3 py-2 text-sm font-medium text-primary cursor-pointer hover:bg-primary/5 after:content-['↓'] phx-click-loading:after:hidden phx-scroll-loading:after:hidden"
                                               dom_id_suffix="show_older"
                                               opts={%{"phx-value-time_limit" => 0}}
                                               hide_if_no_more
@@ -282,7 +282,7 @@
                                             <div class="w-full flex items-center justify-center mb-4">
                                               <button
                                                 data-id="load_all_time"
-                                                class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border-0 bg-transparent px-3 py-2 text-sm font-medium text-primary cursor-pointer hover:bg-primary/5 after:content-['↓'] phx-click-loading:after:hidden phx-scroll-loading:after:hidden"
+                                                class="inline-flex min-h-11 items-center justify-center gap-2 rounded-selector border-0 bg-transparent px-3 py-2 text-sm font-medium text-primary cursor-pointer hover:bg-primary/5 after:content-['↓'] phx-click-loading:after:hidden phx-scroll-loading:after:hidden"
                                                 phx-click="set_filter"
                                                 phx-value-time_limit={0}
                                                 phx-target={@myself}
@@ -298,7 +298,7 @@
                                             <a
                                               :if={!@hide_guest_fallback}
                                               data-id="load_all_time"
-                                              class="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border-0 bg-transparent px-3 py-2 text-sm font-medium text-primary cursor-pointer hover:bg-primary/5 after:content-['↓'] phx-click-loading:after:hidden phx-scroll-loading:after:hidden"
+                                              class="inline-flex min-h-11 items-center justify-center gap-2 rounded-selector border-0 bg-transparent px-3 py-2 text-sm font-medium text-primary cursor-pointer hover:bg-primary/5 after:content-['↓'] phx-click-loading:after:hidden phx-scroll-loading:after:hidden"
                                               href={append_params_uri(
                                                 @current_url || @__context__[:current_url],
                                                 %{

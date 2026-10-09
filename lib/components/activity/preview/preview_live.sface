@@ -6,11 +6,11 @@
     <div class="flex flex-col gap-1">
       {#case e(@object, :post_content, :name, nil) || e(@object, :post_content, :summary, nil)}
         {#match nil}
-          <div :if={!@is_remote} class="font-medium text-lg text-base-content">
+          <div :if={!@is_remote} class="type-heading text-base-content">
             {"No title"}
           </div>
         {#match title}
-          <div class="font-medium text-lg text-base-content">
+          <div class="type-heading text-base-content">
             <p>{title}</p>
           </div>
       {/case}

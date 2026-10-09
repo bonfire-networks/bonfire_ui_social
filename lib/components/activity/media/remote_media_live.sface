@@ -211,7 +211,7 @@
                               {!-- Action buttons overlay --}
                               <div class="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors flex items-center justify-center gap-3">
                                 {!-- Play inline button --}
-                                <div class="flex items-center bg-white/90 hover:bg-white rounded p-3 gap-6 shadow-lg transition-all hover:scale-110">
+                                <div class="flex items-center bg-white/90 hover:bg-white rounded-selector p-3 gap-6 shadow-lg transition-all hover:scale-110">
                                   <button
                                     type="button"
                                     phx-click="show_embed"

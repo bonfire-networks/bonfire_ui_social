@@ -20,7 +20,7 @@
                 <LinkLive
                   to={media.path}
                   target="_blank"
-                  class="text-lg font-medium link link-hover line-clamp-2 leading-snug transition-colors"
+                  class="type-heading link link-hover line-clamp-2 leading-snug transition-colors"
                 >
                   {Bonfire.Files.Media.media_label_and_alt(media)}
                 </LinkLive>
@@ -51,7 +51,7 @@
                   <LinkLive to={media.path} target="_blank" class="block">
                     <LazyImage
                       parent_id={deterministic_dom_id("trending_widget_thumb", media.path)}
-                      class="w-16 h-16 rounded-lg object-cover transition-all"
+                      class="w-16 h-16 rounded-box object-cover transition-all"
                       fallback_class="w-4 h-4 text-muted"
                       src={preview_img}
                       media={media}

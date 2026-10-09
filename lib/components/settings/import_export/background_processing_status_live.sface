@@ -148,7 +148,7 @@
     <div class="text-center py-12">
       <div class="text-muted">
         <#Icon iconify="heroicons:document-text" class="w-12 h-12 mx-auto mb-4 opacity-50" />
-        <p class="text-lg font-medium mb-2">{l("No import history")}</p>
+        <p class="type-heading mb-2">{l("No import history")}</p>
         <p>{if @filters[:type] || @filters[:status],
             do: l("No imports match your current filters."),
             else: l("Your import history will appear here once you start importing data.")}</p>
@@ -303,7 +303,7 @@
                 <#Icon iconify="heroicons:exclamation-triangle" class="w-3.5 h-3.5" />
                 {l("Show error details")}
               </button>
-              <div id={"error-details-#{job.id}"} class="hidden mt-2 p-3 bg-error/10 rounded-lg">
+              <div id={"error-details-#{job.id}"} class="hidden mt-2 p-3 bg-error/10 rounded-box">
                 <pre class="text-xs text-error/80 whitespace-pre-wrap font-mono">{job.error}</pre>
               </div>
             </div>

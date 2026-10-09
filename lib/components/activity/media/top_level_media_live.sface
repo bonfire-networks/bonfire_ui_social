@@ -35,7 +35,7 @@
       <div class="flex flex-col gap-half">
         {#case MediaLive.provider(@link)}
           {#match provider when is_binary(provider)}
-            <div class="text-caption uppercase tracking-[0.04em] text-base-content font-medium truncate">{provider}</div>
+            <div class="text-xs uppercase tracking-label text-base-content font-medium truncate">{provider}</div>
           {#match _}
         {/case}
 
@@ -43,7 +43,7 @@
           <LinkLive
             to={@link.path}
             target="_blank"
-            class="block text-display font-medium tracking-[-0.03em] leading-[25px] text-base-content link link-hover line-clamp-2 text-balance"
+            class="block type-title leading-[25px] text-base-content link link-hover line-clamp-2 text-balance"
           >
             {Bonfire.Files.Media.media_label_and_alt(@link)}
           </LinkLive>
@@ -52,11 +52,11 @@
 
       {#case Bonfire.Files.Media.description(@link)}
         {#match description when is_binary(description) and description != ""}
-          <p class="text-body text-muted line-clamp-2 text-pretty">{description}</p>
+          <p class="text-base text-muted line-clamp-2 text-pretty">{description}</p>
         {#match _}
       {/case}
 
-      <div class="flex items-center gap-2 text-body text-muted">
+      <div class="flex items-center gap-2 text-base text-muted">
         <Bonfire.UI.Social.TrendingMediaActionsLive media={@link} />
       </div>
     </div>
@@ -72,7 +72,7 @@
     <div class="flex flex-col gap-half flex-1 min-w-0">
       {#case MediaLive.provider(@link)}
         {#match provider when is_binary(provider)}
-          <div class="text-caption uppercase tracking-[0.04em] text-base-content font-medium truncate">{provider}</div>
+          <div class="text-xs uppercase tracking-label text-base-content font-medium truncate">{provider}</div>
         {#match _}
       {/case}
 
@@ -80,13 +80,13 @@
         <LinkLive
           to={@link.path}
           target="_blank"
-          class="text-body font-medium text-base-content link link-hover line-clamp-2 leading-snug"
+          class="text-base font-medium text-base-content link link-hover line-clamp-2 leading-snug"
         >
           {Bonfire.Files.Media.media_label_and_alt(@link)}
         </LinkLive>
       </Bonfire.UI.Common.OpenExternalLinkLive>
 
-      <div class="flex items-center gap-2 text-body text-muted">
+      <div class="flex items-center gap-2 text-base text-muted">
         <Bonfire.UI.Social.TrendingMediaActionsLive media={@link} />
       </div>
     </div>

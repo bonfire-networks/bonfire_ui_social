@@ -39,7 +39,7 @@
           image_preview
           enable_fallback={false}
           modal_class=max-w-[500px]"
-          wrapper_class="h-full max-h-full !w-full md:w-10/12 max-w-[100%] bg-base-100 shadow-lg rounded-lg"
+          wrapper_class="h-full max-h-full !w-full md:w-10/12 max-w-[100%] bg-base-100 shadow-lg rounded-box"
           open_btn_class="w-full"
           open_btn_wrapper_class="w-full h-full flex place-content-center"
         >

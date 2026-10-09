@@ -1,7 +1,7 @@
 <div class="flex flex-col max-h-[calc(100vh-10rem)]">
   {#if @title || (@show_reset && @active_filters != [])}
     <div class="flex items-center justify-between gap-3 min-h-10 pb-1">
-      <h3 :if={@title} class="text-base font-semibold text-base-content">{@title}</h3>
+      <h3 :if={@title} class="text-base font-bold text-base-content">{@title}</h3>
       <span :if={!@title} />
       {#if @show_reset && @active_filters != []}
         <button

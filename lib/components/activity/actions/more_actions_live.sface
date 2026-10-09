@@ -160,7 +160,7 @@
           phx-value-quoted_id={id}
           phx-value-quote_id={id(@object)}
           phx-target={"##{@activity_component_id}"}
-          class="!flex items-center gap-2 justify-between  text-error"
+          class="!flex items-center gap-2 justify-between text-error"
         >
           <span>{l("Remove quote")}</span>
         </button>

@@ -4,7 +4,7 @@
     )}
     {#match federating?}
       {!-- <div class="flex items-center justify-between mb-4 mx-4">
-        <h2 class="text-lg font-medium">{l("Import Data")}</h2>
+        <h2 class="type-heading">{l("Import Data")}</h2>
       </div> --}
 
       <div class="p-4 mb-0 rounded-md bg-info/10">
@@ -96,16 +96,16 @@
               <#Icon iconify="ph:swap-fill" class="w-7 h-7 text-primary" />
               <div class="flex flex-col">
                 <div class="font-medium">{l("Move from a different profile")}</div>
-                <div class="text-sm font-light text-muted">{l(
+                <div class="text-sm font-normal text-muted">{l(
                     "Move from another profile to this one (works across instances, and also with other fediverse tools like Mastodon or Akkoma)"
                   )}</div>
               </div>
             </div>
           </div>
-          <button type="button" x-cloak class="rounded btn btn-square btn-sm btn-ghost" x-show="open">
+          <button type="button" x-cloak class="btn btn-square btn-sm btn-ghost" x-show="open">
             <#Icon iconify="carbon:chevron-down" class="w-5 h-5 text-base-content" />
           </button>
-          <button type="button" class="rounded btn btn-square btn-sm btn-ghost" x-show="!open">
+          <button type="button" class="btn btn-square btn-sm btn-ghost" x-show="!open">
             <#Icon iconify="carbon:chevron-up-fill" class="w-5 h-5 text-base-content" />
           </button>
         </div>

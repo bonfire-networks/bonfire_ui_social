@@ -17,7 +17,7 @@
     id={"object_header_aside_menu_#{@thread_id}"}
     position="bottom-end"
     wrapper_class="z-40"
-    trigger_class="flex normal-case btn btn-square place-content-center rounded btn-ghost btn-sm"
+    trigger_class="flex normal-case btn btn-square place-content-center btn-ghost btn-sm"
     panel_class="md:menu-sm"
     label={l("Options")}
   >

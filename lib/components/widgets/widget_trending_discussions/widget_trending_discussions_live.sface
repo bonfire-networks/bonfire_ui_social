@@ -2,7 +2,7 @@
   {#match discussions}
     <Bonfire.UI.Common.WidgetBlockLive
       class="w-full flex-auto mx-auto border-y-hair border-divider overflow-hidden"
-      title_class="px-card py-card text-xs font-semibold uppercase tracking-[0.06em] text-muted"
+      title_class="px-card py-card text-xs font-bold uppercase tracking-wider text-muted"
       widget_title={@widget_title || l("Top discussions")}
       reset_cache_event="Bonfire.UI.Social.WidgetTrendingDiscussionsLive:reset_trending_discussions"
       reset_cache_values={%{limit: @limit}}

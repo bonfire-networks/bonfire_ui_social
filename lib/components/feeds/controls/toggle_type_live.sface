@@ -15,7 +15,7 @@
       <div
         role="radiogroup"
         aria-label={l("Filter mode for %{label}", label: @label)}
-        class="inline-flex items-center rounded-full bg-base-content/[0.06] p-0.5 text-[13px] font-medium shrink-0"
+        class="inline-flex items-center rounded-full bg-base-content/[0.06] p-0.5 text-sm font-medium shrink-0"
       >
         <button
           type="button"

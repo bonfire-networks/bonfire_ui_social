@@ -1050,7 +1050,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       <div
         :if={@reply_context? and e(@reply_to, :object, :id, nil) != @thread_id}
         data-role="thread_header"
-        class="-mx-card -mt-[16px] mb-2 px-card py-2 bg-base-200 border-b-hair border-divider rounded-t-[var(--radius-box)] flex items-center justify-end"
+        class="-mx-card -mt-[16px] mb-2 px-card py-2 bg-base-200 border-b-hair border-divider rounded-t-box flex items-center justify-end"
       >
         {!-- plain anchor with `preview_activity_link` so the PreviewActivity hook
              opens the PreviewContent modal instead of navigating (real link as fallback) --}
@@ -1062,7 +1062,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           class="preview_activity_link group no-underline"
           aria-label={l("See full thread")}
         >
-          <span class="text-xs uppercase tracking-[0.48px] text-base-content group-hover:text-primary transition-colors">{l("See full thread")}</span>
+          <span class="text-xs uppercase tracking-label text-base-content group-hover:text-primary transition-colors">{l("See full thread")}</span>
         </a>
       </div>
 

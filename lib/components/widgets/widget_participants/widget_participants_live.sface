@@ -43,7 +43,7 @@
               <LinkLive
                 to={path(participant)}
                 parent_id={deterministic_dom_id(__MODULE__, id(participant), "name", "widget_participants")}
-                class="flex min-h-11 min-w-0 items-center truncate text-[13px] leading-[1.2] text-base-content [font-weight:550]"
+                class="flex min-h-11 min-w-0 items-center truncate text-sm leading-[1.2] text-base-content font-bold"
               >
                 {e(participant, :profile, :name, nil) ||
                   e(participant, :character, :username, l("User"))}
@@ -56,7 +56,7 @@
                 path={path(participant)}
                 hide_icon
                 container_class="flex w-[76px] items-center justify-end"
-                loading_class="skeleton h-8 w-[76px] rounded-[var(--radius-button,var(--button-radius-default,0.625rem))]"
+                loading_class="skeleton h-8 w-[76px] rounded-(--radius-button)"
                 class="btn btn-outline !h-8 !min-h-8 !w-[76px] !border-divider !px-2 text-xs leading-none text-muted hover:text-base-content"
                 class_already="btn btn-ghost !h-8 !min-h-8 !w-[76px] !border-transparent !bg-base-content/[0.08] !px-2 text-xs leading-none text-muted hover:text-base-content"
               />

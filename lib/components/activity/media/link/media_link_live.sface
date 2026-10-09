@@ -84,21 +84,21 @@
                   {#match provider when is_binary(provider) and provider != media_label}
                     <div
                       data-id="media_author"
-                      class="text-caption uppercase tracking-[0.04em] text-base-content font-medium truncate"
+                      class="text-xs uppercase tracking-label text-base-content font-medium truncate"
                     >
                       {provider}
                     </div>
                   {#match _}
                 {/case}
               </div>
-              {!-- full column unfurl → text-display (Figma headline); compact/row → text-body --}
+              {!-- full column unfurl → text-xl (Figma headline); compact/row → text-base --}
               <div
                 data-id="media_title"
                 class={
                   "font-medium text-base-content text-pretty md:text-balanced line-clamp-2",
-                  "text-display tracking-[-0.03em] leading-[25px]":
+                  "text-xl tracking-tight leading-[25px]":
                     is_binary(@preview_img) and !@small_icon and !@activity_inception,
-                  "text-body leading-snug": @small_icon or @activity_inception or !is_binary(@preview_img)
+                  "text-base leading-snug": @small_icon or @activity_inception or !is_binary(@preview_img)
                 }
               >
                 {rich(media_label) ||
@@ -108,7 +108,7 @@
 
             <div
               data-id="media_description"
-              class="text-body break-words text-muted line-clamp-2 text-pretty max-w-prose"
+              class="text-base break-words text-muted line-clamp-2 text-pretty max-w-prose"
             >
               {raw(Text.maybe_sane_html(Bonfire.Files.Media.description(@media)))}
             </div>
@@ -120,7 +120,7 @@
       {#match creator_names when creator_names != []}
         <div
           data-id="fediverse_creators"
-          class="text-body border-t-hair border-divider text-muted flex items-center gap-3 p-card"
+          class="text-base border-t-hair border-divider text-muted flex items-center gap-3 p-card"
         >
           <span class="text-xl text-secondary">⁂</span>
           <div class="flex-1 font-medium gap-2 flex items-center">

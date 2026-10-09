@@ -15,7 +15,7 @@
       <h2
         :if={@showing_within == :feed}
         id="notification-preferences-title"
-        class="text-heading font-medium"
+        class="type-heading"
       >{l("Notification preferences")}</h2>
       {!-- only the sections that are still unbuilt claim to be a preview, so a live section never says its changes are discarded --}
       <p

@@ -7,7 +7,7 @@
   >
     <span
       data-role="no_subject"
-      class="subject_timestamp text-[13px] font-normal no-underline truncate ellipsis text-muted"
+      class="subject_timestamp text-sm font-normal no-underline truncate ellipsis text-muted"
     >
       <Bonfire.UI.Social.Activity.DateAgoLive
         date_ago={@date_ago}

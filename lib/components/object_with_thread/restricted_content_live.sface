@@ -9,7 +9,7 @@
     <#Icon iconify="ph:lock-key-duotone" class="w-8 h-8 text-primary" />
   </div>
 
-  <h2 class="mt-4 text-lg font-semibold text-base-content">
+  <h2 class="mt-4 type-heading text-base-content">
     {get_setting(
       @rc_settings,
       :title,

@@ -11,7 +11,7 @@
         to={preset.href}
         opts={[id: "feed-tab-" <> preset.slug, "aria-current": if(preset.active?, do: "page", else: nil)]}
         class={[
-          "flex h-7.5 items-center justify-center gap-2 whitespace-nowrap rounded-full border px-3 text-sm font-semibold transition-[color,background-color,border-color,scale] duration-150 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-base-content",
+          "flex h-7.5 items-center justify-center gap-2 whitespace-nowrap rounded-full border px-3 text-sm font-bold transition-[color,background-color,border-color,scale] duration-150 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-base-content",
           "border-primary bg-primary text-primary-content": preset.active?,
           "border-divider bg-base-200 text-muted hover:bg-base-300 hover:text-base-content":
             not preset.active?

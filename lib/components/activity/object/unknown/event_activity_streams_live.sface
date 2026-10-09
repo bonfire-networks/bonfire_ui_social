@@ -28,10 +28,10 @@
       {#case chip_parts(event_time(object_field(@json, "startTime")))}
         {#match nil}
         {#match c}
-          <div class="absolute bottom-3 left-3 flex flex-col items-center justify-center leading-none rounded-lg bg-base-100 ring-1 ring-base-content/10 shadow-md px-3 py-1.5 min-w-[3rem]">
-            <span class="text-[0.65rem] font-medium uppercase tracking-wide text-primary">{c.weekday}</span>
-            <span class="text-2xl font-bold text-base-content">{c.day}</span>
-            <span class="text-[0.65rem] font-medium uppercase tracking-wide text-muted">{c.month}</span>
+          <div class="absolute bottom-3 left-3 flex flex-col items-center justify-center leading-none rounded-box bg-base-100 ring-1 ring-base-content/10 shadow-md px-3 py-1.5 min-w-[3rem]">
+            <span class="type-overline text-primary">{c.weekday}</span>
+            <span class="type-title text-base-content">{c.day}</span>
+            <span class="type-overline text-muted">{c.month}</span>
           </div>
       {/case}
     </div>

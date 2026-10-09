@@ -1,6 +1,6 @@
-<div data-type={@label_id} class="border-hair mt-3 rounded-lg border-divider">
+<div data-type={@label_id} class="border-hair mt-3 rounded-box border-divider">
   <!-- :if={@showing_within not in [:group, :topic, :thread] and not is_nil(@label)} -->
-  <div class="bg-fill rounded-t-lg border-b-hair border-divider flex items-center gap-3 py-2 p-3">
+  <div class="bg-fill rounded-t-box border-b-hair border-divider flex items-center gap-3 py-2 p-3">
     {#case @label_id || id(@label)}
       {#match "1ABE10VTDATEDGET1ATESTNEWS"}
         <#Icon iconify="ri:broadcast-fill" class="w-5 h-5 text-primary" />

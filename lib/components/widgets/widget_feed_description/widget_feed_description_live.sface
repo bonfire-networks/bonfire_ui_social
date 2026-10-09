@@ -1,7 +1,7 @@
 {#if @boxed}
   <Bonfire.UI.Common.WidgetBlockLive :if={@preset}>
     <section id="feed-description" aria-labelledby="feed-description-title">
-      <h2 id="feed-description-title" class="text-base font-semibold leading-6 break-words">
+      <h2 id="feed-description-title" class="text-base font-bold leading-6 break-words">
         {Bonfire.UI.Social.FeedNavigation.get_name(@preset, @feed_name)}
       </h2>
       <p :if={e(@preset, :description, nil)} class="mt-2 text-sm leading-relaxed text-muted">
@@ -14,7 +14,7 @@
     <div class="px-4.5 pt-3.5 pb-3">
       <h2
         id="feed-description-title"
-        class="flex items-center gap-2 text-sm font-semibold leading-5 break-words text-base-content"
+        class="flex items-center gap-2 text-sm font-bold leading-5 break-words text-base-content"
       >
         <span aria-hidden="true" class="flex shrink-0 items-center text-primary">
           <Iconify.iconify icon={e(@preset, :icon, "ph:rss-simple")} class="size-[18px]" />

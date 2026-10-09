@@ -29,7 +29,7 @@
         <select
           id={"feed_order_#{@feed_name || "default"}"}
           name="feed_order"
-          class="min-h-11 min-w-0 max-w-[70%] cursor-pointer appearance-none truncate border-0 bg-transparent p-0 text-right text-sm text-base-content underline decoration-base-content/30 underline-offset-4 transition-colors duration-150 ease-out hover:decoration-base-content focus-ring rounded-sm"
+          class="min-h-11 min-w-0 max-w-[70%] cursor-pointer appearance-none truncate border-0 bg-transparent p-0 text-right text-sm text-base-content underline decoration-base-content/30 underline-offset-4 transition-colors duration-150 ease-out hover:decoration-base-content focus-ring rounded-selector"
         >
           {#for {value, label} <- Bonfire.UI.Social.WidgetCustomizeFeedLive.order_options()}
             <option

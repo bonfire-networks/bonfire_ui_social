@@ -54,8 +54,8 @@
             />
           </LinkLive>
           <div class="min-w-0 flex-1 space-y-2">
-            <p class="text-body leading-snug break-words">
-              <LinkLive to={@path} class="font-semibold link link-hover focus-ring">{@profile_name || @character_username}</LinkLive>
+            <p class="text-base leading-snug break-words">
+              <LinkLive to={@path} class="font-bold link link-hover focus-ring">{@profile_name || @character_username}</LinkLive>
               {l("requested to join")}
             </p>
             <div class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
@@ -97,7 +97,7 @@
                   alt={e(emoji, :metadata, "shortcode", nil) <> " " <> e(emoji, :metadata, "label", nil)}
                 />
               {#match %{summary: emoji}}
-                <span class="text-warning text-body leading-none" aria-hidden="true">{emoji}</span>
+                <span class="text-warning text-base leading-none" aria-hidden="true">{emoji}</span>
               {#match _}
                 <Iconify.iconify
                   icon={notification_icon(@experienced_as, @verb)}
@@ -106,7 +106,7 @@
             {/case}
           </div>
 
-          <div class="flex-1 min-w-0 text-body leading-snug">
+          <div class="flex-1 min-w-0 text-base leading-snug">
             <LinkLive
               to={@path}
               opts={"data-id": "subject_name"}
@@ -188,7 +188,7 @@
               class="w-[18px] h-[18px] flex-shrink-0 text-primary"
             />
           </div>
-          <div class="flex-1 min-w-0 text-body leading-snug">
+          <div class="flex-1 min-w-0 text-base leading-snug">
             <LinkLive
               class="inline link link-hover font-medium text-base-content"
               to={@path}
@@ -211,7 +211,7 @@
               class="w-[18px] h-[18px] flex-shrink-0 text-primary"
             />
           </div>
-          <div class="flex-1 min-w-0 text-body leading-snug">
+          <div class="flex-1 min-w-0 text-base leading-snug">
             <LinkLive
               class="inline link link-hover font-medium text-base-content"
               to={@path}
@@ -235,7 +235,7 @@
                   alt={e(emoji, :metadata, "label", nil) || e(emoji, :metadata, "shortcode", nil)}
                 />
               {#match %{summary: emoji}}
-                <span class="text-warning text-body leading-none" aria-hidden="true">{emoji}</span>
+                <span class="text-warning text-base leading-none" aria-hidden="true">{emoji}</span>
               {#match _}
                 <Iconify.iconify
                   icon={notification_icon(@experienced_as, @verb)}
@@ -243,7 +243,7 @@
                 />
             {/case}
           </div>
-          <div class="flex-1 min-w-0 text-body leading-snug">
+          <div class="flex-1 min-w-0 text-base leading-snug">
             <LinkLive
               to={@path}
               opts={"data-id": "subject_name"}
@@ -280,7 +280,7 @@
               class="w-[18px] h-[18px] flex-shrink-0 text-primary"
             />
           </div>
-          <div class="flex-1 min-w-0 text-body leading-snug">
+          <div class="flex-1 min-w-0 text-base leading-snug">
             <LinkLive
               class="inline link link-hover font-medium text-base-content"
               to={@path}
@@ -301,7 +301,7 @@
               class="w-[18px] h-[18px] flex-shrink-0 text-primary"
             />
           </div>
-          <div class="flex-1 min-w-0 text-body leading-snug">
+          <div class="flex-1 min-w-0 text-base leading-snug">
             <LinkLive
               to={@path}
               opts={"data-id": "subject_name"}
@@ -343,7 +343,7 @@
               class="w-[18px] h-[18px] flex-shrink-0 text-primary"
             />
           </div>
-          <div class="flex-1 min-w-0 text-body leading-snug">
+          <div class="flex-1 min-w-0 text-base leading-snug">
             <LinkLive
               class="inline link link-hover font-medium text-base-content"
               to={@path}
@@ -371,7 +371,7 @@
               class="w-[18px] h-[18px] flex-shrink-0 text-primary"
             />
           </div>
-          <div class="flex-1 min-w-0 text-body leading-snug">
+          <div class="flex-1 min-w-0 text-base leading-snug">
             <LinkLive
               class="inline link link-hover font-medium text-base-content"
               to={@path}

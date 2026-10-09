@@ -5,7 +5,7 @@
 
   <div
     id="feed-settings-panel"
-    class="m-4 rounded-xl border border-divider overflow-hidden"
+    class="m-4 rounded-box border border-divider overflow-hidden"
   >
     <div class="grid grid-cols-1">
       <.form
@@ -65,7 +65,7 @@
         name={l("How many items to show in feeds and other lists")}
         keys={[:default_pagination_limit]}
         unit={l("items")}
-        class="input w-20 min-h-11 rounded-xl text-base shrink-0"
+        class="input w-20 min-h-11 text-base shrink-0"
       />
     </.form>
     --}
@@ -100,7 +100,7 @@
       <div class="flex items-start gap-3 px-4 mb-2">
         <#Icon iconify="ph:list-star-fill" class="size-5 shrink-0 mt-0.5 text-primary" />
         <div>
-          <h2 id="feed-presets-heading" class="text-base font-semibold">{l("Feed presets")}</h2>
+          <h2 id="feed-presets-heading" class="text-base font-bold">{l("Feed presets")}</h2>
           <p class="mt-1 text-sm leading-5 text-muted">{l("Choose which feeds appear in your feed tabs. Drag pinned feeds to reorder them.")}</p>
         </div>
       </div>
@@ -126,12 +126,12 @@
             >
               <#Icon iconify="ph:dots-six-vertical" class="size-4" />
             </span>
-            <div class="size-8 rounded-lg bg-base-200 shrink-0 grid place-items-center text-muted">
+            <div class="size-8 rounded-box bg-base-200 shrink-0 grid place-items-center text-muted">
               <Iconify.iconify icon={preset[:icon] || "ic:baseline-rss-feed"} class="size-5" />
             </div>
             <div class="flex-1 min-w-0">
-              <h3 class="text-sm font-semibold leading-5 break-words">{FeedNavigation.get_name(preset, preset.id)}</h3>
-              <p class="mt-0.5 text-[13px] leading-5 text-muted break-words">{preset[:description]}</p>
+              <h3 class="text-sm font-bold leading-5 break-words">{FeedNavigation.get_name(preset, preset.id)}</h3>
+              <p class="mt-0.5 text-sm leading-5 text-muted break-words">{preset[:description]}</p>
             </div>
             <div class="flex shrink-0 items-center gap-1">
               <div class="w-9 [@media(pointer:coarse)]:w-11">
@@ -139,7 +139,7 @@
                   :if={!preset[:current_user_required] and
                     module_enabled?(Bonfire.UI.Social.SubscribeFeedLive, @__context__)}
                   feed_name={preset.id}
-                  icon_button_class="btn btn-ghost btn-square size-9 min-h-9 p-0 rounded-lg [@media(pointer:coarse)]:size-11 [@media(pointer:coarse)]:min-h-11 text-muted"
+                  icon_button_class="btn btn-ghost btn-square size-9 min-h-9 p-0 [@media(pointer:coarse)]:size-11 [@media(pointer:coarse)]:min-h-11 text-muted"
                   icon_class="size-5 shrink-0"
                   as_icon
                 />
@@ -150,7 +150,7 @@
                 type="button"
                 phx-click="Bonfire.Social.Feeds:preset_delete"
                 phx-value-id={preset.id}
-                class="btn btn-ghost btn-square size-9 min-h-9 p-0 rounded-lg [@media(pointer:coarse)]:size-11 [@media(pointer:coarse)]:min-h-11 text-error"
+                class="btn btn-ghost btn-square size-9 min-h-9 p-0 [@media(pointer:coarse)]:size-11 [@media(pointer:coarse)]:min-h-11 text-error"
               >
                 <#Icon iconify="ph:trash-bold" class="size-5 shrink-0" />
                 <span class="sr-only">{l("Delete")}</span>

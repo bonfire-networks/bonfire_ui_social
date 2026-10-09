@@ -9,5 +9,5 @@ defmodule Bonfire.UI.Social.SaveFeedPresetLive do
 
   prop summary_class, :css_class,
     default:
-      "min-h-11 flex cursor-pointer items-center gap-2 rounded-lg text-sm text-primary focus-visible:outline focus-visible:outline-2"
+      "min-h-11 flex cursor-pointer items-center gap-2 rounded-box text-sm text-primary focus-visible:outline focus-visible:outline-2"
 end

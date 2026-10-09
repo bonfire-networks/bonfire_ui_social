@@ -6,7 +6,7 @@
   {#case object_field(debug(@json, "apjson"), "name") || object_field(@json, "title")}
     {#match nil}
     {#match title}
-      <h2 class="mb-2 text-xl font-medium text-base-content">
+      <h2 class="mb-2 type-title text-base-content">
         {rich(title)}
       </h2>
   {/case}

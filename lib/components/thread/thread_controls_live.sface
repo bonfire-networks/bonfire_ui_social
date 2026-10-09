@@ -12,7 +12,7 @@
       <#Icon iconify="mdi:chevron-down" class="w-4 h-4 opacity-60" aria-hidden="true" />
     </:trigger>
     <fieldset class="p-2">
-      <legend class="text-sm font-semibold">{l("Thread layout")}</legend>
+      <legend class="text-sm font-bold">{l("Thread layout")}</legend>
       {#for {mode, label} <- [{:nested, l("Threaded replies")}, {:flat, l("Linear replies")}]}
         <label class="flex min-h-11 cursor-pointer items-center justify-between gap-3 px-2 text-base-content">
           <span>{label}</span>
@@ -39,7 +39,7 @@
       {/for}
     </fieldset>
     <fieldset class="p-2">
-      <legend class="text-sm font-semibold">{l("Sort order")}</legend>
+      <legend class="text-sm font-bold">{l("Sort order")}</legend>
       {#for {sort_by, sort_order, label} <-
           [
             {nil, :asc, if(@thread_mode != :flat, do: l("Thread order"), else: l("Oldest first"))},

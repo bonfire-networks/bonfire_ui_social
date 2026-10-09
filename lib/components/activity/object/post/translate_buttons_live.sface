@@ -9,7 +9,7 @@
       <span
         :if={to_string(post_locale) != to_string(Bonfire.Common.Localise.get_locale_id())}
         data-role="post_language"
-        class="text-caption text-muted uppercase"
+        class="text-xs text-muted uppercase"
         title={l("This post was written in %{language}", language: post_locale)}
       >
         {String.upcase(to_string(post_locale))}
@@ -18,7 +18,7 @@
 
   <button
     id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object), "translate_client", @parent_id)}
-    class="translate-btn-client text-muted hover:text-primary text-caption"
+    class="translate-btn-client text-muted hover:text-primary text-xs"
     style="display: none;"
   >
     <span class="loading-spinner" />
@@ -27,7 +27,7 @@
 
   <button
     id={deterministic_dom_id(__MODULE__, id(@activity) || id(@object), "translate_server", @parent_id)}
-    class="translate-btn-server text-muted hover:text-primary text-caption"
+    class="translate-btn-server text-muted hover:text-primary text-xs"
     style="display: none;"
   >
     <span class="loading-spinner" />

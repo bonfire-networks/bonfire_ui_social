@@ -13,7 +13,7 @@
     if @show_label,
       do: ["group", @class],
       else: [
-        "tooltip tooltip-left btn btn-ghost btn-square shrink-0 rounded-lg p-0",
+        "tooltip tooltip-left btn btn-ghost btn-square shrink-0 p-0",
         @class,
         "text-primary": @pinned,
         "text-muted": !@pinned

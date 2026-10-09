@@ -215,8 +215,8 @@
                     role="button"
                     x-bind:aria-expanded="captionExpanded"
                     aria-label={l("Toggle full image description")}
-                    x-bind:class="captionExpanded ? 'max-h-[45vh] overflow-y-auto overscroll-contain text-left bg-black/70 backdrop-blur-md rounded-xl p-4' : 'line-clamp-3'"
-                    class="cursor-pointer rounded focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/80"
+                    x-bind:class="captionExpanded ? 'max-h-[45vh] overflow-y-auto overscroll-contain text-left bg-black/70 backdrop-blur-md rounded-box p-4' : 'line-clamp-3'"
+                    class="cursor-pointer rounded-selector focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/80"
                   >
                     <p :if={label not in [nil, ""]} class="text-white/90 text-sm leading-relaxed">{rich(label)}</p>
                     {#case Bonfire.Files.Media.media_alt(m.metadata, false)}
