@@ -14,7 +14,7 @@
     >
       <:trigger>
         <div class="sr-only">{l("Filter by circles")}</div>
-        <#Icon iconify="ph:circle-fill" class="w-4 h-4 text-primary" />
+        <#Icon iconify="ph:circle-fill" class="size-4 text-primary" />
       </:trigger>
 
       <div class="pt-2" :for={circle <- my_circles}>

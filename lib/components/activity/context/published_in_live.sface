@@ -12,24 +12,44 @@
       @class
   end}
 >
-  <span :if={@placement == :attribution} aria-hidden="true" class="mx-1 text-muted">·</span>
-  <#Icon
-    :if={@placement == :standalone}
-    iconify="ph:users-three-fill"
-    class="w-5 h-5 text-primary"
-  />
-  <span class={"flex-1 text-sm text-muted": @placement == :standalone}>
-    <span class="text-muted">{if @placement == :author, do: l("in"), else: l("Posted in")}</span>
+  {#if @placement == :author}
+    <span class="text-muted">{l("in")}</span>
     <LinkLive
-      class={[
-        "link link-hover font-medium",
-        "text-base-content": @placement == :author,
-        "text-primary": @placement != :author,
-        "truncate max-w-[160px]": @placement == :attribution
-      ]}
+      opts={"data-role": "published_in_pill"}
+      class="inline-flex items-center gap-1.5 min-w-0 max-w-full rounded-full bg-fill hover:bg-fill-strong py-0.5 pl-0.5 pr-2.5 text-base-content transition-colors"
       to={@to}
     >
-      {context_label(@context)}
+      <span class="flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/15">
+        {#case context_icon_url(@context)}
+          {#match nil}
+            <#Icon iconify="ph:users-three-fill" class="size-3 text-primary" />
+          {#match icon_url}
+            <img src={icon_url} alt="" loading="lazy" class="size-full object-cover">
+        {/case}
+      </span>
+      <span class="truncate">{context_label(@context)}</span>
     </LinkLive>
-  </span>
+  {#else}
+    <span :if={@placement == :attribution} aria-hidden="true" class="mx-1 text-muted">·</span>
+    {#if @placement == :standalone}
+      {#case context_icon_url(@context)}
+        {#match nil}
+          <#Icon iconify="ph:users-three-fill" class="size-5 text-primary" />
+        {#match icon_url}
+          <img src={icon_url} alt="" loading="lazy" class="size-5 shrink-0 rounded-full object-cover">
+      {/case}
+    {/if}
+    <span class={"flex-1 text-sm text-muted": @placement == :standalone}>
+      <span class="text-muted">{l("Posted in")}</span>
+      <LinkLive
+        class={[
+          "link link-hover font-medium text-primary",
+          "truncate max-w-40": @placement == :attribution
+        ]}
+        to={@to}
+      >
+        {context_label(@context)}
+      </LinkLive>
+    </span>
+  {/if}
 </div>

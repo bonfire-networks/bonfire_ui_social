@@ -42,16 +42,16 @@
     >
       {#case e(@feed_filters, :sort_by, nil)}
         {#match :reply_count}
-          <#Icon iconify="ph:chat-circle-fill" class="w-5 h-5 stroke-1 fill-base-content/50" />
+          <#Icon iconify="ph:chat-circle-fill" class="size-5 stroke-1 fill-base-content/50" />
           <span>{l("Sort by amount of replies")}</span>
         {#match :boost_count}
-          <#Icon iconify="ph:rocket-launch" class="w-5 h-5 stroke-1 fill-base-content/50" />
+          <#Icon iconify="ph:rocket-launch" class="size-5 stroke-1 fill-base-content/50" />
           <span>{l("Sort by amount of boosts")}</span>
         {#match :like_count}
-          <#Icon iconify="ph:fire-fill" class="w-5 h-5" />
+          <#Icon iconify="ph:fire-fill" class="size-5" />
           <span>{l("Sort by amount of likes")}</span>
         {#match _}
-          <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-muted" />
+          <#Icon iconify="mdi:order-alphabetical-ascending" class="size-5 text-muted" />
           <span>{l("default")}</span>
       {/case}
     </label></div> --}
@@ -73,7 +73,7 @@
         "border-divider active !text-base-content": is_nil(e(@feed_filters, :sort_by, nil))
       }
     >
-      <#Icon iconify="mdi:order-alphabetical-ascending" class="w-5 h-5 text-muted" />
+      <#Icon iconify="mdi:order-alphabetical-ascending" class="size-5 text-muted" />
       <span class="sr-only">{l("Chronological")}</span>
     </a></li>
   <li
@@ -91,7 +91,7 @@
         "border-divider active !text-base-content": e(@feed_filters, :sort_by, nil) == :reply_count
       }
     >
-      <#Icon iconify="ph:chat-circle-fill" class="w-5 h-5 stroke-1 fill-base-content/50" />
+      <#Icon iconify="ph:chat-circle-fill" class="size-5 stroke-1 fill-base-content/50" />
       <span class="sr-only">{l("Most replied")}</span>
     </a>
   </li>
@@ -110,7 +110,7 @@
         "border-divider active !text-base-content": e(@feed_filters, :sort_by, nil) == :boost_count
       }
     >
-      <#Icon iconify="ph:rocket-launch" class="w-5 h-5 stroke-1 fill-base-content/50" />
+      <#Icon iconify="ph:rocket-launch" class="size-5 stroke-1 fill-base-content/50" />
       <span class="sr-only">{l("Most boosted")}</span>
     </a>
   </li>
@@ -129,7 +129,7 @@
         "border-divider active !text-base-content": e(@feed_filters, :sort_by, nil) == :like_count
       }
     >
-      <#Icon iconify="ph:fire-fill" class="w-5 h-5" />
+      <#Icon iconify="ph:fire-fill" class="size-5" />
       <span class="sr-only">{l("Most liked")}</span>
     </a>
   </li>

@@ -28,7 +28,7 @@
         data-tip={l("Advanced")}
         phx-click={JS.toggle(to: "#more_filters")}
         class="btn btn-ghost lg:tooltip lg:tooltip-bottom btn-square text-primary !flex"
-      ><#Icon iconify="mingcute:filter-2-line" class="w-5 h-5" /></button>
+      ><#Icon iconify="mingcute:filter-2-line" class="size-5" /></button>
     </div>
   </div>
 

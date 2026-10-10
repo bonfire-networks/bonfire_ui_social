@@ -11,6 +11,6 @@ defmodule Bonfire.UI.Social.EventCategoryIconLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
   prop category, :string, default: nil
-  prop class, :css_class, default: "w-5 h-5"
+  prop class, :css_class, default: "size-5"
   prop colored, :boolean, default: true
 end

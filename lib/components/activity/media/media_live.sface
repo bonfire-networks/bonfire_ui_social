@@ -51,7 +51,7 @@
             {/case}
           {#else}
             <div class="text-muted text-sm flex items-center gap-2">
-              <#Icon iconify="ph:paperclip-bold" class="w-5 h-5 text-primary" />
+              <#Icon iconify="ph:paperclip-bold" class="size-5 text-primary" />
               <span>{id(m)}</span>
             </div>
           {/if}
@@ -89,7 +89,7 @@
         {!-- the modal caption shows these too, but when the media is the object itself in needs to be shown up-front --}
         {#if @media_text_up_font?}
           {#for m <- @visual_list}
-            <div class="flex flex-col gap-half mb-2">
+            <div class="flex flex-col gap-2 mb-2">
               {#case Bonfire.Files.Media.media_label(m)}
                 {#match nil}
                 {#match label}
@@ -116,7 +116,7 @@
                 class="btn btn-circle btn-sm bg-black/50 hover:bg-black/70 border-none text-white transition-opacity"
                 onclick={"document.getElementById('carousel_#{@parent_id}').scrollBy({left: -(document.getElementById('carousel_#{@parent_id}').offsetWidth - 40), behavior: 'smooth'})"}
               >
-                <#Icon iconify="carbon:chevron-left" class="w-4 h-4" />
+                <#Icon iconify="carbon:chevron-left" class="size-4" />
               </button>
             </div>
             <div class="absolute inset-y-0 right-2 z-30 flex items-center">
@@ -127,7 +127,7 @@
                 class="btn btn-circle btn-sm bg-black/50 hover:bg-black/70 border-none text-white transition-opacity"
                 onclick={"document.getElementById('carousel_#{@parent_id}').scrollBy({left: document.getElementById('carousel_#{@parent_id}').offsetWidth - 40, behavior: 'smooth'})"}
               >
-                <#Icon iconify="carbon:chevron-right" class="w-4 h-4" />
+                <#Icon iconify="carbon:chevron-right" class="size-4" />
               </button>
             </div>
           {/if}
@@ -328,8 +328,8 @@
                                       disable_lazy={@disable_lazy}
                                     />
                                   {#else}
-                                    <div class="flex items-center rounded-l shrink-0 w-10 h-10 place-content-center">
-                                      <#Icon iconify="octicon:file-media-24" class="w-8 h-8 text-muted" />
+                                    <div class="flex items-center rounded-l shrink-0 size-10 place-content-center">
+                                      <#Icon iconify="octicon:file-media-24" class="size-8 text-muted" />
                                     </div>
                                   {/if}
                               {/case}
@@ -348,7 +348,7 @@
       {#else}
         <div class="gap-2 mt-1">
           <div class="flex items-center gap-2">
-            <#Icon iconify="ph:paperclip-bold" class="w-5 h-5 text-primary" />
+            <#Icon iconify="ph:paperclip-bold" class="size-5 text-primary" />
             <span class="text-sm text-muted">{lp("%{count} media file", "%{count} media files", length(@visual_list),
                 count: length(@visual_list)
               )}</span>
@@ -412,7 +412,7 @@
 
   {#if @showing_within in [:feed, :profile] && length(@link_list) > 1}
     <div class="text-xs text-muted flex items-center gap-1 px-2">
-      <#Icon iconify="ph:link-simple" class="w-3 h-3" />
+      <#Icon iconify="ph:link-simple" class="size-3" />
       <span>{length(@link_list) - 1} {l("more link(s)")}</span>
     </div>
   {/if}

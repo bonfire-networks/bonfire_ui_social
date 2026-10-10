@@ -24,7 +24,7 @@
           aria-label={l("Back to the top of the thread")}
           class="w-full flex items-center gap-2 px-3 py-1.5 text-left border-b-hair border-divider bg-base-100/95 backdrop-blur-sm cursor-pointer opacity-0 -translate-y-1 pointer-events-none transition-all duration-150 ease-out"
         >
-          <#Icon iconify="ph:arrow-up-bold" class="w-4 h-4 text-muted shrink-0" />
+          <#Icon iconify="ph:arrow-up-bold" class="size-4 text-muted shrink-0" />
           <Bonfire.UI.Common.AvatarLive
             parent_id={"thread_ctx_#{@thread_id}_#{@activity_inception || "page"}"}
             user_id={id(subject)}
@@ -32,7 +32,7 @@
             title={e(subject, :profile, :name, nil) || e(subject, :character, :username, nil)}
             wrapper_class="shrink-0 !w-6 !h-6 avatar border-0"
             bg_class="rounded-full"
-            class="w-6 h-6 rounded-full"
+            class="size-6 rounded-full"
           />
           <span class="text-sm font-medium truncate">{e(subject, :profile, :name, nil) || e(subject, :character, :username, nil)}</span>
           <span class="text-xs text-muted shrink-0">{DatesTimes.date_from_now(id(@object) || @object_id || @thread_id)}</span>
@@ -59,10 +59,10 @@
             class="flex flex-col items-center w-full max-w-prose px-6 py-12 mx-auto text-center"
           >
             <div
-              class="flex items-center justify-center w-16 h-16 rounded-full bg-fill"
+              class="flex items-center justify-center size-16 rounded-full bg-fill"
               aria-hidden="true"
             >
-              <#Icon iconify="ph:eye-slash-duotone" class="w-8 h-8 text-muted" />
+              <#Icon iconify="ph:eye-slash-duotone" class="size-8 text-muted" />
             </div>
             <h2 class="mt-4 type-heading text-base-content">{l("Sorry, you cannot view this.")}</h2>
             <p class="mt-1 text-sm text-muted">{l("It may have been deleted, or you may not have permission to see it.")}</p>

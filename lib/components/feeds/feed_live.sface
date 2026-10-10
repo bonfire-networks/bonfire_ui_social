@@ -39,7 +39,7 @@
     <div class="load_more_container flex flex-col h-full grow w-full max-w-full">
       {!-- TODO: show tabs at top of persistent feed and use event handler to trigger switching feed within the component rather than patch the view? --}
       {!-- type={if @feed_name in [nil, :my], do: :header_only} --}
-      {!-- "h-[56px]": @feed_name in [nil, :my] --}
+      {!-- "h-14": @feed_name in [nil, :my] --}
       {!-- <Bonfire.UI.Common.TabsLive
       :if={!@hide_filters}
       selected_tab={@selected_tab}
@@ -70,7 +70,7 @@
         class="flex justify-center w-full mx-auto btn btn-ghost text-primary z-50 border-0 border-b border-divider rounded-none py-6 font-normal"
         phx-show={JS.remove_class("hidden")}
       >
-        <#Icon iconify="mdi:arrow-up" class="w-4 h-4" />
+        <#Icon iconify="mdi:arrow-up" class="size-4" />
         {lp("Show %{count} new activity", "Show %{count} new activities", fresh_count(@fresh_ids),
           count: fresh_count(@fresh_ids)
         )}

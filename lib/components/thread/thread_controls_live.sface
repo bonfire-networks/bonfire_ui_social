@@ -9,7 +9,7 @@
   >
     <:trigger>
       <span>{l("View options")}</span>
-      <#Icon iconify="mdi:chevron-down" class="w-4 h-4 opacity-60" aria-hidden="true" />
+      <#Icon iconify="mdi:chevron-down" class="size-4 opacity-60" aria-hidden="true" />
     </:trigger>
     <fieldset class="p-2">
       <legend class="text-sm font-bold">{l("Thread layout")}</legend>

@@ -33,9 +33,9 @@
                   phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_edit_title")}
                   class="flex items-center gap-3 w-full text-base-content"
                 >
-                  <#Icon iconify="ph:text-h-one-fill" class="w-4 h-4 shrink-0 text-muted" />
+                  <#Icon iconify="ph:text-h-one-fill" class="size-4 shrink-0 text-muted" />
                   <span class="text-sm font-medium">{l("Edit discussion title")}</span>
-                  <#Icon iconify="carbon:chevron-right" class="w-3.5 h-3.5 shrink-0 text-subtle ml-auto" />
+                  <#Icon iconify="carbon:chevron-right" class="size-3.5 shrink-0 text-subtle ml-auto" />
                 </button>
               </li>
 
@@ -48,9 +48,9 @@
                     phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_edit_post")}
                     class="flex items-center gap-3 w-full text-base-content"
                   >
-                    <#Icon iconify="ph:pencil-simple-line-fill" class="w-4 h-4 shrink-0 text-muted" />
+                    <#Icon iconify="ph:pencil-simple-line-fill" class="size-4 shrink-0 text-muted" />
                     <span class="text-sm font-medium">{l("Edit")}</span>
-                    <#Icon iconify="carbon:chevron-right" class="w-3.5 h-3.5 shrink-0 text-subtle ml-auto" />
+                    <#Icon iconify="carbon:chevron-right" class="size-3.5 shrink-0 text-subtle ml-auto" />
                   </button>
                 </li>
               {/if}
@@ -62,7 +62,7 @@
                     target="_top"
                     class="flex items-center gap-3 w-full text-base-content"
                   >
-                    <#Icon iconify="ph:clock-counter-clockwise-fill" class="w-4 h-4 shrink-0 text-muted" />
+                    <#Icon iconify="ph:clock-counter-clockwise-fill" class="size-4 shrink-0 text-muted" />
                     <span class="text-sm">{l("Version history")}</span>
                   </a>
                 </li>
@@ -114,9 +114,9 @@
                       phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_lock")}
                       class="flex items-center gap-3 w-full text-base-content"
                     >
-                      <#Icon iconify="ph:lock-fill" class="w-4 h-4 shrink-0 text-muted" />
+                      <#Icon iconify="ph:lock-fill" class="size-4 shrink-0 text-muted" />
                       <span class="text-sm font-medium">{l("Lock discussion")}</span>
-                      <#Icon iconify="carbon:chevron-right" class="w-3.5 h-3.5 shrink-0 text-subtle ml-auto" />
+                      <#Icon iconify="carbon:chevron-right" class="size-3.5 shrink-0 text-subtle ml-auto" />
                     </button>
                   </li>
                 {#elseif @creator_id == current_user_id(@__context__) or
@@ -126,9 +126,9 @@
                       phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_unlock")}
                       class="flex items-center gap-3 w-full text-base-content"
                     >
-                      <#Icon iconify="ph:lock-open-fill" class="w-4 h-4 shrink-0 text-muted" />
+                      <#Icon iconify="ph:lock-open-fill" class="size-4 shrink-0 text-muted" />
                       <span class="text-sm font-medium">{l("Unlock discussion")}</span>
-                      <#Icon iconify="carbon:chevron-right" class="w-3.5 h-3.5 shrink-0 text-subtle ml-auto" />
+                      <#Icon iconify="carbon:chevron-right" class="size-3.5 shrink-0 text-subtle ml-auto" />
                     </button>
                   </li>
                 {/if}
@@ -149,9 +149,9 @@
                         phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_delete_object")}
                         class="flex items-center gap-3 w-full text-error/80"
                       >
-                        <#Icon iconify="ph:trash-fill" class="w-4 h-4 shrink-0" />
+                        <#Icon iconify="ph:trash-fill" class="size-4 shrink-0" />
                         <span class="text-sm font-medium">{l("Delete %{object_or_type}", object_or_type: @object_type_label)}</span>
-                        <#Icon iconify="carbon:chevron-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
+                        <#Icon iconify="carbon:chevron-right" class="size-3.5 shrink-0 text-error/30 ml-auto" />
                       </button>
                     </li>
                     <li :if={id(@activity)}>
@@ -159,9 +159,9 @@
                         phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_delete_activity")}
                         class="flex items-center gap-3 w-full text-error/80"
                       >
-                        <#Icon iconify="ph:trash-fill" class="w-4 h-4 shrink-0" />
+                        <#Icon iconify="ph:trash-fill" class="size-4 shrink-0" />
                         <span class="text-sm font-medium">{l("Delete from feeds")}</span>
-                        <#Icon iconify="carbon:chevron-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
+                        <#Icon iconify="carbon:chevron-right" class="size-3.5 shrink-0 text-error/30 ml-auto" />
                       </button>
                     </li>
                   {/if}
@@ -170,9 +170,9 @@
                       phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_remove_from_group")}
                       class="flex items-center gap-3 w-full text-error/80"
                     >
-                      <#Icon iconify="ph:sign-out-fill" class="w-4 h-4 shrink-0" />
+                      <#Icon iconify="ph:sign-out-fill" class="size-4 shrink-0" />
                       <span class="text-sm font-medium">{l("Remove from group")}</span>
-                      <#Icon iconify="carbon:chevron-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
+                      <#Icon iconify="carbon:chevron-right" class="size-3.5 shrink-0 text-error/30 ml-auto" />
                     </button>
                   </li>
                 {#else}
@@ -181,9 +181,9 @@
                       phx-click={JS.hide(to: "##{@panel_prefix}_main") |> JS.show(to: "##{@panel_prefix}_delete_object")}
                       class="flex items-center gap-3 w-full text-error/80"
                     >
-                      <#Icon iconify="ph:trash-fill" class="w-4 h-4 shrink-0" />
+                      <#Icon iconify="ph:trash-fill" class="size-4 shrink-0" />
                       <span class="text-sm font-medium">{l("Delete %{object_or_type}", object_or_type: @object_type_label)}</span>
-                      <#Icon iconify="carbon:chevron-right" class="w-3.5 h-3.5 shrink-0 text-error/30 ml-auto" />
+                      <#Icon iconify="carbon:chevron-right" class="size-3.5 shrink-0 text-error/30 ml-auto" />
                     </button>
                   </li>
                 {/if}
@@ -201,7 +201,7 @@
             class="btn btn-sm btn-soft mb-4"
             aria-label={l("Back")}
           >
-            <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
+            <#Icon iconify="ph:arrow-left" class="size-4" />
             <span class="text-sm font-medium">{l("Edit discussion title")}</span>
           </button>
         </div>
@@ -230,7 +230,7 @@
             class="btn btn-sm btn-outline mb-4"
             aria-label={l("Back")}
           >
-            <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
+            <#Icon iconify="ph:arrow-left" class="size-4" />
             <span class="text-sm font-medium">{l("Edit")}</span>
           </button>
         </div>
@@ -270,7 +270,7 @@
             class="btn btn-sm btn-outline mb-4"
             aria-label={l("Back")}
           >
-            <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
+            <#Icon iconify="ph:arrow-left" class="size-4" />
             <span class="text-sm font-medium">{l("Delete %{object_or_type}", object_or_type: @object_type_label)}</span>
           </button>
         </div>
@@ -283,7 +283,7 @@
             phx-value-id={id(@object)}
             class="normal-case w-full btn btn-error"
           >
-            <#Icon iconify="ph:trash-fill" class="w-4 h-4" />
+            <#Icon iconify="ph:trash-fill" class="size-4" />
             {l("Delete %{object_or_type}", object_or_type: @object_type_label)}
           </button>
         </div>
@@ -297,7 +297,7 @@
             class="btn btn-sm btn-outline mb-4"
             aria-label={l("Back")}
           >
-            <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
+            <#Icon iconify="ph:arrow-left" class="size-4" />
             <span class="text-sm font-medium">{l("Remove from group")}</span>
           </button>
         </div>
@@ -313,7 +313,7 @@
             data-role="remove_from_group_confirm"
             class="normal-case w-full btn btn-error"
           >
-            <#Icon iconify="ph:sign-out-fill" class="w-4 h-4" />
+            <#Icon iconify="ph:sign-out-fill" class="size-4" />
             {l("Remove from group")}
           </button>
         </div>
@@ -327,7 +327,7 @@
             class="btn btn-sm btn-outline mb-4"
             aria-label={l("Back")}
           >
-            <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
+            <#Icon iconify="ph:arrow-left" class="size-4" />
             <span class="text-sm font-medium">{l("Delete from feeds")}</span>
           </button>
         </div>
@@ -344,7 +344,7 @@
             phx-value-id={id(@activity)}
             class="normal-case w-full btn btn-error"
           >
-            <#Icon iconify="ph:trash-fill" class="w-4 h-4" />
+            <#Icon iconify="ph:trash-fill" class="size-4" />
             {l("Delete from feeds")}
           </button>
         </div>
@@ -358,7 +358,7 @@
             class="btn btn-sm btn-outline mb-4"
             aria-label={l("Back")}
           >
-            <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
+            <#Icon iconify="ph:arrow-left" class="size-4" />
             <span class="text-sm font-medium">{l("Lock discussion")}</span>
           </button>
         </div>
@@ -373,7 +373,7 @@
             phx-value-id={@thread_id}
             class="normal-case w-full btn btn-warning"
           >
-            <#Icon iconify="ph:lock-fill" class="w-4 h-4" />
+            <#Icon iconify="ph:lock-fill" class="size-4" />
             {l("Lock this discussion")}
           </button>
         </div>
@@ -387,7 +387,7 @@
             class="btn btn-sm btn-outline mb-4"
             aria-label={l("Back")}
           >
-            <#Icon iconify="ph:arrow-left" class="w-4 h-4" />
+            <#Icon iconify="ph:arrow-left" class="size-4" />
             <span class="text-sm font-medium">{l("Unlock discussion")}</span>
           </button>
         </div>
@@ -400,7 +400,7 @@
             phx-value-id={@thread_id}
             class="normal-case w-full btn btn-primary"
           >
-            <#Icon iconify="ph:lock-open-fill" class="w-4 h-4" />
+            <#Icon iconify="ph:lock-open-fill" class="size-4" />
             {l("Unlock this discussion")}
           </button>
         </div>
@@ -412,7 +412,7 @@
           class="flex items-center justify-between w-full gap-2 text-sm text-base-content"
         >
           <span class="flex-1 text-sm text-left text-primary font-medium">{l("Advanced")}</span>
-          <#Icon iconify="ph:sparkle-fill" class="w-5 h-5 text-primary shrink-0" />
+          <#Icon iconify="ph:sparkle-fill" class="size-5 text-primary shrink-0" />
         </div>
       </:open_btn>
     </Bonfire.UI.Common.OpenModalLive>

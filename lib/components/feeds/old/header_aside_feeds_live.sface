@@ -2,7 +2,7 @@
   <label tabindex="0" class="flex normal-case btn place-content-center btn-circle btn-ghost btn-sm">
     <#Icon
       iconify="ph:dots-three-outline-vertical-fill"
-      class="w-5 h-5 text-muted"
+      class="size-5 text-muted"
     />
   </label>
   <ul tabindex="0" class="p-2 shadow dropdown-content menu bg-base-200 rounded-box w-52">
@@ -17,7 +17,7 @@
             class={"ml-1": @selected_tab != "home", "bg-primary/10": @selected_tab == "home"}
             to={path(:feed)}
           >
-            <#Icon solid="Home" class="w-4 h-4" />
+            <#Icon solid="Home" class="size-4" />
             <span class="text-sm truncate ellipsis">{l("Home")}</span>
           </LinkLive>
         </li>
@@ -26,7 +26,7 @@
             class={"ml-1": @selected_tab != "local", "bg-primary/10": @selected_tab == "local"}
             to={path(:local, :feed)}
           >
-            <#Icon solid="LocationMarker" class="w-4 h-4" />
+            <#Icon solid="LocationMarker" class="size-4" />
             <span class="text-sm truncate ellipsis">{l("Local")}</span>
           </LinkLive>
         </li>
@@ -36,7 +36,7 @@
             class={"ml-1": @selected_tab != "remote", "bg-primary/10": @selected_tab == "remote"}
             to={path(:local, :remote)}
           >
-            <#Icon solid="Globe" class="w-4 h-4" />
+            <#Icon solid="Globe" class="size-4" />
             <span class="text-sm truncate ellipsis">{l("Federated")}</span>
           </LinkLive>
         </li>

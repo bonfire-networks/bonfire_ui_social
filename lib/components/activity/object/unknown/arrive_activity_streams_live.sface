@@ -1,7 +1,7 @@
 {#if @showing_within in [:smart_input, :pinned]}
   <div class="">
     <div class="flex badge badge-neutral items-center gap-2 font-medium">
-      <#Icon iconify="material-symbols:location-on" class="w-4 h-4" />
+      <#Icon iconify="material-symbols:location-on" class="size-4" />
       {l("Arrival")}
     </div>
     {#case e(@json, "location", "name", nil) || e(@json, "location", "pointer", :name, nil)}
@@ -19,7 +19,7 @@
   <div class="my-2">
     <div class="flex items-start gap-3">
       <div class="flex-shrink-0">
-        <#Icon iconify="material-symbols:location-on" class="w-6 h-6 text-primary" />
+        <#Icon iconify="material-symbols:location-on" class="size-6 text-primary" />
       </div>
 
       <div class="flex-1">
@@ -34,7 +34,7 @@
 
         <!-- {#if e(@json, "published", nil) || e(@json, "updated", nil)}
           <div class="flex items-center gap-2 text-sm text-muted mb-2">
-            <#Icon iconify="ph:calendar-blank" class="w-4 h-4" />
+            <#Icon iconify="ph:calendar-blank" class="size-4" />
             {#case e(@json, "published", nil) || e(@json, "updated", nil)}
               {#match nil}
               {#match date_str}

@@ -3,7 +3,7 @@
   class="flex min-w-0 flex-wrap items-center justify-between gap-x-4 gap-y-2 pt-0.5 text-xs text-muted sm:text-sm"
 >
   <span data-role="reply_count" class="flex items-center gap-1.5">
-    <#Icon iconify="ph:chat-circle" class="h-4 w-4" />
+    <#Icon iconify="ph:chat-circle" class="size-4" />
     {#case display_reply_count(@activity, @reply_count)}
       {#match 1}
         <span>{l("1 reply")}</span>
@@ -36,8 +36,8 @@
           title={e(participant, :profile, :name, nil) ||
             e(participant, :character, :username, nil)}
           showing_within={:widget}
-          wrapper_class="h-6 w-6 border-0 avatar !flex"
-          class="h-6 w-6 rounded-full bg-base-100 ring-2 ring-base-100"
+          wrapper_class="size-6 border-0 avatar !flex"
+          class="size-6 rounded-full bg-base-100 ring-2 ring-base-100"
           bg_class="h-full w-full overflow-hidden rounded-full"
         />
       {/for}

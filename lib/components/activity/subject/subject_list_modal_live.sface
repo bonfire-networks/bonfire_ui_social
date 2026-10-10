@@ -19,7 +19,7 @@
             user_id={@main_profile_id}
             src={@main_profile_media}
             title={@main_profile_name || @main_character_username}
-            class="h-8 w-8 rounded-full"
+            class="size-8 rounded-full"
             wrapper_class="flex-shrink-0"
             is_remote={@main_is_remote}
           />
@@ -42,7 +42,7 @@
               user_id={id(subject)}
               src={e(subject, :profile, :icon, nil)}
               title={e(subject, :profile, :name, nil) || e(subject, :character, :username, nil)}
-              class="h-8 w-8 rounded-full"
+              class="size-8 rounded-full"
               wrapper_class="flex-shrink-0"
               is_remote={!check_is_local?(subject, preload_if_needed: false)}
             />

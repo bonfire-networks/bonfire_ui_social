@@ -80,7 +80,7 @@
         phx-value-tab_mode="true"
         phx-target={@event_target}
       >
-        <#Icon iconify="dashicons:text-page" class="w-5 h-5" />
+        <#Icon iconify="dashicons:text-page" class="size-5" />
         <span class="sr-only">{l("All Posts")}</span>
         <div class="filters_tabbed" />
       </button>
@@ -104,7 +104,7 @@
         phx-value-tab_mode="true"
         phx-target={@event_target}
       >
-        <#Icon iconify="icomoon-free:blog" class="w-4 h-4" />
+        <#Icon iconify="icomoon-free:blog" class="size-4" />
         <span class="sr-only">{l("Show articles (long posts)")}</span>
         <div class="filters_tabbed" />
       </button>
@@ -129,7 +129,7 @@
         phx-value-tab_mode="true"
         phx-target={@event_target}
       >
-        <#Icon iconify="ph:rocket-launch" class="w-4 h-4" />
+        <#Icon iconify="ph:rocket-launch" class="size-4" />
         <span class="sr-only">{l("Boosts")}</span>
         <div class="filters_tabbed" />
       </button>
@@ -151,7 +151,7 @@
         phx-value-tab_mode="true"
         phx-target={@event_target}
       >
-        <#Icon iconify="flowbite:user-add-solid" class="w-5 h-5" />
+        <#Icon iconify="flowbite:user-add-solid" class="size-5" />
         <span class="sr-only">{l("Follows")}</span>
         <div class="filters_tabbed" />
       </button>
@@ -173,7 +173,7 @@
         phx-value-tab_mode="true"
         phx-target={@event_target}
       >
-        <#Icon iconify="mdi:link" class="w-5 h-5" />
+        <#Icon iconify="mdi:link" class="size-5" />
         <span class="sr-only">{l("Show links")}</span>
         <div class="filters_tabbed" />
       </button>
@@ -195,7 +195,7 @@
         phx-value-tab_mode="true"
         phx-target={@event_target}
       >
-        <#Icon iconify="ic:round-image" class="w-5 h-5" />
+        <#Icon iconify="ic:round-image" class="size-5" />
         <span class="sr-only">{l("Images")}</span>
         <div class="filters_tabbed" />
       </button>
@@ -217,7 +217,7 @@
         phx-value-tab_mode="true"
         phx-target={@event_target}
       >
-        <#Icon iconify="majesticons:video" class="w-5 h-5" />
+        <#Icon iconify="majesticons:video" class="size-5" />
         <span class="sr-only">{l("Videos")}</span>
       </button>
     </div> -->
@@ -238,7 +238,7 @@
         phx-value-tab_mode="true"
         phx-target={@event_target}
       >
-        <#Icon iconify="lucide:audio-lines" class="w-5 h-5" />
+        <#Icon iconify="lucide:audio-lines" class="size-5" />
         <span class="sr-only">{l("Audio")}</span>
       </button>
     </div> -->
@@ -259,7 +259,7 @@
         phx-value-tab_mode="true"
         phx-target={@event_target}
       >
-        <#Icon iconify="mdi:bookshelf" class="w-5 h-5" />
+        <#Icon iconify="mdi:bookshelf" class="size-5" />
         <span class="sr-only">{l("Books")}</span>
       </button>
     </div> --}
@@ -280,7 +280,7 @@
         phx-value-tab_mode="true"
         phx-target={@event_target}
       >
-        <#Icon iconify="ph:calendar-blank-bold" class="w-5 h-5" />
+        <#Icon iconify="ph:calendar-blank-bold" class="size-5" />
         <span class="sr-only">{l("Events")}</span>
       </button>
     </div> --}
@@ -302,7 +302,7 @@
       phx-value-tab_mode="true"
       phx-target={@event_target}
     >
-      <#Icon iconify="mingcute:comment-fill" class="w-5 h-5" />
+      <#Icon iconify="mingcute:comment-fill" class="size-5" />
       <span class="sr-only">{l("Replies")}</span>
     </button>
   </div> --}
@@ -318,7 +318,7 @@
       phx-value-tab_mode="true"
       phx-target={@event_target}
     >
-      <#Icon iconify="mingcute:paper-fill" class="w-5 h-5" />
+      <#Icon iconify="mingcute:paper-fill" class="size-5" />
       <span class="sr-only">{l("Research")}</span>
     </button>
   </div> 

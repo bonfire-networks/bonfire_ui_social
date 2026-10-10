@@ -33,11 +33,11 @@
           >
             <:open_btn>
               <div class="btn btn-sm btn-outline border-hair rounded-field border border-divider bg-base-100 gap-2 pr-1">
-                <#Icon iconify="ph:funnel-fill" class="w-4 h-4 text-secondary" />
+                <#Icon iconify="ph:funnel-fill" class="size-4 text-secondary" />
                 <span>{l("Filters")}</span>
                 {#if active_filters != []}
                   <span
-                    class="badge badge-secondary badge-xs w-5 h-5"
+                    class="badge badge-secondary badge-xs size-5"
                     aria-label={l("%{count} active filters", count: length(active_filters))}
                   >{length(active_filters)}</span>
                 {/if}

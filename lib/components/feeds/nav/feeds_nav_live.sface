@@ -10,7 +10,7 @@
       ]}
     >
       <div class="shrink-0 flex items-center">
-        <Iconify.iconify icon={link.icon} class="w-5 h-5 text-primary" />
+        <Iconify.iconify icon={link.icon} class="size-5 text-primary" />
       </div>
       <span class={["text-base", Bonfire.UI.Common.LinkWidgetLive.active_label_class(link.active?)]}>{link.label}</span>
     </LinkLive>

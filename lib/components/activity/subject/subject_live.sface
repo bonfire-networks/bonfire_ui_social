@@ -1,7 +1,7 @@
 <div
   data-role="subject"
   data-main-object={@viewing_main_object}
-  class="subject flex items-center gap-avatar"
+  class="subject flex items-center gap-3"
 >
   <LinkLive
     :if={@subject_id}
@@ -16,15 +16,14 @@
     label={l("%{username}'s profile", username: @character_username || @profile_name || "")}
   >
     <Bonfire.UI.Common.AvatarLive
-      ring
       parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject", @parent_id)}
       user_id={@subject_id}
       src={@profile_media}
       title={@profile_name || @character_username}
       showing_within={@showing_within}
-      fallback_class="w-8 h-8 opacity-30 mx-auto"
+      fallback_class="size-8 opacity-30 mx-auto"
       class={[
-        "rounded-full w-[35px] h-[35px]",
+        "rounded-full size-10 ring-1 ring-divider",
         "avatar-compact":
           @__context__[:ui_compact] ||
             @showing_within in [:smart_input, :pinned, :quote_preview] ||
@@ -43,7 +42,7 @@
           "aria-label": l("%{name}'s profile", name: @profile_name)
         ]}
         parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_name", @parent_id)}
-        class="link link-hover text-base font-medium text-base-content leading-tight max-w-[250px] lg:max-w-[500px] truncate"
+        class="link link-hover text-base font-medium text-base-content leading-snug max-w-[250px] lg:max-w-[500px] truncate"
         to={@path}
       >
         {@profile_name}
@@ -59,7 +58,7 @@
     <span
       :if={@showing_within not in [:smart_input, :pinned]}
       data-id="subject_secondary"
-      class="flex items-center gap-1 text-sm text-muted leading-tight"
+      class="flex items-center gap-1 text-sm text-muted leading-snug"
     >
       <LinkLive
         :if={@character_username && @showing_within not in [:smart_input, :pinned]}
@@ -70,7 +69,7 @@
           "aria-label": l("%{name}'s profile", name: @profile_name)
         ]}
         parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_username", @parent_id)}
-        class="link link-hover truncate max-w-[150px] lg:max-w-[250px] subject_username"
+        class="link link-hover truncate max-w-37.5 lg:max-w-[250px] subject_username"
         to={e(@subject_peered, :canonical_uri, nil) || @path}
       >
         @{@character_username}
@@ -85,7 +84,7 @@
         >From {DatesTimes.format_duration(e(@extra_info, :info, "timestamps", "in", ""))} to {DatesTimes.format_duration(e(@extra_info, :info, "timestamps", "out", ""))}</button>
       {/if}
 
-      <span class="text-primary shrink-0" aria-hidden="true">·</span>
+      <span class="text-muted shrink-0" aria-hidden="true">·</span>
 
       <Bonfire.UI.Social.Activity.LinkToActivityLive permalink={@permalink}>
         <Bonfire.UI.Social.Activity.DateAgoLive

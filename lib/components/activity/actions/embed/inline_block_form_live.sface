@@ -9,7 +9,7 @@
       aria-label={l("Close")}
       class="btn btn-ghost btn-sm btn-circle"
     >
-      <#Icon iconify="ph:x" class="w-4 h-4" />
+      <#Icon iconify="ph:x" class="size-4" />
     </button>
   </div>
 

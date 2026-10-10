@@ -71,11 +71,11 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   @doc false
   def subject_minimal_line_class,
     do:
-      "flex items-start gap-half -mx-card px-card -mt-1.5 pb-content mb-content border-b-hair border-divider"
+      "flex items-start gap-2 -mx-card px-card -mt-1.5 pb-3 mb-3 border-b-hair border-divider"
 
   @doc false
   def subject_minimal_icon_box_class,
-    do: "flex-shrink-0 w-[18px] flex items-start justify-center mt-px"
+    do: "flex-shrink-0 w-4.5 flex items-start justify-center mt-px"
 
   @doc "Whether a boost's attribution line is redundant here: the group or topic auto-boosted its own content (the publication context row already says so), or we're viewing inside it. A person's manual boost still needs attribution, and notification/widget rows always keep the line since they exist to say who acted."
   def hide_boost_reason?(:boost, subject_id, published_in, showing_within)

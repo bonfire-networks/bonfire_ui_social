@@ -1,7 +1,7 @@
 {#if @showing_within in [:smart_input, :pinned]}
   <div>
     <div class="flex badge badge-neutral items-center gap-2 font-medium">
-      <#Icon iconify="ph:calendar-blank-bold" class="w-4 h-4" />
+      <#Icon iconify="ph:calendar-blank-bold" class="size-4" />
       {l("Event")}
     </div>
     <h2 class="mt-2 font-medium text-base-content">
@@ -17,11 +17,11 @@
         class="flex items-center justify-center h-24 bg-base-200 border-b border-divider"
         aria-hidden="true"
       >
-        <#Icon iconify="ph:calendar-blank-bold" class="w-10 h-10 text-base-content/10" />
+        <#Icon iconify="ph:calendar-blank-bold" class="size-10 text-base-content/10" />
       </div>
 
       <div class="absolute top-3 right-3 badge badge-neutral gap-1.5 font-medium shadow-sm">
-        <#Icon iconify="ph:calendar-blank-bold" class="w-3.5 h-3.5" />
+        <#Icon iconify="ph:calendar-blank-bold" class="size-3.5" />
         {l("Event")}
       </div>
 
@@ -52,7 +52,7 @@
         {#match nil}
         {#match start}
           <div class="flex items-start gap-2 mt-3">
-            <#Icon iconify="ph:calendar-blank-bold" class="w-4 h-4 mt-0.5 shrink-0 text-muted" />
+            <#Icon iconify="ph:calendar-blank-bold" class="size-4 mt-0.5 shrink-0 text-muted" />
             <time datetime={start.iso} class="text-sm text-base-content leading-snug">
               {format_range(start, event_end_time(@json))}
             </time>
@@ -74,7 +74,7 @@
             {#match ""}
             {#match location_text}
               <div class="flex items-start gap-2 mt-2">
-                <#Icon iconify="ph:map-pin-fill" class="w-4 h-4 mt-0.5 shrink-0 text-muted" />
+                <#Icon iconify="ph:map-pin-fill" class="size-4 mt-0.5 shrink-0 text-muted" />
                 <a
                   href={"https://www.openstreetmap.org/search?zoom=6&query=#{location_text}"}
                   target="_blank"
@@ -126,7 +126,7 @@
                 class="inline-flex items-center gap-1.5 mt-4 text-sm font-medium text-primary hover:underline transition-colors"
               >
                 {l("View on %{instance}", instance: host)}
-                <#Icon iconify="ph:arrow-square-out-bold" class="w-4 h-4" />
+                <#Icon iconify="ph:arrow-square-out-bold" class="size-4" />
               </a>
           {/case}
       {/case}

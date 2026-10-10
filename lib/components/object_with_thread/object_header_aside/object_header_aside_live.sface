@@ -22,7 +22,7 @@
     label={l("Options")}
   >
     <:trigger>
-      <#Icon iconify="heroicons-solid:dots-vertical" class="w-4 h-4 text-muted" />
+      <#Icon iconify="heroicons-solid:dots-vertical" class="size-4 text-muted" />
     </:trigger>
 
     <li>

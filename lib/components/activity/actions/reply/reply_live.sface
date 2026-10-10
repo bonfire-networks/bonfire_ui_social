@@ -6,7 +6,7 @@
     {#match true}
       <.icon_button
         icon="ph:arrow-bend-up-left"
-        icon_class="w-[18px] h-[18px]"
+        icon_class="size-4.5"
         aria_label={lc("verb: action", "Reply", [], :bonfire_social)}
         variant="ghost"
         size="sm"
@@ -34,7 +34,7 @@
       {#if @object_boundary}
         <.icon_button
           icon="ph:arrow-bend-up-left"
-          icon_class="w-[18px] h-[18px]"
+          icon_class="size-4.5"
           aria_label={@cannot_reply_text || l("Cannot reply")}
           variant="ghost"
           size="sm"

@@ -7,10 +7,10 @@
         <div class="absolute flex justify-center items-center inset-0">
           <div class="bg-gray-900/60 z-50 gap-4 px-3 py-2 rounded flex justify-center items-center place-content-center">
             {!-- <button class="">
-              <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 text-gray-200" />
+              <#Icon iconify="heroicons:play-20-solid" class="size-6 text-gray-200" />
             </button> --}
             <a href={object_field(@json, "id")} target="_blank">
-              <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 text-gray-200" />
+              <#Icon iconify="heroicons-outline:external-link" class="size-6 text-gray-200" />
             </a>
           </div>
         </div>

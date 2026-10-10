@@ -3,7 +3,7 @@
     {#case (!e(@activity, :files, nil) and object_field(@json, "url")) || object_field(@json, "id")}
       {#match audio when is_map(audio) or is_binary(audio)}
         {!-- Only show the preview here if we have not attached media (hopefully with oembed) --}
-        <div class="relative w-[160px] h-auto">
+        <div class="relative w-40 h-auto">
           {#case e(object_field(@json, "image") || object_field(@json, "icon"), "url", nil)}
             {#match nil}
             {#match img}
@@ -40,7 +40,7 @@
 
                     <:open_btn>
                       <button class="">
-                        <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 text-gray-200" />
+                        <#Icon iconify="heroicons:play-20-solid" class="size-6 text-gray-200" />
                       </button>
                     </:open_btn>
                   </Bonfire.UI.Common.OpenModalLive>
@@ -48,7 +48,7 @@
               {/case}
 
               <a href={e(@json, "id", nil)} target="_blank">
-                <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 text-gray-200" />
+                <#Icon iconify="heroicons-outline:external-link" class="size-6 text-gray-200" />
               </a>
             </div>
           </div>

@@ -16,7 +16,7 @@
               href="/settings/export/csv/posts"
               class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2"
             >
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </a></td>
         </tr>
@@ -28,7 +28,7 @@
               href="/settings/export/csv/messages"
               class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2"
             >
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </a></td>
         </tr>
@@ -42,7 +42,7 @@
               href="/settings/export/csv/following"
               class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2"
             >
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </a>
           </td>
@@ -56,7 +56,7 @@
               href="/settings/export/csv/requests"
               class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2"
             >
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </a>
           </td>
@@ -69,7 +69,7 @@
               href="/settings/export/csv/followers"
               class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2"
             >
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </a></td>
         </tr>
@@ -81,7 +81,7 @@
               href="/settings/export/csv/bookmarks"
               class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2"
             >
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </a></td>
         </tr>
@@ -92,7 +92,7 @@
               href="/settings/export/csv/likes"
               class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2"
             >
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </a></td>
         </tr>
@@ -103,7 +103,7 @@
               href="/settings/export/csv/boosts"
               class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2"
             >
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </a></td>
         </tr>
@@ -114,7 +114,7 @@
               href="/settings/export/csv/circles"
               class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2"
             >
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </a></td>
         </tr>
@@ -124,7 +124,7 @@
           <td>Boundaries</td>
           <td>2</td>
           <td><button class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2">
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </button></td>
         </tr> --}
@@ -137,7 +137,7 @@
               href="/settings/export/csv/silenced"
               class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2"
             >
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </a></td>
         </tr>
@@ -149,7 +149,7 @@
               href="/settings/export/csv/ghosted"
               class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2"
             >
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </a></td>
         </tr>
@@ -157,7 +157,7 @@
           <td>Blocks</td>
           <td>23</td>
           <td><button class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2">
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </button></td>
         </tr> --}
@@ -169,7 +169,7 @@
               href="/settings/export/json/actor"
               class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2"
             >
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>JSON</span>
             </a></td>
         </tr>
@@ -181,7 +181,7 @@
               href="/settings/export/binary/keys/asc"
               class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2"
             >
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>PEM</span>
             </a></td>
         </tr>
@@ -193,7 +193,7 @@
               href="/settings/export/json/outbox"
               class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2"
             >
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>JSON</span>
             </a></td>
         </tr>
@@ -207,7 +207,7 @@
               href="/settings/export/json/outbox"
               class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2"
             >
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>JSON</span>
             </a></td>
         </tr> -->

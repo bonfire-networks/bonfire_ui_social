@@ -11,7 +11,7 @@
       class="tooltip-button btn btn-circle btn-outline border-primary btn-xs"
       data-tip={l("Customize feeds")}
     >
-      <#Icon iconify="ph:gear-six-fill" class="w-4 h-4 text-primary" />
+      <#Icon iconify="ph:gear-six-fill" class="size-4 text-primary" />
     </LinkLive>
   </:action>
   {!--  --}

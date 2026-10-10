@@ -22,7 +22,7 @@
               title={l("Copy RSS URL")}
               aria-label={l("Copy RSS URL")}
             >
-              <#Icon iconify="ion:copy" class="w-4 h-4" />
+              <#Icon iconify="ion:copy" class="size-4" />
               <span class="">{l("Copy RSS URL")}</span>
             </a>
             <a
@@ -34,7 +34,7 @@
               title={l("Open RSS feed")}
               aria-label={l("Open RSS feed")}
             >
-              <#Icon iconify="mdi:rss" class="w-4 h-4" />
+              <#Icon iconify="mdi:rss" class="size-4" />
               {l("Get RSS feed")}
             </a>
           </div>
@@ -47,7 +47,7 @@
               title={l("Copy Atom URL")}
               aria-label={l("Copy Atom URL")}
             >
-              <#Icon iconify="ion:copy" class="w-4 h-4" />
+              <#Icon iconify="ion:copy" class="size-4" />
               <span class="">{l("Copy Atom URL")}</span>
             </a>
             <a
@@ -59,7 +59,7 @@
               title={l("Open Atom feed")}
               aria-label={l("Open Atom feed")}
             >
-              <#Icon iconify="mdi:atom" class="w-4 h-4" />
+              <#Icon iconify="mdi:atom" class="size-4" />
               {l("Get Atom feed")}
             </a>
           </div>

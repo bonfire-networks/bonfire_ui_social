@@ -17,7 +17,7 @@
             <LazyImage
               parent_id={deterministic_dom_id("trending_featured", @link.path)}
               class="w-full h-full object-cover"
-              fallback_class="w-12 h-12 text-muted"
+              fallback_class="size-12 text-muted"
               src={preview_img}
               media={@link}
               fallback_icon="ion:newspaper-outline"
@@ -26,13 +26,13 @@
         </Bonfire.UI.Common.OpenExternalLinkLive>
       {#match _}
         <div class="rounded-box border-hair border-divider bg-placeholder aspect-[1.91/1] flex items-center justify-center">
-          <#Icon iconify="ion:newspaper-outline" class="w-12 h-12 text-subtle" />
+          <#Icon iconify="ion:newspaper-outline" class="size-12 text-subtle" />
         </div>
     {/case}
 
-    <div class="p-card flex flex-col gap-content">
+    <div class="p-card flex flex-col gap-3">
       {!-- publisher eyebrow + headline as one tight group --}
-      <div class="flex flex-col gap-half">
+      <div class="flex flex-col gap-2">
         {#case MediaLive.provider(@link)}
           {#match provider when is_binary(provider)}
             <div class="text-xs uppercase tracking-label text-base-content font-medium truncate">{provider}</div>
@@ -69,7 +69,7 @@
     class={"flex gap-3 bg-base-100", @class, "p-card": !@in_widget}
   >
     {!-- Content on left --}
-    <div class="flex flex-col gap-half flex-1 min-w-0">
+    <div class="flex flex-col gap-2 flex-1 min-w-0">
       {#case MediaLive.provider(@link)}
         {#match provider when is_binary(provider)}
           <div class="text-xs uppercase tracking-label text-base-content font-medium truncate">{provider}</div>
@@ -102,8 +102,8 @@
             <LinkLive to={@link.path} target="_blank" class="block">
               <LazyImage
                 parent_id={deterministic_dom_id("trending_thumb", @link.path)}
-                class="w-[120px] h-[120px] rounded-box border-hair border-divider object-cover"
-                fallback_class="w-6 h-6 text-muted"
+                class="size-30 rounded-box border-hair border-divider object-cover"
+                fallback_class="size-6 text-muted"
                 src={preview_img}
                 media={@link}
                 fallback_icon="ion:newspaper-outline"
@@ -111,8 +111,8 @@
             </LinkLive>
           </Bonfire.UI.Common.OpenExternalLinkLive>
         {#match _}
-          <div class="w-[120px] h-[120px] rounded-box border-hair border-divider bg-placeholder flex items-center justify-center shrink-0">
-            <#Icon iconify="ion:newspaper-outline" class="w-6 h-6 text-subtle" />
+          <div class="size-30 rounded-box border-hair border-divider bg-placeholder flex items-center justify-center shrink-0">
+            <#Icon iconify="ion:newspaper-outline" class="size-6 text-subtle" />
           </div>
       {/case}
     {/if}

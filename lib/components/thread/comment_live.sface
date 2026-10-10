@@ -9,7 +9,7 @@
         :if={@thread_level > 1}
         x-cloak
         x-show="show_replies"
-        class="group z-10 left-[18px] px-3 top-0 -bottom-[16px] absolute"
+        class="group z-10 left-4.5 px-3 top-0 -bottom-4 absolute"
       >
         <i
           :class="!show_replies ? 'bg-primary bottom-[0px]' : 'bottom-[0px]'"
@@ -19,7 +19,7 @@
 
   <div
     data-role="comment-pin"
-    class="hidden w-4 h-4 bg-primary/70 rounded-md absolute top-[18px] left-[10px]"
+    class="hidden size-4 bg-primary/70 rounded-md absolute top-4.5 left-2.5"
   >
   </div>
 
@@ -36,8 +36,8 @@
     :if={@thread_mode != :flat && @threaded_replies != []}
     x-on:click="show_replies = ! show_replies"
     class={
-      "absolute p-0.5 z-50 bg-base-100 flex items-center place-content-center left-[15px] bottom-[24px]",
-      "!left-[14px]": @__context__[:ui_compact]
+      "absolute p-0.5 z-50 bg-base-100 flex items-center place-content-center left-3.75 bottom-6",
+      "!left-3.5": @__context__[:ui_compact]
     }
   >
     <span
@@ -60,7 +60,7 @@
         role="note"
         class="mx-4 my-2 flex items-center gap-2 text-sm text-muted"
       >
-        <#Icon iconify="ph:eye-slash-duotone" class="w-4 h-4 shrink-0" />
+        <#Icon iconify="ph:eye-slash-duotone" class="size-4 shrink-0" />
         <span>{l("This comment is unavailable. It may have been deleted or is not visible to you.")}</span>
       </div>
     {#else}

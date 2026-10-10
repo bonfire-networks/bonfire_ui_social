@@ -28,27 +28,27 @@
       {#case e(@feed_filters, :sort_by, nil)}
         {#match :reply_count}
           <span class="flex items-center">
-            <#Icon iconify="ph:chat-circle-fill" class="lg:hidden block w-4 h-4" />
+            <#Icon iconify="ph:chat-circle-fill" class="lg:hidden block size-4" />
             <span class="hidden lg:block">{if e(@feed_filters, :sort_order, nil) == :asc, do: l("Least replied"), else: l("Most replied")}</span>
           </span>
         {#match :boost_count}
           <span class="flex items-center">
-            <#Icon iconify="ph:arrows-counter-clockwise-fill" class="lg:hidden block w-4 h-4" />
+            <#Icon iconify="ph:arrows-counter-clockwise-fill" class="lg:hidden block size-4" />
             <span class="hidden lg:block">{if e(@feed_filters, :sort_order, nil) == :asc, do: l("Least boosted"), else: l("Most boosted")}</span>
           </span>
         {#match :like_count}
           <span class="flex items-center">
-            <#Icon iconify="ph:fire-fill" class="lg:hidden block h-[20px] w-[18px]" />
+            <#Icon iconify="ph:fire-fill" class="lg:hidden block h-5 w-4.5" />
             <span class="hidden lg:block">{if e(@feed_filters, :sort_order, nil) == :asc, do: l("Least liked"), else: l("Most liked")}</span>
           </span>
         {#match _}
           <span class="flex items-center">
-            <#Icon iconify="mdi:order-alphabetical-ascending" class="lg:hidden block w-4 h-4" />
+            <#Icon iconify="mdi:order-alphabetical-ascending" class="lg:hidden block size-4" />
             <span class="hidden lg:block">{l("Chronological")}</span>
           </span>
       {/case}
 
-      <#Icon iconify="mdi:chevron-down" class="w-4 h-4" aria-hidden="true" />
+      <#Icon iconify="mdi:chevron-down" class="size-4" aria-hidden="true" />
     </:trigger>
 
     <li>
@@ -61,10 +61,10 @@
         class="w-full flex gap-3 px-2 text-base-content justify-between items-center"
       >
         {l("Chronological")}
-        <div class="w-5 h-5 flex items-center justify-center border border-divider rounded-full">
+        <div class="size-5 flex items-center justify-center border border-divider rounded-full">
           <span
             :if={e(@feed_filters, :sort_by, nil) not in [:reply_count, :boost_count, :like_count]}
-            class="w-[14px] h-[14px] bg-primary rounded-full"
+            class="size-3.5 bg-primary rounded-full"
           />
         </div>
       </button>
@@ -81,10 +81,10 @@
         class="w-full flex gap-3 px-2 text-base-content justify-between items-center"
       >
         {l("Most replied")}
-        <div class="w-5 h-5 flex items-center justify-center border border-divider rounded-full">
+        <div class="size-5 flex items-center justify-center border border-divider rounded-full">
           <span
             :if={e(@feed_filters, :sort_by, nil) == :reply_count}
-            class="w-[14px] h-[14px] bg-primary rounded-full"
+            class="size-3.5 bg-primary rounded-full"
           />
         </div>
       </button>
@@ -102,10 +102,10 @@
           class="w-full flex gap-3 px-2 text-base-content justify-between items-center"
         >
           {l("Most boosted")}
-          <div class="w-5 h-5 flex items-center justify-center border border-divider rounded-full">
+          <div class="size-5 flex items-center justify-center border border-divider rounded-full">
             <span
               :if={e(@feed_filters, :sort_by, nil) == :boost_count}
-              class="w-[14px] h-[14px] bg-primary rounded-full"
+              class="size-3.5 bg-primary rounded-full"
             />
           </div>
         </button>
@@ -122,10 +122,10 @@
           class="w-full flex gap-3 px-2 text-base-content justify-between items-center"
         >
           {l("Most liked")}
-          <div class="w-5 h-5 flex items-center justify-center border border-divider rounded-full">
+          <div class="size-5 flex items-center justify-center border border-divider rounded-full">
             <span
               :if={e(@feed_filters, :sort_by, nil) == :like_count}
-              class="w-[14px] h-[14px] bg-primary rounded-full"
+              class="size-3.5 bg-primary rounded-full"
             />
           </div>
         </button>

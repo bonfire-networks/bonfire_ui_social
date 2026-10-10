@@ -23,20 +23,20 @@
                 fallback_icon="majesticons:video"
               />
               <!-- <div class="h-60 flex items-center place-content-center rounded-t-box">
-                  <#Icon iconify="majesticons:video" class="w-32 h-32 text-muted" />
+                  <#Icon iconify="majesticons:video" class="size-32 text-muted" />
                 </div> -->
               <div class="absolute inset-0 w-full h-full flex items-center place-content-center">
                 <div class="bg-gray-900/60 z-50 gap-4 px-4 h-12 rounded flex justify-center items-center place-content-center">
                   {#case e(@media, :metadata, "canonical_media", nil)}
                     {#match nil}
-                      <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 hover:text-white text-gray-300" aria-label={l("Play video")} />
+                      <#Icon iconify="heroicons:play-20-solid" class="size-6 hover:text-white text-gray-300" aria-label={l("Play video")} />
                     {#match url}
                       <LinkLive to={url} parent_id={deterministic_dom_id(__MODULE__, id(@media), "video_link", @parent_id)} class="" aria-label={l("Play video")}>
-                        <#Icon iconify="heroicons:play-20-solid" class="w-6 h-6 hover:text-white text-gray-300" />
+                        <#Icon iconify="heroicons:play-20-solid" class="size-6 hover:text-white text-gray-300" />
                       </LinkLive>
                   {/case}
                   <a href={Media.media_url(@media)} target="_blank" aria-label={l("Open in new tab")}>
-                    <#Icon iconify="heroicons-outline:external-link" class="w-6 h-6 hover:text-white text-gray-300" />
+                    <#Icon iconify="heroicons-outline:external-link" class="size-6 hover:text-white text-gray-300" />
                   </a>
                 </div>
               </div>

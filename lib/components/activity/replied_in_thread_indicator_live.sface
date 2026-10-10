@@ -1,4 +1,4 @@
 <div class="text-sm text-muted mb-2 flex items-center gap-1 font-medium">
-  <#Icon iconify="ph:chat-circle-fill" class="w-4 h-4 text-primary" />
+  <#Icon iconify="ph:chat-circle-fill" class="size-4 text-primary" />
   <span>{l("Replied in thread")}</span>
 </div>

@@ -5,7 +5,7 @@
                       parent_id={deterministic_dom_id("trending_sharer", id(sharer))}
                       user_id={id(sharer)}
                       src={Bonfire.Common.Media.avatar_url(sharer)}
-                      class="w-5 h-5 rounded-full"
+                      class="size-5 rounded-full"
                       bg_class="rounded-full"
                       alt={l("Shared by %{user_name}",
                         user_name: e(sharer, :profile, :name, nil) || e(sharer, :character, :username, nil)
@@ -27,7 +27,7 @@
   <!-- <span class="text-subtle">·</span> -->
   <LinkLive to={URIs.path(@media.newest_activity_id)}>
     <span class="flex items-center gap-1" title={l("Shares")}>
-      <#Icon iconify="ph:note-fill" class="w-4 h-4" />
+      <#Icon iconify="ph:note-fill" class="size-4" />
       {@media.object_count}
     </span>
   </LinkLive>
@@ -35,21 +35,21 @@
 {#if to_int(@media.reply_count) > 0}
   <span class="text-subtle">·</span>
   <span class="flex items-center gap-1" title={l("Replies")}>
-    <#Icon iconify="ph:chat-teardrop-text-fill" class="w-4 h-4" />
+    <#Icon iconify="ph:chat-teardrop-text-fill" class="size-4" />
     {@media.reply_count}
   </span>
 {/if}
 {#if to_int(@media.boost_count) > 0}
   <span class="text-subtle">·</span>
   <span class="flex items-center gap-1" title={l("Boosts")}>
-    <#Icon iconify="ph:rocket-launch-fill" class="w-4 h-4" />
+    <#Icon iconify="ph:rocket-launch-fill" class="size-4" />
     {@media.boost_count}
   </span>
 {/if}
 {#if to_int(@media.like_count) > 0}
   <span class="text-subtle">·</span>
   <span class="flex items-center gap-1" title={l("Likes")}>
-    <#Icon iconify="ph:fire-fill" class="w-4 h-4" />
+    <#Icon iconify="ph:fire-fill" class="size-4" />
     {@media.like_count}
   </span>
 {/if}

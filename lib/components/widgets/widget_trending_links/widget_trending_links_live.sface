@@ -51,8 +51,8 @@
                   <LinkLive to={media.path} target="_blank" class="block">
                     <LazyImage
                       parent_id={deterministic_dom_id("trending_widget_thumb", media.path)}
-                      class="w-16 h-16 rounded-box object-cover transition-all"
-                      fallback_class="w-4 h-4 text-muted"
+                      class="size-16 rounded-box object-cover transition-all"
+                      fallback_class="size-4 text-muted"
                       src={preview_img}
                       media={media}
                       fallback_icon="ion:newspaper-outline"

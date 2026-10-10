@@ -39,6 +39,22 @@ defmodule Bonfire.UI.Social.Activity.PublishedInLiveTest do
     assert html =~ ~s(href="/+fermo")
   end
 
+  test "author placement renders the context as a pill with a group glyph when no icon is loaded" do
+    html = render_published_in(placement: :author)
+
+    assert html =~ ~s(data-role="published_in_pill")
+    assert html =~ "fermo! mutual aid and neighbourhood organising"
+    assert html =~ ~s(href="/+fermo")
+    refute html =~ "<img"
+  end
+
+  test "author placement shows the context's avatar once its icon is loaded" do
+    context = put_in(@context, [:profile, :icon], %{url: "https://example.com/fermo.png"})
+    html = render_published_in(placement: :author, context: context)
+
+    assert html =~ ~s(src="https://example.com/fermo.png")
+  end
+
   test "a caller's class replaces the standalone default" do
     html = render_published_in(class: "custom-provenance")
 

@@ -351,6 +351,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
       hide_actions: false,
       label: "",
       showing_within: :thread,
+      page_title_context:
+        Bonfire.UI.Social.Activity.PublishedInLive.page_title_context(
+          maybe_published_in(activity, nil)
+        ),
       # rendered in the preview's header by PreviewContentLive
       page_header_aside:
         Bonfire.Social.Objects.LiveHandler.thread_bell_aside(
@@ -1050,7 +1054,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       <div
         :if={@reply_context? and e(@reply_to, :object, :id, nil) != @thread_id}
         data-role="thread_header"
-        class="-mx-card -mt-[16px] mb-2 px-card py-2 bg-base-200 border-b-hair border-divider rounded-t-box flex items-center justify-end"
+        class="-mx-card -mt-4 mb-2 px-card py-2 bg-base-200 border-b-hair border-divider rounded-t-box flex items-center justify-end"
       >
         {!-- plain anchor with `preview_activity_link` so the PreviewActivity hook
              opens the PreviewContent modal instead of navigating (real link as fallback) --}
@@ -1291,7 +1295,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 />
               {#match Bonfire.UI.Social.Activity.NoteLive}
                 <span :if={@is_thread_start} class="badge badge-outline badge-warning mb-2">
-                  <#Icon iconify="ph:chats-circle-fill" class="w-4 h-4 mr-1" />
+                  <#Icon iconify="ph:chats-circle-fill" class="size-4 mr-1" />
                   {l("Original post")}
                 </span>
                 <Bonfire.UI.Social.Activity.NoteLive

@@ -15,7 +15,7 @@
         module={maybe_component(Bonfire.UI.Me.ProfileItemLive, @__context__)}
         show_controls={[]}
         inline
-        avatar_class="w-7 h-7 rounded-full"
+        avatar_class="size-7 rounded-full"
         profile={e(diff, :editor, :profile, nil)}
         character={e(diff, :editor, :character, nil)}
       />

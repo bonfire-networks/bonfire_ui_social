@@ -32,7 +32,7 @@
             @selected_category != category
         }
       >
-        <Bonfire.UI.Social.EventCategoryIconLive category={category} class="w-4 h-4" colored={false} />
+        <Bonfire.UI.Social.EventCategoryIconLive category={category} class="size-4" colored={false} />
         {category_label(category)}
       </button>
     {/for}

@@ -21,7 +21,7 @@
   <:trigger>
     <#Icon
       iconify="ph:dots-three-outline-vertical-fill"
-      class="w-[18px] h-[18px] group-hover:text-primary text-muted"
+      class="size-4.5 group-hover:text-primary text-muted"
     />
     <span class="sr-only">{l("More actions")}</span>
   </:trigger>
@@ -29,7 +29,7 @@
     <li class="hover:bg-base-100">
       <div class="hover:bg-base-100 cursor-default flex justify-between items-center gap-2">
         <span class="text-sm font-meium">{l("Direct Message")}</span></div>
-      <#Icon iconify="ph:tray-fill" class="w-5 h-5 shrink-0" />
+      <#Icon iconify="ph:tray-fill" class="size-5 shrink-0" />
     </li>
   {/if}
 
@@ -43,7 +43,7 @@
       class="flex items-center justify-between gap-2 text-sm text-base-content w-full"
     >
       <span class="flex-1 text-sm text-left" data-role="label">{l("Copy link")}</span>
-      <#Icon iconify="ph:copy-fill" class="w-5 h-5 shrink-0" />
+      <#Icon iconify="ph:copy-fill" class="size-5 shrink-0" />
     </button>
   </li>
 
@@ -135,7 +135,7 @@
                     e(@activity, :subject, :profile, :name, nil) ||
                       e(@activity, :subject, :character, :username, nil)
                 )}</span>
-              <#Icon iconify="ph:user-minus-fill" class="w-5 h-5 shrink-0" />
+              <#Icon iconify="ph:user-minus-fill" class="size-5 shrink-0" />
             </a>
           </li>
       {/case}

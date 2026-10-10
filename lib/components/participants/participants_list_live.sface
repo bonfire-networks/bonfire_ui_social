@@ -28,7 +28,7 @@
             :if={@show_toggle_icon}
             iconify="carbon:chevron-down"
             class={
-              "h-4 w-4 shrink-0 transition-transform duration-150 ease-out motion-reduce:transition-none",
+              "size-4 shrink-0 transition-transform duration-150 ease-out motion-reduce:transition-none",
               "rotate-180": @expanded
             }
           />

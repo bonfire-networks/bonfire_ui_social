@@ -34,7 +34,7 @@
         />
 
         <div class="relative border-b border-divider">
-          <#Icon iconify="ri:alert-fill" class="absolute w-5 h-5 stroke-1 top-[14px] left-3 text-muted" />
+          <#Icon iconify="ri:alert-fill" class="absolute size-5 stroke-1 top-3.5 left-3 text-muted" />
           <input
             name="summary"
             class="w-full input"
@@ -61,14 +61,14 @@
           <div class="text-sm text-base-content">
             {l("Edit")}
           </div>
-          <#Icon iconify="ph:pencil-simple-line-fill" class="w-5 h-5 shrink-0" />
+          <#Icon iconify="ph:pencil-simple-line-fill" class="size-5 shrink-0" />
         </div>
       </li>
       <li :if={@versioning_enabled}>
         <div class="flex items-center gap-2">
           <!-- <#Icon
             iconify="material-symbols:difference-outline-rounded"
-            class="w-4 h-4 shrink-0 text-base-content"
+            class="size-4 shrink-0 text-base-content"
           /> -->
           <div class="text-sm text-base-content">
             {l("Version history")}

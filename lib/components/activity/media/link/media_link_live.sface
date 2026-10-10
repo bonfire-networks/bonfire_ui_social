@@ -20,11 +20,11 @@
       {#if !@no_cover}
         {#if is_binary(@preview_img)}
           {#if @small_icon or @activity_inception}
-            <div class="flex place-content-center items-center min-w-[150px] max-w-[150px] h-[150px]">
+            <div class="flex place-content-center items-center min-w-37.5 max-w-37.5 h-37.5">
               <LazyImage
                 parent_id={deterministic_dom_id(__MODULE__, id(@media), "icon", @parent_id)}
                 class="rounded-md object-cover cursor-pointer m-image h-full"
-                fallback_class="w-8 h-8 text-muted"
+                fallback_class="size-8 text-muted"
                 src={@preview_img}
                 media={@media}
                 fallback_icon="ion:newspaper-outline"
@@ -39,7 +39,7 @@
                 <LazyImage
                   parent_id={deterministic_dom_id(__MODULE__, id(@media), "icon", @parent_id)}
                   class="object-cover rounded-box cursor-pointer m-image w-full h-full"
-                  fallback_class="w-8 h-8 text-muted"
+                  fallback_class="size-8 text-muted"
                   src={@preview_img}
                   media={@media}
                   fallback_icon="ion:newspaper-outline"
@@ -49,12 +49,12 @@
           {/if}
         {/if}
       {/if}
-      <div class="p-card flex flex-col w-full flex-1 min-w-0 gap-content">
+      <div class="p-card flex flex-col w-full flex-1 min-w-0 gap-3">
         {#case Bonfire.Files.Media.media_label_and_alt(@media)}
           {#match media_label}
             {!-- publisher eyebrow + headline as one tight group (gap-based, so no leading
                  space when the publisher is absent) --}
-            <div class="flex flex-col gap-half">
+            <div class="flex flex-col gap-2">
               <div
                 :if={(!is_binary(@preview_img) && !@no_cover) ||
                   (is_binary(MediaLive.provider(@media)) && MediaLive.provider(@media) != media_label)}
@@ -62,20 +62,20 @@
                 class="flex items-center gap-3 min-w-0"
               >
                 {#if !is_binary(@preview_img) && !@no_cover}
-                  <div data-id="media_favicon" class="w-10 h-10 shrink-0">
+                  <div data-id="media_favicon" class="size-10 shrink-0">
                     {#case e(@media, :metadata, "favicon", nil) ||
                         Bonfire.Files.FaviconStore.favicon_url(@media_url)}
                       {#match favicon_url when is_binary(favicon_url)}
                         <LazyImage
                           parent_id={deterministic_dom_id(__MODULE__, id(@media), "icon", @parent_id)}
                           class="w-full h-full rounded-md object-contain cursor-pointer m-image bg-base-200"
-                          fallback_class="w-8 h-8 text-muted"
+                          fallback_class="size-8 text-muted"
                           src={favicon_url}
                           media={@media}
                           fallback_icon="ion:newspaper-outline"
                         />
                       {#match _}
-                        <#Icon iconify="ion:newspaper-outline" class="w-8 h-8 text-muted" />
+                        <#Icon iconify="ion:newspaper-outline" class="size-8 text-muted" />
                     {/case}
                   </div>
                 {/if}
@@ -136,7 +136,7 @@
                     name={creator.display_name}
                     title={creator.display_name}
                     wrapper_class="avatar"
-                    class="w-4 h-4"
+                    class="size-4"
                   />
                   <span class="font-medium text-base-content">{creator.display_name}</span>
                 </LinkLive>

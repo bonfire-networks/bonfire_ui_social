@@ -44,7 +44,7 @@
         :load_from_settings -> l("Loading...")
         _ -> l("All time")
       end}
-    <#Icon iconify="mdi:chevron-down" class="w-4 h-4" />
+    <#Icon iconify="mdi:chevron-down" class="size-4" />
   </:trigger>
 
   {#for {days, label} <- default_options()}
@@ -56,8 +56,8 @@
         class="flex gap-3 px-2 text-base-content justify-between items-center"
       >
         {label}
-        <div class="w-5 h-5 flex items-center justify-center border border-divider rounded-full">
-          <span :if={@current_value == days} class="w-[14px] h-[14px] bg-primary rounded-full" />
+        <div class="size-5 flex items-center justify-center border border-divider rounded-full">
+          <span :if={@current_value == days} class="size-3.5 bg-primary rounded-full" />
         </div>
       </a>
     </li>

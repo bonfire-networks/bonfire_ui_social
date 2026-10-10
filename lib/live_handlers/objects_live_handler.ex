@@ -267,7 +267,12 @@ defmodule Bonfire.Social.Objects.LiveHandler do
         !Bonfire.Common.Extend.module_enabled?(Bonfire.Search.Indexer, author)
         |> debug("no_index"),
       thread_id: thread_id,
-      thread_title: thread_title
+      thread_title: thread_title,
+      page_title_context:
+        Bonfire.UI.Social.Activity.PublishedInLive.page_title_context(
+          Bonfire.UI.Social.ActivityLive.maybe_published_in(activity, nil) ||
+            Bonfire.UI.Social.ActivityLive.maybe_published_in(object, nil)
+        )
     )
     |> maybe_seo_assign(object, activity)
 

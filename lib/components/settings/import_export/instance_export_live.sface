@@ -13,7 +13,7 @@
           <td>Circles</td>
           <td>2</td>
           <td><button class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2">
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </button></td>
         </tr>
@@ -21,7 +21,7 @@
           <td>Boundaries</td>
           <td>2</td>
           <td><button class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2">
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </button></td>
         </tr> --}
@@ -34,7 +34,7 @@
               href={"/settings/export/csv/silenced?scope=#{@scope}"}
               class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2"
             >
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </a></td>
         </tr>
@@ -46,7 +46,7 @@
               href={"/settings/export/csv/ghosted?scope=#{@scope}"}
               class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2"
             >
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </a></td>
         </tr>
@@ -54,7 +54,7 @@
           <td>Blocks</td>
           <td>23</td>
           <td><button class="btn btn-ghost items-center text-muted btn-sm normal-case gap-2">
-              <#Icon iconify="pajamas:import" class="w-4 h-4" />
+              <#Icon iconify="pajamas:import" class="size-4" />
               <span>CSV</span>
             </button></td>
         </tr> --}

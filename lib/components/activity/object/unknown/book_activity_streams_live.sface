@@ -7,7 +7,7 @@
         <a
           href={object_field(@json, "id")}
           target="_blank"
-          class="relative h-full min-w-[140px] max-w-[200px]"
+          class="relative h-full min-w-35 max-w-[200px]"
         >
           <img
             src={e(img, "url", "href", nil) || e(img, "url", nil)}
@@ -48,7 +48,7 @@
 
       {!-- PAGES --}
       <div :if={object_field(@json, "pages")} class="flex  items-center mt-2 gap-2">
-        <#Icon iconify="carbon:book" class="w-4 h-4 text-muted" />
+        <#Icon iconify="carbon:book" class="size-4 text-muted" />
         <span class="text-muted text-sm">{object_field(@json, "pages")} {l("pages")}</span>
       </div>
 
@@ -58,7 +58,7 @@
           {#match nil}
           {#match published_date}
             <div class="flex  items-center mt-2 gap-2">
-              <#Icon iconify="carbon:building" class="w-4 h-4 text-muted" />
+              <#Icon iconify="carbon:building" class="size-4 text-muted" />
               <div class="flex items-baseline text-muted text-sm">
                 {l("Published in %{year}", year: DatesTimes.format(published_date, format: :y) || published_date)}
                 {} {#case List.first(object_field(@json, "publishers") || [])}

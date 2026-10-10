@@ -51,7 +51,7 @@
                     {#match nil}
                     {#match published}
                       <span class="text-muted text-sm flex items-center gap-2">
-                        {!-- <#Icon iconify="material-symbols:date-range-outline" class="w-4 h-4 text-muted" /> --}
+                        {!-- <#Icon iconify="material-symbols:date-range-outline" class="size-4 text-muted" /> --}
                         <span class="font-medium">{published |> DatesTimes.format_date(format: "MMMM d, Y")}</span>
                       </span>
                   {/case}
@@ -111,7 +111,7 @@
                   class="btn btn-secondary btn-soft btn-sm flex-1"
                   target="_blank"
                 >
-                  <#Icon iconify="pajamas:import" class="w-4 h-4 opacity-70" />
+                  <#Icon iconify="pajamas:import" class="size-4 opacity-70" />
                   <span>{l("Download")}</span>
                 </a>
 
@@ -120,7 +120,7 @@
                   {#case doi}
                     {#match doi_value when is_binary(doi_value)}
                       <LinkLive to={format_doi_url(doi_value)} class="btn btn-sm btn-soft flex-1" target="_blank">
-                        <#Icon iconify="heroicons-outline:external-link" class="w-4 h-4 opacity-70" />
+                        <#Icon iconify="heroicons-outline:external-link" class="size-4 opacity-70" />
                         <span>{l("Read paper")}</span>
                       </LinkLive>
                     {#match _}
@@ -132,7 +132,7 @@
                 {#elseif is_binary(media_url) and not String.starts_with?(media_url, "doi:") and URIs.valid_url?(media_url)}
                   {!-- Regular URL --}
                   <LinkLive to={media_url} class="btn btn-sm btn-soft flex-1" target="_blank">
-                    <#Icon iconify="heroicons-outline:external-link" class="w-4 h-4 opacity-70" />
+                    <#Icon iconify="heroicons-outline:external-link" class="size-4 opacity-70" />
                     <span>{l("Read paper")}</span>
                   </LinkLive>
                 {#else}

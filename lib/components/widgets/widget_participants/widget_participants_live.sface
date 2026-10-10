@@ -33,9 +33,9 @@
                   user_id={id(participant)}
                   src={Media.avatar_url(participant)}
                   title={e(participant, :profile, :name, nil) || e(participant, :character, :username, "")}
-                  class="h-7 w-7 rounded-full"
-                  wrapper_class="avatar !flex h-7 w-7 shrink-0 border-0"
-                  fallback_class="h-7 w-7 rounded-full"
+                  class="size-7 rounded-full"
+                  wrapper_class="avatar !flex size-7 shrink-0 border-0"
+                  fallback_class="size-7 rounded-full"
                   is_remote={!check_is_local?(participant, preload_if_needed: false)}
                 />
               </LinkLive>
@@ -55,10 +55,11 @@
                 object_id={id(participant)}
                 path={path(participant)}
                 hide_icon
-                container_class="flex w-[76px] items-center justify-end"
-                loading_class="skeleton h-8 w-[76px] rounded-(--radius-button)"
-                class="btn btn-outline !h-8 !min-h-8 !w-[76px] !border-divider !px-2 text-xs leading-none text-muted hover:text-base-content"
-                class_already="btn btn-ghost !h-8 !min-h-8 !w-[76px] !border-transparent !bg-base-content/[0.08] !px-2 text-xs leading-none text-muted hover:text-base-content"
+                with_bell={false}
+                container_class="flex w-19 items-center justify-end"
+                loading_class="skeleton h-8 w-19 rounded-(--radius-button)"
+                class="btn btn-outline !h-8 !min-h-8 !w-19 !border-divider !px-2 text-xs leading-none text-muted hover:text-base-content"
+                class_already="btn btn-ghost !h-8 !min-h-8 !w-19 !border-transparent !bg-base-content/[0.08] !px-2 text-xs leading-none text-muted hover:text-base-content"
               />
             </div>
           </Bonfire.UI.Social.ParticipantsListLive>

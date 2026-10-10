@@ -104,7 +104,7 @@
                               <img src={poster} alt="" class="w-full h-full object-cover">
                             {#match _}
                               <div class="w-full h-full bg-base-200 flex items-center justify-center">
-                                <#Icon iconify="heroicons:video-camera" class="w-12 h-12 text-subtle" />
+                                <#Icon iconify="heroicons:video-camera" class="size-12 text-subtle" />
                               </div>
                           {/case}
                           <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-3">
@@ -115,7 +115,7 @@
                               rel="noopener noreferrer"
                               class="btn btn-sm btn-primary gap-2"
                             >
-                              <#Icon iconify="heroicons:arrow-top-right-on-square" class="w-4 h-4" />
+                              <#Icon iconify="heroicons:arrow-top-right-on-square" class="size-4" />
                               {l("Open original")}
                             </a>
                           </div>
@@ -135,7 +135,7 @@
                                 src={media_img}
                                 media={@media}
                                 alt=""
-                                class="w-16 h-16 object-cover"
+                                class="size-16 object-cover"
                                 fallback_icon="octicon:file-media-24"
                               />
                             </div>
@@ -173,7 +173,7 @@
                         class="flex items-center gap-3 p-3 rounded-box border border-divider bg-base-200"
                       >
                         <div class="flex-shrink-0">
-                          <#Icon iconify="heroicons:musical-note" class="w-10 h-10 text-muted" />
+                          <#Icon iconify="heroicons:musical-note" class="size-10 text-muted" />
                         </div>
                         <div class="flex-1 min-w-0">
                           <p class="text-sm text-muted">{l("This audio cannot be previewed")}</p>
@@ -183,7 +183,7 @@
                             rel="noopener noreferrer"
                             class="btn btn-sm btn-primary gap-2 mt-2"
                           >
-                            <#Icon iconify="heroicons:arrow-top-right-on-square" class="w-4 h-4" />
+                            <#Icon iconify="heroicons:arrow-top-right-on-square" class="size-4" />
                             {l("Open original")}
                           </a>
                         </div>
@@ -219,11 +219,11 @@
                                     class="cursor-pointer"
                                     title={l("Play inline")}
                                   >
-                                    <#Icon iconify="ph:play-fill" class="w-6 h-6 text-gray-800" />
+                                    <#Icon iconify="ph:play-fill" class="size-6 text-gray-800" />
                                   </button>
                                   {!-- Open in new tab button --}
                                   <a href={media_url} target="_blank" class="" title={l("Open in new tab")}>
-                                    <#Icon iconify="ph:arrow-square-out-fill" class="w-6 h-6 text-gray-600" />
+                                    <#Icon iconify="ph:arrow-square-out-fill" class="size-6 text-gray-600" />
                                   </a>
                                 </div>
                               </div>
@@ -259,7 +259,7 @@
                               />
                               <div class="absolute inset-0 bg-black/20 hover:bg-black/10 transition-colors flex items-center justify-center">
                                 <div class="bg-white/90 rounded-full p-3 shadow-lg">
-                                  <#Icon iconify="heroicons:arrow-top-right-on-square-20-solid" class="w-8 h-8 text-gray-800" />
+                                  <#Icon iconify="heroicons:arrow-top-right-on-square-20-solid" class="size-8 text-gray-800" />
                                 </div>
                               </div>
                             </a>

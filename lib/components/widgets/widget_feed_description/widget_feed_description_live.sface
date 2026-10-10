@@ -17,7 +17,7 @@
         class="flex items-center gap-2 text-sm font-bold leading-5 break-words text-base-content"
       >
         <span aria-hidden="true" class="flex shrink-0 items-center text-primary">
-          <Iconify.iconify icon={e(@preset, :icon, "ph:rss-simple")} class="size-[18px]" />
+          <Iconify.iconify icon={e(@preset, :icon, "ph:rss-simple")} class="size-4.5" />
         </span>
         <span class="min-w-0">{Bonfire.UI.Social.FeedNavigation.get_name(@preset, @feed_name)}</span>
       </h2>
@@ -42,9 +42,9 @@
         class={@row_class}
       >
         {#if @default?}
-          <#Icon iconify="ph:house-fill" class="size-[18px] shrink-0 text-primary" />
+          <#Icon iconify="ph:house-fill" class="size-4.5 shrink-0 text-primary" />
         {#else}
-          <#Icon iconify="ph:house" class="size-[18px] shrink-0 text-muted" />
+          <#Icon iconify="ph:house" class="size-4.5 shrink-0 text-muted" />
         {/if}
         <span>{@default_label}</span>
         <#Icon :if={@default?} iconify="ph:check" class="ml-auto size-4 shrink-0 text-primary" />
@@ -57,14 +57,14 @@
         pinned={@pinned}
         show_label
         class={@row_class}
-        icon_class="size-[18px]"
+        icon_class="size-4.5"
       />
       <LinkLive
         to={~p"/settings/user/feeds"}
         opts={[id: "feed-description-settings"]}
         class={@row_class}
       >
-        <#Icon iconify="ph:gear-six" class="size-[18px] shrink-0 text-muted" />
+        <#Icon iconify="ph:gear-six" class="size-4.5 shrink-0 text-muted" />
         <span>{l("Feed settings")}</span>
         <#Icon iconify="ph:arrow-right" class="ml-auto size-4 shrink-0 text-muted" />
       </LinkLive>

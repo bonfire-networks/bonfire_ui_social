@@ -34,7 +34,7 @@
           <span
             data-role="row_value"
             class={
-              "text-sm truncate max-w-[180px]",
+              "text-sm truncate max-w-45",
               "text-primary":
                 !Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, :all),
               "text-muted":
@@ -149,7 +149,7 @@
           <span
             data-role="row_value"
             class={
-              "text-sm truncate max-w-[180px]",
+              "text-sm truncate max-w-45",
               "text-primary": @selected_authors != [],
               "text-muted": @selected_authors == []
             }
@@ -191,7 +191,7 @@
           <span
             data-role="row_value"
             class={
-              "text-sm truncate max-w-[180px]",
+              "text-sm truncate max-w-45",
               "text-primary": @selected_excluded_authors != [],
               "text-muted": @selected_excluded_authors == []
             }
@@ -299,7 +299,7 @@
           <span
             data-role="row_value"
             class={
-              "text-sm truncate max-w-[180px]",
+              "text-sm truncate max-w-45",
               "text-primary": List.wrap(e(@pending_filters, :tags, [])) != [],
               "text-muted": List.wrap(e(@pending_filters, :tags, [])) == []
             }
@@ -580,7 +580,7 @@
           <span
             data-role="row_value"
             class={
-              "text-sm truncate max-w-[180px]",
+              "text-sm truncate max-w-45",
               "text-primary":
                 Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :media_types),
               "text-muted":

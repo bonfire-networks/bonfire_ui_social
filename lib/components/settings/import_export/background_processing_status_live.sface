@@ -6,7 +6,7 @@
         {!-- Total Progress --}
         <div class="stat">
           <div class="stat-figure text-primary">
-            <#Icon iconify="ph:chart-line-fill" class="w-6 h-6" />
+            <#Icon iconify="ph:chart-line-fill" class="size-6" />
           </div>
           <div class="stat-title text-xs">{l("Total Progress")}</div>
           <div class="stat-value text-lg">{(@stats.total || 0) - (@stats.active || 0)}/{@stats.total || 0}</div>
@@ -39,7 +39,7 @@
           phx-value-status="active"
         >
           <div class="stat-figure text-warning">
-            <#Icon iconify="ph:clock-fill" class="w-6 h-6" />
+            <#Icon iconify="ph:clock-fill" class="size-6" />
           </div>
           <div class="stat-title text-xs">{l("Active")}</div>
           <div class="stat-value text-lg text-warning">{@stats.active || 0}</div>
@@ -55,7 +55,7 @@
           phx-value-status="successful"
         >
           <div class="stat-figure text-success">
-            <#Icon iconify="ph:check-bold" class="w-6 h-6" />
+            <#Icon iconify="ph:check-bold" class="size-6" />
           </div>
           <div class="stat-title text-xs">{l("Success Rate")}</div>
           <div class="stat-value text-lg text-success">{@stats.success_rate || 0}%</div>
@@ -70,7 +70,7 @@
           phx-value-status="failed"
         >
           <div class={"stat-figure " <> if(@stats.failed > 0, do: "text-error", else: "text-subtle")}>
-            <#Icon iconify="ph:exclamation-mark-fill" class="w-6 h-6" />
+            <#Icon iconify="ph:exclamation-mark-fill" class="size-6" />
           </div>
           <div class="stat-title text-xs">{l("Issues")}</div>
           <div class={"stat-value text-lg " <> if(@stats.failed > 0, do: "text-error", else: "text-muted")}>
@@ -105,7 +105,7 @@
               phx-click="cancel_jobs_by_type"
               phx-value-type={op_code}
             >
-              <#Icon iconify="heroicons:x-mark" class="w-3 h-3" />
+              <#Icon iconify="heroicons:x-mark" class="size-3" />
               {l("Cancel")}
             </button>
           </div>
@@ -147,7 +147,7 @@
   {#if @jobs == []}
     <div class="text-center py-12">
       <div class="text-muted">
-        <#Icon iconify="heroicons:document-text" class="w-12 h-12 mx-auto mb-4 opacity-50" />
+        <#Icon iconify="heroicons:document-text" class="size-12 mx-auto mb-4 opacity-50" />
         <p class="type-heading mb-2">{l("No import history")}</p>
         <p>{if @filters[:type] || @filters[:status],
             do: l("No imports match your current filters."),
@@ -171,7 +171,7 @@
             phx-target={@myself}
             phx-click="prev_page"
           >
-            <#Icon iconify="heroicons:chevron-left" class="w-3 h-3" />
+            <#Icon iconify="heroicons:chevron-left" class="size-3" />
             {l("Previous")}
           </button>
 
@@ -181,7 +181,7 @@
 
           <button :if={@has_more} class="btn btn-sm btn-soft" phx-target={@myself} phx-click="next_page">
             {l("Next")}
-            <#Icon iconify="heroicons:chevron-right" class="w-3 h-3" />
+            <#Icon iconify="heroicons:chevron-right" class="size-3" />
           </button>
         </div>
       </div>
@@ -197,25 +197,25 @@
           <div class={"flex-shrink-0 mt-0.5 " <> elem(format_state(job.state), 1)}>
             {#case job.state}
               {#match "executing"}
-                <#Icon iconify="heroicons:arrow-path" class="w-5 h-5 animate-spin" />
+                <#Icon iconify="heroicons:arrow-path" class="size-5 animate-spin" />
               {#match "retryable"}
-                <#Icon iconify="heroicons:arrow-path" class="w-5 h-5 animate-spin" />
+                <#Icon iconify="heroicons:arrow-path" class="size-5 animate-spin" />
               {#match "completed"}
-                <#Icon iconify="heroicons:check-circle" class="w-5 h-5" />
+                <#Icon iconify="heroicons:check-circle" class="size-5" />
               {#match "available"}
-                <#Icon iconify="heroicons:clock" class="w-5 h-5" />
+                <#Icon iconify="heroicons:clock" class="size-5" />
               {#match "scheduled"}
-                <#Icon iconify="heroicons:calendar" class="w-5 h-5" />
+                <#Icon iconify="heroicons:calendar" class="size-5" />
               {#match "failed"}
-                <#Icon iconify="heroicons:exclamation-circle" class="w-5 h-5" />
+                <#Icon iconify="heroicons:exclamation-circle" class="size-5" />
               {#match "discarded"}
-                <#Icon iconify="heroicons:x-circle" class="w-5 h-5" />
+                <#Icon iconify="heroicons:x-circle" class="size-5" />
               {#match "cancelled"}
-                <#Icon iconify="heroicons:x-circle" class="w-5 h-5" />
+                <#Icon iconify="heroicons:x-circle" class="size-5" />
               {#match "pre_existing"}
-                <#Icon iconify="heroicons:information-circle" class="w-5 h-5" />
+                <#Icon iconify="heroicons:information-circle" class="size-5" />
               {#match _}
-                <#Icon iconify="heroicons:question-mark-circle" class="w-5 h-5" />
+                <#Icon iconify="heroicons:question-mark-circle" class="size-5" />
             {/case}
           </div>
 
@@ -283,7 +283,7 @@
                 character={job.target_user}
                 profile={e(job.target_user, :profile, nil)}
                 wrapper_class="flex items-center gap-2 profile-item group"
-                avatar_class="w-8 h-8"
+                avatar_class="size-8"
                 show_controls={[:follow, :follows_me, :add_to_circles, :blocks]}
               />
             </div>
@@ -300,7 +300,7 @@
                 class="link text-sm text-error gap-1"
                 phx-click={JS.toggle(to: "#error-details-#{job.id}")}
               >
-                <#Icon iconify="heroicons:exclamation-triangle" class="w-3.5 h-3.5" />
+                <#Icon iconify="heroicons:exclamation-triangle" class="size-3.5" />
                 {l("Show error details")}
               </button>
               <div id={"error-details-#{job.id}"} class="hidden mt-2 p-3 bg-error/10 rounded-box">

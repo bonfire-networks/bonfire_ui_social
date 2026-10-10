@@ -33,4 +33,23 @@ defmodule Bonfire.UI.Social.Activity.PublishedInLive do
     e(context, :profile, :name, nil) || e(context, :named, :name, nil) ||
       e(context, :character, :username, nil)
   end
+
+  @doc "A publication context as `Bonfire.UI.Common.PageHeaderLive`'s `page_title_context` (\"Discussion in <group>\"), or `nil` when there's no name to show without a database round-trip."
+  def page_title_context(context) do
+    if name = context_label(context) do
+      %{name: name, path: path(context), icon_url: context_icon_url(context)}
+    end
+  end
+
+  @doc "The context's avatar URL when its icon is already loaded, else `nil` (callers then show a group glyph) — it never resolves one, so the chip stays free of data access."
+  def context_icon_url(context) do
+    case e(context, :profile, :icon, nil) do
+      %{} = icon ->
+        url = Bonfire.Common.Media.avatar_url(%{icon: icon})
+        if url != Bonfire.Common.Media.avatar_fallback(), do: url
+
+      _ ->
+        nil
+    end
+  end
 end
