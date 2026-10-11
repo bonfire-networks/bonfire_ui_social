@@ -1,50 +1,79 @@
 {#case load(current_user(@__context__), @limit)}
   {#match discussions}
-    <Bonfire.UI.Common.WidgetBlockLive
-      class="w-full flex-auto mx-auto border-y-hair border-divider overflow-hidden"
-      title_class="px-card py-card text-xs font-bold uppercase tracking-wider text-muted"
-      widget_title={@widget_title || l("Top discussions")}
-      reset_cache_event="Bonfire.UI.Social.WidgetTrendingDiscussionsLive:reset_trending_discussions"
-      reset_cache_values={%{limit: @limit}}
-      can_reset
-      empty={discussions == []}
-      empty_icon="ph:chats-circle-fill"
-      empty_message={l("No popular discussions yet. Why not start one? Your post could be tomorrow's top thread.")}
-    >
-      <:action>
-        <LinkLive
-          to={~p"/feed/trending_discussions"}
-          class="text-xs font-medium text-muted hover:text-primary"
-          aria-label={l("View all top discussions")}
-        >
-          {l("View all")}
-        </LinkLive>
-      </:action>
-
-      <ul
-        class="flex flex-col mx-(--stream-content-padding) rounded-box bg-surface overflow-hidden"
-        role="list"
-        data-id="trending_discussions"
+    <div data-id="trending_discussions_widget">
+      <Bonfire.UI.Common.WidgetBlockLive
+        class="w-full relative overflow-hidden"
+        widget_title={@widget_title || l("Top discussions")}
+        reset_cache_event="Bonfire.UI.Social.WidgetTrendingDiscussionsLive:reset_trending_discussions"
+        reset_cache_values={%{limit: @limit}}
+        empty={discussions == []}
+        empty_icon="ph:chats-circle-fill"
+        empty_message={l("No popular discussions yet. Why not start one? Your post could be tomorrow's top thread.")}
       >
-        {#for fp <- discussions}
-          <li
-            id={"trending_discussion_#{id(fp.activity) || id(fp.activity.object)}"}
-            class="p-0 border-0 bg-transparent [&+li]:border-t-hair [&+li]:border-t-divider"
+        <:action>
+          <div class="flex items-center gap-3">
+            <LinkLive
+              to={~p"/feed/trending_discussions"}
+              class="text-xs font-medium text-muted hover:text-primary"
+              aria-label={l("View all top discussions")}
+            >
+              {l("View all")}
+            </LinkLive>
+            {!-- data attributes handled by scroll.js, so they work without a socket --}
+            <div :if={length(discussions) > 1} class="flex items-center gap-1.5">
+              <.icon_button
+                icon="carbon:chevron-left"
+                aria_label={l("Scroll left")}
+                variant="outline"
+                size="sm"
+                class="border-divider"
+                data-carousel-scroll="previous"
+                aria-controls="trending-discussions-carousel"
+              />
+              <.icon_button
+                icon="carbon:chevron-right"
+                aria_label={l("Scroll right")}
+                variant="outline"
+                size="sm"
+                class="border-divider"
+                data-carousel-scroll="next"
+                aria-controls="trending-discussions-carousel"
+              />
+            </div>
+          </div>
+        </:action>
+
+        <div class="grid grid-cols-1 overflow-hidden relative">
+          <div
+            id="trending-discussions-carousel"
+            class="carousel-scroll items-start"
+            phx-hook="CarouselScroll"
+            role="list"
+            data-id="trending_discussions"
           >
-            <Bonfire.UI.Social.ActivityLive
-              id={Bonfire.UI.Social.ActivityLive.component_id(
-                id(fp.activity) || id(fp.activity.object),
-                "trending_discussion"
-              )}
-              activity={fp.activity}
-              class="px-card py-4 sm:py-5 transition-colors hover:bg-base-content/[0.035]"
-              showing_within={:widget}
-              custom_actions={Bonfire.UI.Social.Activity.DiscussionPreviewActionsLive}
-              participants={e(fp, :participants, [])}
-              participants_more_count={e(fp, :participants_more_count, 0)}
-            />
-          </li>
-        {/for}
-      </ul>
-    </Bonfire.UI.Common.WidgetBlockLive>
+            {#for fp <- discussions}
+              <div
+                id={"trending_discussion_#{id(fp.activity) || id(fp.activity.object)}"}
+                role="listitem"
+                class="spotlight_clamp w-[var(--carousel-item-w-mobile)] sm:w-[var(--carousel-item-w)] rounded-box bg-base-100 p-card"
+                style={"--carousel-item-w-mobile: #{carousel_item_width(1.5)}; --carousel-item-w: #{carousel_item_width(nil)};"}
+              >
+                <Bonfire.UI.Social.ActivityLive
+                  id={Bonfire.UI.Social.ActivityLive.component_id(
+                    id(fp.activity) || id(fp.activity.object),
+                    "trending_discussion"
+                  )}
+                  activity={fp.activity}
+                  class="flex-1 spotlight_activity"
+                  showing_within={:widget}
+                  custom_actions={Bonfire.UI.Social.Activity.DiscussionPreviewActionsLive}
+                  participants={e(fp, :participants, [])}
+                  participants_more_count={e(fp, :participants_more_count, 0)}
+                />
+              </div>
+            {/for}
+          </div>
+        </div>
+      </Bonfire.UI.Common.WidgetBlockLive>
+    </div>
 {/case}
