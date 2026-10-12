@@ -139,7 +139,7 @@
                   :if={!preset[:current_user_required] and
                     module_enabled?(Bonfire.UI.Social.SubscribeFeedLive, @__context__)}
                   feed_name={preset.id}
-                  icon_button_class="btn btn-ghost btn-square size-9 min-h-9 p-0 [@media(pointer:coarse)]:size-11 [@media(pointer:coarse)]:min-h-11 text-muted"
+                  icon_button_class="btn btn-ghost btn-square size-9 min-h-9 p-0 text-muted"
                   icon_class="size-5 shrink-0"
                   as_icon
                 />
@@ -150,7 +150,7 @@
                 type="button"
                 phx-click="Bonfire.Social.Feeds:preset_delete"
                 phx-value-id={preset.id}
-                class="btn btn-ghost btn-square size-9 min-h-9 p-0 [@media(pointer:coarse)]:size-11 [@media(pointer:coarse)]:min-h-11 text-error"
+                class="btn btn-ghost btn-square size-9 min-h-9 p-0 text-error"
               >
                 <#Icon iconify="ph:trash-bold" class="size-5 shrink-0" />
                 <span class="sr-only">{l("Delete")}</span>

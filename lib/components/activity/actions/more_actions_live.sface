@@ -27,9 +27,10 @@
   </:trigger>
   {#if @object_type == Bonfire.Data.Social.Message}
     <li class="hover:bg-base-100">
-      <div class="hover:bg-base-100 cursor-default flex justify-between items-center gap-2">
-        <span class="text-sm font-meium">{l("Direct Message")}</span></div>
-      <#Icon iconify="ph:tray-fill" class="size-5 shrink-0" />
+      <div class="hover:bg-base-100 cursor-default flex items-center gap-3 text-sm text-base-content">
+        <#Icon iconify="ph:tray-fill" class="size-4 shrink-0 text-muted" />
+        <span class="flex-1 truncate">{l("Direct Message")}</span>
+      </div>
     </li>
   {/if}
 
@@ -40,10 +41,10 @@
       id={deterministic_dom_id(__MODULE__, id(@activity), "more_action_copy_url", @parent_id)}
       data-clipboard-text={URIs.canonical_url(@permalink, preload_if_needed: false) ||
         URIs.canonical_url(@object, preload_if_needed: false)}
-      class="flex items-center justify-between gap-2 text-sm text-base-content w-full"
+      class="flex items-center gap-3 text-sm text-base-content w-full"
     >
-      <span class="flex-1 text-sm text-left" data-role="label">{l("Copy link")}</span>
-      <#Icon iconify="ph:copy-fill" class="size-5 shrink-0" />
+      <#Icon iconify="ph:copy-fill" class="size-4 shrink-0 text-muted" />
+      <span class="flex-1 text-left truncate" data-role="label">{l("Copy link")}</span>
     </button>
   </li>
 
@@ -128,14 +129,14 @@
               data-id="unfollow"
               :on-click="Bonfire.Social.Graph.Follows:unfollow"
               phx-value-id={subject_id}
-              class="flex items-center justify-between gap-2 text-sm text-base-content w-full"
+              class="flex items-center gap-3 text-sm text-base-content w-full"
             >
-              <span class="flex-1 text-sm text-left truncate ellipsis" data-role="label">{l("Unfollow %{name}",
+              <#Icon iconify="ph:user-minus-fill" class="size-4 shrink-0 text-muted" />
+              <span class="flex-1 text-left truncate" data-role="label">{l("Unfollow %{name}",
                   name:
                     e(@activity, :subject, :profile, :name, nil) ||
                       e(@activity, :subject, :character, :username, nil)
                 )}</span>
-              <#Icon iconify="ph:user-minus-fill" class="size-5 shrink-0" />
             </a>
           </li>
       {/case}
@@ -160,9 +161,10 @@
           phx-value-quoted_id={id}
           phx-value-quote_id={id(@object)}
           phx-target={"##{@activity_component_id}"}
-          class="!flex items-center gap-2 justify-between text-error"
+          class="!flex items-center gap-3 text-sm text-error w-full"
         >
-          <span>{l("Remove quote")}</span>
+          <#Icon iconify="ph:quotes-fill" class="size-4 shrink-0" />
+          <span class="flex-1 text-left truncate">{l("Remove quote")}</span>
         </button>
       </li>
     {#match _}
@@ -170,7 +172,7 @@
 
   {#if current_user_id(@__context__) != @creator_id and @verb != "Flag" and
       module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}
-    <li class="m-1 border-t-hair border-divider" />
+    <li role="separator" class="-mx-2 my-1 border-t border-divider" />
 
     {#if !current_user_id(@__context__)}
       <li>
@@ -181,9 +183,10 @@
             @object,
             @__context__
           )}
-          class="flex items-center w-full gap-2 text-sm text-base-content"
+          class="flex items-center w-full gap-3 text-sm text-base-content"
         >
-          <span class="truncate ellipsis">{l("Flag this %{object}", object: e(@object_type_readable, l("object")))}</span>
+          <#Icon iconify="ph:flag-duotone" class="size-4 shrink-0 text-muted" />
+          <span class="flex-1 truncate">{l("Flag this %{object}", object: e(@object_type_readable, l("object")))}</span>
         </LinkLive>
       </li>
     {#else}

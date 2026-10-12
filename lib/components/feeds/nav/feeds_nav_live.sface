@@ -1,18 +1,18 @@
-<ul class="menu p-0 w-full gap-0 px-0 lg:px-card">
+<ul class="menu p-0 w-full gap-0 px-0 lg:px-5.5">
   {!-- mirrors Bonfire.UI.Common.LinkWidgetLive markup/classes so these rows match the other nav links --}
   <li :for={link <- @links} id={"sidebar-#{link.id}"}>
     <LinkLive
       to={link.href}
       opts={[id: "sidebar-#{link.id}-link", "aria-current": if(link.active?, do: "page", else: nil)]}
       class={[
-        "rounded-selector transition-colors duration-150",
+        "nav-row transition-colors duration-150",
         Bonfire.UI.Common.LinkWidgetLive.active_link_class(link.active?)
       ]}
     >
       <div class="shrink-0 flex items-center">
         <Iconify.iconify icon={link.icon} class="size-5 text-primary" />
       </div>
-      <span class={["text-base", Bonfire.UI.Common.LinkWidgetLive.active_label_class(link.active?)]}>{link.label}</span>
+      <span class={["truncate min-w-0 text-sm", Bonfire.UI.Common.LinkWidgetLive.active_label_class(link.active?)]}>{link.label}</span>
     </LinkLive>
   </li>
 </ul>

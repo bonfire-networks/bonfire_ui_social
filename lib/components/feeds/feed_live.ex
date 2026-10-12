@@ -33,6 +33,8 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   prop hide_load_more, :boolean, default: false
   prop enable_marker, :boolean, default: false
+  # opts out of reading positions even when the preset enables them (presets re-apply `enable_marker` on each load)
+  prop disable_marker, :boolean, default: false
 
   prop verb_default, :string, default: nil
 
@@ -308,7 +310,8 @@ defmodule Bonfire.UI.Social.FeedLive do
     debug("feed stream is being poured into")
 
     markers_enabled =
-      Map.get(assigns, :enable_marker, assigns(socket)[:enable_marker]) == true
+      assigns(socket)[:disable_marker] != true and
+        Map.get(assigns, :enable_marker, assigns(socket)[:enable_marker]) == true
 
     socket =
       socket

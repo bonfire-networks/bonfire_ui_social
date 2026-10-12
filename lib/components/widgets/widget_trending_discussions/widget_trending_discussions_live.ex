@@ -29,14 +29,20 @@ defmodule Bonfire.UI.Social.WidgetTrendingDiscussionsLive do
   end
 
   @doc """
-  Card width for `visible_items` cards per row, or 70% (as the Spotlight carousel sizes them).
+  Card width for `visible_items` cards per row, `:peek` for one full card with the first 1rem of the next showing, or 70% (as the Spotlight carousel sizes them).
 
       iex> Bonfire.UI.Social.WidgetTrendingDiscussionsLive.carousel_item_width(nil)
       "70%"
 
       iex> Bonfire.UI.Social.WidgetTrendingDiscussionsLive.carousel_item_width(2)
       "calc((100% - 0.75rem) / 2)"
+
+      iex> Bonfire.UI.Social.WidgetTrendingDiscussionsLive.carousel_item_width(:peek)
+      "calc(100% - 1.75rem)"
   """
+  # 0.75rem gap + 1rem of the next card
+  def carousel_item_width(:peek), do: "calc(100% - 1.75rem)"
+
   def carousel_item_width(visible_items) when is_number(visible_items) and visible_items > 0,
     do: "calc((100% - #{(visible_items - 1) * 0.75}rem) / #{visible_items})"
 

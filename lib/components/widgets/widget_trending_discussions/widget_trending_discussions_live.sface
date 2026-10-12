@@ -56,7 +56,7 @@
                 id={"trending_discussion_#{id(fp.activity) || id(fp.activity.object)}"}
                 role="listitem"
                 class="spotlight_clamp w-[var(--carousel-item-w-mobile)] sm:w-[var(--carousel-item-w)] rounded-box bg-base-100 p-card"
-                style={"--carousel-item-w-mobile: #{carousel_item_width(1.5)}; --carousel-item-w: #{carousel_item_width(nil)};"}
+                style={"--carousel-item-w-mobile: #{carousel_item_width(:peek)}; --carousel-item-w: #{carousel_item_width(nil)};"}
               >
                 <Bonfire.UI.Social.ActivityLive
                   id={Bonfire.UI.Social.ActivityLive.component_id(

@@ -1189,6 +1189,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
          %Phoenix.LiveView.Socket{} = socket,
          reset_stream
        ) do
+    # a feed component opted out of reading positions overrides its preset's `enable_marker`
+    assigns =
+      if assigns(socket)[:disable_marker] == true,
+        do: Keyword.put(assigns, :enable_marker, false),
+        else: assigns
+
     base_opts =
       to_options(socket)
       |> maybe_surface_enable_marker(assigns)
