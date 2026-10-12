@@ -72,7 +72,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLinkLiveTest do
 
     assert preview_img == nil
     assert html =~ ~s(data-id="media_favicon")
-    assert html =~ "w-10 h-10 shrink-0"
+    assert html =~ "size-10 shrink-0"
     assert html =~ "w-full h-full rounded-md object-contain"
     assert html =~ "text-pretty max-w-prose"
     refute html =~ "max-w-[120px] w-full h-full"
