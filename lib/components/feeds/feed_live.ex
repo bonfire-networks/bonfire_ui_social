@@ -33,6 +33,7 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   prop hide_load_more, :boolean, default: false
   prop enable_marker, :boolean, default: false
+
   # opts out of reading positions even when the preset enables them (presets re-apply `enable_marker` on each load)
   prop disable_marker, :boolean, default: false
 

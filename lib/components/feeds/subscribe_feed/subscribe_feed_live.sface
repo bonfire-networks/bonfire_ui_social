@@ -67,7 +67,9 @@
       </div>
   {/case}
   <:open_btn>
-    <div class={if @as_icon, do: @icon_button_class, else: "text-left cursor-pointer flex items-center gap-3 w-full"}>
+    <div class={if @as_icon,
+      do: @icon_button_class,
+      else: "text-left cursor-pointer flex items-center gap-3 w-full"}>
       <#Icon
         iconify="ph:rss-simple-duotone"
         class={@icon_class || if(@as_icon, do: "size-4", else: "size-4 shrink-0 text-muted")}

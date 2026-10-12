@@ -407,10 +407,7 @@
       </div>
 
       <:open_btn>
-        <div
-          data-id="boundary_details"
-          class="flex items-center w-full gap-3 text-sm text-base-content"
-        >
+        <div data-id="boundary_details" class="flex items-center w-full gap-3 text-sm text-base-content">
           <#Icon iconify="ph:sparkle-fill" class="size-4 text-primary shrink-0" />
           <span class="flex-1 text-left text-primary font-medium">{l("Advanced")}</span>
         </div>
