@@ -3,10 +3,7 @@
       "Customize your feed experience by configuring default display settings and managing which feeds appear in your feed tabs."
     )}</p>
 
-  <div
-    id="feed-settings-panel"
-    class="m-4 rounded-box border border-divider overflow-hidden"
-  >
+  <div id="feed-settings-panel" class="m-4 rounded-box border border-divider overflow-hidden">
     <div class="grid grid-cols-1">
       <.form
         for={@default_feed_form}

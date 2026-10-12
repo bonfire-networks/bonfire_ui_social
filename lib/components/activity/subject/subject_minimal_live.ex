@@ -70,8 +70,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   # up by Tailwind. See the `NotificationCard` styleguide for the visual contract.
   @doc false
   def subject_minimal_line_class,
-    do:
-      "flex items-start gap-2 -mx-card px-card -mt-1.5 pb-3 mb-3 border-b-hair border-divider"
+    do: "flex items-start gap-2 -mx-card px-card -mt-1.5 pb-3 mb-3 border-b-hair border-divider"
 
   @doc false
   def subject_minimal_icon_box_class,

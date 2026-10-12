@@ -12,11 +12,7 @@
   {!-- no `phx-update="ignore"`: these controls are live, and ignoring updates would freeze their checked state and the Apply button --}
   <div id="notification-preferences-controls" class="p-4 space-y-4">
     <div class="space-y-1.5">
-      <h2
-        :if={@showing_within == :feed}
-        id="notification-preferences-title"
-        class="type-heading"
-      >{l("Notification preferences")}</h2>
+      <h2 :if={@showing_within == :feed} id="notification-preferences-title" class="type-heading">{l("Notification preferences")}</h2>
       {!-- only the sections that are still unbuilt claim to be a preview, so a live section never says its changes are discarded --}
       <p
         :if={show_unimplemented?()}

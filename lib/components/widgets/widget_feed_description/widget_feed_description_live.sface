@@ -28,10 +28,7 @@
         {e(@preset, :description, nil)}
       </p>
     </div>
-    <div
-      :if={current_user(@__context__)}
-      class="flex flex-col border-t border-divider p-1.5"
-    >
+    <div :if={current_user(@__context__)} class="flex flex-col border-t border-divider p-1.5">
       <button
         :if={@can_set_default? and @feed_name not in [:notifications, "notifications"]}
         id="feed-description-default"

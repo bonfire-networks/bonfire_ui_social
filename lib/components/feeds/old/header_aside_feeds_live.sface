@@ -1,9 +1,6 @@
 <div class="relative z-40 tablet:hidden dropdown dropdown-end">
   <label tabindex="0" class="flex normal-case btn place-content-center btn-circle btn-ghost btn-sm">
-    <#Icon
-      iconify="ph:dots-three-outline-vertical-fill"
-      class="size-5 text-muted"
-    />
+    <#Icon iconify="ph:dots-three-outline-vertical-fill" class="size-5 text-muted" />
   </label>
   <ul tabindex="0" class="p-2 shadow dropdown-content menu bg-base-200 rounded-box w-52">
     <div

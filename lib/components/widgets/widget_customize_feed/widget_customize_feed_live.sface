@@ -22,10 +22,7 @@
         phx-change="set_feed_order"
         phx-target={@event_target}
       >
-        <label
-          for={"feed_order_#{@feed_name || "default"}"}
-          class="text-sm font-normal text-muted"
-        >{l("Sort")}</label>
+        <label for={"feed_order_#{@feed_name || "default"}"} class="text-sm font-normal text-muted">{l("Sort")}</label>
         <select
           id={"feed_order_#{@feed_name || "default"}"}
           name="feed_order"
