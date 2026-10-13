@@ -131,7 +131,7 @@ defmodule Bonfire.UI.Social.NotificationShowInCentreTest do
     conn
     |> visit("/notifications")
     |> wait_async()
-    |> refute_has("#notification-filter-boost[class*=opacity-40]")
+    |> refute_has("#notification-filter-boost[data-switched-off]")
     |> refute_has("#notification-filters-dimmed")
 
     Settings.put(Notifications.show_in_centre_key(:boost), false, current_user: me)
@@ -139,10 +139,10 @@ defmodule Bonfire.UI.Social.NotificationShowInCentreTest do
     conn(user: me, account: me.account)
     |> visit("/notifications")
     |> wait_async()
-    |> assert_has("#notification-filter-boost[class*=opacity-40]")
+    |> assert_has("#notification-filter-boost[data-switched-off]")
     |> assert_has("#notification-filter-boost[href='/notifications/boosts']")
-    |> refute_has("#notification-filter-react[class*=opacity-40]")
-    # dimming is colour alone, so the state is spoken too, and only by the chips it applies to
+    |> refute_has("#notification-filter-react[data-switched-off]")
+    # dimming is visual alone, so the state is spoken too, and only by the chips it applies to
     |> assert_has("#notification-filters-dimmed")
     |> assert_has("#notification-filter-boost[aria-describedby=notification-filters-dimmed]")
     |> refute_has("#notification-filter-react[aria-describedby=notification-filters-dimmed]")
