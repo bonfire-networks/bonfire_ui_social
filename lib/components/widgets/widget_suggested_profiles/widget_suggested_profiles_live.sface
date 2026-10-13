@@ -18,7 +18,7 @@
             aria_label={l("Scroll left")}
             variant="outline"
             size="sm"
-            class="border-divider"
+            class="border-transparent bg-transparent text-muted hover:text-base-content"
             data-carousel-scroll="previous"
             aria-controls="suggested-profiles-carousel"
           />
@@ -27,7 +27,7 @@
             aria_label={l("Scroll right")}
             variant="outline"
             size="sm"
-            class="border-divider"
+            class="border-transparent bg-transparent text-muted hover:text-base-content"
             data-carousel-scroll="next"
             aria-controls="suggested-profiles-carousel"
           />
