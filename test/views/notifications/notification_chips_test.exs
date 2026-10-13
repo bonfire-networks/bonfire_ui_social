@@ -195,7 +195,7 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
     conn(user: admin, account: admin.account)
     |> visit("/notifications")
     |> wait_async()
-    |> click_link("#notification-filter-flag", "Flagged")
+    |> click_link("#notification-filter-flag", "Flags")
     |> wait_async()
     |> assert_path("/notifications/flags")
     # the chip bar survives the preset switch, so the moderator can get back
@@ -505,7 +505,7 @@ defmodule Bonfire.UI.Social.NotificationChipsTest do
       |> visit("/notifications")
       |> wait_async()
       |> assert_has("[data-verb=like]")
-      |> click_link("#notification-filter-other", "Other activity")
+      |> click_link("#notification-filter-other", "Other")
       |> wait_async()
       |> assert_has("#notification-filter-other[aria-current=page]")
       |> assert_has("[data-verb=vote]")
