@@ -1,38 +1,38 @@
 <nav
   id="notification-filters"
   aria-label={l("Filter notifications")}
-  class="mb-4 min-w-0 border-b border-divider"
+  class="min-w-0"
 >
-  {!-- read out only when something is dimmed, rather than saying it on every visit --}
   <p :if={any_switched_off?(@__context__)} id="notification-filters-dimmed" class="sr-only">{l("Dimmed categories are switched off in your preferences. Selecting one still shows it.")}</p>
-  <ul class="flex min-w-0 list-none p-0">
+  <ul
+    id="notification-filters-list"
+    phx-hook="ScrollRow"
+    class="flex min-w-0 list-none gap-1.5 overflow-x-auto p-4 [scrollbar-width:none] data-[fade-end]:[mask-image:linear-gradient(to_right,black_calc(100%-3rem),transparent)] data-[fade-start]:[mask-image:linear-gradient(to_right,transparent,black_3rem)] data-[fade-start]:data-[fade-end]:[mask-image:linear-gradient(to_right,transparent,black_3rem,black_calc(100%-3rem),transparent)] [&::-webkit-scrollbar]:hidden"
+  >
     {#for {key, chip} <- chips(@__context__)}
-      <li class="min-w-0 flex-1">
-        {!-- a category switched off in preferences greys out but stays a link, since this is the way back to what the default view no longer shows --}
-        <LinkPatchLive
-          to={chip_path(key, chip)}
-          opts={[
-            id: "notification-filter-#{key}",
-            "data-tip": chip_label(key, chip),
-            "aria-current": if(current?(key, @selected_tab), do: "page", else: nil),
-            "aria-describedby":
-              if(Notifications.hidden_from_centre?(key, @__context__), do: "notification-filters-dimmed")
-          ]}
-          class={
-            "tooltip tooltip-bottom flex min-h-12 w-full items-center justify-center border-b-2 text-muted hover:bg-fill focus-visible:outline-2 focus-visible:-outline-offset-2",
-            "border-primary text-primary": current?(key, @selected_tab),
-            "border-transparent": !current?(key, @selected_tab),
-            "opacity-40": Notifications.hidden_from_centre?(key, @__context__)
-          }
-        >
-          {#if icon = chip_icon(key, chip)}
-            <span aria-hidden="true"><Iconify.iconify icon={icon} class="size-5" /></span>
-            <span class="sr-only">{chip_label(key, chip)}</span>
-          {#else}
-            <span class="truncate px-2 text-sm font-medium">{chip_label(key, chip)}</span>
-          {/if}
-        </LinkPatchLive>
-      </li>
+      {#case {current?(key, @selected_tab), Notifications.hidden_from_centre?(key, @__context__)}}
+        {#match {current?, switched_off?}}
+          <li class="shrink-0">
+            {!-- a category switched off in preferences goes hollow (dashed, muted) but stays a link, since this is the way back to what the default view no longer shows. The ::before stretches the 32px pill's touch target to 44px without making the pill look chunky --}
+            <LinkPatchLive
+              to={chip_path(key, chip)}
+              opts={[
+                id: "notification-filter-#{key}",
+                "aria-current": if(current?, do: "page", else: nil),
+                "data-switched-off": if(switched_off?, do: "true", else: nil),
+                "aria-describedby": if(switched_off?, do: "notification-filters-dimmed")
+              ]}
+              class={
+                "relative flex h-8 items-center whitespace-nowrap rounded-full border px-3.5 text-sm font-medium transition-colors before:absolute before:inset-x-0 before:-inset-y-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+                "border-transparent bg-base-content text-base-100": current?,
+                "border-transparent bg-fill text-base-content hover:bg-fill-strong": !current? and !switched_off?,
+                "border-dashed border-divider text-muted hover:bg-fill": !current? and switched_off?
+              }
+            >
+              {chip_label(key, chip)}
+            </LinkPatchLive>
+          </li>
+      {/case}
     {/for}
   </ul>
 </nav>
