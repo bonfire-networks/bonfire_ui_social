@@ -1,84 +1,46 @@
 <Bonfire.UI.Common.OpenModalLive
-  id={deterministic_dom_id("edit_post", id(@object), @activity_component_id)}
-  title_text={if @versioning_enabled, do: l("Version history"), else: l("Edit")}
-  modal_class="modal_wide"
-  form_opts={if !@read_only,
-    do: %{"phx-submit" => "Bonfire.Posts:edit", "phx-target": "##{@activity_component_id}"},
-    else: %{}}
-  :let={autocomplete: _autocomplete}
+  id={deterministic_dom_id("edit_post", id(@object), @activity_component_id, @parent_id)}
+  title_text={l("Edit")}
+  form_opts={%{"phx-submit" => "Bonfire.Posts:edit", "phx-target" => "##{@activity_component_id}"}}
 >
   <input type="hidden" name="post_id" value={id(@object)}>
 
-  <div class="flex-1 mt-4">
-    <Bonfire.UI.Social.VersionHistoryLive
-      :if={@versioning_enabled}
-      versioning_enabled={@versioning_enabled}
-      object={@object}
+  <div class="flex flex-col gap-2 mt-4">
+    <input
+      name="name"
+      class="w-full input"
+      autocomplete="off"
+      placeholder={l("Title")}
+      aria-label={l("Title")}
+      value={e(@post_content, :name, nil)}
     />
 
-    <div
-      :if={!@read_only}
-      id={deterministic_dom_id(__MODULE__, id(@object), nil, @parent_id)}
-      phx-update="ignore"
-    >
-      <h3 :if={@versioning_enabled} class="font-bold mt-5 text-base flex-1">
-        {l("Edit")}
-      </h3>
-      <div class="flex flex-col gap-2 mt-4">
-        <input
-          name="name"
-          class="w-full input"
-          autocomplete="off"
-          placeholder={l("Title")}
-          value={e(Bonfire.UI.Social.Activity.NoteLive.post_content(@object), :name, nil)}
-        />
+    <input
+      name="summary"
+      class="w-full input"
+      autocomplete="off"
+      placeholder={l("CW")}
+      aria-label={l("Content warning")}
+      value={e(@post_content, :summary, nil)}
+    />
 
-        <div class="relative border-b border-divider">
-          <#Icon iconify="ri:alert-fill" class="absolute size-5 stroke-1 top-3.5 left-3 text-muted" />
-          <input
-            name="summary"
-            class="w-full input"
-            autocomplete="off"
-            placeholder={l("CW")}
-            value={e(Bonfire.UI.Social.Activity.NoteLive.post_content(@object), :summary, nil)}
-          />
-        </div>
-
-        <textarea
-          name="html_body"
-          class="w-full h-32 textarea"
-          autocomplete="off"
-          placeholder={l("Text")}
-        >{e(Bonfire.UI.Social.Activity.NoteLive.post_content(@object), :html_body, nil)}</textarea>
-      </div>
-    </div>
+    <textarea
+      name="html_body"
+      class="w-full h-32 textarea"
+      autocomplete="off"
+      placeholder={l("Text")}
+      aria-label={l("Text")}
+    >{e(@post_content, :html_body, nil)}</textarea>
   </div>
 
   <:open_btn>
-    <#slot>
-      <li :if={!@read_only}>
-        <div class="flex justify-between items-center gap-2">
-          <div class="text-sm text-base-content">
-            {l("Edit")}
-          </div>
-          <#Icon iconify="ph:pencil-simple-line-fill" class="size-5 shrink-0" />
-        </div>
-      </li>
-      <li :if={@versioning_enabled}>
-        <div class="flex items-center gap-2">
-          <!-- <#Icon
-            iconify="material-symbols:difference-outline-rounded"
-            class="size-4 shrink-0 text-base-content"
-          /> -->
-          <div class="text-sm text-base-content">
-            {l("Version history")}
-          </div>
-        </div>
-      </li>
-    </#slot>
+    <div class="flex items-center gap-3 w-full text-sm text-base-content">
+      <#Icon iconify="ph:pencil-simple-line-fill" class="size-4 shrink-0 text-muted" />
+      <span class="flex-1 text-left truncate">{l("Edit")}</span>
+    </div>
   </:open_btn>
   <:action_btns>
-    <button :if={!@read_only} class="normal-case btn-sm btn btn-primary">
+    <button type="submit" class="normal-case btn-sm btn btn-primary">
       {l("Done")}
     </button>
   </:action_btns>

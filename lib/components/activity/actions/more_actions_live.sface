@@ -7,16 +7,7 @@
   trigger_class="btn btn-ghost group hover:bg-primary/10 btn-circle btn-sm"
   label={l("More actions")}
   wrapper_opts={["data-id": "more_menu", "data-rendered": @showing_within]}
-  trigger_opts={if current_user_id(@__context__) && show_bell?(assigns) &&
-       module_enabled?(Bonfire.Notify.Web.BellButtonLive, @__context__),
-     do: [
-       "phx-click":
-         JS.push("load",
-           target:
-             "##{deterministic_dom_id(__MODULE__, id(@activity || @object), "bell", @parent_id)}"
-         )
-     ],
-     else: []}
+  trigger_opts={@trigger_opts}
 >
   <:trigger>
     <#Icon
@@ -55,7 +46,7 @@
     <li :if={show_bell?(assigns)}>
       <StatefulComponent
         module={maybe_component(Bonfire.Notify.Web.BellButtonLive, @__context__)}
-        id={deterministic_dom_id(__MODULE__, id(@activity || @object), "bell", @parent_id)}
+        id={lazy_id(assigns, "bell")}
         object={id(@object)}
         lazy
         menu_item
@@ -236,11 +227,11 @@
     with_icon
   />
 
-  {!-- Advanced actions (boundary-dependent: edit, delete, lock, boundary details, etc.) --}
+  {!-- boundary details, edit, delete, etc: loaded when the menu opens --}
   <StatefulComponent
-    :if={@object_type != Bonfire.Data.Social.Message}
-    module={maybe_component(Bonfire.UI.Social.Activity.AdvancedActionsLive, @__context__)}
-    id={deterministic_dom_id(__MODULE__, id(@activity || @object), "advanced_actions", @parent_id)}
+    :if={permitted_actions?(assigns)}
+    module={maybe_component(Bonfire.UI.Social.Activity.PermittedActionsLive, @__context__)}
+    id={lazy_id(assigns, "permitted_actions")}
     activity={@activity}
     object={@object}
     object_type={@object_type}
@@ -256,7 +247,6 @@
     permalink={@permalink}
     published_in={@published_in}
     participants={@participants}
-    quotes={@quotes}
   />
 
   <#slot {@admin_items} />

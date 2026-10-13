@@ -13,9 +13,6 @@ defmodule Bonfire.UI.Social.PostDelete.Test do
     {:ok, conn: conn, account: account, me: me}
   end
 
-  @tag :todo
-  # object_boundary is loaded asynchronously via update_many on connected mount,
-  # so the delete button doesn't render on the initial page load that PhoenixTest sees.
   test "post author can see the delete button", %{conn: conn, me: me} do
     {:ok, post} =
       Posts.publish(
@@ -26,11 +23,10 @@ defmodule Bonfire.UI.Social.PostDelete.Test do
 
     conn
     |> visit("/discussion/#{post.id}")
-    |> assert_has("[role=delete]")
+    |> open_more_menu()
+    |> assert_has("[data-role=delete_object] [role=delete]")
   end
 
-  @tag :todo
-  # Depends on delete button being visible (see above).
   test "post author can delete via confirmation modal", %{conn: conn, me: me} do
     {:ok, post} =
       Posts.publish(
@@ -41,9 +37,12 @@ defmodule Bonfire.UI.Social.PostDelete.Test do
 
     conn
     |> visit("/discussion/#{post.id}")
-    |> click_button("[role=delete]", "Delete")
-    |> click_button("Delete")
+    |> open_more_menu()
+    |> click_button("[data-role=delete_object] [data-role=open_modal]", "Delete")
+    |> click_button("[phx-click='Bonfire.Social.Objects:delete']", "Delete")
     |> assert_has("[role=alert]", text: "Deleted")
+
+    assert {:error, _} = Posts.read(id(post), current_user: me)
   end
 
   test "deleted post disappears from feed", %{conn: conn, me: me} do

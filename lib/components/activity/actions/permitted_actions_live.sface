@@ -1,0 +1,238 @@
+<li id={@id} data-id="permitted_actions" class="w-full">
+  <ul class="m-0 p-0 w-full min-w-0 whitespace-normal before:hidden">
+    {#if @permitted}
+      <li data-id="boundary_details">
+        <Bonfire.UI.Common.OpenModalLive id={"#{@id}_boundary"} title_text={l("Boundary")} no_actions>
+          <StatefulComponent
+            module={maybe_component(Bonfire.UI.Boundaries.BoundaryIconLive, @__context__)}
+            id={"#{@id}_boundary_icon"}
+            object={@object}
+            object_boundary={@boundary}
+            object_type={Types.object_type(@published_in) || @object_type}
+            details_only
+          />
+          <:open_btn>
+            <div class="flex items-center gap-3 w-full text-sm text-base-content">
+              <#Icon iconify="ph:shield-check-fill" class="size-4 shrink-0 text-muted" />
+              <span class="flex-1 text-left truncate">{l("Boundary details")}</span>
+            </div>
+          </:open_btn>
+        </Bonfire.UI.Common.OpenModalLive>
+      </li>
+
+      <li
+        :if={@permitted.edit and
+          (@object_type == Bonfire.Data.Social.Post or not is_nil(e(@object, :post_content, nil)))}
+        data-role="edit_post"
+      >
+        <Bonfire.UI.Social.EditPostLive
+          object={@object}
+          activity_component_id={@activity_component_id}
+          parent_id={@id}
+        />
+      </li>
+
+      <li
+        :if={@permitted.describe and @viewing_main_object and not is_nil(@thread_id)}
+        data-role="edit_thread_title"
+      >
+        <Bonfire.UI.Common.OpenModalLive
+          id={"#{@id}_edit_title"}
+          title_text={l("Edit discussion title")}
+          form_opts={%{"phx-submit" => "Bonfire.Social.Objects:set_name", "phx-target" => "##{@activity_component_id}"}}
+        >
+          <input
+            name="name"
+            class="w-full bg-fill-strong input input-bordered mt-3"
+            placeholder={l("Set a name for the thread...")}
+            aria-label={l("Discussion title")}
+            value={@thread_title || e(@activity, :replied, :thread, :named, :name, nil) ||
+              e(@object, :post_content, :name, nil) ||
+              e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, nil) ||
+              e(@object, :profile, :name, nil) || e(@object, :name, nil)}
+          />
+          <input type="hidden" name="thread_id" value={@thread_id}>
+          <:open_btn>
+            <div class="flex items-center gap-3 w-full text-sm text-base-content">
+              <#Icon iconify="ph:text-h-one-fill" class="size-4 shrink-0 text-muted" />
+              <span class="flex-1 text-left truncate">{l("Edit discussion title")}</span>
+            </div>
+          </:open_btn>
+          <:action_btns>
+            <button type="submit" class="normal-case btn btn-sm btn-primary">{l("Save")}</button>
+          </:action_btns>
+        </Bonfire.UI.Common.OpenModalLive>
+      </li>
+
+      <li :if={Bonfire.Social.PostContents.versioning_enabled?(@__context__)}>
+        <a
+          href={"/discussion/#{id(@object)}/history/"}
+          target="_top"
+          class="flex items-center gap-3 w-full text-sm text-base-content"
+        >
+          <#Icon iconify="ph:clock-counter-clockwise-fill" class="size-4 shrink-0 text-muted" />
+          <span class="flex-1 text-left truncate">{l("Version history")}</span>
+        </a>
+      </li>
+
+      {#if @permitted.download and @showing_within == :thread and
+          @object_type in [Bonfire.Data.Social.Post, :article] and
+          not is_nil(e(@object, :post_content, nil))}
+        <li>
+          <Bonfire.UI.Social.Activity.DownloadMarkdownLive
+            id={"#{@id}_download_markdown"}
+            object_id={id(@object)}
+            as_icon={false}
+          />
+        </li>
+
+        <StatelessComponent
+          :if={extension_enabled?(:bonfire_open_science)}
+          module={maybe_component(Bonfire.OpenScience.ZenodoDoiButtonLive, @__context__)}
+          parent_id={@activity_component_id || id(@activity)}
+          object={@object}
+          media={e(@activity, :media, nil) || e(@object, :media, nil) || e(@activity, :files, nil) ||
+            e(@object, :files, nil)}
+          participants={@participants}
+        />
+      {/if}
+
+      <StatelessComponent
+        module={maybe_component(Bonfire.Label.Web.ContentLabelLive, @__context__)}
+        object={@object}
+        scope={:activity}
+        parent_id={@activity_component_id || id(@activity)}
+        object_boundary={@boundary}
+        target={"##{@activity_component_id}"}
+        btn_label={l("Label this %{object}", object: e(@object_type_readable, l("object")))}
+      />
+
+      {#if @viewing_main_object && @thread_id &&
+          module_enabled?(Bonfire.Boundaries.Locking.LiveHandler, @__context__)}
+        {#if @permitted.lock}
+          <li data-role="lock_discussion">
+            <Bonfire.UI.Common.OpenModalLive id={"#{@id}_lock"} title_text={l("Lock discussion")}>
+              <p class="text-sm text-muted mt-3">
+                {l(
+                  "You can lock this discussion to prevent any replies from users on this instance and to block any remote replies from federating back to this instance."
+                )}
+              </p>
+              <:open_btn>
+                <div class="flex items-center gap-3 w-full text-sm text-base-content">
+                  <#Icon iconify="ph:lock-fill" class="size-4 shrink-0 text-muted" />
+                  <span class="flex-1 text-left truncate">{l("Lock discussion")}</span>
+                </div>
+              </:open_btn>
+              <:action_btns>
+                <button
+                  type="button"
+                  phx-click="Bonfire.Boundaries.Locking:lock"
+                  phx-value-id={@thread_id}
+                  class="normal-case btn btn-sm btn-warning"
+                >
+                  {l("Lock this discussion")}
+                </button>
+              </:action_btns>
+            </Bonfire.UI.Common.OpenModalLive>
+          </li>
+        {#elseif @permitted.unlock}
+          <li data-role="unlock_discussion">
+            <Bonfire.UI.Common.OpenModalLive id={"#{@id}_unlock"} title_text={l("Unlock discussion")}>
+              <p class="text-sm text-muted mt-3">
+                {l("You can unlock this discussion to accept replies again.")}
+              </p>
+              <:open_btn>
+                <div class="flex items-center gap-3 w-full text-sm text-base-content">
+                  <#Icon iconify="ph:lock-open-fill" class="size-4 shrink-0 text-muted" />
+                  <span class="flex-1 text-left truncate">{l("Unlock discussion")}</span>
+                </div>
+              </:open_btn>
+              <:action_btns>
+                <button
+                  type="button"
+                  phx-click="Bonfire.Boundaries.Locking:unlock"
+                  phx-value-id={@thread_id}
+                  class="normal-case btn btn-sm btn-primary"
+                >
+                  {l("Unlock this discussion")}
+                </button>
+              </:action_btns>
+            </Bonfire.UI.Common.OpenModalLive>
+          </li>
+        {/if}
+      {/if}
+
+      <li
+        :if={@permitted.delete or @permitted.remove_from_group}
+        role="separator"
+        class="-mx-2 my-1 border-t border-divider"
+      />
+
+      {#if @permitted.delete}
+        <li data-role="delete_object">
+          <Bonfire.UI.Social.Activity.DeleteObjectLive
+            object={@object}
+            object_type_readable={@object_type_readable}
+            parent_id={@id}
+            skip_permission_check
+            open_btn_class="flex flex-row-reverse items-center gap-3 w-full text-error"
+            icon_class="size-4 shrink-0"
+          />
+        </li>
+
+        {!-- a post's create activity shares its id, so its own parent_id keeps the two modals' ids apart --}
+        <li :if={id(@activity)} data-role="delete_activity">
+          <Bonfire.UI.Social.Activity.DeleteObjectLive
+            object={@activity}
+            object_type_readable={@object_type_readable}
+            parent_id={"#{@id}_feeds"}
+            skip_permission_check
+            action="Bonfire.Social.Feeds:delete"
+            label={l("Delete from feeds")}
+            explanation={l(
+              "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
+              object: e(@object_type_readable, l("object")),
+              verb: @verb
+            )}
+            open_btn_class="flex flex-row-reverse items-center gap-3 w-full text-error"
+            icon_class="size-4 shrink-0"
+          />
+        </li>
+      {/if}
+
+      <li :if={@permitted.remove_from_group} data-role="remove_from_group">
+        <Bonfire.UI.Common.OpenModalLive id={"#{@id}_remove_from_group"} title_text={l("Remove from group")}>
+          <p class="text-sm text-muted mt-3">
+            {l("The post stays available, but it won't appear in the group any more.")}
+          </p>
+          <:open_btn>
+            <div class="flex items-center gap-3 w-full text-sm text-error">
+              <#Icon iconify="ph:sign-out-fill" class="size-4 shrink-0" />
+              <span class="flex-1 text-left truncate">{l("Remove from group")}</span>
+            </div>
+          </:open_btn>
+          <:action_btns>
+            <button
+              type="button"
+              phx-click="Bonfire.Social.Flags:unpublish"
+              phx-target={"##{@activity_component_id}"}
+              phx-value-id={id(@object)}
+              phx-value-context={id(@published_in) || @published_in}
+              data-role="remove_from_group_confirm"
+              class="normal-case btn btn-sm btn-error"
+            >
+              {l("Remove from group")}
+            </button>
+          </:action_btns>
+        </Bonfire.UI.Common.OpenModalLive>
+      </li>
+    {#else}
+      <li aria-hidden="true" data-id="permitted_actions_placeholder">
+        <div class="flex items-center gap-3">
+          <div class="size-4 shrink-0 rounded bg-fill-strong animate-pulse" />
+          <div class="h-3 w-28 rounded bg-fill-strong animate-pulse" />
+        </div>
+      </li>
+    {/if}
+  </ul>
+</li>

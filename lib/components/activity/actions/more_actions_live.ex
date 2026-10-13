@@ -35,12 +35,44 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
       creator_id: id(creator),
       creator_name:
         e(creator, :profile, :name, nil) || e(creator, :character, :username, nil) ||
-          l("the user")
+          l("the user"),
+      trigger_opts:
+        case load_on_open(assigns) do
+          %JS{ops: []} -> []
+          js -> ["phx-click": js]
+        end
     )
     |> render_sface()
   end
 
-  @doc "Whether the menu offers the \"notify me about replies\" bell: not on a thread's root when it's the main object, since the page (or preview) header already has the bell for that thread."
+  def load_on_open(assigns) do
+    [
+      permitted_actions?(assigns) && lazy_id(assigns, "permitted_actions"),
+      bell?(assigns) && lazy_id(assigns, "bell")
+    ]
+    |> Enum.filter(& &1)
+    |> Enum.reduce(%JS{}, &JS.push(&2, "load", target: "##{&1}"))
+  end
+
+  def permitted_actions?(assigns),
+    do:
+      not is_nil(current_user_id(assigns[:__context__])) and
+        assigns[:object_type] != Bonfire.Data.Social.Message
+
+  def bell?(assigns),
+    do:
+      not is_nil(current_user_id(assigns[:__context__])) and show_bell?(assigns) and
+        module_enabled?(Bonfire.Notify.Web.BellButtonLive, assigns[:__context__])
+
+  def lazy_id(assigns, name),
+    do:
+      deterministic_dom_id(
+        __MODULE__,
+        id(assigns[:activity] || assigns[:object]),
+        name,
+        assigns[:parent_id]
+      )
+
   def show_bell?(%{viewing_main_object: true, thread_id: thread_id, object: object}),
     do: not is_nil(thread_id) and thread_id != id(object)
 

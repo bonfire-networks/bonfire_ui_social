@@ -51,6 +51,7 @@ defmodule Bonfire.UI.Social.NotificationFiltersLive do
   defp from_preset(key, chip, preset, context) do
     %{
       name_pluralized: e(chip, :name_pluralized, nil) || e(preset, :name, nil),
+      chip_name: e(chip, :chip_name, nil),
       icon: e(chip, :icon, nil) || e(preset, :icon, nil),
       description: e(chip, :description, nil) || e(preset, :description, nil),
       preset: e(chip, :preset, nil),
@@ -151,14 +152,15 @@ defmodule Bonfire.UI.Social.NotificationFiltersLive do
       not is_nil(Notifications.category(Types.maybe_to_atom!(name) || :none))
   end
 
-  @doc "A chip's `name_pluralized` OVERRIDE, else the verb's own (singular) name, else its key."
-  def chip_label(key, chip) do
-    e(chip, :name_pluralized, nil) || e(Verbs.get(key), :verb, nil) || to_string(key)
-  end
+  @doc """
+  A chip's short `chip_name`, else its `name_pluralized` OVERRIDE, else the verb's own (singular) name, else its key.
 
-  @doc "A chip's `icon` OVERRIDE, else the verb's own (most chips declare none and inherit it)."
-  def chip_icon(key, chip) do
-    e(chip, :icon, nil) || e(Verbs.get(key), :icon, nil)
+      iex> Bonfire.UI.Social.NotificationFiltersLive.chip_label(:other, %{chip_name: "Other", name_pluralized: "Other activity"})
+      "Other"
+  """
+  def chip_label(key, chip) do
+    e(chip, :chip_name, nil) || e(chip, :name_pluralized, nil) || e(Verbs.get(key), :verb, nil) ||
+      to_string(key)
   end
 
   @doc """
