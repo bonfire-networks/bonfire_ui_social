@@ -10,7 +10,7 @@
       ]}
     >
       <div class="shrink-0 flex items-center">
-        <Iconify.iconify icon={link.icon} class="size-5 text-primary" />
+        <Iconify.iconify icon={link.icon} class={["size-4.5", Bonfire.UI.Common.LinkWidgetLive.active_icon_class(link.active?)]} />
       </div>
       <span class={["truncate min-w-0 text-sm", Bonfire.UI.Common.LinkWidgetLive.active_label_class(link.active?)]}>{link.label}</span>
     </LinkLive>

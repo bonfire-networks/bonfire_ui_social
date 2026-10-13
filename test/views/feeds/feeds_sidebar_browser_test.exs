@@ -49,8 +49,8 @@ defmodule Bonfire.UI.Social.FeedsSidebarBrowserTest do
     |> Browser.click(Query.css("#feed-tab-local"))
     |> Browser.assert_has(Query.css("#feed-tab-local[aria-current='page']"))
     |> Browser.refute_has(Query.css("#sidebar-feeds-list"))
-    |> Browser.click(Query.link("Dashboard"))
-    |> Browser.assert_has(Query.css("#nav_sidebar a[aria-current='page']", text: "Dashboard"))
+    |> Browser.click(Query.link("Home"))
+    |> Browser.assert_has(Query.css("#nav_sidebar a[aria-current='page']", text: "Home"))
     |> Browser.refute_has(Query.css("#feed-tabs"))
   end
 
