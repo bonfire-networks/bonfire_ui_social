@@ -41,6 +41,13 @@ defmodule Bonfire.UI.Social.ActivityLiveTest do
                  page |> Map.put(:published_in, topic) |> Map.put(:verb, :boost),
                  "topic"
                )
+
+      # a person's boost: the attribution line is hidden inside the group, so the chip can't chain onto it
+      assert :standalone =
+               ActivityLive.published_in_placement(
+                 page |> Map.put(:published_in, topic) |> Map.put(:verb, :boost),
+                 "alice"
+               )
     end
 
     test "on a group's other tabs, still hides the group itself" do

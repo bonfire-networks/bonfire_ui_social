@@ -16,7 +16,7 @@ defmodule Bonfire.UI.Social.Activity.PublishedInLive do
   @published_in_implied_by_context [:group, :topic, :thread, :thread_embed]
   @published_in_never_chained [:widget, :notifications, :smart_input, :pinned, :search]
 
-  @doc "Whether the page itself already establishes the publication context, making a per-card mention redundant. Shared by `ActivityLive.published_in_placement/2` and `SubjectMinimalLive.hide_boost_reason?/4` so they can't disagree."
+  @doc "Whether the page itself establishes a publication context, making boost attribution redundant. Shared by `ActivityLive.published_in_placement/2` and `SubjectMinimalLive.hide_boost_reason?/4` so they can't disagree. On `:group`/`:topic` pages `ActivityLive` still shows the row for posts from a *different* context (a group's topics), as a standalone row since the attribution line is hidden there."
   def published_in_implied_by_context?(showing_within),
     do: showing_within in @published_in_implied_by_context
 

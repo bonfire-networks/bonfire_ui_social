@@ -746,6 +746,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   defp chain_published_in?(assigns, published_in, subject_id) do
     assigns[:verb] == :boost and id(published_in) != subject_id and
       Bonfire.UI.Social.Activity.PublishedInLive.chainable_context?(assigns[:showing_within]) and
+      # inside a group or topic `SubjectMinimalLive.hide_boost_reason?/4` hides the attribution line, so a topic's chip chained onto it would vanish with it
+      not Bonfire.UI.Social.Activity.PublishedInLive.published_in_implied_by_context?(
+        assigns[:showing_within]
+      ) and
       assigns[:hide_activity] != "subject"
   end
 
