@@ -25,6 +25,34 @@ defmodule Bonfire.UI.Social.ActivityLiveTest do
                )
     end
 
+    test "on a group's page, hides the group's own posts but labels those from its topics" do
+      group = Map.put(@group, :character, %{outbox_id: "group_outbox"})
+      topic = %{id: "topic", profile: %{name: "Gardens"}, character: %{outbox_id: "topic_outbox"}}
+      page = %{verb: :create, showing_within: :group, feed_id: ["group_outbox", "topic_outbox"]}
+
+      assert :hidden = ActivityLive.published_in_placement(Map.put(page, :published_in, group), nil)
+
+      assert :standalone =
+               ActivityLive.published_in_placement(Map.put(page, :published_in, topic), nil)
+
+      # a topic's auto-boost into the group page: its attribution line is hidden, so the row stands alone
+      assert :standalone =
+               ActivityLive.published_in_placement(
+                 page |> Map.put(:published_in, topic) |> Map.put(:verb, :boost),
+                 "topic"
+               )
+    end
+
+    test "on a group's other tabs, still hides the group itself" do
+      group = Map.put(@group, :character, %{outbox_id: "group_outbox", notifications_id: "group_notifs"})
+
+      assert :hidden =
+               ActivityLive.published_in_placement(
+                 %{published_in: group, verb: :create, showing_within: :group, feed_id: "group_notifs"},
+                 nil
+               )
+    end
+
     test "chains onto a person's boost, but not a group's own auto-boost" do
       boost = %{published_in: @group, verb: :boost, showing_within: :feed}
 

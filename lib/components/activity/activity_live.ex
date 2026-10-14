@@ -701,13 +701,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       not is_nil(assigns[:custom_preview]) or assigns[:hide_activity] == "all" ->
         :hidden
 
-      Bonfire.UI.Social.Activity.PublishedInLive.published_in_implied_by_context?(
-        assigns[:showing_within]
-      ) ->
-        :hidden
-
-      # already the feed we're looking at
-      id(published_in) == assigns[:feed_id] ->
+      published_in_implied?(assigns, published_in) ->
         :hidden
 
       is_nil(Bonfire.UI.Social.Activity.PublishedInLive.context_label(published_in)) ->
@@ -719,6 +713,34 @@ defmodule Bonfire.UI.Social.ActivityLive do
       true ->
         :standalone
     end
+  end
+
+  # a group's page also carries its topics' posts (`Categories.group_feed_ids/2` lists the group's own feed first), so there only the page's own context is implied, and a topic post keeps its row
+  defp published_in_implied?(%{showing_within: showing_within} = assigns, published_in)
+       when showing_within in [:group, :topic] do
+    case {List.first(List.wrap(assigns[:feed_id])), e(published_in, :character, nil)} do
+      {nil, _} -> true
+      # can't tell which feeds the context owns without a DB round-trip, so trust the page
+      {_, character} when not is_map(character) -> true
+      {feed_id, character} -> owns_feed?(published_in, character, feed_id)
+    end
+  end
+
+  defp published_in_implied?(assigns, published_in) do
+    Bonfire.UI.Social.Activity.PublishedInLive.published_in_implied_by_context?(
+      assigns[:showing_within]
+    ) or
+      # already the feed we're looking at
+      id(published_in) == assigns[:feed_id]
+  end
+
+  defp owns_feed?(context, character, feed_id) do
+    feed_id in [
+      id(context),
+      e(character, :outbox_id, nil),
+      e(character, :inbox_id, nil),
+      e(character, :notifications_id, nil)
+    ]
   end
 
   defp chain_published_in?(assigns, published_in, subject_id) do
