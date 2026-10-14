@@ -575,13 +575,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       object_type_readable: object_type_readable,
       # unit: :minute
       # NOTE: skip narrow format which gives odd results in some languages
-      date_ago:
-        if(
-          e(assigns[:__context], :ui_compact, nil) &&
-            Bonfire.Common.Localise.get_locale_id() not in [:fr],
-          do: DatesTimes.date_from_now(object_id, format: :narrow),
-          else: DatesTimes.date_from_now(object_id, format: :short)
-        ),
+      date_ago: DatesTimes.date_from_now(object_id, format: :short),
       verb: verb,
       experienced_as: experienced_as,
       permalink: permalink,
@@ -1019,7 +1013,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
       data-rendered={@showing_within}
       data-avatar-hidden={Media.hide_avatars?(@__context__, @showing_within)}
       data-hidden={@hide_activity}
-      data-compact={@__context__[:ui_compact]}
       data-answer={not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil))}
       data-verb={@verb}
       data-experienced-as={@experienced_as}

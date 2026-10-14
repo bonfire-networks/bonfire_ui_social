@@ -5,7 +5,7 @@
   aria-label={if @showing_within != :feed, do: l("Notification preferences")}
   style={if @showing_within == :feed, do: "display: none;", else: ""}
   class={
-    "text-base-content",
+    "bg-base-100 text-base-content",
     "mb-8 border-b-4 border-base-content/20 pb-6": @showing_within == :feed
   }
 >
@@ -38,6 +38,7 @@
           <StatefulComponent
             module={maybe_component(Bonfire.Notify.Settings.PushNotificationsLive, @__context__)}
             id="notification-push-devices"
+            embedded={true}
           />
         </section>
 
@@ -79,7 +80,7 @@
                 phx-change="Bonfire.Common.Settings:set"
                 class="flex min-h-6 w-full items-center justify-center"
               >
-                <label class="flex cursor-pointer items-center justify-center">
+                <label class="flex min-h-11 cursor-pointer items-center justify-center">
                   <span class="sr-only">{l("%{type}: show in Latest notifications", type: label)}</span>
                   <Bonfire.UI.Common.SettingsToggleLive
                     id={"notification-pref-#{key}-centre"}
@@ -89,7 +90,7 @@
                   />
                 </label>
               </form>
-              <label :if={centre? and !wired?} class="flex min-h-8 cursor-pointer items-center justify-center">
+              <label :if={centre? and !wired?} class="flex min-h-11 cursor-pointer items-center justify-center">
                 <span class="sr-only">{l("%{type}: show in Latest notifications", type: label)}</span>
                 <input
                   id={"notification-pref-#{key}-centre"}
@@ -106,7 +107,7 @@
                 phx-change="Bonfire.Common.Settings:set"
                 class="flex min-h-8 items-center justify-center"
               >
-                <label class="flex cursor-pointer items-center justify-center">
+                <label class="flex min-h-11 cursor-pointer items-center justify-center">
                   <span class="sr-only">{l("%{type}: push notifications", type: label)}</span>
                   <Bonfire.UI.Common.SettingsToggleLive
                     id={"notification-pref-#{key}-push"}
@@ -116,7 +117,7 @@
                   />
                 </label>
               </form>
-              <label :if={push? and !wired?} class="flex min-h-8 cursor-pointer items-center justify-center">
+              <label :if={push? and !wired?} class="flex min-h-11 cursor-pointer items-center justify-center">
                 <span class="sr-only">{l("%{type}: push notifications", type: label)}</span>
                 <input
                   id={"notification-pref-#{key}-push"}

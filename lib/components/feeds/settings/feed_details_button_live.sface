@@ -8,7 +8,7 @@
   label={l("Feed details")}
 >
   <:trigger>
-    <#Icon iconify="ph:dots-three-bold" class="size-5" />
+    <#Icon iconify="ph:dots-three-outline" class="size-5" />
   </:trigger>
   <Bonfire.UI.Social.WidgetFeedDescriptionLive feed_name={@feed_name} />
 </Dropdown>

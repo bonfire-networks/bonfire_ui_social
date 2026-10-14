@@ -25,8 +25,7 @@
       class={[
         "rounded-full size-10 ring-1 ring-divider",
         "avatar-compact":
-          @__context__[:ui_compact] ||
-            @showing_within in [:smart_input, :pinned, :quote_preview] ||
+          @showing_within in [:smart_input, :pinned, :quote_preview] ||
             (@showing_within in [:thread, :thread_embed] && !@viewing_main_object)
       ]}
     />

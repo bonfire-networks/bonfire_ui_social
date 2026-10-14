@@ -840,17 +840,12 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     end
   end
 
-  def max_depth(ui_compact \\ nil, opts),
-    # if using compact layout or not logged in, use *double* the instance/default max depth
+  # guests get 1.4× the instance/default max depth
+  def max_depth(opts),
     do:
       (Settings.get(:thread_default_max_depth, 3, opts) *
-         if(ui_compact || !current_user_id(opts),
-           do: 1.4,
-           else: 1
-         ))
+         if(current_user_id(opts), do: 1, else: 1.4))
       |> round()
-
-  # def max_depth(_ui_compact \\ nil, _opts), do: nil
 
   def maybe_include_path_ids(reply_id, level, context) do
     current_user = current_user(context)
@@ -859,7 +854,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       do:
         Threads.compute_include_path_ids(reply_id,
           level: level,
-          max_depth: max_depth(e(context, :ui_compact, nil), current_user: current_user),
+          max_depth: max_depth(current_user: current_user),
           current_user: current_user
         )
   end
@@ -878,7 +873,6 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       sort_by = e(assigns, :sort_by, nil)
       sort_order = e(assigns, :sort_order, nil)
       showing_within = e(assigns, :showing_within, :thread)
-      ui_compact = e(assigns, :__context__, :ui_compact, nil)
 
       # TODO: use same logic as feeds preloads?
       # {preloads, postloads} =
@@ -891,7 +885,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       preloads =
         Bonfire.Social.Feeds.LiveHandler.feed_extra_preloads_list(showing_within, thread_mode)
 
-      max_depth = max_depth(ui_compact, assigns)
+      max_depth = max_depth(assigns)
 
       opts = [
         current_user: current_user(assigns),

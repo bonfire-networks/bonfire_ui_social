@@ -35,10 +35,7 @@
   {!-- <div
     :if={@thread_mode != :flat && @threaded_replies != []}
     x-on:click="show_replies = ! show_replies"
-    class={
-      "absolute p-0.5 z-50 bg-base-100 flex items-center place-content-center left-3.75 bottom-6",
-      "!left-3.5": @__context__[:ui_compact]
-    }
+    class="absolute p-0.5 z-50 bg-base-100 flex items-center place-content-center left-3.75 bottom-6"
   >
     <span
       x-cloak

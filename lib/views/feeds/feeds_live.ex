@@ -109,7 +109,6 @@ defmodule Bonfire.UI.Social.FeedsLive do
          no_header: false,
          no_index: true,
          loading: true,
-         back: true,
          feed_id: nil,
          feed_count: nil,
          feed_title: nil,
