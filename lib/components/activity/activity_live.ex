@@ -58,8 +58,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop object_type_readable, :string, default: nil
   prop reply_count, :any, default: nil
   prop reply_to, :any, default: nil
-  prop thread_start, :any, default: nil
-  prop is_thread_start, :boolean, default: false
   prop published_in, :any, default: nil
   prop labelled, :any, default: nil
   prop subject_user, :any, default: nil
@@ -473,8 +471,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     reply_to = if show_reply_to?, do: prepare_reply_to(replied || activity)
 
-    thread_start = if show_reply_to?, do: prepare_thread_start(replied || activity)
-
     object_type =
       assigns[:object_type] || Types.object_type(object)
 
@@ -570,7 +566,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
       object_id: o_id || "no-object-id",
       activity_component_id: activity_component_id,
       reply_to: reply_to,
-      thread_start: thread_start,
       object_type: object_type,
       object_type_readable: object_type_readable,
       # unit: :minute
@@ -888,7 +883,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       end
 
     (if(showing_within == :media, do: attachments_component, else: []) ++
-       component_maybe_thread_start_or_reply_to(
+       component_maybe_reply_context(
          reply_to,
          showing_within,
          activity_inception,
@@ -1047,7 +1042,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       <div
         :if={@reply_context? and e(@reply_to, :object, :id, nil) != @thread_id}
         data-role="thread_header"
-        class="-mx-card -mt-4 mb-2 px-card py-2 bg-base-200 border-b-hair border-divider rounded-t-box flex items-center justify-end"
+        class="flex items-center min-h-6"
       >
         {!-- plain anchor with `preview_activity_link` so the PreviewActivity hook
              opens the PreviewContent modal instead of navigating (real link as fallback) --}
@@ -1059,7 +1054,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
           class="preview_activity_link group no-underline"
           aria-label={l("See full thread")}
         >
-          <span class="text-xs uppercase tracking-label text-base-content group-hover:text-primary transition-colors">{l("See full thread")}</span>
+          <span class="text-sm font-medium text-muted group-hover:text-base-content transition-colors">{l("See full thread")}</span>
         </a>
       </div>
 
@@ -1190,7 +1185,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 @subject_user,
                 @reply_to,
                 @quotes,
-                thread_start: @thread_start,
                 current_user_context: @__context__,
                 cw: @cw,
                 hashtags: @hashtags
@@ -1287,10 +1281,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   summary={maybe_get(component_assigns, :summary, nil)}
                 />
               {#match Bonfire.UI.Social.Activity.NoteLive}
-                <span :if={@is_thread_start} class="badge badge-outline badge-warning mb-2">
-                  <#Icon iconify="ph:chats-circle-fill" class="size-4 mr-1" />
-                  {l("Original post")}
-                </span>
                 <Bonfire.UI.Social.Activity.NoteLive
                   :if={@hide_activity != "note"}
                   showing_within={@showing_within}
@@ -1459,7 +1449,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   to={maybe_get(component_assigns, :to, nil)}
                   is_remote={maybe_get(component_assigns, :is_remote, @is_remote)}
                   hide_actions={maybe_get(component_assigns, :hide_actions, @hide_actions)}
-                  is_thread_start={maybe_get(component_assigns, :is_thread_start, false)}
                   parent_id={@activity_component_id}
                   cw={@cw}
                   thread_title={maybe_get(component_assigns, :thread_title, @thread_title)}
@@ -2164,72 +2153,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
     do: nil
 
   @doc """
-  Prepares thread start data for displaying the first post in a thread.
-  Used when the setting to show thread start in feeds is enabled.
-  """
-  def prepare_thread_start(%{
-        id: activity_id,
-        thread:
-          %{
-            post_content: %{id: _} = thread_post_content,
-            created: %{
-              creator: %{
-                character: %{id: creator_id},
-                profile: %{id: _}
-              }
-            }
-          } = thread
-      }) do
-    %{
-      activity_id: activity_id,
-      object: thread,
-      subject_id: creator_id,
-      activity: thread
-    }
-  end
-
-  def prepare_thread_start(%{
-        id: activity_id,
-        thread:
-          %{
-            id: thread_id,
-            created: %{
-              creator: %{
-                character: %{id: _} = subject_character,
-                profile: %{id: creator_id} = subject_profile
-              }
-            }
-          } = thread
-      })
-      when is_binary(thread_id) do
-    %{
-      activity_id: activity_id,
-      object: thread,
-      subject_id: creator_id,
-      activity: %{
-        subject: %{
-          profile: subject_profile,
-          character: subject_character
-        }
-      }
-    }
-  end
-
-  def prepare_thread_start(%{replied: %{id: _} = replied}),
-    do: prepare_thread_start(replied)
-
-  def prepare_thread_start(_),
-    do: nil
-
-  @doc """
   Checks the reply context mode setting and returns appropriate components.
 
   Modes:
   - `:reply_to` (default) - Show the post being replied to
-  - `:thread_start` - Show the original thread post
   - `:minimal` - Show just a "Replied in thread" label
   """
-  def component_maybe_thread_start_or_reply_to(
+  def component_maybe_reply_context(
         reply_to,
         showing_within,
         activity_inception,
@@ -2240,7 +2170,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         activity_component_id,
         opts
       ) do
-    thread_start = Keyword.get(opts, :thread_start)
     current_user_context = Keyword.get(opts, :current_user_context)
 
     reply_context_mode =
@@ -2251,11 +2180,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
       )
 
     case reply_context_mode do
-      :thread_start
-      when showing_within in [:feed, :profile] and is_nil(activity_inception) and
-             not is_nil(thread_start) ->
-        component_thread_start(thread_start, thread_title, activity_component_id)
-
       :minimal
       when showing_within in [:feed, :profile] and is_nil(activity_inception) and
              not is_nil(reply_to) ->
@@ -2274,37 +2198,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
         )
     end
   end
-
-  defp component_thread_start(
-         %{
-           activity_id: activity_id,
-           subject_id: subject_id,
-           activity: activity,
-           object: %{id: object_id} = thread_object
-         },
-         thread_title,
-         activity_component_id
-       ) do
-    [
-      {Bonfire.UI.Social.ActivityLive,
-       %{
-         id: "thread_start-#{activity_component_id}-#{object_id}",
-         activity_inception: activity_id,
-         show_minimal_subject_and_note: true,
-         is_thread_start: true,
-         viewing_main_object: false,
-         thread_title: thread_title,
-         object: thread_object,
-         object_type: Types.object_type(thread_object),
-         subject_id: subject_id,
-         activity: activity,
-         cw: sensitive?(activity)
-       }
-       |> prepare_assigns()}
-    ]
-  end
-
-  defp component_thread_start(_thread_start, _, _), do: []
 
   # @decorate time()
   def component_maybe_in_reply_to(

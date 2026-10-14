@@ -19,14 +19,23 @@
       class="inline-flex items-center gap-1.5 min-w-0 max-w-full rounded-full bg-fill hover:bg-fill-strong py-0.5 pl-0.5 pr-2.5 text-base-content transition-colors"
       to={@to}
     >
-      <span class="flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/15">
-        {#case context_icon_url(@context)}
-          {#match nil}
-            <#Icon iconify="ph:users-three-fill" class="size-3 text-primary" />
-          {#match icon_url}
-            <img src={icon_url} alt="" loading="lazy" class="size-full object-cover">
-        {/case}
-      </span>
+      {!-- same identity tile as the groups sidebar: avatar, else a hued letter --}
+      {#case context_icon_url(@context)}
+        {#match nil}
+          <span
+            data-role="group_tile"
+            class="nav-tile"
+            style={"--tile-hue: #{context_tile_hue(@context)}"}
+            aria-hidden="true"
+          >{context_initial(@context)}</span>
+        {#match icon_url}
+          <img
+            src={icon_url}
+            alt=""
+            loading="lazy"
+            class="size-5 shrink-0 rounded-[5px] object-cover outline outline-1 -outline-offset-1 outline-base-content/10"
+          />
+      {/case}
       <span class="truncate">{context_label(@context)}</span>
     </LinkLive>
   {#else}
