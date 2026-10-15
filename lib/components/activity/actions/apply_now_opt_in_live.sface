@@ -1,0 +1,8 @@
+<Bonfire.UI.Common.OptInLive
+  :if={offered?(@group, @__context__)}
+  name="apply_now"
+  offer={offer()}
+  what={what()}
+  risk={risk()}
+  checked={checked?()}
+/>

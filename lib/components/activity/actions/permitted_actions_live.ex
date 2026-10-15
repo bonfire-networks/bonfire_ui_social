@@ -38,7 +38,10 @@ defmodule Bonfire.UI.Social.Activity.PermittedActionsLive do
       permitted: %{
         edit: Bonfire.Boundaries.can?(context, :edit, boundary) == true,
         describe: Bonfire.Boundaries.can?(context, :describe, boundary) == true,
-        lock: Bonfire.Boundaries.can?(context, :grant, boundary) == true,
+        # as `Blocks.lock/2` allows: whoever may change its boundary, or moderate the group it is in
+        lock:
+          Bonfire.Boundaries.can?(context, :grant, boundary) == true or
+            Bonfire.Boundaries.can?(context, :mediate, boundary) == true,
         unlock:
           (not is_nil(current_user) and id(creator) == id(current_user)) or
             Bonfire.Boundaries.can?(context, :grant, :instance) == true,

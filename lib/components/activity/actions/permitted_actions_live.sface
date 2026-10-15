@@ -124,14 +124,14 @@
                 </div>
               </:open_btn>
               <:action_btns>
-                <button
-                  type="button"
-                  phx-click="Bonfire.Boundaries.Locking:lock"
-                  phx-value-id={@thread_id}
-                  class="normal-case btn btn-sm btn-warning"
-                >
-                  {l("Lock this discussion")}
-                </button>
+                {!-- a form rather than a bare button, so the checkbox travels with the submit --}
+                <form phx-submit="Bonfire.Boundaries.Locking:lock">
+                  <input type="hidden" name="id" value={@thread_id}>
+                  <Bonfire.UI.Social.ApplyNowOptInLive group={@published_in} />
+                  <button data-role="lock_confirm" type="submit" class="normal-case btn btn-sm btn-warning">
+                    {l("Lock this discussion")}
+                  </button>
+                </form>
               </:action_btns>
             </Bonfire.UI.Common.OpenModalLive>
           </li>
@@ -212,17 +212,18 @@
             </div>
           </:open_btn>
           <:action_btns>
-            <button
-              type="button"
-              phx-click="Bonfire.Social.Flags:unpublish"
-              phx-target={"##{@activity_component_id}"}
-              phx-value-id={id(@object)}
-              phx-value-context={id(@published_in) || @published_in}
-              data-role="remove_from_group_confirm"
-              class="normal-case btn btn-sm btn-error"
-            >
-              {l("Remove from group")}
-            </button>
+            <form phx-submit="Bonfire.Social.Flags:unpublish" phx-target={"##{@activity_component_id}"}>
+              <input type="hidden" name="id" value={id(@object)}>
+              <input type="hidden" name="context" value={id(@published_in) || @published_in}>
+              <Bonfire.UI.Social.ApplyNowOptInLive group={@published_in} />
+              <button
+                type="submit"
+                data-role="remove_from_group_confirm"
+                class="normal-case btn btn-sm btn-error"
+              >
+                {l("Remove from group")}
+              </button>
+            </form>
           </:action_btns>
         </Bonfire.UI.Common.OpenModalLive>
       </li>
