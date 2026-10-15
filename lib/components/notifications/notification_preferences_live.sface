@@ -73,11 +73,13 @@
               <div :if={!centre?} />
               {!-- a row whose switch nothing honours yet stays inert rather than saving a setting no query reads --}
               {!-- each switch's form carries its own id: two forms in a row with the same attributes are indistinguishable to a selector, including the ones test helpers build for themselves --}
+              {!-- an id also opts a phx-change form into LiveView's recovery, which replays it on every reconnect (saving again, with a flash, while the panel is hidden). These save as they change, so the server already has their state: nothing to recover --}
               <form
                 :if={centre? and wired?}
                 id={"notification-pref-#{key}-centre-form"}
                 data-scope={key}
                 phx-change="Bonfire.Common.Settings:set"
+                phx-auto-recover="ignore"
                 class="flex min-h-6 w-full items-center justify-center"
               >
                 <label class="flex min-h-11 cursor-pointer items-center justify-center">
@@ -105,6 +107,7 @@
                 id={"notification-pref-#{key}-push-form"}
                 data-scope={key}
                 phx-change="Bonfire.Common.Settings:set"
+                phx-auto-recover="ignore"
                 class="flex min-h-8 items-center justify-center"
               >
                 <label class="flex min-h-11 cursor-pointer items-center justify-center">
@@ -153,6 +156,7 @@
           :if={email?}
           id="notification-email-digest-form"
           phx-change="Bonfire.Notify:set_email_digest"
+          phx-auto-recover="ignore"
           class="border-t border-divider pt-4"
         >
           <Bonfire.UI.Common.SettingsSelectLive

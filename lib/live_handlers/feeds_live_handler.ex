@@ -2571,19 +2571,28 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
          fallback_return: nil,
          on_error: :ignore
        )},
-      {ValueFlows.Planning.Intent,
-       Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.IntentTaskLive, :preloads, [],
-         fallback_return: nil,
-         on_error: :ignore
-       )},
+      {ValueFlows.Planning.Intent, preview_preloads(ValueFlows.Planning.Intent)},
       {ValueFlows.Process,
        Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.ProcessListLive, :preloads, [],
          fallback_return: nil,
          on_error: :ignore
        )}
     ]
+    # a schema whose preview extension isn't installed (eg. `ValueFlows.Planning.Intent` without `bonfire_ui_valueflows`) has no preloads, and `Repo.preload/2` raises on `nil`
+    |> Enum.reject(&match?({_schema, nil}, &1))
     |> Enums.filter_empty([])
     |> debug("preload object data in feed")
+  end
+
+  # the preloads of whichever component `[:ui, :object_preview]` registers for `schema`, so the extension that renders a schema also says what it needs loaded (several extensions can render an Intent)
+  defp preview_preloads(schema) do
+    case Bonfire.Common.Config.get([:ui, :object_preview, schema]) do
+      module when is_atom(module) and not is_nil(module) ->
+        Utils.maybe_apply(module, :preloads, [], fallback_return: nil, on_error: :ignore)
+
+      _ ->
+        nil
+    end
   end
 
   defp merge_feed_assigns(feed, new_assigns, previous_page_info) do
