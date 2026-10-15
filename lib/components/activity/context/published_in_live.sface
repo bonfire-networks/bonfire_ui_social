@@ -36,7 +36,7 @@
             class="size-5 shrink-0 rounded-[5px] object-cover outline outline-1 -outline-offset-1 outline-base-content/10"
           />
       {/case}
-      <span class="truncate">{context_label(@context)}</span>
+      <span data-role="group_name" class="truncate">{context_label(@context)}</span>
     </LinkLive>
   {#else}
     <span :if={@placement == :attribution} aria-hidden="true" class="mx-1 text-muted">·</span>
