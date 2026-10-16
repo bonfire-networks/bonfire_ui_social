@@ -991,6 +991,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def can_read?(_context, _object_boundary), do: false
 
+  # a flag in the notifications or flags feeds shows what was flagged to whoever moderates the instance, even when they couldn't read it otherwise. Cached per process by `can?/3`, so a page of flags asks once
+  defp moderating_flag?(context, :flag, showing_within)
+       when showing_within in [:flags, :notifications],
+       do: Bonfire.Boundaries.can?(context, :mediate, :instance) == true
+
+  defp moderating_flag?(_context, _experienced_as, _showing_within), do: false
+
   def render(%{object_boundary: :not_visible} = assigns) do
     ~F"""
     <div data-id="activity_not_visible">
@@ -1235,7 +1242,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 current_user_context: @__context__,
                 cw: @cw,
                 hashtags: @hashtags,
-                can_read: can_read?(@__context__, @object_boundary)
+                can_read:
+                  can_read?(@__context__, @object_boundary) or
+                    moderating_flag?(@__context__, @experienced_as, @showing_within)
               ) || []}
             {#case component}
               {#match :html}
