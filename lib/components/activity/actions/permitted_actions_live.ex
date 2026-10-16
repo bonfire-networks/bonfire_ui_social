@@ -19,6 +19,8 @@ defmodule Bonfire.UI.Social.Activity.PermittedActionsLive do
 
   @doc "The object's boundary for the viewer, when the feed has loaded it (`Bonfire.Boundaries.LiveHandler.preload_boundaries/2`): the menu is then decided from it, with no query on opening"
   prop object_boundary, :any, default: nil
+  # from `MoreActionsLive`, so deleting a remote object doesn't promise a request to other instances
+  prop is_remote, :boolean, default: nil
 
   data boundary, :any, default: nil
   @doc "What the viewer may do here, by action; `nil` until the menu is first opened, unless decided from a loaded `object_boundary`."
@@ -42,7 +44,7 @@ defmodule Bonfire.UI.Social.Activity.PermittedActionsLive do
   defp loaded?(_), do: false
 
   defp assign_permitted(socket) do
-    %{object: object, creator: creator, published_in: published_in, __context__: context} =
+    %{object: object, published_in: published_in, __context__: context} =
       assigns(socket)
 
     current_user = current_user(socket)
@@ -56,10 +58,9 @@ defmodule Bonfire.UI.Social.Activity.PermittedActionsLive do
       permitted: %{
         edit: Bonfire.Boundaries.can?(context, :edit, boundary) == true,
         describe: Bonfire.Boundaries.can?(context, :describe, boundary) == true,
-        # as `Blocks.lock/2` allows: whoever may change its boundary, or moderate the group it is in
-        lock: Bonfire.Boundaries.can?(context, {:any, [:grant, :mediate]}, boundary) == true,
-        unlock:
-          (not is_nil(current_user) and id(creator) == id(current_user)) or
+        # lock or unlock, as `Blocks.lock/2` and `Blocks.unlock/2` both allow: whoever may change its boundary or moderate the group it is in, or an instance admin
+        lock:
+          Bonfire.Boundaries.can?(context, {:any, [:grant, :mediate]}, boundary) == true or
             Bonfire.Boundaries.can?(context, :grant, :instance) == true,
         download: Bonfire.Social.maybe_can?(context, :edit, object, boundary) == true,
         delete:

@@ -56,6 +56,10 @@ defmodule Bonfire.UI.Social.Threads.FederationActionsTest do
     |> assert_has("[data-role=like_disabled]")
     |> assert_has("[data-role=reply_disabled]")
     |> assert_has("[data-role=quote_disabled]")
+    # says why, as it isn't the post's boundary: in a tooltip on a wrapper, as a disabled button gets no hover, or shown under quote's label
+    |> assert_has("[data-tip*='ederation'] [data-role=like_disabled]")
+    |> assert_has("[data-tip*='ederation'] [data-role=reply_disabled]")
+    |> assert_has("[data-role=quote_refusal]", text: "ederation")
   end
 
   test "like, reply & quote are DISABLED on a remote post in archipelago (allowlist-only) mode",

@@ -9,7 +9,12 @@ TODO: use preloaded boundaries for can? when available
 >
   <div class="prose-sm prose mt-3">
     {!-- {rich l "You may be able to undo this deletion *in some cases*, but in any case the data will eventually be permanently deleted from this instance."} --}
-    <p>{@explanation || l("A request will be sent to remote instances to delete it as well.")}</p>
+    {!-- the deletion request goes out only for what we host: a remote object's deletion is its own instance's to send --}
+    {#if @explanation}
+      <p>{@explanation}</p>
+    {#elseif not remote?(@is_remote, @object)}
+      <p>{l("A request will be sent to remote instances to delete it as well.")}</p>
+    {/if}
   </div>
 
   <input name="object_id" type="hidden" value={id(@object)}>

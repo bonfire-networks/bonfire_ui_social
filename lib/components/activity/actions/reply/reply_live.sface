@@ -1,9 +1,12 @@
 <div data-role="reply_action" class="relative z-dropdown flex items-center">
-  {#case @object_type == Bonfire.Data.Social.Message or
-      Bonfire.Boundaries.can_interact_or_unloaded?(@__context__, :reply, @object_boundary,
-        target_user: @creator
-      )}
-    {#match true}
+  {!-- why it's refused, if it is, so the disabled button can say --}
+  {#case if(@object_type != Bonfire.Data.Social.Message,
+      do:
+        Bonfire.Boundaries.interaction_refusal(@__context__, :reply, @object_boundary,
+          target_user: @creator
+        )
+    )}
+    {#match nil}
       <.icon_button
         icon="ph:arrow-bend-up-left"
         icon_class="size-4.5"
@@ -30,19 +33,25 @@
       >
         {@reply_count}
       </span>
-    {#match _}
+    {#match refusal}
       {#if @object_boundary}
-        <.icon_button
-          icon="ph:arrow-bend-up-left"
-          icon_class="size-4.5"
-          aria_label={@cannot_reply_text || l("Cannot reply")}
-          variant="ghost"
-          size="sm"
-          disabled
-          class="text-base-content/20"
-          data-role="reply_disabled"
-          data-id="action_reply"
-        />
+        {!-- the tooltip on a wrapper, as a disabled button gets no hover (`pointer-events-none`) --}
+        <span
+          class="tooltip tooltip-top"
+          data-tip={Bonfire.UI.Common.refusal_text(refusal, @cannot_reply_text || l("Cannot reply"))}
+        >
+          <.icon_button
+            icon="ph:arrow-bend-up-left"
+            icon_class="size-4.5"
+            aria_label={Bonfire.UI.Common.refusal_text(refusal, @cannot_reply_text || l("Cannot reply"))}
+            variant="ghost"
+            size="sm"
+            disabled
+            class="text-base-content/20"
+            data-role="reply_disabled"
+            data-id="action_reply"
+          />
+        </span>
         <span
           data-role="reply_count"
           :if={show_activity_counts?(@show_counts, @__context__) && e(@reply_count, 0) > 0}

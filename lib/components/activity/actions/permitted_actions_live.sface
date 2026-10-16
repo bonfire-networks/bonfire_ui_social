@@ -109,57 +109,19 @@
 
       {#if @viewing_main_object && @thread_id &&
           module_enabled?(Bonfire.Boundaries.Locking.LiveHandler, @__context__)}
-        {#if @permitted.lock}
-          <li data-role="lock_discussion">
-            <Bonfire.UI.Common.OpenModalLive id={"#{@id}_lock"} title_text={l("Lock discussion")}>
-              <p class="text-sm text-muted mt-3">
-                {l(
-                  "You can lock this discussion to prevent any replies from users on this instance and to block any remote replies from federating back to this instance."
-                )}
-              </p>
-              <:open_btn>
-                <div class="flex items-center gap-3 w-full text-sm text-base-content">
-                  <#Icon iconify="ph:lock-fill" class="size-4 shrink-0 text-muted" />
-                  <span class="flex-1 text-left truncate">{l("Lock discussion")}</span>
-                </div>
-              </:open_btn>
-              <:action_btns>
-                {!-- a form rather than a bare button, so the checkbox travels with the submit --}
-                <form phx-submit="Bonfire.Boundaries.Locking:lock">
-                  <input type="hidden" name="id" value={@thread_id}>
-                  <Bonfire.UI.Social.ApplyNowOptInLive group={@published_in} />
-                  <button data-role="lock_confirm" type="submit" class="normal-case btn btn-sm btn-warning">
-                    {l("Lock this discussion")}
-                  </button>
-                </form>
-              </:action_btns>
-            </Bonfire.UI.Common.OpenModalLive>
-          </li>
-        {#elseif @permitted.unlock}
-          <li data-role="unlock_discussion">
-            <Bonfire.UI.Common.OpenModalLive id={"#{@id}_unlock"} title_text={l("Unlock discussion")}>
-              <p class="text-sm text-muted mt-3">
-                {l("You can unlock this discussion to accept replies again.")}
-              </p>
-              <:open_btn>
-                <div class="flex items-center gap-3 w-full text-sm text-base-content">
-                  <#Icon iconify="ph:lock-open-fill" class="size-4 shrink-0 text-muted" />
-                  <span class="flex-1 text-left truncate">{l("Unlock discussion")}</span>
-                </div>
-              </:open_btn>
-              <:action_btns>
-                <button
-                  type="button"
-                  phx-click="Bonfire.Boundaries.Locking:unlock"
-                  phx-value-id={@thread_id}
-                  class="normal-case btn btn-sm btn-primary"
-                >
-                  {l("Unlock this discussion")}
-                </button>
-              </:action_btns>
-            </Bonfire.UI.Common.OpenModalLive>
-          </li>
-        {/if}
+        {!-- one item whichever state the thread is in: the block button's modal looks that up when opened, as it does for a hide, so rendering the menu costs no query --}
+        <li :if={@permitted.lock} data-role="lock_or_unlock_discussion">
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Boundaries.BlockButtonLive, @__context__)}
+            object={@thread_id}
+            is_local_user
+            type={:lock}
+            group={@published_in}
+            parent_id={@id}
+            with_icon
+            class="flex items-center gap-3 w-full text-sm text-base-content"
+          />
+        </li>
       {/if}
 
       <li
@@ -174,6 +136,7 @@
             object={@object}
             object_type_readable={@object_type_readable}
             parent_id={@id}
+            is_remote={@is_remote}
             skip_permission_check
             open_btn_class="flex flex-row-reverse items-center gap-3 w-full text-error"
             icon_class="size-4 shrink-0"
