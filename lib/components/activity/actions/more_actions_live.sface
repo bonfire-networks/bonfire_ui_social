@@ -227,7 +227,7 @@
     with_icon
   />
 
-  {!-- boundary details, edit, delete, etc: loaded when the menu opens --}
+  {!-- boundary details, edit, delete, etc: from the card's loaded boundary when it has one, else loaded when the menu opens --}
   <StatefulComponent
     :if={permitted_actions?(assigns)}
     module={maybe_component(Bonfire.UI.Social.Activity.PermittedActionsLive, @__context__)}
@@ -247,6 +247,7 @@
     permalink={@permalink}
     published_in={@published_in}
     participants={@participants}
+    object_boundary={@object_boundary}
   />
 
   <#slot {@admin_items} />

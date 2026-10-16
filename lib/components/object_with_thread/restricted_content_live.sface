@@ -1,68 +1,113 @@
+{!-- the object being opened gets the full screen; one item of a list (`viewing_main_object: false`) the same, compact: its name and summary and why the rest isn't shown, never its body or media, and opening it (the card is previewable) shows the full screen --}
 <div
   data-id="restricted_content"
-  class="flex flex-col items-center w-full max-w-prose px-6 py-12 mx-auto text-center"
+  data-role={if @viewing_main_object, do: "restricted_content", else: "restricted_object"}
+  class={if @viewing_main_object,
+    do: "flex flex-col items-center w-full max-w-prose px-6 py-12 mx-auto text-center",
+    else: "previewable_activity cursor-pointer"}
 >
+  {#case Bonfire.Common.Media.media_url(@primary_image)}
+    {#match url when is_binary(url)}
+      <div
+        role="img"
+        aria-label={Bonfire.Files.Media.media_alt(@primary_image)}
+        data-role="restricted_cover"
+        class="w-full aspect-[3/2] bg-center bg-no-repeat bg-cover overflow-hidden bg-placeholder rounded-box"
+        style={["background-image": "url('#{URI.encode(url)}')"]}
+      >
+        <span class="sr-only">{Bonfire.Files.Media.media_alt(@primary_image)}</span>
+      </div>
+    {#match _}
+  {/case}
+  {#case e(@object, :post_content, :name, nil) || e(@object, :name, nil)}
+    {#match nil}
+    {#match name}
+      <div data-role="name" class="translatable text-sm my-1 mt-2">{rich(name)}</div>
+  {/case}
+  {#case e(@object, :post_content, :summary, nil) || e(@object, :summary, nil)}
+    {#match nil}
+    {#match summary}
+      <div data-role="summary" class="translatable prose max-w-prose prose-p:pt-1">{rich(summary)}</div>
+  {/case}
+
   <div
-    class="flex items-center justify-center size-16 rounded-full bg-primary/10"
-    aria-hidden="true"
+    data-role="restricted_content_notice"
+    class={if @viewing_main_object,
+      do: "flex flex-col items-center",
+      else: "flex items-center gap-2 mt-2 text-sm text-muted"}
   >
-    <#Icon iconify="ph:lock-key-duotone" class="size-8 text-primary" />
+    <div
+      class={if @viewing_main_object,
+        do: "flex items-center justify-center size-16 rounded-full bg-primary/10",
+        else: "shrink-0"}
+      aria-hidden="true"
+    >
+      <#Icon
+        iconify="ph:lock-key-duotone"
+        class={if @viewing_main_object, do: "size-8 text-primary", else: "size-4"}
+      />
+    </div>
+    <span class={"mt-4 type-heading text-base-content": @viewing_main_object}>
+      {title(@rc_settings, @published_in, @__context__)}
+    </span>
   </div>
 
-  <h2 class="mt-4 type-heading text-base-content">
-    {get_setting(
-      @rc_settings,
-      :title,
-      l("This %{thing} isn't visible to you", thing: @object_type_name || l("content"))
-    )}
-  </h2>
+  {#if @viewing_main_object}
+    <p class="mt-1 text-sm text-muted max-w-prose">
+      {get_setting(@rc_settings, :message, l("It was shared with a limited audience."))}
+    </p>
 
-  <p class="mt-1 text-sm text-muted max-w-prose">
-    {get_setting(@rc_settings, :message, l("It was shared with a limited audience."))}
-  </p>
+    {#if get_setting(@rc_settings, :cta_url, nil) || is_nil(current_user_id(@__context__))}
+      <div class="flex flex-wrap items-center justify-center gap-3 mt-6">
+        {#case get_setting(@rc_settings, :cta_url, nil)}
+          {#match nil}
+          {#match cta_url}
+            <a
+              href={cta_url}
+              target={e(@__context__, :link_target, nil) || "_top"}
+              rel={if e(@__context__, :link_target, nil) == "_blank", do: "noopener"}
+              class="btn btn-primary"
+              data-role="restricted_content_cta"
+            >
+              {get_setting(@rc_settings, :cta_label, l("Find out more"))}
+            </a>
+        {/case}
 
-  {#if get_setting(@rc_settings, :cta_url, nil) || is_nil(current_user_id(@__context__))}
-    <div class="flex flex-wrap items-center justify-center gap-3 mt-6">
-      {#case get_setting(@rc_settings, :cta_url, nil)}
-        {#match nil}
-        {#match cta_url}
-          <a
-            href={cta_url}
-            target={e(@__context__, :link_target, nil) || "_top"}
-            rel={if e(@__context__, :link_target, nil) == "_blank", do: "noopener"}
-            class="btn btn-primary"
-            data-role="restricted_content_cta"
+        {#if is_nil(current_user_id(@__context__))}
+          <LinkLive
+            to={path(:login, :index)}
+            class="btn btn-outline"
+            opts={"data-role": "restricted_login"}
           >
-            {get_setting(@rc_settings, :cta_label, l("Find out more"))}
-          </a>
+            {l("Sign in")}
+          </LinkLive>
+        {/if}
+      </div>
+    {/if}
+
+    {#if is_nil(current_user_id(@__context__))}
+      {#case @object_id &&
+          maybe_apply(
+            Bonfire.UI.Me.RemoteInteractionLive,
+            :generate_url,
+            [
+              "read",
+              @object_type_name || l("content"),
+              Bonfire.Common.URIs.canonical_url(@object_id),
+              @__context__
+            ],
+            fallback_return: nil
+          )}
+        {#match url when is_binary(url)}
+          <LinkLive
+            to={url}
+            class="mt-4 text-sm link link-hover text-muted"
+            opts={"data-role": "remote_interaction"}
+          >
+            {l("Use your account on another instance")}
+          </LinkLive>
+        {#match _}
       {/case}
-
-      {#if is_nil(current_user_id(@__context__))}
-        <LinkLive to={path(:login, :index)} class="btn btn-outline" data-role="restricted_login">
-          {l("Sign in")}
-        </LinkLive>
-      {/if}
-    </div>
-  {/if}
-
-  {#if is_nil(current_user_id(@__context__))}
-    {#case @object_id &&
-        maybe_apply(
-          Bonfire.UI.Me.RemoteInteractionLive,
-          :generate_url,
-          [
-            "read",
-            @object_type_name || l("content"),
-            Bonfire.Common.URIs.canonical_url(@object_id),
-            @__context__
-          ],
-          fallback_return: nil
-        )}
-      {#match url when is_binary(url)}
-        <LinkLive to={url} class="mt-4 text-sm link link-hover text-muted" data-role="remote_interaction">
-          {l("Use your account on another instance")}
-        </LinkLive>
-      {#match _}
-    {/case}
+    {/if}
   {/if}
 </div>

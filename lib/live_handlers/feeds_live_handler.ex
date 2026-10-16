@@ -2058,6 +2058,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       ) ||
         assigns_sockets
 
+    # each card's boundary for the viewer, one query for the page (`Queries.granted_verbs_on/2`, ~23ms for 20 on prod against the feed's 69ms): whether its body may be shown, what its buttons may do, and its menu without a query on opening
+    assigns_sockets =
+      Bonfire.Boundaries.LiveHandler.preload_boundaries(assigns_sockets,
+        current_user: current_user
+      )
+
     non_batch_opts =
       Keyword.merge(opts,
         assigns_to_params_fn: &assigns_to_params/1,
@@ -2065,8 +2071,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       )
 
     batch_opts = [
-      # NOTE: boundary verb preloading skipped for feed performance — buttons render enabled,
-      # boundaries checked on click (backend already enforces permissions at action time)
+      # boundaries are loaded above (`preload_boundaries/2`), so the buttons ask `can?/3` in memory
       # TODO: add Likes, Bookmarks, etc as in `actions_update_many`
       non_batch_opts
     ]

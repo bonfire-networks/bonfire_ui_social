@@ -375,15 +375,15 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     # Use passed object_boundary or fall back to socket assigns
     object_boundary = object_boundary || e(assigns(socket), :object_boundary, nil)
 
-    # If boundary wasn't preloaded (e.g. skipped in feed for performance), load preset on demand
+    # the card's loaded boundary (`Bonfire.Boundaries.LiveHandler.preload_boundaries/2`), else loaded here, once, on replying: the composer's preview of what's replied to shows it only if they may read it, as the card does
     object_boundary =
-      if object_boundary in [:skip_boundary_preload, nil] do
-        case Bonfire.Boundaries.Controlleds.list_presets_on_objects([reply_to]) do
-          %{} = presets when map_size(presets) > 0 -> presets[Enums.id(reply_to)]
-          _ -> nil
-        end
-      else
-        object_boundary
+      case object_boundary do
+        %{object_id: _, verbs: verbs} = loaded when is_list(verbs) ->
+          loaded
+
+        _ ->
+          Bonfire.Boundaries.boundaries_on_objects([Enums.id(reply_to)], current_user(socket))
+          |> Map.get(Enums.id(reply_to))
       end
 
     reply_to_id = Enums.id(reply_to)
@@ -465,6 +465,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       [
         # reset_smart_input: false, # avoid double-reset
         reply_to_id: reply_to_id,
+        reply_to_boundary: object_boundary,
         context_id: thread_id,
         participants: participants,
         to_circles: to_circles || [],

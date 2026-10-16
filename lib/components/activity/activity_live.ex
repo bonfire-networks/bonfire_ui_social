@@ -801,7 +801,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
       assigns[:activity_component_id],
       assigns[:subject_user],
       assigns[:reply_to],
-      assigns[:quotes] || []
+      assigns[:quotes] || [],
+      # an email only goes to whom the fan-out found may see and read it (`Boundaries.permitted_users/3` in `Bonfire.Notify.FanOut`)
+      can_read: true
     )
     |> Enum.flat_map(fn {component, component_assigns} ->
       template = :"#{filename_for_module_template(component)}_#{format}"
@@ -873,24 +875,37 @@ defmodule Bonfire.UI.Social.ActivityLive do
         quotes,
         opts \\ []
       ) do
+    # one the viewer may find but not read shows its name and summary, never its body or media, whatever its type. Fails closed: the caller says when they may (`can_read?/2`)
+    can_read? = opts[:can_read] == true
+
     {primary_image, attachments_component} =
-      primary_image_and_component_maybe_attachments(
-        object_type,
-        activity,
-        object,
-        activity_inception
-      )
+      if can_read?,
+        do:
+          primary_image_and_component_maybe_attachments(
+            object_type,
+            activity,
+            object,
+            activity_inception
+          ),
+        # of its media, only the one flagged as its primary image (a cover), whatever its type
+        else: {restricted_primary_image(activity, object), []}
 
     object_components =
-      if(experience == :quote_request,
-        do: [],
-        else: component_object(object, object_type, %{primary_image: primary_image})
-      )
+      cond do
+        experience == :quote_request ->
+          []
+
+        not can_read? ->
+          [{Bonfire.UI.Social.RestrictedContentLive, %{object: object, primary_image: primary_image}}]
+
+        true ->
+          component_object(object, object_type, %{primary_image: primary_image})
+      end
 
     # Show CW button at activity level when NoteLive isn't in the component list
     # (e.g., media-only posts with no text body)
     cw_fallback =
-      if !!opts[:cw] and
+      if can_read? and !!opts[:cw] and
            not Enum.any?(object_components, fn
              {Bonfire.UI.Social.Activity.NoteLive, _} -> true
              Bonfire.UI.Social.Activity.NoteLive -> true
@@ -970,6 +985,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # The viewer may `:see` the object but not `:read` it: `maybe_check_boundaries`
   # nulled the activity/object wherever `check_object_boundary` was set.
+  @doc "Whether the viewer may read the object, from its loaded boundary (`Bonfire.Boundaries.LiveHandler.preload_boundaries/2`). Fails closed: without one, its body isn't shown"
+  def can_read?(context, %{object_id: _, verbs: verbs} = object_boundary) when is_list(verbs),
+    do: Bonfire.Boundaries.can?(context, :read, object_boundary) == true
+
+  def can_read?(_context, _object_boundary), do: false
+
   def render(%{object_boundary: :not_visible} = assigns) do
     ~F"""
     <div data-id="activity_not_visible">
@@ -1213,7 +1234,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 @quotes,
                 current_user_context: @__context__,
                 cw: @cw,
-                hashtags: @hashtags
+                hashtags: @hashtags,
+                can_read: can_read?(@__context__, @object_boundary)
               ) || []}
             {#case component}
               {#match :html}
@@ -1440,6 +1462,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 />
               {#match Bonfire.UI.Social.Activity.ActivityNameLive}
                 <StatelessComponent module={Bonfire.UI.Social.Activity.ActivityNameLive} {...component_assigns} />
+              {#match Bonfire.UI.Social.RestrictedContentLive}
+                <Bonfire.UI.Social.RestrictedContentLive
+                  viewing_main_object={@viewing_main_object}
+                  object={maybe_get(component_assigns, :object, @object)}
+                  object_id={id(maybe_get(component_assigns, :object, @object))}
+                  object_type_name={@object_type_readable}
+                  primary_image={maybe_get(component_assigns, :primary_image, nil)}
+                  published_in={@published_in}
+                />
               {#match _}
                 <StatelessComponent
                   :if={@hide_activity != "dynamic"}
@@ -2620,6 +2651,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   # defp primary_image_and_component_maybe_attachments(_, _activity, _object, _activity_inception), do: []
+
+  defp restricted_primary_image(activity, object) do
+    (e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
+       e(object, :media, nil))
+    |> Bonfire.Files.split_primary_image()
+    |> elem(0)
+  end
 
   def do_primary_image_and_component_maybe_attachments(_id, files, object_type)
       when (is_list(files) and files != []) or is_map(files) do

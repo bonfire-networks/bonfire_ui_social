@@ -106,7 +106,8 @@ defmodule Bonfire.UI.Social.PreviewGatedTest do
     assert Keyword.get(assigns, :check_object_boundary) == true
   end
 
-  test "the feed shows the see-only article's excerpt but NOT its full body", %{
+  # the teaser is its summary (Ghost's `custom_excerpt` is imported as one), never the opening of its body, which someone who may not read it doesn't get any of
+  test "the feed shows the see-only article's summary but none of its body", %{
     author: author,
     viewer: viewer,
     viewer_account: viewer_account
@@ -114,11 +115,11 @@ defmodule Bonfire.UI.Social.PreviewGatedTest do
     {:ok, article} =
       Posts.publish(
         current_user: author,
-        # render as an Article → feed shows the preview card (truncated, no full body)
         schema: Bonfire.Articles.Article,
         post_attrs: %{
           post_content: %{
             name: "Paywalled Headline",
+            summary: "What this article is about",
             html_body: long_body()
           }
         },
@@ -132,9 +133,10 @@ defmodule Bonfire.UI.Social.PreviewGatedTest do
 
     conn(user: viewer, account: viewer_account)
     |> visit("/feed/local")
-    # the card renders (headline + truncated intro) …
     |> assert_has("article", text: "Paywalled Headline")
-    # … but the deep body past the truncation is never sent to the client
+    |> assert_has("article", text: "What this article is about")
+    # none of the body is sent to the client, its opening included
+    |> refute_has("article", text: @teaser)
     |> refute_has("article", text: @secret)
   end
 
@@ -170,7 +172,8 @@ defmodule Bonfire.UI.Social.PreviewGatedTest do
     conn(user: viewer, account: viewer_account)
     |> visit("/feed/local")
     |> assert_has("article", text: "Paywalled Image Headline")
-    |> assert_has("[data-id=article_cover]")
+    # its cover, the one media someone who may not read it is shown
+    |> assert_has("[data-role=restricted_cover]")
     |> refute_has("article", text: @secret)
   end
 end

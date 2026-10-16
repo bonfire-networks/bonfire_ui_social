@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.MoreActionsPermitted.Test do
   @moduledoc """
-  The "More actions" menu's rows that depend on what the viewer may do with a post (boundary details, edit, delete…) are loaded when it's opened. These open it on the post's own page, where the main object is outside any stream so the loaded rows reach the test DOM. The edit and delete flows are in `post_edit_test.exs` and `post_delete_test.exs`.
+  The "More actions" menu's rows that depend on what the viewer may do with a post (boundary details, edit, delete…) are decided from the post's boundary, which a feed or the post's page loads with it (`Bonfire.Boundaries.LiveHandler.preload_boundaries/2`); where it isn't loaded, they load when the menu is opened. These open it on the post's own page, where the main object is outside any stream so the rows reach the test DOM. The edit and delete flows are in `post_edit_test.exs` and `post_delete_test.exs`.
   """
   use Bonfire.UI.Social.ConnCase, async: System.get_env("TEST_UI_ASYNC") != "no"
   @moduletag :ui
@@ -29,13 +29,51 @@ defmodule Bonfire.UI.Social.MoreActionsPermitted.Test do
   end
 
   describe "before the menu is opened" do
-    test "the permission rows are placeholders", %{conn: conn, me: me} do
-      post = publish!(me, "lazy")
+    test "the permission rows are there already, from the post's loaded boundary", %{
+      conn: conn,
+      me: me
+    } do
+      post = publish!(me, "loaded")
 
       conn
       |> visit("/post/#{id(post)}")
-      |> assert_has("[data-id=permitted_actions_placeholder]")
-      |> refute_has("[data-id=boundary_details]")
+      |> refute_has("[data-id=permitted_actions_placeholder]")
+      |> assert_has("[data-id=boundary_details]")
+      |> assert_has("[data-role=edit_post]")
+    end
+
+    # where nothing loaded the boundary, which a page no longer reaches, so rendered directly
+    test "without a loaded boundary, the rows are placeholders until it is opened", %{me: me} do
+      post = publish!(me, "not loaded")
+
+      html =
+        render_component(Bonfire.UI.Social.Activity.PermittedActionsLive, %{
+          id: "permitted_actions_not_loaded",
+          object: post,
+          creator: me,
+          object_boundary: nil,
+          __context__: %{current_user: me}
+        })
+
+      assert html =~ ~s(data-id="permitted_actions_placeholder")
+      refute html =~ ~s(data-role="edit_post")
+    end
+
+    test "given a loaded boundary, the rows are decided without opening it", %{me: me} do
+      post = publish!(me, "given loaded")
+      loaded = Bonfire.Boundaries.boundaries_on_objects([id(post)], me) |> Map.get(id(post))
+
+      html =
+        render_component(Bonfire.UI.Social.Activity.PermittedActionsLive, %{
+          id: "permitted_actions_loaded",
+          object: post,
+          creator: me,
+          object_boundary: loaded,
+          __context__: %{current_user: me}
+        })
+
+      refute html =~ ~s(data-id="permitted_actions_placeholder")
+      assert html =~ ~s(data-role="edit_post")
     end
 
     test "a guest gets neither the rows nor their placeholder", %{me: me} do
