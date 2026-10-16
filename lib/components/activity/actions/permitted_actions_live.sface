@@ -137,6 +137,7 @@
             object_type_readable={@object_type_readable}
             parent_id={@id}
             is_remote={@is_remote}
+            removable_from_group={@permitted.remove_from_group}
             skip_permission_check
             open_btn_class="flex flex-row-reverse items-center gap-3 w-full text-error"
             icon_class="size-4 shrink-0"
