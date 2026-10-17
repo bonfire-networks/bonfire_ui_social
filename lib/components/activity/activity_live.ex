@@ -971,8 +971,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
       c when is_atom(c) -> {c, nil}
       other -> other
     end)
+    # a join request is its requester, the group and the decision (all in `SubjectMinimalLive`), wherever its edge is loaded: a moderator's notifications and a group's moderation page. The group's own card under it would only repeat the group, with buttons for following or deleting it
     |> Enum.filter(fn {component, _assigns} ->
-      experience != :join_request or showing_within != :notifications or
+      # experience != :join_request or showing_within != :notifications or
+      experience != :join_request or
         component == Bonfire.UI.Social.Activity.SubjectMinimalLive
     end)
     |> debug("preview_components - #{activity_inception}")

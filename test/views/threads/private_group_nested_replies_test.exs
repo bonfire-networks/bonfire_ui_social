@@ -42,7 +42,7 @@ defmodule Bonfire.UI.Social.PrivateGroupNestedRepliesTest do
         default_content_visibility: "members:private"
       })
 
-    {:ok, _} = Categories.add_member(creator, group, id(member))
+    {:ok, _} = Categories.add_member(creator, group, id(member), skip_boundary_check: true)
 
     {group, Simulate.fake_post_in_group!(starter, group, "<p>the thread</p>")}
   end
@@ -268,7 +268,7 @@ defmodule Bonfire.UI.Social.PrivateGroupNestedRepliesTest do
     {group, root} = private_group_thread(me, other, other)
 
     fellow = fake_user!()
-    {:ok, _} = Categories.add_member(me, group, id(fellow))
+    {:ok, _} = Categories.add_member(me, group, id(fellow), skip_boundary_check: true)
 
     fellow_post = Simulate.fake_post_in_group!(fellow, group, "<p>a fellow member's post</p>")
 

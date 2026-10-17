@@ -25,14 +25,31 @@
     class="flex flex-wrap items-center gap-2"
   >
     <input type="hidden" name="request_id" value={@request_id}>
-    <button
-      id={"#{@id}-approve"}
-      type="submit"
-      name="decision"
-      value="approve"
-      phx-value-id={@request_id}
-      class={"btn btn-sm", "btn-primary": @request_status == :pending}
-    >{if @request_status == :declined, do: l("Approve instead"), else: l("Approve")}</button>
+    {#if @remote_group?}
+      {!-- a group hosted on another instance decides who joins it, and approving here would answer as that group. The tooltip on a wrapper, as a disabled button gets no hover --}
+      <span
+        data-role="join_request_remote_group"
+        class="tooltip tooltip-top"
+        data-tip={l("The group's own instance approves who joins")}
+      >
+        <button
+          id={"#{@id}-approve"}
+          type="button"
+          disabled
+          aria-label={l("The group's own instance approves who joins")}
+          class="btn btn-sm"
+        >{l("Cannot approve")}</button>
+      </span>
+    {#else}
+      <button
+        id={"#{@id}-approve"}
+        type="submit"
+        name="decision"
+        value="approve"
+        phx-value-id={@request_id}
+        class={"btn btn-sm", "btn-primary": @request_status == :pending}
+      >{if @request_status == :declined, do: l("Approve instead"), else: l("Approve")}</button>
+    {/if}
     <button
       :if={@request_status == :pending}
       id={"#{@id}-decline"}

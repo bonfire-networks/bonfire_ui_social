@@ -3,8 +3,12 @@ defmodule Bonfire.UI.Social.Activity.JoinRequestActionsLive do
   use Bonfire.UI.Common.Web, :stateful_component
 
   prop request_id, :string, required: true
+
+  @doc "The group asked to join, to tell whether it is hosted here, where its moderators approve, or on another instance, which does."
+  prop group, :any, default: nil
   data request_status, :atom, default: nil
   data request_error, :string, default: nil
+  data remote_group?, :boolean, default: false
 
   @doc false
   def update_many(assigns_sockets) do
@@ -30,6 +34,10 @@ defmodule Bonfire.UI.Social.Activity.JoinRequestActionsLive do
       socket
       |> assign(assigns)
       |> assign(:request_status, status)
+      |> assign(
+        :remote_group?,
+        not is_nil(assigns[:group]) and not Bonfire.Social.is_local?(assigns[:group])
+      )
     end)
   end
 end
