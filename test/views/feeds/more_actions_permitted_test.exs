@@ -123,7 +123,7 @@ defmodule Bonfire.UI.Social.MoreActionsPermitted.Test do
   end
 
   describe "the rows" do
-    test "\"Delete from feeds\" is labelled as such and sends the feeds event with the activity",
+    test "\"Remove from feeds\" is labelled as such and sends the feeds event with the activity",
          %{conn: conn, me: me} do
       post = publish!(me, "post to take out of feeds")
       activity_id = id(e(post, :activity, nil))
@@ -132,10 +132,10 @@ defmodule Bonfire.UI.Social.MoreActionsPermitted.Test do
       conn
       |> visit("/post/#{id(post)}")
       |> open_more_menu()
-      |> click_button("[data-role=delete_activity] [data-role=open_modal]", "Delete from feeds")
+      |> click_button("[data-role=delete_activity] [data-role=open_modal]", "Remove from feeds")
       |> assert_has(
         "[phx-click='Bonfire.Social.Feeds:delete'][phx-value-id='#{activity_id}']",
-        text: "Delete from feeds"
+        text: "Remove from feeds"
       )
     end
   end

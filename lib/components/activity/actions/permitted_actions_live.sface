@@ -152,9 +152,9 @@
             parent_id={"#{@id}_feeds"}
             skip_permission_check
             action="Bonfire.Social.Feeds:delete"
-            label={l("Delete from feeds")}
+            label={l("Remove from feeds")}
             explanation={l(
-              "Deleting from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via the local instance's feeds. Remote feeds won't be affected.",
+              "Removing from feeds means this %{verb} and this %{object} still exist, but this activity won't be discoverable via this instance's feeds. Remote feeds won't be affected.",
               object: e(@object_type_readable, l("object")),
               verb: @verb
             )}
