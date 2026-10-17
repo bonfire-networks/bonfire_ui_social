@@ -29,6 +29,7 @@ defmodule Bonfire.UI.Social.QuoteComposerPreview.Test do
     |> wait_async()
     |> PhoenixTest.unwrap(fn view ->
       view |> element("[data-role=quote_enabled][phx-value-id='#{id(post)}']") |> render_click()
+
       # the press reaches the composer as a message to its `PersistentLive`; rendering that child is a synchronous call, so the quote is set up before the composer is read (as `TopicReplyDestinationTest` does for a reply)
       composer = composer_view(view)
       render(composer)

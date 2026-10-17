@@ -32,6 +32,7 @@ defmodule Bonfire.UI.Social.PermittedActionsTest do
       target = "#" <> MoreActionsLive.lazy_id(assigns, "permitted_actions")
 
       assert MoreActionsLive.permitted_actions?(assigns)
+
       assert ["push", %{event: "load", target: target}] in MoreActionsLive.load_on_open(assigns).ops
     end
 
@@ -40,6 +41,7 @@ defmodule Bonfire.UI.Social.PermittedActionsTest do
       target = "#" <> MoreActionsLive.lazy_id(assigns, "permitted_actions")
 
       refute MoreActionsLive.permitted_actions?(assigns)
+
       refute ["push", %{event: "load", target: target}] in MoreActionsLive.load_on_open(assigns).ops
     end
   end

@@ -11,8 +11,10 @@ defmodule Bonfire.UI.Social.Activity.DeleteObjectLive do
   prop object_type_readable, :any
   prop action, :string, default: nil
   prop explanation, :string, default: nil
+
   # whether the object came from elsewhere, so no deletion request goes out for it; when not given, read off its `peered`
   prop is_remote, :boolean, default: nil
+
   # whether whoever deletes it may also take it out of its group, which reaches the group's followers elsewhere where deleting a remote object doesn't
   prop removable_from_group, :boolean, default: false
 

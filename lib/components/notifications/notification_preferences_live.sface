@@ -38,7 +38,7 @@
           <StatefulComponent
             module={maybe_component(Bonfire.Notify.Settings.PushNotificationsLive, @__context__)}
             id="notification-push-devices"
-            embedded={true}
+            embedded
           />
         </section>
 

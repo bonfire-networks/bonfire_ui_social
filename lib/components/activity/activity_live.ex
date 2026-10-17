@@ -727,10 +727,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   defp published_in_implied?(assigns, published_in) do
+    # already the feed we're looking at
     Bonfire.UI.Social.Activity.PublishedInLive.published_in_implied_by_context?(
       assigns[:showing_within]
     ) or
-      # already the feed we're looking at
       id(published_in) == assigns[:feed_id]
   end
 
@@ -744,9 +744,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   defp chain_published_in?(assigns, published_in, subject_id) do
+    # inside a group or topic `SubjectMinimalLive.hide_boost_reason?/4` hides the attribution line, so a topic's chip chained onto it would vanish with it
     assigns[:verb] == :boost and id(published_in) != subject_id and
       Bonfire.UI.Social.Activity.PublishedInLive.chainable_context?(assigns[:showing_within]) and
-      # inside a group or topic `SubjectMinimalLive.hide_boost_reason?/4` hides the attribution line, so a topic's chip chained onto it would vanish with it
       not Bonfire.UI.Social.Activity.PublishedInLive.published_in_implied_by_context?(
         assigns[:showing_within]
       ) and
@@ -896,7 +896,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
           []
 
         not can_read? ->
-          [{Bonfire.UI.Social.RestrictedContentLive, %{object: object, primary_image: primary_image}}]
+          [
+            {Bonfire.UI.Social.RestrictedContentLive,
+             %{object: object, primary_image: primary_image}}
+          ]
 
         true ->
           component_object(object, object_type, %{primary_image: primary_image})

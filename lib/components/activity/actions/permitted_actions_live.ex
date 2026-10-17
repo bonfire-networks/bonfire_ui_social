@@ -19,19 +19,22 @@ defmodule Bonfire.UI.Social.Activity.PermittedActionsLive do
 
   @doc "The object's boundary for the viewer, when the feed has loaded it (`Bonfire.Boundaries.LiveHandler.preload_boundaries/2`): the menu is then decided from it, with no query on opening"
   prop object_boundary, :any, default: nil
+
   # from `MoreActionsLive`, so deleting a remote object doesn't promise a request to other instances
   prop is_remote, :boolean, default: nil
 
   data boundary, :any, default: nil
+
   @doc "What the viewer may do here, by action; `nil` until the menu is first opened, unless decided from a loaded `object_boundary`."
   data permitted, :map, default: nil
 
   def update(assigns, socket) do
     socket = assign(socket, assigns)
 
-    if is_nil(e(assigns(socket), :permitted, nil)) and loaded?(e(assigns(socket), :object_boundary, nil)),
-      do: {:ok, assign_permitted(socket)},
-      else: {:ok, socket}
+    if is_nil(e(assigns(socket), :permitted, nil)) and
+         loaded?(e(assigns(socket), :object_boundary, nil)),
+       do: {:ok, assign_permitted(socket)},
+       else: {:ok, socket}
   end
 
   # opening the menu, where the feed didn't load the boundary
@@ -85,7 +88,12 @@ defmodule Bonfire.UI.Social.Activity.PermittedActionsLive do
   defp can_remove_from_group?(_current_user, nil, _object, _boundary), do: false
 
   # with the post's boundary loaded, as `Categories.can_remove_post_from_group?/3` decides it: its author, or one who may moderate it, which a group's moderators may do to what is published in it (its moderators ACL) as they may the group, mirrors included. Not instance-wide moderation, which that doesn't count either
-  defp can_remove_from_group?(current_user, _published_in, object, %{object_id: _, verbs: verbs} = boundary)
+  defp can_remove_from_group?(
+         current_user,
+         _published_in,
+         object,
+         %{object_id: _, verbs: verbs} = boundary
+       )
        when is_list(verbs) do
     user_id = id(current_user)
 

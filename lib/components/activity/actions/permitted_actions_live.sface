@@ -165,7 +165,10 @@
       {/if}
 
       <li :if={@permitted.remove_from_group} data-role="remove_from_group">
-        <Bonfire.UI.Common.OpenModalLive id={"#{@id}_remove_from_group"} title_text={l("Remove from group")}>
+        <Bonfire.UI.Common.OpenModalLive
+          id={"#{@id}_remove_from_group"}
+          title_text={l("Remove from group")}
+        >
           <p class="text-sm text-muted mt-3">
             {l("The post stays available, but it won't appear in the group any more.")}
           </p>

@@ -30,7 +30,8 @@ defmodule Bonfire.UI.Social.ActivityLiveTest do
       topic = %{id: "topic", profile: %{name: "Gardens"}, character: %{outbox_id: "topic_outbox"}}
       page = %{verb: :create, showing_within: :group, feed_id: ["group_outbox", "topic_outbox"]}
 
-      assert :hidden = ActivityLive.published_in_placement(Map.put(page, :published_in, group), nil)
+      assert :hidden =
+               ActivityLive.published_in_placement(Map.put(page, :published_in, group), nil)
 
       assert :standalone =
                ActivityLive.published_in_placement(Map.put(page, :published_in, topic), nil)
@@ -51,11 +52,17 @@ defmodule Bonfire.UI.Social.ActivityLiveTest do
     end
 
     test "on a group's other tabs, still hides the group itself" do
-      group = Map.put(@group, :character, %{outbox_id: "group_outbox", notifications_id: "group_notifs"})
+      group =
+        Map.put(@group, :character, %{outbox_id: "group_outbox", notifications_id: "group_notifs"})
 
       assert :hidden =
                ActivityLive.published_in_placement(
-                 %{published_in: group, verb: :create, showing_within: :group, feed_id: "group_notifs"},
+                 %{
+                   published_in: group,
+                   verb: :create,
+                   showing_within: :group,
+                   feed_id: "group_notifs"
+                 },
                  nil
                )
     end

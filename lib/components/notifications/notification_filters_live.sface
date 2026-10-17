@@ -1,8 +1,4 @@
-<nav
-  id="notification-filters"
-  aria-label={l("Filter notifications")}
-  class="min-w-0"
->
+<nav id="notification-filters" aria-label={l("Filter notifications")} class="min-w-0">
   <p :if={any_switched_off?(@__context__)} id="notification-filters-dimmed" class="sr-only">{l("Dimmed categories are switched off in your preferences. Selecting one still shows it.")}</p>
   <ul
     id="notification-filters-list"
@@ -25,7 +21,8 @@
               class={
                 "relative flex h-8 items-center whitespace-nowrap rounded-full border px-3.5 text-sm font-medium transition-colors before:absolute before:inset-x-0 before:-inset-y-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
                 "border-transparent bg-base-content text-base-100": current?,
-                "border-transparent bg-fill text-base-content hover:bg-fill-strong": !current? and !switched_off?,
+                "border-transparent bg-fill text-base-content hover:bg-fill-strong":
+                  !current? and !switched_off?,
                 "border-dashed border-divider text-muted hover:bg-fill": !current? and switched_off?
               }
             >

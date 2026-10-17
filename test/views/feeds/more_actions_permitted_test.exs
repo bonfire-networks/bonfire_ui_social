@@ -123,7 +123,8 @@ defmodule Bonfire.UI.Social.MoreActionsPermitted.Test do
   end
 
   describe "the rows" do
-    test "\"Delete from feeds\" is labelled as such and sends the feeds event with the activity", %{conn: conn, me: me} do
+    test "\"Delete from feeds\" is labelled as such and sends the feeds event with the activity",
+         %{conn: conn, me: me} do
       post = publish!(me, "post to take out of feeds")
       activity_id = id(e(post, :activity, nil))
       assert activity_id
