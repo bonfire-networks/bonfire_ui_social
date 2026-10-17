@@ -56,6 +56,24 @@ defmodule Bonfire.UI.Social.Threads.FederationActionsTest do
     |> assert_has("[data-role=like_disabled]")
     |> assert_has("[data-role=reply_disabled]")
     |> assert_has("[data-role=quote_disabled]")
+    # says why, as it isn't the post's boundary: in a tooltip on a wrapper, as a disabled button gets no hover, or shown under quote's label
+    |> assert_has("[data-tip*='ederation'] [data-role=like_disabled]")
+    |> assert_has("[data-tip*='ederation'] [data-role=reply_disabled]")
+    |> assert_has("[data-role=quote_refusal]", text: "ederation")
+  end
+
+  # deleting a remote post sends nothing (`Acts.Federate` skips a remote object), so it mustn't promise a request to other instances
+  test "deleting a remote post says it deletes only the copy here", %{post: post} do
+    account = fake_account!()
+    admin = fake_admin!(account)
+
+    conn(user: admin, account: account)
+    |> visit("/discussion/#{post.id}")
+    |> wait_async()
+    |> open_more_menu()
+    |> click_button("[data-role=delete_object] [data-role=open_modal]", "Delete")
+    |> assert_has("[data-role=delete_remote_explanation]", text: "only deletes the copy")
+    |> refute_has("p", text: "A request will be sent to remote instances")
   end
 
   test "like, reply & quote are DISABLED on a remote post in archipelago (allowlist-only) mode",

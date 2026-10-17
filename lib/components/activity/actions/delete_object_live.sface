@@ -4,12 +4,21 @@ TODO: use preloaded boundaries for can? when available
 <OpenModalLive
   :if={@skip_permission_check == true or can_delete?(@__context__, @object, @object_boundary)}
   id={deterministic_dom_id("delete_modal", id(@object), @object_type_readable, @parent_id)}
-  title_text={@label || l("Delete this %{object_or_type}", object_or_type: e(@object_type_readable, l("object")))}
+  title_text={@label ||
+    l("Delete this %{object_or_type}", object_or_type: e(@object_type_readable, l("object")))}
   form_opts={@form_opts}
 >
   <div class="prose-sm prose mt-3">
     {!-- {rich l "You may be able to undo this deletion *in some cases*, but in any case the data will eventually be permanently deleted from this instance."} --}
-    <p>{@explanation || l("A request will be sent to remote instances to delete it as well.")}</p>
+    {!-- a deletion goes out only for what we host (`Acts.Federate` skips a remote object), so deleting a remote one removes only our copy. Taking it out of a group, which a moderator may, is what reaches the group's followers elsewhere --}
+    {#if @explanation}
+      <p>{@explanation}</p>
+    {#elseif not remote?(@is_remote, @object)}
+      <p>{l("A request will be sent to remote instances to delete it as well.")}</p>
+    {#else}
+      <p data-role="delete_remote_explanation">{l("This only deletes the copy on this instance. The original stays on the instance it came from.")}</p>
+      <p :if={@removable_from_group} data-role="delete_remote_group_hint">{l("To take it out of the group for everyone following it, remove it from the group instead.")}</p>
+    {/if}
   </div>
 
   <input name="object_id" type="hidden" value={id(@object)}>

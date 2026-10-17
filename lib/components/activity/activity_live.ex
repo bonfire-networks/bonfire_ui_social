@@ -727,10 +727,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   defp published_in_implied?(assigns, published_in) do
+    # already the feed we're looking at
     Bonfire.UI.Social.Activity.PublishedInLive.published_in_implied_by_context?(
       assigns[:showing_within]
     ) or
-      # already the feed we're looking at
       id(published_in) == assigns[:feed_id]
   end
 
@@ -744,9 +744,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
   end
 
   defp chain_published_in?(assigns, published_in, subject_id) do
+    # inside a group or topic `SubjectMinimalLive.hide_boost_reason?/4` hides the attribution line, so a topic's chip chained onto it would vanish with it
     assigns[:verb] == :boost and id(published_in) != subject_id and
       Bonfire.UI.Social.Activity.PublishedInLive.chainable_context?(assigns[:showing_within]) and
-      # inside a group or topic `SubjectMinimalLive.hide_boost_reason?/4` hides the attribution line, so a topic's chip chained onto it would vanish with it
       not Bonfire.UI.Social.Activity.PublishedInLive.published_in_implied_by_context?(
         assigns[:showing_within]
       ) and
@@ -896,7 +896,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
           []
 
         not can_read? ->
-          [{Bonfire.UI.Social.RestrictedContentLive, %{object: object, primary_image: primary_image}}]
+          [
+            {Bonfire.UI.Social.RestrictedContentLive,
+             %{object: object, primary_image: primary_image}}
+          ]
 
         true ->
           component_object(object, object_type, %{primary_image: primary_image})
@@ -990,6 +993,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
     do: Bonfire.Boundaries.can?(context, :read, object_boundary) == true
 
   def can_read?(_context, _object_boundary), do: false
+
+  # a flag in the notifications or flags feeds shows what was flagged to whoever moderates the instance, even when they couldn't read it otherwise. Cached per process by `can?/3`, so a page of flags asks once
+  defp moderating_flag?(context, :flag, showing_within)
+       when showing_within in [:flags, :notifications],
+       do: Bonfire.Boundaries.can?(context, :mediate, :instance) == true
+
+  defp moderating_flag?(_context, _experienced_as, _showing_within), do: false
 
   def render(%{object_boundary: :not_visible} = assigns) do
     ~F"""
@@ -1235,7 +1245,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 current_user_context: @__context__,
                 cw: @cw,
                 hashtags: @hashtags,
-                can_read: can_read?(@__context__, @object_boundary)
+                can_read:
+                  can_read?(@__context__, @object_boundary) or
+                    moderating_flag?(@__context__, @experienced_as, @showing_within)
               ) || []}
             {#case component}
               {#match :html}

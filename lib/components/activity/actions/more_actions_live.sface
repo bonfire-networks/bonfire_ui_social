@@ -248,6 +248,7 @@
     published_in={@published_in}
     participants={@participants}
     object_boundary={@object_boundary}
+    is_remote={@is_remote || not is_nil(e(@object, :peered, :canonical_uri, nil))}
   />
 
   <#slot {@admin_items} />

@@ -45,6 +45,22 @@ defmodule Bonfire.UI.Social.PostDelete.Test do
     assert {:error, _} = Posts.read(id(post), current_user: me)
   end
 
+  test "deleting my post says a request goes to remote instances", %{conn: conn, me: me} do
+    {:ok, post} =
+      Posts.publish(
+        current_user: me,
+        post_attrs: %{post_content: %{html_body: "a local post"}},
+        boundary: "public"
+      )
+
+    conn
+    |> visit("/discussion/#{post.id}")
+    |> open_more_menu()
+    |> click_button("[data-role=delete_object] [data-role=open_modal]", "Delete")
+    |> assert_has("p", text: "A request will be sent to remote instances")
+    |> refute_has("[data-role=delete_remote_explanation]")
+  end
+
   test "deleted post disappears from feed", %{conn: conn, me: me} do
     body = "post that will vanish #{System.unique_integer()}"
 

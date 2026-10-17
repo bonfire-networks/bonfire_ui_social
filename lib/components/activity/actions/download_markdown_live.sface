@@ -1,4 +1,4 @@
-<div class="flex">
+<div class="flex w-full">
   <Bonfire.UI.Common.OpenModalLive id={@id} title_text={l("Download as Markdown")} no_actions>
     <div
       class="flex flex-col gap-4 py-4"
@@ -36,9 +36,10 @@
       </div>
     </div>
     <:open_btn>
-      <div class="flex items-center w-full gap-2 cursor-pointer justify-between text-sm text-base-content">
-        <span class={"text-sm font-medium", "sr-only": @as_icon}>{l("Download as Markdown")}</span>
-        <#Icon iconify="ph:download-simple" class="size-5 shrink-0" />
+      {!-- laid out as the other items of the more-actions menu --}
+      <div class="flex items-center gap-3 w-full text-sm text-base-content">
+        <#Icon iconify="ph:download-simple" class="size-4 shrink-0 text-muted" />
+        <span class={"flex-1 text-left truncate", "sr-only": @as_icon}>{l("Download as Markdown")}</span>
       </div>
     </:open_btn>
   </Bonfire.UI.Common.OpenModalLive>
