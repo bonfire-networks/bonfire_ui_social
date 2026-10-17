@@ -93,7 +93,7 @@
             [
               "read",
               @object_type_name || l("content"),
-              Bonfire.Common.URIs.canonical_url(@object_id),
+              Bonfire.Common.URIs.canonical_url(@object_id, preload_if_needed: true),
               @__context__
             ],
             fallback_return: nil
