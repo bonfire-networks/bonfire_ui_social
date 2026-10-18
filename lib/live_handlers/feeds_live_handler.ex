@@ -2063,7 +2063,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       Bonfire.Boundaries.LiveHandler.preload_boundaries(assigns_sockets,
         current_user: current_user
       )
-      |> preload_can_pin_in_thread(current_user)
 
     non_batch_opts =
       Keyword.merge(opts,
@@ -2186,61 +2185,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # |> debug
     else
       assigns_sockets
-    end
-  end
-
-  @doc """
-  Sets each reply's `can_pin_in_thread` to whether the viewer holds `:pin` on its thread, which `Bonfire.Social.Pins.may_pin_in?/3` requires, so its menu doesn't offer what would be refused. Asks once for all the page's threads rather than per reply.
-  """
-  def preload_can_pin_in_thread(assigns_sockets, current_user)
-  def preload_can_pin_in_thread(assigns_sockets, nil), do: assigns_sockets
-
-  def preload_can_pin_in_thread(assigns_sockets, current_user) do
-    if module_enabled?(Bonfire.Social.Pins, current_user),
-      do: do_preload_can_pin_in_thread(assigns_sockets, current_user),
-      else: assigns_sockets
-  end
-
-  defp do_preload_can_pin_in_thread(assigns_sockets, current_user) do
-    with_thread_ids =
-      Enum.map(assigns_sockets, fn {assigns, socket} ->
-        {assigns, socket, reply_thread_id(assigns, socket)}
-      end)
-
-    thread_ids =
-      with_thread_ids
-      |> Enum.map(&elem(&1, 2))
-      |> Enum.reject(&is_nil/1)
-      |> Enum.uniq()
-
-    if thread_ids == [] do
-      assigns_sockets
-    else
-      loaded = Bonfire.Boundaries.boundaries_on_objects(thread_ids, current_user)
-
-      Enum.map(with_thread_ids, fn
-        {assigns, socket, nil} ->
-          {assigns, socket}
-
-        {assigns, socket, thread_id} ->
-          {Map.put(
-             assigns,
-             :can_pin_in_thread,
-             Bonfire.Boundaries.can?(current_user, :pin, Map.get(loaded, thread_id)) == true
-           ), socket}
-      end)
-    end
-  end
-
-  # nil for the thread's own post, whose menu offers neither, and for a card already prepared, which `ActivityLive.maybe_update/2` doesn't take it for
-  defp reply_thread_id(_assigns, %{assigns: %{activity_prepared: true}}), do: nil
-
-  defp reply_thread_id(assigns, _socket) do
-    if e(assigns, :showing_within, nil) == :thread do
-      thread_id = ActivityLive.thread_id(assigns)
-
-      if thread_id != id(e(assigns, :object, nil) || e(assigns, :activity, :object, nil)),
-        do: thread_id
     end
   end
 

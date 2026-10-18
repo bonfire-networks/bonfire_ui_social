@@ -42,7 +42,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop thread_url, :string, default: nil
   prop thread_title, :string, default: nil
   prop thread_mode, :any, default: nil
-  @doc "Whether the viewer may pin in this reply's thread (`:pin` on it), set for a page of replies at once by `Bonfire.Social.Feeds.LiveHandler.activity_update_many/2`"
+  @doc "Whether the viewer may pin in this reply's thread (`:pin` on it), decided once by `Bonfire.UI.Social.ThreadLive` and passed to each comment"
   prop can_pin_in_thread, :boolean, default: false
   prop thread_level, :any, default: nil
   prop current_url, :string, default: nil
@@ -459,23 +459,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def thread(assigns, replied) do
     e(assigns, :thread_object, nil) || e(replied, :thread, nil) || e(replied, :thread_id, nil) ||
       e(assigns, :thread_id, nil)
-  end
-
-  @doc """
-  The id of `thread/2`, from assigns not yet prepared, such as those `update_many` batches.
-
-      iex> Bonfire.UI.Social.ActivityLive.thread_id(%{activity: %{replied: %{thread_id: "t1"}}})
-      "t1"
-
-      iex> Bonfire.UI.Social.ActivityLive.thread_id(%{activity: %{object: %{replied: %{thread: %{id: "t2"}}}}})
-      "t2"
-  """
-  def thread_id(assigns) do
-    activity = e(assigns, :activity, nil)
-    object = e(assigns, :object, nil) || e(activity, :object, nil)
-
-    thread(assigns, e(activity, :replied, nil) || e(object, :replied, nil))
-    |> id()
   end
 
   defp do_prepare_assigns(%{activity: activity, object: object} = assigns)

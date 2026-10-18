@@ -674,8 +674,22 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       loading: user_socket_connected?(socket)
       # participants: participants
     )
+    |> assign_can_pin_in_thread(current_user, thread_id)
 
     # |> debug
+  end
+
+  # once per thread, for every comment's menu: whether the viewer holds `:pin` on the thread, which `Bonfire.Social.Pins.may_pin_in?/3` requires to mark an answer or pin to it.
+  defp assign_can_pin_in_thread(socket, current_user, thread_id) do
+    if is_nil(e(assigns(socket), :can_pin_in_thread, nil)),
+      do:
+        assign(socket,
+          can_pin_in_thread:
+            not is_nil(current_user) and not is_nil(thread_id) and
+              module_enabled?(Bonfire.Social.Pins, current_user) and
+              Bonfire.Boundaries.can?(current_user, :pin, thread_id) == true
+        ),
+      else: socket
   end
 
   def load_thread_maybe_async(socket_or_opts, show_loader \\ true, reset_stream \\ false)

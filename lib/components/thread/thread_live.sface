@@ -90,6 +90,7 @@
                       current_url={@current_url}
                       thread_object={@object}
                       thread_mode={@thread_mode}
+                      can_pin_in_thread={@can_pin_in_thread == true}
                       showing_within={@showing_within || :thread}
                       hide_actions={hide_actions}
                       activity_inception={@activity_inception}
@@ -117,6 +118,7 @@
                       current_url={@current_url}
                       thread_object={@object}
                       thread_mode={@thread_mode}
+                      can_pin_in_thread={@can_pin_in_thread == true}
                       showing_within={@showing_within || :thread}
                       hide_actions={hide_actions}
                       activity_inception={@activity_inception}
@@ -140,6 +142,7 @@
                       current_url={@current_url}
                       thread_object={@object}
                       thread_mode={@thread_mode}
+                      can_pin_in_thread={@can_pin_in_thread == true}
                       showing_within={@showing_within || :thread}
                       hide_actions={hide_actions}
                       activity_inception={@activity_inception}
@@ -175,6 +178,7 @@
                         current_url={@current_url}
                         thread_object={@object}
                         thread_mode={@thread_mode}
+                        can_pin_in_thread={@can_pin_in_thread == true}
                         showing_within={@showing_within || :thread}
                         hide_actions={hide_actions}
                         activity_inception={@activity_inception}

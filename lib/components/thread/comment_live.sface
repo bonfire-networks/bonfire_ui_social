@@ -78,6 +78,7 @@
         current_url={@current_url || current_url(@__context__)}
         showing_within={@showing_within || :thread}
         thread_mode={debug(@thread_mode, "thread_modessss")}
+        can_pin_in_thread={@can_pin_in_thread}
         object_boundary={if @showing_within == :messages, do: :skip_boundary_check}
         viewing_main_object={false}
         activity_inception={@activity_inception}

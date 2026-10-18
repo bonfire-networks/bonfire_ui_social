@@ -4,7 +4,7 @@ defmodule Bonfire.UI.Social.ThreadPinMenu.Test do
   """
   use Bonfire.UI.Social.ConnCase, async: System.get_env("TEST_UI_ASYNC") != "no"
   @moduletag :ui
-  doctest Bonfire.UI.Social.ActivityLive, only: [thread: 2, thread_id: 1]
+  doctest Bonfire.UI.Social.ActivityLive, only: [thread: 2]
 
   alias Bonfire.Posts
   alias Bonfire.Boundaries.{Acls, Grants}

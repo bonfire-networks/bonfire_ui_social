@@ -20,6 +20,7 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   prop highlight_reply_id, :any, default: nil
   prop feed_id, :any, default: nil
   prop thread_mode, :any, default: nil
+  prop can_pin_in_thread, :boolean, default: false
   prop showing_within, :atom, default: :thread
   # prop page, :any, default: "thread"
   # prop create_object_type, :any, default: nil

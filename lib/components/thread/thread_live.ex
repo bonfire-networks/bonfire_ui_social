@@ -55,6 +55,9 @@ defmodule Bonfire.UI.Social.ThreadLive do
 
   data has_replies, :boolean, default: false
 
+  @doc "Whether the viewer may pin in this thread, decided once by `LiveHandler.thread_init/1` and passed to each comment; `nil` until then"
+  data can_pin_in_thread, :boolean, default: nil
+
   # time-gap divider labels for top-level stream entries, keyed by reply id
   # (computed at insert time — stream items can't see their predecessor at render)
   data time_gaps, :map, default: %{}

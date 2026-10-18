@@ -101,6 +101,7 @@
         thread_level={@thread_level}
         visual_level={@visual_level}
         thread_mode={@thread_mode}
+        can_pin_in_thread={@can_pin_in_thread}
         showing_within={@showing_within || :thread}
         activity_inception={@activity_inception}
         activity_preloads={@activity_preloads}
@@ -252,6 +253,7 @@
                     current_url={@current_url || current_url(@__context__)}
                     activity_preloads={@activity_preloads}
                     hide_actions={@hide_actions}
+                    can_pin_in_thread={@can_pin_in_thread}
                     depth_loaded={@depth_loaded}
                     reply_generation={@reply_generation}
                     thread_reply_count={@thread_reply_count}
