@@ -413,7 +413,8 @@ defmodule Bonfire.Social.Objects.LiveHandler do
   # through `maybe_preloads_per_schema/3`, which would `Needles.follow!/1`
   # and discard the merged activity.
   defp apply_object_extension_preloads(object, current_user) do
-    object_type = Bonfire.Common.Types.object_type(object)
+    # the schema, which `object_preloads/0` is keyed by (a group is otherwise `:group` and gets none)
+    object_type = Bonfire.Common.Types.object_type_schema(object)
 
     Bonfire.Social.Feeds.LiveHandler.object_preloads()
     |> Enum.find_value(object, fn
