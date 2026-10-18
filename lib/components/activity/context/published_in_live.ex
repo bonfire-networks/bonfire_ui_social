@@ -41,16 +41,6 @@ defmodule Bonfire.UI.Social.Activity.PublishedInLive do
     end
   end
 
-  def context_initial(context) do
-    case context |> context_label() |> to_string() |> String.trim() |> String.first() do
-      nil -> "#"
-      letter -> String.upcase(letter)
-    end
-  end
-
-  @doc "The tile hue for a context, derived from its id exactly as the groups sidebar does."
-  def context_tile_hue(context), do: :erlang.phash2(id(context), 360)
-
   @doc "The context's avatar URL when its icon is already loaded, else `nil` (callers then show a group glyph or letter tile) — it never resolves one, so the chip stays free of data access."
   def context_icon_url(context) do
     case e(context, :profile, :icon, nil) do

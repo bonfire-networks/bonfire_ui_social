@@ -202,6 +202,7 @@ defmodule Bonfire.UI.Social.MoreActionsPermitted.Test do
           labelled: nil,
           hide_actions: false,
           is_answer: false,
+          can_pin_in_thread: false,
           participants: nil,
           quotes: [],
           my_boost: nil,

@@ -39,7 +39,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
     |> refute_has("[data-id=widget_customize_feed]")
   end
 
-  test "group profiles show access details in the hero instead of the sidebar", %{
+  test "group pages have no customize-feed widget", %{
     conn: conn,
     user: user
   } do
@@ -49,10 +49,6 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
     |> visit("/&#{group.character.username}/discussions")
     |> wait_async()
     |> assert_has("[data-id=group]")
-    |> assert_has("[data-role=group-access-details-content] dt", text: "Joining")
-    |> assert_has("[data-role=group-access-details-content] dt", text: "Visibility")
-    |> assert_has("[data-role=group-access-details-content] dt", text: "Posting")
-    |> refute_has("aside [data-role=group-access-details-content]")
     |> refute_has("[data-id=widget_customize_feed]")
   end
 

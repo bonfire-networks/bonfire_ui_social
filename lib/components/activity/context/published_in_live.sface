@@ -22,12 +22,7 @@
       {!-- same identity tile as the groups sidebar: avatar, else a hued letter --}
       {#case context_icon_url(@context)}
         {#match nil}
-          <span
-            data-role="group_tile"
-            class="nav-tile"
-            style={"--tile-hue: #{context_tile_hue(@context)}"}
-            aria-hidden="true"
-          >{context_initial(@context)}</span>
+          <Bonfire.UI.Common.NavTileLive object={@context} name={context_label(@context)} />
         {#match icon_url}
           <img
             src={icon_url}

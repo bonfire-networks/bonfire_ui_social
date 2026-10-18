@@ -58,11 +58,10 @@
 
     {!-- TODO: the pin/unpin items below could load their state the same way, when the menu opens, rather than for every post on the page --}
     <li
-      :if={module_enabled?(Bonfire.Social.Answers, @__context__) and @showing_within == :thread and
-        @thread_id != id(@object)}
-      class=""
+      :if={@can_pin_in_thread and module_enabled?(Bonfire.Social.Answers, @__context__) and
+        @showing_within == :thread and @thread_id != id(@object)}
+      data-role="mark_as_answer"
     >
-      {!-- TODO: should depend on thread creator: current_user_id(@__context__) == @thread_creator_id --}
       <StatelessComponent
         module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
         parent_id={id(@activity_component_id || @activity)}
@@ -76,8 +75,10 @@
 
     {#if module_enabled?(Bonfire.Social.Pins, @__context__) and
         @object_type != Bonfire.Data.Social.Message}
-      <li :if={@showing_within == :thread and @thread_id != id(@object)} class="">
-        {!-- TODO: should depend on thread creator: current_user_id(@__context__) == @thread_creator_id --}
+      <li
+        :if={@can_pin_in_thread and @showing_within == :thread and @thread_id != id(@object)}
+        data-role="pin_to_thread"
+      >
         <StatelessComponent
           module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
           parent_id={deterministic_dom_id(

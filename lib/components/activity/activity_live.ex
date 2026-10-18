@@ -42,6 +42,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop thread_url, :string, default: nil
   prop thread_title, :string, default: nil
   prop thread_mode, :any, default: nil
+  @doc "Whether the viewer may pin in this reply's thread (`:pin` on it), set for a page of replies at once by `Bonfire.Social.Feeds.LiveHandler.activity_update_many/2`"
+  prop can_pin_in_thread, :boolean, default: false
   prop thread_level, :any, default: nil
   prop current_url, :string, default: nil
   prop permalink, :string, default: nil
@@ -442,6 +444,40 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def prepare_assigns(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
 
+  @doc """
+  The loaded thread when there is one, as `prepare_assigns` builds its URL from it, else its id.
+
+      iex> Bonfire.UI.Social.ActivityLive.thread(%{thread_object: %{id: "given"}, thread_id: "page"}, %{thread_id: "own"})
+      %{id: "given"}
+
+      iex> Bonfire.UI.Social.ActivityLive.thread(%{thread_id: "page"}, %{thread_id: "own"})
+      "own"
+
+      iex> Bonfire.UI.Social.ActivityLive.thread(%{thread_id: "page"}, nil)
+      "page"
+  """
+  def thread(assigns, replied) do
+    e(assigns, :thread_object, nil) || e(replied, :thread, nil) || e(replied, :thread_id, nil) ||
+      e(assigns, :thread_id, nil)
+  end
+
+  @doc """
+  The id of `thread/2`, from assigns not yet prepared, such as those `update_many` batches.
+
+      iex> Bonfire.UI.Social.ActivityLive.thread_id(%{activity: %{replied: %{thread_id: "t1"}}})
+      "t1"
+
+      iex> Bonfire.UI.Social.ActivityLive.thread_id(%{activity: %{object: %{replied: %{thread: %{id: "t2"}}}}})
+      "t2"
+  """
+  def thread_id(assigns) do
+    activity = e(assigns, :activity, nil)
+    object = e(assigns, :object, nil) || e(activity, :object, nil)
+
+    thread(assigns, e(activity, :replied, nil) || e(object, :replied, nil))
+    |> id()
+  end
+
   defp do_prepare_assigns(%{activity: activity, object: object} = assigns)
        when not is_nil(object) do
     activity_inception = e(assigns, :activity_inception, nil)
@@ -463,9 +499,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     thread_level = e(assigns, :thread_level, nil) || length(e(replied, :path, []))
 
-    thread =
-      e(assigns, :thread_object, nil) || e(replied, :thread, nil) || e(replied, :thread_id, nil) ||
-        e(assigns, :thread_id, nil)
+    thread = thread(assigns, replied)
 
     show_reply_to? = show_reply_to?(experienced_as, activity, assigns[:showing_within])
 
@@ -1430,6 +1464,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       reply_count={@reply_count}
                       is_remote={@is_remote}
                       is_answer={not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil))}
+                      can_pin_in_thread={@can_pin_in_thread}
                       hide_actions={@hide_actions}
                       subject_user={@subject_user}
                       creator={e(@object, :created, :creator, nil) || e(@activity, :created, :creator, nil) ||
@@ -1460,6 +1495,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       labelled={maybe_get(component_assigns, :labelled, @labelled)}
                       reply_count={maybe_get(component_assigns, :reply_count, @reply_count)}
                       is_remote={maybe_get(component_assigns, :is_remote, @is_remote)}
+                      can_pin_in_thread={@can_pin_in_thread}
                       hide_actions={@hide_actions}
                       subject_user={@subject_user}
                       creator={e(maybe_get(component_assigns, :object, @object), :created, :creator, nil) ||

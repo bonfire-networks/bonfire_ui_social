@@ -15,6 +15,8 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   prop thread_id, :string, required: true
   prop thread_mode, :any, default: nil
   prop thread_title, :any, default: nil
+  @doc "Whether the viewer holds `:pin` on the thread, which `Bonfire.Social.Pins.may_pin_in?/3` requires to mark an answer or pin to it"
+  prop can_pin_in_thread, :boolean, default: false
   prop is_remote, :boolean, default: false
   prop parent_id, :any, default: nil
   prop published_in, :any, default: nil
