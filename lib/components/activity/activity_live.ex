@@ -42,6 +42,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop thread_url, :string, default: nil
   prop thread_title, :string, default: nil
   prop thread_mode, :any, default: nil
+
   @doc "Whether the viewer may pin in this reply's thread (`:pin` on it), decided once by `Bonfire.UI.Social.ThreadLive` and passed to each comment"
   prop can_pin_in_thread, :boolean, default: false
   prop thread_level, :any, default: nil
@@ -2630,7 +2631,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
         [module_def]
 
       module_fun when is_function(module_fun) ->
-        module_fun.(object)
+        # such functions (eg. `ProcessListLive.activity_component/1`) return a single `{module, assigns}` tuple, but callers concatenate a list
+        List.wrap(module_fun.(object))
 
       other ->
         error(other, "Unrecognised object_preview config")

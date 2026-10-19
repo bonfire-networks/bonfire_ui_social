@@ -272,7 +272,7 @@ defmodule Bonfire.UI.Social.PrivateGroupNestedRepliesTest do
 
     fellow_post = Simulate.fake_post_in_group!(fellow, group, "<p>a fellow member's post</p>")
 
-    {:ok, true} = Categories.remove_member(me, group, id(other))
+    {:ok, %{member: false}} = Categories.remove_member(me, group, id(other))
 
     # not the root: that one is theirs, and keeping sight of your own post is right
     refute Bonfire.Boundaries.can?(other, :read, fellow_post),
