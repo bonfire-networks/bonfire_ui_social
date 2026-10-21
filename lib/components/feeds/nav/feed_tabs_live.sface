@@ -3,7 +3,7 @@
   :hook
   data-selected={@selected_feed}
   aria-label={l("Feeds")}
-  class="sticky top-[calc(env(safe-area-inset-top)+3.75rem)] lg:top-page-header z-sticky w-full min-w-0 bg-base-100/80 lg:bg-base-200/70 backdrop-blur-md before:absolute before:inset-x-0 before:bottom-full before:h-4 before:bg-base-100 lg:before:hidden transition-[translate] duration-200 ease-out motion-reduce:transition-none max-lg:data-scroll-hidden:-translate-y-full [html:has(&)]:scroll-pt-[calc(env(safe-area-inset-top)+6.75rem)] lg:[html:has(&)]:scroll-pt-[calc(var(--spacing-page-header)+3rem)] border-none"
+  class="sticky top-[calc(env(safe-area-inset-top)+3.75rem)] lg:top-page-header z-sticky w-full min-w-0 bg-base-100/80 lg:bg-base-200/70 backdrop-blur-md before:absolute before:inset-x-0 before:bottom-full before:h-4 before:bg-base-100 lg:before:hidden transition-[translate,opacity] duration-200 ease-out motion-reduce:transition-none data-scroll-hidden:-translate-y-full lg:data-scroll-hidden:opacity-0 [html:has(&)]:scroll-pt-[calc(env(safe-area-inset-top)+6.75rem)] lg:[html:has(&)]:scroll-pt-[calc(var(--spacing-page-header)+3rem)] border-none"
 >
   {!-- the edge fades only appear on a side that has more tabs to scroll to (toggled by the hook), so the first chip isn't faded at rest --}
   <ul class="flex flex-nowrap gap-1 overflow-x-auto overscroll-x-contain scroll-smooth motion-reduce:scroll-auto snap-x snap-proximity px-3 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [--fade-start:0px] [--fade-end:0px] data-fade-start:[--fade-start:1.5rem] data-fade-end:[--fade-end:1.5rem] [mask-image:linear-gradient(to_right,transparent,black_var(--fade-start),black_calc(100%-var(--fade-end)),transparent)]">

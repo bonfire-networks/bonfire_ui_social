@@ -131,7 +131,7 @@
             <#Icon iconify="ph:push-pin-duotone" class="size-4 shrink-0 text-muted" />
             <span class="flex-1 text-left truncate">{l("Pin this activity")}</span>
             <#Icon
-              iconify="ph:caret-down"
+              iconify="carbon:chevron-down"
               class="size-4 shrink-0 text-muted transition-transform group-open:rotate-180 motion-reduce:transition-none"
             />
           </summary>
