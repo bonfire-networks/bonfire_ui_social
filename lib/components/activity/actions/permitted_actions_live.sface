@@ -124,6 +124,35 @@
         </li>
       {/if}
 
+      {!-- one entry for every place it can be pinned, so the menu doesn't grow a row for each --}
+      <li :if={@permitted.pin_scopes != []} data-role="pin_menu">
+        <details class="group">
+          <summary class="flex items-center gap-3 w-full text-sm text-base-content after:hidden">
+            <#Icon iconify="ph:push-pin-duotone" class="size-4 shrink-0 text-muted" />
+            <span class="flex-1 text-left truncate">{l("Pin this activity")}</span>
+            <#Icon
+              iconify="ph:caret-down"
+              class="size-4 shrink-0 text-muted transition-transform group-open:rotate-180 motion-reduce:transition-none"
+            />
+          </summary>
+          <ul>
+            {#for {kind, scope, pinned?} <- @permitted.pin_scopes}
+              <li data-role={"pin_to_#{kind}"}>
+                <StatelessComponent
+                  module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
+                  parent_id={@id}
+                  scope={kind}
+                  scope_object={if is_binary(scope), do: scope}
+                  object={@object}
+                  pinned?={pinned?}
+                  component={__MODULE__}
+                />
+              </li>
+            {/for}
+          </ul>
+        </details>
+      </li>
+
       <li
         :if={@permitted.delete or @permitted.remove_from_group}
         role="separator"

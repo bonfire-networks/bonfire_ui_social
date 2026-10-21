@@ -55,12 +55,16 @@ defmodule Bonfire.UI.Social.ThreadPinMenu.Test do
     |> refute_has(@pin)
   end
 
-  test "the thread's author is offered both on a reply", %{author: author, thread: thread} do
+  test "Pin to thread sits in the Pin entry, Mark as answer beside it", %{
+    author: author,
+    thread: thread
+  } do
     conn(user: author)
     |> visit("/post/#{id(thread)}")
     |> assert_has("article", text: "an answer")
+    |> assert_has("[data-role=pin_menu] #{@pin}")
     |> assert_has(@answer)
-    |> assert_has(@pin)
+    |> refute_has("[data-role=pin_menu] #{@answer}")
   end
 
   test "someone granted :pin on the thread is offered both", %{author: author, thread: thread} do

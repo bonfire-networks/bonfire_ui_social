@@ -17,6 +17,9 @@ defmodule Bonfire.UI.Social.Activity.PermittedActionsLive do
   prop published_in, :any, default: nil
   prop participants, :any, default: nil
 
+  @doc "Whether the viewer may pin in this reply's thread"
+  prop can_pin_in_thread, :boolean, default: false
+
   @doc "The object's boundary for the viewer, when the feed has loaded it (`Bonfire.Boundaries.LiveHandler.preload_boundaries/2`): the menu is then decided from it, with no query on opening"
   prop object_boundary, :any, default: nil
 
@@ -28,25 +31,57 @@ defmodule Bonfire.UI.Social.Activity.PermittedActionsLive do
   @doc "What the viewer may do here, by action; `nil` until the menu is first opened, unless decided from a loaded `object_boundary`."
   data permitted, :map, default: nil
 
+  # a pin or unpin from one of its rows (`Pins.LiveHandler.after_pin`): flip that row, the rest of `permitted` stands
+  def update(%{pinned?: pinned?} = toggled, %{assigns: %{permitted: %{} = permitted}} = socket) do
+    rows =
+      Enum.map(permitted.pin_scopes, fn {kind, scope, was} ->
+        {kind, scope, if(scope == toggled[:pin_scope], do: pinned?, else: was)}
+      end)
+
+    {:ok, assign(socket, permitted: %{permitted | pin_scopes: rows})}
+  end
+
   def update(assigns, socket) do
     socket = assign(socket, assigns)
 
+    # so a pin toggled from one of its rows (a reply's thread row, or the post's group rows) reaches it, as `ComponentID.send_updates` finds components by object id
+    ComponentID.register_alias(
+      __MODULE__,
+      id(e(assigns(socket), :object, nil)),
+      e(assigns(socket), :id, nil)
+    )
+
     if is_nil(e(assigns(socket), :permitted, nil)) and
          loaded?(e(assigns(socket), :object_boundary, nil)),
-       do: {:ok, assign_permitted(socket)},
+       do: {:ok, assign_permitted(socket, false)},
        else: {:ok, socket}
   end
 
   # opening the menu, where the feed didn't load the boundary
   def handle_event("load", _params, %{assigns: %{permitted: nil}} = socket),
-    do: {:noreply, assign_permitted(socket)}
+    do: {:noreply, assign_permitted(socket, true)}
+
+  # opening the menu, where the rows were decided from the loaded boundary without the group and topic ones
+  def handle_event("load", _params, %{assigns: %{permitted: %{group_pins_loaded: false} = permitted}} = socket) do
+    %{object: object, published_in: published_in} = assigns(socket)
+
+    {:noreply,
+     assign(socket,
+       permitted: %{
+         permitted
+         | pin_scopes: pin_scopes(assigns(socket), current_user(socket), published_in, object, true),
+           group_pins_loaded: true
+       }
+     )}
+  end
 
   def handle_event("load", _params, socket), do: {:noreply, socket}
 
   defp loaded?(%{object_id: _, verbs: verbs}) when is_list(verbs), do: true
   defp loaded?(_), do: false
 
-  defp assign_permitted(socket) do
+  # `opened?`: the group and topic rows cost a few queries, so they're decided only once the menu opens, not for every view of the post's page
+  defp assign_permitted(socket, opened?) do
     %{object: object, published_in: published_in, __context__: context} =
       assigns(socket)
 
@@ -70,9 +105,61 @@ defmodule Bonfire.UI.Social.Activity.PermittedActionsLive do
           not is_nil(id(object)) and
             Bonfire.UI.Social.Activity.DeleteObjectLive.can_delete?(context, object, boundary) ==
               true,
-        remove_from_group: can_remove_from_group?(current_user, published_in, object, boundary)
+        remove_from_group: can_remove_from_group?(current_user, published_in, object, boundary),
+        pin_scopes: pin_scopes(assigns(socket), current_user, published_in, object, opened?),
+        group_pins_loaded: opened?
       }
     )
+  end
+
+  # as `[{kind, scope_id | :instance, pinned?}]`
+  defp pin_scopes(assigns, current_user, published_in, object, opened?) do
+    if current_user && module_enabled?(Bonfire.Social.Pins, current_user),
+      do:
+        thread_pin_scope(assigns, object) ++
+          if(opened?, do: group_pin_scopes(assigns, current_user, published_in, object), else: []) ++
+          instance_pin_scope(current_user),
+      else: []
+  end
+
+  # a reply, in a thread the viewer may pin in; its pinned state comes with the activity
+  defp thread_pin_scope(
+         %{can_pin_in_thread: true, showing_within: :thread, thread_id: thread_id} = assigns,
+         object
+       )
+       when is_binary(thread_id) do
+    if thread_id != id(object),
+      do: [
+        {:thread, thread_id,
+         not is_nil(
+           e(assigns, :activity, :replied, :pinned, nil) || e(assigns, :activity, :pinned, nil)
+         )}
+      ],
+      else: []
+  end
+
+  defp thread_pin_scope(_assigns, _object), do: []
+
+  # only on the post's own page: group and topic feed cards have no menu, and a thread's replies shouldn't each look it up
+  defp group_pin_scopes(%{viewing_main_object: true}, current_user, published_in, object)
+       when not is_nil(published_in) do
+    scopes =
+      maybe_apply(Bonfire.Classify.Categories, :pin_scopes, [current_user, published_in],
+        fallback_return: []
+      )
+
+    pinned = Bonfire.Social.Pins.pinned_in(Enum.map(scopes, &elem(&1, 1)), object)
+
+    Enum.map(scopes, fn {kind, scope} -> {kind, id(scope), MapSet.member?(pinned, id(scope))} end)
+  end
+
+  defp group_pin_scopes(_assigns, _current_user, _published_in, _object), do: []
+
+  # the spotlight: its pinned state is looked up when its modal opens (`PinModalLive`), so a feed of cards doesn't query it for each
+  defp instance_pin_scope(current_user) do
+    if Bonfire.Social.Pins.may_pin_in?(current_user, :instance),
+      do: [{:instance, :instance, nil}],
+      else: []
   end
 
   # the call the feeds' batch preload makes, for one id: `Boundaries.boundary_on_object/2` returns a different shape (a `%Controlled{}`, not the preferred preset `%Acl{}`)

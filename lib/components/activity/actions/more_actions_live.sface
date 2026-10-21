@@ -56,7 +56,7 @@
       />
     </li>
 
-    {!-- TODO: the pin/unpin items below could load their state the same way, when the menu opens, rather than for every post on the page --}
+    {!-- marking an answer is a different act from pinning, so it stays its own row rather than under the "Pin" entry --}
     <li
       :if={@can_pin_in_thread and module_enabled?(Bonfire.Social.Answers, @__context__) and
         @showing_within == :thread and @thread_id != id(@object)}
@@ -69,47 +69,8 @@
         scope_object={@thread_id}
         object={@object}
         pinned?={not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil))}
-        class="flex items-center px-4 text-sm text-neutral-content/80"
       />
     </li>
-
-    {#if module_enabled?(Bonfire.Social.Pins, @__context__) and
-        @object_type != Bonfire.Data.Social.Message}
-      <li
-        :if={@can_pin_in_thread and @showing_within == :thread and @thread_id != id(@object)}
-        data-role="pin_to_thread"
-      >
-        <StatelessComponent
-          module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
-          parent_id={deterministic_dom_id(
-            __MODULE__,
-            id(@activity_component_id || @activity),
-            "object-pin",
-            @parent_id
-          )}
-          scope={:thread}
-          scope_object={@thread_id}
-          object={@object}
-          pinned?={not is_nil(e(@activity, :replied, :pinned, nil) || e(@activity, :pinned, nil))}
-          class="flex items-center px-4 text-sm text-neutral-content/80"
-        />
-      </li>
-
-      <li :if={Bonfire.Boundaries.can?(@__context__, :mediate, :instance)} data-id="pin_action">
-        <StatelessComponent
-          module={maybe_component(Bonfire.UI.Reactions.PinActionLive, @__context__)}
-          parent_id={deterministic_dom_id(
-            __MODULE__,
-            id(@activity_component_id || @activity),
-            "instance-pin",
-            @parent_id
-          )}
-          scope={:instance}
-          object={@object}
-          class="flex items-center px-4 text-sm text-neutral-content/80"
-        />
-      </li>
-    {/if}
 
     {#if @feed_name == :my}
       {#case e(@activity, :subject, :id, nil)}
@@ -249,6 +210,7 @@
     published_in={@published_in}
     participants={@participants}
     object_boundary={@object_boundary}
+    can_pin_in_thread={@can_pin_in_thread}
     is_remote={@is_remote || not is_nil(e(@object, :peered, :canonical_uri, nil))}
   />
 
