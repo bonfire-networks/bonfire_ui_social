@@ -3,15 +3,9 @@ defmodule Bonfire.UI.Social.EventsLive do
   The `/events` discovery page: a category filter bar (FEP-8a8e) over the standard
   events feed.
 
-  The feed itself is the shared `Bonfire.UI.Social.FeedLive` component rendering the
-  `:events` preset (exactly like `/feed/events`) — it owns loading, pagination and
-  rendering the standard event card. This view only adds the category chip bar.
+  The feed itself is the shared `Bonfire.UI.Social.FeedLive` component rendering the `:events` preset (exactly like `/feed/events`) — it owns loading, pagination and rendering the standard event card. This view only adds the category chip bar.
 
-  The selected category lives in the URL (`?category=MUSIC`): a chip navigates there,
-  and `handle_params/3` scopes the feed via the `object_categories` filter and marks
-  the active chip. Navigation remounts the feed fresh, so it always reflects the URL —
-  and the filter is shareable/bookmarkable. No changes to the shared feed component are
-  needed.
+  The selected category lives in the URL (`?category=MUSIC`): a chip navigates there, and `handle_params/3` scopes the feed via the `object_categories` filter and marks the active chip. Navigation remounts the feed fresh, so it always reflects the URL, and the filter is shareable/bookmarkable. No changes to the shared feed component are needed.
   """
   use Bonfire.UI.Common.Web, :surface_live_view
 
