@@ -23,4 +23,38 @@ defmodule Bonfire.UI.Social.DiscussionPreviewActionsTest do
     assert DiscussionPreviewActionsLive.display_reply_count(%{}, 7) == 7
     assert DiscussionPreviewActionsLive.display_reply_count(nil, nil) == 0
   end
+
+  describe "update_many/1" do
+    setup do
+      test_pid = self()
+
+      Repatch.patch(Bonfire.Social.Threads, :attach_participants, fn cards, _user ->
+        send(test_pid, {:participants_loaded, length(cards)})
+        Enum.map(cards, &Map.merge(&1, %{participants: [%{id: "someone"}], participants_more_count: 0}))
+      end)
+
+      :ok
+    end
+
+    defp card(id, socket_assigns \\ %{}),
+      do:
+        {%{id: id, activity: %{id: "activity_#{id}"}},
+         %Phoenix.LiveView.Socket{assigns: Map.merge(%{__changed__: %{}}, socket_assigns)}}
+
+    test "the page's cards get their participants in one batch" do
+      assert [%{assigns: %{participants: [%{id: "someone"}]}}, %{assigns: %{participants: [%{id: "someone"}]}}] =
+               DiscussionPreviewActionsLive.update_many([card("a"), card("b")])
+
+      assert_received {:participants_loaded, 2}
+    end
+
+    test "a card that already loaded them keeps them, without querying again" do
+      loaded = %{participants: [%{id: "earlier"}], participants_more_count: 2}
+
+      assert [%{assigns: %{participants: [%{id: "earlier"}], participants_more_count: 2}}] =
+               DiscussionPreviewActionsLive.update_many([card("a", loaded)])
+
+      refute_received {:participants_loaded, _}
+    end
+  end
 end

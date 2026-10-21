@@ -29,7 +29,7 @@
             __MODULE__,
             id(participant),
             "trending_participant",
-            id(@activity)
+            @activity_component_id || id(@activity)
           )}
           user_id={id(participant)}
           src={Media.avatar_url(participant)}

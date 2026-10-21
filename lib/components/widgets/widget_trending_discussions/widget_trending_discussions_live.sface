@@ -19,60 +19,35 @@
             >
               {l("View all")}
             </LinkLive>
-            {!-- data attributes handled by scroll.js, so they work without a socket --}
-            <div :if={length(discussions) > 1} class="flex items-center gap-1.5">
-              <.icon_button
-                icon="carbon:chevron-left"
-                aria_label={l("Scroll left")}
-                variant="outline"
-                size="sm"
-                class="border-transparent bg-transparent text-muted hover:text-base-content"
-                data-carousel-scroll="previous"
-                aria-controls="trending-discussions-carousel"
-              />
-              <.icon_button
-                icon="carbon:chevron-right"
-                aria_label={l("Scroll right")}
-                variant="outline"
-                size="sm"
-                class="border-transparent bg-transparent text-muted hover:text-base-content"
-                data-carousel-scroll="next"
-                aria-controls="trending-discussions-carousel"
-              />
-            </div>
+            <Bonfire.UI.Common.CarouselArrowsLive track="trending-discussions-carousel" count={length(discussions)} />
           </div>
         </:action>
 
-        <div class="grid grid-cols-1 overflow-hidden relative">
-          <div
+        {!-- `data-id` for the typographic preset's styles and the tests --}
+        <div data-id="trending_discussions">
+          <Bonfire.UI.Common.CarouselLive
             id="trending-discussions-carousel"
-            class="carousel-scroll items-start"
-            phx-hook="CarouselScroll"
-            role="list"
-            data-id="trending_discussions"
+            items={discussions}
           >
-            {#for fp <- discussions}
+            <:card :let={item: fp}>
               <div
-                id={"trending_discussion_#{id(fp.activity) || id(fp.activity.object)}"}
-                role="listitem"
-                class="spotlight_clamp w-[var(--carousel-item-w-mobile)] sm:w-[var(--carousel-item-w)] rounded-box bg-base-100 p-card"
-                style={"--carousel-item-w-mobile: #{carousel_item_width(:peek)}; --carousel-item-w: #{carousel_item_width(nil)};"}
+                id={"trending_discussion_#{card_id(fp)}"}
+                class="spotlight_clamp h-full rounded-box p-card"
               >
                 <Bonfire.UI.Social.ActivityLive
                   id={Bonfire.UI.Social.ActivityLive.component_id(
-                    id(fp.activity) || id(fp.activity.object),
-                    "trending_discussion"
+                    card_id(fp),
+                    "trending_discussion",
+                    "trending_"
                   )}
                   activity={fp.activity}
                   class="flex-1 spotlight_activity"
                   showing_within={:widget}
                   custom_actions={Bonfire.UI.Social.Activity.DiscussionPreviewActionsLive}
-                  participants={e(fp, :participants, [])}
-                  participants_more_count={e(fp, :participants_more_count, 0)}
                 />
               </div>
-            {/for}
-          </div>
+            </:card>
+          </Bonfire.UI.Common.CarouselLive>
         </div>
       </Bonfire.UI.Common.WidgetBlockLive>
     </div>

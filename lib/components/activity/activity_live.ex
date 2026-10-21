@@ -49,7 +49,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop current_url, :string, default: nil
   prop permalink, :string, default: nil
   prop participants, :any, default: nil
-  prop participants_more_count, :integer, default: 0
   prop object_boundary, :any, default: :skip_boundary_preload
   prop cw, :any, default: nil
   prop emoji, :any, default: nil
@@ -1212,7 +1211,6 @@ defmodule Bonfire.UI.Social.ActivityLive do
           activity_component_id={@activity_component_id}
           cw={@cw}
           participants={@participants}
-          participants_more_count={@participants_more_count}
           rank={@i}
           module={maybe_component(@custom_preview, @__context__)}
         />
@@ -1552,15 +1550,14 @@ defmodule Bonfire.UI.Social.ActivityLive do
           {!-- Caller-provided replacement for `ActionsLive` (rendered outside the
                component loop so it applies to any object type, since
                `actions_for_object_type` only yields actions for some types) --}
-          <StatelessComponent
+          <StatefulComponent
             :if={@custom_actions && @hide_activity != "actions"}
+            id={"#{@activity_component_id}_custom_actions"}
             module={maybe_component(@custom_actions, @__context__)}
             activity={@activity}
             object={@object}
             permalink={@permalink}
             reply_count={@reply_count}
-            participants={@participants}
-            participants_more_count={@participants_more_count}
             activity_component_id={@activity_component_id}
             showing_within={@showing_within}
           />
