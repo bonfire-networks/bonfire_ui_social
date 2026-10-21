@@ -1,5 +1,6 @@
 defmodule Bonfire.UI.Social.EventsLiveTest do
   use Bonfire.UI.Social.ConnCase, async: false
+  import Bonfire.Classify.Simulate
   @moduletag :ui
 
   # Insert an APActivity-backed AS2 Event into the user's :events feed.
@@ -15,6 +16,7 @@ defmodule Bonfire.UI.Social.EventsLiveTest do
       }
       |> put_if("endTime", attrs[:end] && DateTime.to_iso8601(attrs[:end]))
       |> put_if("category", attrs[:category])
+      |> put_if("tag", attrs[:tag])
 
     activity_json = %{
       "type" => "Create",
@@ -75,6 +77,59 @@ defmodule Bonfire.UI.Social.EventsLiveTest do
     |> click_button("button", "Music")
     |> wait_async()
     |> assert_has("[data-id=feed]", text: "Jazz Night")
+    |> refute_has("[data-id=feed]", text: "Gallery Opening")
+  end
+
+  test "a category path shows the events tagged with that category", %{conn: conn, me: me} do
+    topic =
+      fake_category!(me, nil, %{type: :topic, name: "Jazz"})
+      |> repo().maybe_preload(:character)
+
+    iri = Bonfire.Me.Characters.character_url(topic)
+
+    fake_event!(me,
+      name: "Jazz Night",
+      tag: [%{"type" => "Category", "id" => iri, "name" => "Jazz"}]
+    )
+
+    fake_event!(me, name: "Gallery Opening")
+
+    conn
+    |> visit("/events/category/#{topic.character.username}")
+    |> wait_async()
+    |> assert_has("[data-id=feed]", text: "Jazz Night")
+    |> refute_has("[data-id=feed]", text: "Gallery Opening")
+  end
+
+  test "a category path takes the id of a category that has no character", %{
+    conn: conn,
+    me: me
+  } do
+    topic = fake_category!(me, nil, %{type: :topic, name: "Poetry", without_character: true})
+
+    # a category with no character has no AP IRI to name it by, so it is tagged directly
+    tagged = fake_event!(me, name: "Poetry Slam")
+    fake_event!(me, name: "Gallery Opening")
+    assert {:ok, _} = Bonfire.Tag.maybe_tag(me, tagged, [topic])
+
+    conn
+    |> visit("/events/category/#{topic.id}")
+    |> wait_async()
+    |> assert_has("[data-id=feed]", text: "Poetry Slam")
+    |> refute_has("[data-id=feed]", text: "Gallery Opening")
+  end
+
+  test "a category path that names no category shows an error and no events", %{
+    conn: conn,
+    me: me
+  } do
+    # an event exists, so that no events shown is the feed being withheld and not an empty database
+    fake_event!(me, name: "Gallery Opening")
+
+    conn
+    |> visit("/events/category/no_such_category")
+    |> wait_async()
+    |> assert_has("[data-id=flash_error]")
     |> refute_has("[data-id=feed]", text: "Gallery Opening")
   end
 
