@@ -3,15 +3,9 @@ defmodule Bonfire.UI.Social.EventsLive do
   The `/events` discovery page: a category filter bar (FEP-8a8e) over the standard
   events feed.
 
-  The feed itself is the shared `Bonfire.UI.Social.FeedLive` component rendering the
-  `:events` preset (exactly like `/feed/events`) — it owns loading, pagination and
-  rendering the standard event card. This view only adds the category chip bar.
+  The feed itself is the shared `Bonfire.UI.Social.FeedLive` component rendering the `:events` preset (exactly like `/feed/events`) — it owns loading, pagination and rendering the standard event card. This view only adds the category chip bar.
 
-  The selected category lives in the URL (`?category=MUSIC`): a chip navigates there,
-  and `handle_params/3` scopes the feed via the `object_categories` filter and marks
-  the active chip. Navigation remounts the feed fresh, so it always reflects the URL —
-  and the filter is shareable/bookmarkable. No changes to the shared feed component are
-  needed.
+  The selected category lives in the URL (`?category=MUSIC`): a chip navigates there, and `handle_params/3` scopes the feed via the `object_categories` filter and marks the active chip. Navigation remounts the feed fresh, so it always reflects the URL, and the filter is shareable/bookmarkable. No changes to the shared feed component are needed.
   """
   use Bonfire.UI.Common.Web, :surface_live_view
 
@@ -62,6 +56,19 @@ defmodule Bonfire.UI.Social.EventsLive do
      )}
   end
 
+  # A category's own path, `/events/category/<username or id>`: the events tagged with that category. It is found with the visitor's read boundary, so one they may not read gets the same "not found" error as one that does not exist, rather than a hint that it is there. Raising `Bonfire.Fail` in a callback is caught by `ErrorHandling.undead/3`, which shows the error in the page, so no feed is loaded and no events show. The param is not called `category`, as that is the FEP-8a8e key of the clauses below.
+  def handle_params(%{"category_ref" => ref}, _uri, socket) do
+    case maybe_apply(
+           Bonfire.Classify.Categories,
+           :get,
+           [ref, [[:default], current_user: current_user(socket)]],
+           fallback_return: {:error, :not_found}
+         ) do
+      {:ok, category} -> {:noreply, assign_feed(socket, nil, %{tags: [category.id]})}
+      _ -> raise Bonfire.Fail, :not_found
+    end
+  end
+
   def handle_params(params, _uri, socket) do
     selected =
       case params["category"] do
@@ -69,11 +76,14 @@ defmodule Bonfire.UI.Social.EventsLive do
         _ -> nil
       end
 
-    {:noreply,
-     socket
-     |> assign(selected_category: selected)
-     |> assign(feed: nil, page_info: nil, loading: true)
-     |> assign(LiveHandler.feed_default_assigns({:events, category_filters(selected)}, socket))}
+    {:noreply, assign_feed(socket, selected, category_filters(selected))}
+  end
+
+  defp assign_feed(socket, selected_category, filters) do
+    socket
+    |> assign(selected_category: selected_category)
+    |> assign(feed: nil, page_info: nil, loading: true)
+    |> assign(LiveHandler.feed_default_assigns({:events, filters}, socket))
   end
 
   # a chip navigates to the category's URL (a full remount → the feed loads fresh, filtered)
