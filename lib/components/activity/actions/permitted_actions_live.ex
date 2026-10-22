@@ -62,14 +62,19 @@ defmodule Bonfire.UI.Social.Activity.PermittedActionsLive do
     do: {:noreply, assign_permitted(socket, true)}
 
   # opening the menu, where the rows were decided from the loaded boundary without the group and topic ones
-  def handle_event("load", _params, %{assigns: %{permitted: %{group_pins_loaded: false} = permitted}} = socket) do
+  def handle_event(
+        "load",
+        _params,
+        %{assigns: %{permitted: %{group_pins_loaded: false} = permitted}} = socket
+      ) do
     %{object: object, published_in: published_in} = assigns(socket)
 
     {:noreply,
      assign(socket,
        permitted: %{
          permitted
-         | pin_scopes: pin_scopes(assigns(socket), current_user(socket), published_in, object, true),
+         | pin_scopes:
+             pin_scopes(assigns(socket), current_user(socket), published_in, object, true),
            group_pins_loaded: true
        }
      )}

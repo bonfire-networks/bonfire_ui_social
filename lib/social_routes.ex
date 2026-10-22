@@ -11,6 +11,7 @@ defmodule Bonfire.UI.Social.Routes do
         live("/feed/local", FeedsLive, :local, as: :feed)
 
         live("/events", EventsLive, as: :events)
+
         # the events tagged with a category, named by its username or, if it has no character, its id
         live("/events/category/:category_ref", EventsLive, as: :events)
 

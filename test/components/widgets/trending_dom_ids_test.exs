@@ -26,7 +26,8 @@ defmodule Bonfire.UI.Social.WidgetTrendingDomIdsTest do
 
     doc = Floki.parse_document!(html)
 
-    assert [_ | _] = Floki.find(doc, "[data-id=trending_discussions] [data-object_id='#{id(post)}']"),
+    assert [_ | _] =
+             Floki.find(doc, "[data-id=trending_discussions] [data-object_id='#{id(post)}']"),
            "control: in the widget"
 
     assert length(Floki.find(doc, "article[data-object_id='#{id(post)}']")) > 1,
