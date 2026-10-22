@@ -15,6 +15,32 @@ defmodule Bonfire.UI.Social.RuntimeConfig do
 
     config :bonfire_ui_social, Bonfire.UI.Social.ThreadLive, thread_mode: :nested
 
+    # How the dashboard's "Top discussions" block words itself. `module:` makes this extension's gettext domain the one the phrases are looked up in, which is where `l/1` extracts them (and where the old strings were translated)
+    config :bonfire_common, Bonfire.Common.Vocabulary,
+      kinds: [
+        top_discussions: [
+          module: __MODULE__,
+          presets: %{
+            top_discussions: %{
+              title: l("Top discussions"),
+              empty:
+                l(
+                  "No popular discussions yet. Why not start one? Your post could be tomorrow's top thread."
+                ),
+              view_all: l("View all top discussions")
+            },
+            hot_discussions: %{
+              title: l("Hot discussions"),
+              empty:
+                l(
+                  "No hot discussions yet. Why not start one? Your post could be tomorrow's hot thread."
+                ),
+              view_all: l("View all hot discussions")
+            }
+          }
+        ]
+      ]
+
     config :bonfire_ui_social, Bonfire.UI.Social.NotificationPreferencesLive,
       # Per-user display switches for the notifications feed, ordered. Each names what it controls: a `filter` key goes into the feed's filters, an `assign` key into the feed's assigns, and `:chips` is this UI's own chip bar. Defaults mirror the `:notifications` preset, so a user who changes nothing sees what the preset intends
       extra_toggles: [

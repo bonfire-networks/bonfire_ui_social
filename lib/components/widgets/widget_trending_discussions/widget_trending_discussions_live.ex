@@ -8,6 +8,7 @@ defmodule Bonfire.UI.Social.WidgetTrendingDiscussionsLive do
   every LiveView render.
   """
   use Bonfire.UI.Common.Web, :stateless_component
+  alias Bonfire.Common.Vocabulary
 
   prop limit, :integer, default: 3
   prop widget_title, :string, default: nil
