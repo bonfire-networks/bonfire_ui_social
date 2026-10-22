@@ -28,9 +28,9 @@
 
         {!-- `data-id` for the typographic preset's styles and the tests --}
         <div data-id="trending_discussions">
-          <Bonfire.UI.Common.CarouselLive id="trending-discussions-carousel" items={discussions}>
+          <Bonfire.UI.Common.CarouselLive id="trending-discussions-carousel" items={discussions} expandable>
             <:card :let={item: fp}>
-              <div id={"trending_discussion_#{card_id(fp)}"} class="spotlight_clamp h-full rounded-box p-card">
+              <div id={"trending_discussion_#{card_id(fp)}"} class="spotlight_clamp rounded-box p-card">
                 <Bonfire.UI.Social.ActivityLive
                   id={Bonfire.UI.Social.ActivityLive.component_id(
                     card_id(fp),
