@@ -1,51 +1,55 @@
 {#case load(current_user(@__context__), @limit)}
   {#match discussions}
-    <div data-id="trending_discussions_widget">
-      <Bonfire.UI.Common.WidgetBlockLive
-        class="w-full relative overflow-hidden"
-        widget_title={@widget_title || l("Top discussions")}
-        reset_cache_event="Bonfire.UI.Social.WidgetTrendingDiscussionsLive:reset_trending_discussions"
-        reset_cache_values={%{limit: @limit}}
-        empty={discussions == []}
-        empty_icon="ph:chats-circle-fill"
-        empty_message={l("No popular discussions yet. Why not start one? Your post could be tomorrow's top thread.")}
-      >
-        <:action>
-          <div class="flex items-center gap-3">
-            <LinkLive
-              to={~p"/feed/trending_discussions"}
-              class="text-xs font-medium text-muted hover:text-primary"
-              aria-label={l("View all top discussions")}
-            >
-              {l("View all")}
-            </LinkLive>
-            <Bonfire.UI.Common.CarouselArrowsLive
-              track="trending-discussions-carousel"
-              count={length(discussions)}
-            />
-          </div>
-        </:action>
-
-        {!-- `data-id` for the typographic preset's styles and the tests --}
-        <div data-id="trending_discussions">
-          <Bonfire.UI.Common.CarouselLive id="trending-discussions-carousel" items={discussions}>
-            <:card :let={item: fp}>
-              <div id={"trending_discussion_#{card_id(fp)}"} class="spotlight_clamp h-full rounded-box p-card">
-                <Bonfire.UI.Social.ActivityLive
-                  id={Bonfire.UI.Social.ActivityLive.component_id(
-                    card_id(fp),
-                    "trending_discussion",
-                    "trending_"
-                  )}
-                  activity={fp.activity}
-                  class="flex-1 spotlight_activity"
-                  showing_within={:widget}
-                  custom_actions={Bonfire.UI.Social.Activity.DiscussionPreviewActionsLive}
+    {#case Vocabulary.preset(:top_discussions, @__context__)}
+      {#match vocab}
+        <div data-id="trending_discussions_widget">
+          <Bonfire.UI.Common.WidgetBlockLive
+            class="w-full relative overflow-hidden"
+            widget_title={@widget_title || Vocabulary.phrase(vocab, :title)}
+            reset_cache_event="Bonfire.UI.Social.WidgetTrendingDiscussionsLive:reset_trending_discussions"
+            reset_cache_values={%{limit: @limit}}
+            empty={discussions == []}
+            empty_icon="ph:chats-circle-fill"
+            empty_message={Vocabulary.phrase(vocab, :empty)}
+          >
+            <:action>
+              <div class="flex items-center gap-3">
+                {!-- `label` is what `LinkLive` turns into the aria-label, an `aria-label` attribute is not passed on --}
+                <LinkLive
+                  to={~p"/feed/trending_discussions"}
+                  class="text-xs font-medium text-muted hover:text-primary"
+                  label={Vocabulary.phrase(vocab, :view_all)}
+                >
+                  {l("View all")}
+                </LinkLive>
+                <Bonfire.UI.Common.CarouselArrowsLive
+                  track="trending-discussions-carousel"
+                  count={length(discussions)}
                 />
               </div>
-            </:card>
-          </Bonfire.UI.Common.CarouselLive>
+            </:action>
+
+            {!-- `data-id` for the typographic preset's styles and the tests --}
+            <div data-id="trending_discussions">
+              <Bonfire.UI.Common.CarouselLive id="trending-discussions-carousel" items={discussions}>
+                <:card :let={item: fp}>
+                  <div id={"trending_discussion_#{card_id(fp)}"} class="spotlight_clamp h-full rounded-box p-card">
+                    <Bonfire.UI.Social.ActivityLive
+                      id={Bonfire.UI.Social.ActivityLive.component_id(
+                        card_id(fp),
+                        "trending_discussion",
+                        "trending_"
+                      )}
+                      activity={fp.activity}
+                      class="flex-1 spotlight_activity"
+                      showing_within={:widget}
+                      custom_actions={Bonfire.UI.Social.Activity.DiscussionPreviewActionsLive}
+                    />
+                  </div>
+                </:card>
+              </Bonfire.UI.Common.CarouselLive>
+            </div>
+          </Bonfire.UI.Common.WidgetBlockLive>
         </div>
-      </Bonfire.UI.Common.WidgetBlockLive>
-    </div>
+    {/case}
 {/case}
