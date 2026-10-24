@@ -9,6 +9,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectListModalLive do
 
   # what the activity was for whoever is reading, since the title turns on a distinction the stored verb cannot make: a reaction and a plain like are both stored as likes
   prop experienced_as, :atom, default: nil
+
   # the liked or boosted object, so the modal lists everyone who reacted to it rather than only the ones grouped on the current feed page
   prop object_id, :string, required: true
   prop trigger_text, :string, required: true

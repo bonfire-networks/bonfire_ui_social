@@ -30,7 +30,8 @@ defmodule Bonfire.UI.Social.WidgetTrendingDiscussionsTitleTest do
     choose(:school_yard)
   end
 
-  defp choose(preset_id), do: Process.put([:bonfire_common, Vocabulary, :top_discussions], preset_id)
+  defp choose(preset_id),
+    do: Process.put([:bonfire_common, Vocabulary, :top_discussions], preset_id)
 
   # the list is cached per user for an hour, so each visit that needs a fresh list is a user of its own
   defp new_user do
@@ -49,7 +50,8 @@ defmodule Bonfire.UI.Social.WidgetTrendingDiscussionsTitleTest do
   defp heading(doc), do: doc |> Floki.find(@heading) |> Floki.text() |> String.trim()
 
   # `LinkLive` turns its `label` into the link's aria-label
-  defp view_all_link(doc), do: Floki.find(doc, ~s(#{@widget} a[href$="/feed/trending_discussions"]))
+  defp view_all_link(doc),
+    do: Floki.find(doc, ~s(#{@widget} a[href$="/feed/trending_discussions"]))
 
   defp fake_discussion(me) do
     Bonfire.Posts.Fake.fake_post!(me, "public", %{
