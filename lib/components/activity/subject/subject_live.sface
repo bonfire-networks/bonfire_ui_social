@@ -8,6 +8,7 @@
     opts={[
       "data-id": "subject_avatar",
       "data-subject-id": @subject_id,
+      "data-hovercard-id": @hovercard_id,
       "data-view-transition-name": "avatar-#{@subject_id}"
     ]}
     parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_avatar", @parent_id)}
@@ -37,6 +38,7 @@
         opts={[
           "data-id": "subject_name",
           "data-subject-id": @subject_id,
+          "data-hovercard-id": @hovercard_id,
           "data-view-transition-name": "profile-#{@subject_id}",
           "aria-label": l("%{name}'s profile", name: @profile_name)
         ]}
@@ -64,6 +66,7 @@
         opts={[
           "data-id": "subject_username",
           "data-subject-id": @subject_id,
+          "data-hovercard-id": @hovercard_id,
           "data-view-transition-name": "profile-#{@subject_id}",
           "aria-label": l("%{name}'s profile", name: @profile_name)
         ]}

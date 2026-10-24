@@ -42,6 +42,9 @@ defmodule Bonfire.UI.Social.Activity.SubjectLive do
   prop extra_info, :any, default: nil
   prop replies_more_count, :integer, default: 0
 
+  @doc "The id for `data-hovercard-id` on the avatar, name and username links (the profile hover card), from `Bonfire.UI.Social.ActivityLive.hovercard_id/4`; `nil` renders no attribute"
+  prop hovercard_id, :string, default: nil
+
   def prepare_path(character_username, subject_id, user) do
     if character_username,
       do: "/@#{character_username}",

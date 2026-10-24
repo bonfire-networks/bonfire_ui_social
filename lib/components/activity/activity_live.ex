@@ -1090,7 +1090,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       data-reply-context={@reply_context?}
       tabIndex={if @custom_preview && @showing_within == :widget, do: nil, else: "0"}
       class={[
-        "activity focus-ring relative flex flex-col gap-3 touch-pan-y #{@class}",
+        "activity focus-ring relative flex flex-col gap-3 #{@class}",
         "cursor-pointer":
           (@showing_within not in [:thread, :thread_embed, :smart_input, :widget] ||
              (@showing_within == :widget && !is_nil(@custom_actions))) &&
@@ -1314,6 +1314,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   )}
                   subject_id={maybe_get(component_assigns, :subject_id, nil) ||
                     e(maybe_get(component_assigns, :activity, @activity), :subject_id, nil)}
+                  hovercard_id={hovercard_id(
+                    maybe_get(component_assigns, :subject_id, nil) ||
+                      e(maybe_get(component_assigns, :activity, @activity), :subject_id, nil),
+                    maybe_get(component_assigns, :activity, @activity),
+                    maybe_get(component_assigns, :object, @object),
+                    current_user_id(@__context__)
+                  )}
                   subjects_more={maybe_get(component_assigns, :subjects_more, [])}
                   replies_more_count={e(maybe_get(component_assigns, :activity, @activity), :replies_more_count, 0)}
                   subject_peered={case e(component_assigns, :character, nil) do
@@ -1581,6 +1588,29 @@ defmodule Bonfire.UI.Social.ActivityLive do
   #     (id(object) != nil and e(activity, :replied, :reply_to_id, nil) == nil and
   #        id(activity) == nil and showing_within != :search)
   # end
+
+  @doc "The byline's `data-hovercard-id`: `subject_id` when the loaded subject is a user other than the viewer, otherwise `nil`."
+  def hovercard_id(subject_id, activity, object, current_user_id)
+      when is_binary(subject_id) and subject_id != current_user_id do
+    # under a boost or like the byline shows the post's creator, not the actor
+    [
+      e(activity, :subject, nil),
+      e(object, :created, :creator, nil),
+      e(activity, :object, :created, :creator, nil)
+    ]
+    |> Enum.find(&(loaded_struct?(&1) and id(&1) == subject_id))
+    |> case do
+      nil -> nil
+      shown -> if Types.object_type(shown) == Bonfire.Data.Identity.User, do: subject_id
+    end
+  end
+
+  def hovercard_id(_subject_id, _activity, _object, _current_user_id), do: nil
+
+  # `Types.object_type/2` logs an error for associations that weren't loaded, as the viewer's own activities are
+  defp loaded_struct?(%Ecto.Association.NotLoaded{}), do: false
+  defp loaded_struct?(%{__struct__: _}), do: true
+  defp loaded_struct?(_), do: false
 
   # @decorate time()
   def component_activity_subject(
