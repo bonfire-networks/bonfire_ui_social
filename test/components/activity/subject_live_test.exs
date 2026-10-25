@@ -12,7 +12,10 @@ defmodule Bonfire.UI.Social.Activity.SubjectLiveTest do
   @viewer_id "01JBBBBBBBBBBBBBBBBBBBBBBB"
 
   test "hovercard_id: a post's creator shown under a boost or like gets a card" do
-    user = %Needle.Pointer{id: "01JAAAAAAAAAAAAAAAAAAAAAAA", table_id: "5EVSER1S0STENS1B1YHVMAN01D"}
+    user = %Needle.Pointer{
+      id: "01JAAAAAAAAAAAAAAAAAAAAAAA",
+      table_id: "5EVSER1S0STENS1B1YHVMAN01D"
+    }
 
     assert ActivityLive.hovercard_id(
              user.id,
@@ -23,7 +26,10 @@ defmodule Bonfire.UI.Social.Activity.SubjectLiveTest do
   end
 
   test "hovercard_id: a group subject gets no card" do
-    group = %Needle.Pointer{id: "01JDDDDDDDDDDDDDDDDDDDDDDD", table_id: "2AGSCANBECATEG0RY0RHASHTAG"}
+    group = %Needle.Pointer{
+      id: "01JDDDDDDDDDDDDDDDDDDDDDDD",
+      table_id: "2AGSCANBECATEG0RY0RHASHTAG"
+    }
 
     assert ActivityLive.hovercard_id(group.id, %{subject: group}, nil, @viewer_id) == nil
   end
@@ -96,15 +102,30 @@ defmodule Bonfire.UI.Social.Activity.SubjectLiveTest do
              ) == @them
 
       # a group boosts their post: the actor is the group, the byline shows them
-      assert ActivityLive.hovercard_id(@them, %{subject: group}, %{created: %{creator: them}}, @me) ==
+      assert ActivityLive.hovercard_id(
+               @them,
+               %{subject: group},
+               %{created: %{creator: them}},
+               @me
+             ) ==
                @them
 
       # someone boosts a group's post: the byline shows the group, which gets no card
-      assert ActivityLive.hovercard_id(@group, %{subject: other}, %{created: %{creator: group}}, @me) ==
+      assert ActivityLive.hovercard_id(
+               @group,
+               %{subject: other},
+               %{created: %{creator: group}},
+               @me
+             ) ==
                nil
 
       # my own post
-      assert ActivityLive.hovercard_id(@me, %{subject: %Needle.Pointer{id: @me, table_id: @user_table_id}}, nil, @me) ==
+      assert ActivityLive.hovercard_id(
+               @me,
+               %{subject: %Needle.Pointer{id: @me, table_id: @user_table_id}},
+               nil,
+               @me
+             ) ==
                nil
 
       # nothing loaded has the shown id: no card rather than a guess
