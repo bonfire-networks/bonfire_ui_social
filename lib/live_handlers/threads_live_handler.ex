@@ -816,6 +816,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     with {replies, assigns} when is_list(replies) and is_list(assigns) <-
            load_thread_assigns(socket) do
       thread_mode = e(assigns, :thread_mode, nil)
+      assigns = mark_loaded(assigns)
 
       if thread_mode != :flat and is_list(replies) and
            e(assigns, :reply_count, 0) > 0 do
@@ -852,6 +853,14 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         socket
         |> assign_error("Could not load comments")
         |> assign(loading: false)
+    end
+  end
+
+  # marked as loaded for its thread, as an async load is (`loaded_async`), so a later update of the same thread shows what is loaded rather than loading it again into the stream unreset (see `Bonfire.UI.Social.ThreadLive.update/2`)
+  defp mark_loaded(assigns) do
+    case e(assigns, :thread_id, nil) do
+      thread_id when is_binary(thread_id) -> Keyword.put(assigns, :loaded_async, thread_id)
+      _ -> assigns
     end
   end
 
@@ -1057,8 +1066,35 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     socket
     |> maybe_reset_reply_generation(opts)
     |> maybe_track_time_gaps(replies, opts)
+    |> track_placeholder_ids(replies, opts)
     |> maybe_stream_insert(:threaded_replies, replies, opts)
   end
+
+  # the posts shown as "not yet available" (`Threads.mark_placeholder_stubs/1`), so that when one arrives the thread is reloaded rather than inserted into (see `Bonfire.UI.Social.ThreadLive`)
+  defp track_placeholder_ids(socket, replies, opts) do
+    reset? = opts[:reset]
+
+    case placeholder_ids(replies) do
+      [] when not reset? ->
+        socket
+
+      ids ->
+        known = if reset?, do: [], else: e(assigns(socket), :placeholder_ids, nil) || []
+        assign_generic(socket, placeholder_ids: Enum.uniq(known ++ ids))
+    end
+  end
+
+  defp placeholder_ids(tree) when is_list(tree) do
+    Enum.flat_map(tree, fn
+      {comment, children} ->
+        if(e(comment, :fetch_url, nil), do: [id(comment)], else: []) ++ placeholder_ids(children)
+
+      _ ->
+        []
+    end)
+  end
+
+  defp placeholder_ids(_), do: []
 
   def insert_comments(socket, {:threaded_replies, replies, at}, opts) do
     insert_comments(socket, {:threaded_replies, replies}, opts ++ [at: at])

@@ -50,9 +50,28 @@
   </div> --}
   <div data-role="comment-activity" class="flex-1 w-full" x-data="{reply: false, show: true}">
     {#if is_nil(@activity)}
+      {!-- Stub for a post we know of but haven't fetched (`Threads.mark_placeholder_stubs/1`): the replies below answer it, and it can be fetched from where it lives --}
+      <div
+        :if={e(@comment, :stub, nil) && e(@comment, :fetch_url, nil)}
+        data-role="comment-not-fetched"
+        role="note"
+        class="mx-4 my-2 flex items-center gap-2 text-sm text-muted"
+      >
+        <span>{l("This federated comment is not yet available here.")}</span>
+        <button
+          type="button"
+          phx-click="Bonfire.Social.Feeds:fetch_thread"
+          phx-value-url={e(@comment, :fetch_url, nil)}
+          data-role="fetch-not-fetched"
+          class="btn btn-ghost btn-xs normal-case"
+        >
+          <#Icon iconify="ph:arrows-clockwise" class="size-4 shrink-0" aria-hidden="true" />
+          {l("Try loading it")}
+        </button>
+      </div>
       {!-- Stub from `Threads.rescue_orphaned_replies/1`: the parent of the replies below is deleted or boundary-hidden — the placeholder keeps the chain intact without leaking which of the two it is. --}
       <div
-        :if={e(@comment, :stub, nil)}
+        :if={e(@comment, :stub, nil) && !e(@comment, :fetch_url, nil)}
         data-role="comment-unavailable"
         role="note"
         class="mx-4 my-2 flex items-center gap-2 text-sm text-muted"

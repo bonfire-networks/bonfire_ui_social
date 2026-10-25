@@ -64,6 +64,9 @@ defmodule Bonfire.UI.Social.ThreadLive do
   data last_top_reply_date, :any, default: nil
   data reply_generation, :integer, default: 0
 
+  # posts shown as "not yet available" (see `LiveHandler.send_thread_updates/5`): when one arrives, the thread is reloaded rather than inserted into
+  data placeholder_ids, :list, default: []
+
   def mount(socket) do
     {
       :ok,
@@ -178,6 +181,18 @@ defmodule Bonfire.UI.Social.ThreadLive do
         insert = {:threaded_replies, [{new_reply, []}], 0}
 
         cond do
+          # it was on the page as "not yet available", with the replies to it under it, and may belong deeper in the thread, with a gap of its own above it: the thread is loaded again (resetting its stream), so everything shows where it now is
+          object_id in (e(assigns(socket), :placeholder_ids, nil) || []) ->
+            debug(
+              object_id,
+              "a post shown as not yet available has arrived, reloading the thread"
+            )
+
+            {:ok,
+             socket
+             |> bump_reply_count()
+             |> LiveHandler.load_thread_maybe_async(false, true)}
+
           reply_to_id == thread_id ->
             debug("top level reply")
 
