@@ -60,7 +60,7 @@
         <span>{l("This federated comment is not yet available here.")}</span>
         <button
           type="button"
-          phx-click="Bonfire.Social.Feeds:fetch_thread"
+          phx-click="Bonfire.Social.Threads:load_missing"
           phx-value-url={e(@comment, :fetch_url, nil)}
           data-role="fetch-not-fetched"
           class="btn btn-ghost btn-xs normal-case"

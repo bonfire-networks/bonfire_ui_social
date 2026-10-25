@@ -97,22 +97,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
      )}
   end
 
-  # a post we know of only by its URL, standing in its thread as a placeholder: fetched, which fills the placeholder (`Bonfire.Federate.ActivityPub.Incoming`)
-  def handle_event("fetch_thread", %{"url" => "http" <> _ = url}, socket) do
-    ActivityPub.Federator.Fetcher.maybe_fetch(url,
-      user_id: current_user_id(socket),
-      mode: :async,
-      triggered_by: "live_handler:fetch_placeholder"
-    )
-
-    {:noreply,
-     socket
-     |> assign_flash(
-       :info,
-       l("Syncing with remote server. Content will gradually appear in the thread..")
-     )}
-  end
-
   def handle_event("fetch_thread", params, socket) do
     ActivityPub.Federator.Fetcher.fetch_thread(
       [pointer: params["id"] || assigns(socket)[:post] || assigns(socket)[:object]],

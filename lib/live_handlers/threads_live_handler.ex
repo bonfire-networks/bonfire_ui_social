@@ -149,6 +149,22 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     live_more_stream(thread_id, input_to_atoms(attrs), socket)
   end
 
+  # a post shown as "not yet available" in its thread (`Threads.mark_placeholder_stubs/1`), known only by its URL: fetched, which fills its placeholder (`Bonfire.Federate.ActivityPub.Incoming`), and the open thread then shows it in its place (`Bonfire.UI.Social.ThreadLive`)
+  def handle_event("load_missing", %{"url" => "http" <> _ = url}, socket) do
+    ActivityPub.Federator.Fetcher.maybe_fetch(url,
+      user_id: current_user_id(socket),
+      mode: :async,
+      triggered_by: "live_handler:load_missing"
+    )
+
+    {:noreply,
+     socket
+     |> assign_flash(
+       :info,
+       l("Syncing with remote server. Content will gradually appear in the thread..")
+     )}
+  end
+
   def handle_event("reply", %{"id" => reply_to_id} = _params, socket) do
     activity = e(assigns(socket), :activity, %{})
     object_boundary = e(assigns(socket), :object_boundary, nil)
