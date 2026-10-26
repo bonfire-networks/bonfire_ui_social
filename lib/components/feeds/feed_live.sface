@@ -107,8 +107,9 @@
             </div>
           </div>
 
+          {!-- keyed on the component, not the feed name: LiveView keeps the children of a stream container whose id survives a patch, so a group and its topic (both `recent_discussions`) would show each other's posts --}
           <div
-            id={"feed_#{@feed_name || @feed_id || @id}"}
+            id={"#{@id}_stream"}
             data-id="feed_activity_list"
             phx-target={@myself}
             role="feed"
