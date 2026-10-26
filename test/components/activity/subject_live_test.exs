@@ -34,6 +34,40 @@ defmodule Bonfire.UI.Social.Activity.SubjectLiveTest do
     assert ActivityLive.hovercard_id(group.id, %{subject: group}, nil, @viewer_id) == nil
   end
 
+  describe "hovercard_user/2, the post's loaded user for the profile hover card" do
+    setup do
+      user = %Needle.Pointer{id: "01JAAAAAAAAAAAAAAAAAAAAAAA", table_id: "5EVSER1S0STENS1B1YHVMAN01D"}
+      booster = %Needle.Pointer{id: "01JCCCCCCCCCCCCCCCCCCCCCCC", table_id: "5EVSER1S0STENS1B1YHVMAN01D"}
+
+      {:ok, user: user, booster: booster}
+    end
+
+    defp post_assigns(activity, object, viewer_id \\ "01JBBBBBBBBBBBBBBBBBBBBBBB"),
+      do: %{activity: activity, object: object, __context__: %{current_user_id: viewer_id}}
+
+    test "the loaded actor", %{user: user} do
+      assert ActivityLive.hovercard_user(post_assigns(%{subject: user}, nil), user.id) == user
+    end
+
+    test "under a boost, the post's creator, not the booster", %{user: user, booster: booster} do
+      assigns = post_assigns(%{subject: booster}, %{created: %{creator: user}})
+
+      assert ActivityLive.hovercard_user(assigns, user.id) == user
+    end
+
+    test "nothing for the viewer, a group, or a user that wasn't loaded", %{user: user} do
+      group = %Needle.Pointer{id: "01JDDDDDDDDDDDDDDDDDDDDDDD", table_id: "2AGSCANBECATEG0RY0RHASHTAG"}
+
+      assert ActivityLive.hovercard_user(post_assigns(%{subject: user}, nil, user.id), user.id) == nil
+      assert ActivityLive.hovercard_user(post_assigns(%{subject: group}, nil), group.id) == nil
+
+      assert ActivityLive.hovercard_user(
+               post_assigns(%{subject: %Ecto.Association.NotLoaded{}}, nil),
+               user.id
+             ) == nil
+    end
+  end
+
   defp render_subject(overrides) do
     render_component(
       &SubjectLive.render/1,

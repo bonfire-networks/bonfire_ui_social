@@ -1590,8 +1590,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # end
 
   @doc "The byline's `data-hovercard-id`: `subject_id` when the loaded subject is a user other than the viewer, otherwise `nil`."
-  def hovercard_id(subject_id, activity, object, current_user_id)
-      when is_binary(subject_id) and subject_id != current_user_id do
+  def hovercard_id(subject_id, activity, object, current_user_id) do
+    if shown_user(subject_id, activity, object, current_user_id), do: subject_id
+  end
+
+  @doc "The user with `id` this post already loaded for its byline, for the profile hover card to show without a query; `nil` for the viewer, a group, or a user it didn't load."
+  def hovercard_user(assigns, id) do
+    shown_user(id, e(assigns, :activity, nil), e(assigns, :object, nil), current_user_id(assigns))
+  end
+
+  defp shown_user(subject_id, activity, object, current_user_id)
+       when is_binary(subject_id) and subject_id != current_user_id do
     # under a boost or like the byline shows the post's creator, not the actor
     [
       e(activity, :subject, nil),
@@ -1601,14 +1610,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
     |> Enum.find(&(loaded_struct?(&1) and id(&1) == subject_id))
     |> case do
       nil -> nil
-      shown -> if Types.object_type(shown) == Bonfire.Data.Identity.User, do: subject_id
+      shown -> if Types.object_type(shown) == Bonfire.Data.Identity.User, do: shown
     end
   end
 
-  def hovercard_id(_subject_id, _activity, _object, _current_user_id), do: nil
+  defp shown_user(_subject_id, _activity, _object, _current_user_id), do: nil
 
-  # `Types.object_type/2` logs an error for associations that weren't loaded, as the viewer's own activities are
-  defp loaded_struct?(%Ecto.Association.NotLoaded{}), do: false
+  # `e/3` already turns an unloaded association into nil; this skips that and other non-structs, which `Types.object_type/2` can't type
   defp loaded_struct?(%{__struct__: _}), do: true
   defp loaded_struct?(_), do: false
 
