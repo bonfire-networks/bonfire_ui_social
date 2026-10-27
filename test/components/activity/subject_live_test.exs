@@ -36,8 +36,15 @@ defmodule Bonfire.UI.Social.Activity.SubjectLiveTest do
 
   describe "hovercard_user/2, the post's loaded user for the profile hover card" do
     setup do
-      user = %Needle.Pointer{id: "01JAAAAAAAAAAAAAAAAAAAAAAA", table_id: "5EVSER1S0STENS1B1YHVMAN01D"}
-      booster = %Needle.Pointer{id: "01JCCCCCCCCCCCCCCCCCCCCCCC", table_id: "5EVSER1S0STENS1B1YHVMAN01D"}
+      user = %Needle.Pointer{
+        id: "01JAAAAAAAAAAAAAAAAAAAAAAA",
+        table_id: "5EVSER1S0STENS1B1YHVMAN01D"
+      }
+
+      booster = %Needle.Pointer{
+        id: "01JCCCCCCCCCCCCCCCCCCCCCCC",
+        table_id: "5EVSER1S0STENS1B1YHVMAN01D"
+      }
 
       {:ok, user: user, booster: booster}
     end
@@ -56,9 +63,14 @@ defmodule Bonfire.UI.Social.Activity.SubjectLiveTest do
     end
 
     test "nothing for the viewer, a group, or a user that wasn't loaded", %{user: user} do
-      group = %Needle.Pointer{id: "01JDDDDDDDDDDDDDDDDDDDDDDD", table_id: "2AGSCANBECATEG0RY0RHASHTAG"}
+      group = %Needle.Pointer{
+        id: "01JDDDDDDDDDDDDDDDDDDDDDDD",
+        table_id: "2AGSCANBECATEG0RY0RHASHTAG"
+      }
 
-      assert ActivityLive.hovercard_user(post_assigns(%{subject: user}, nil, user.id), user.id) == nil
+      assert ActivityLive.hovercard_user(post_assigns(%{subject: user}, nil, user.id), user.id) ==
+               nil
+
       assert ActivityLive.hovercard_user(post_assigns(%{subject: group}, nil), group.id) == nil
 
       assert ActivityLive.hovercard_user(
