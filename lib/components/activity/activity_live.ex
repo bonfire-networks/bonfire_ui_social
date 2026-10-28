@@ -2633,7 +2633,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
       end
 
     # Events are self-contained cards (location shown in-card), so skip nested previews that would otherwise duplicate the location as an empty box below:
-    nested = # if "Event" in types, do: [], else: 
+    # if "Event" in types, do: [], else: 
+    nested =
       nested_object_components(json)
 
     [
