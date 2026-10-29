@@ -52,6 +52,11 @@ defmodule Bonfire.UI.Social.FeedNavigation do
       Enum.find(slugs, &(to_string(&1) == "local")) || List.first(slugs)
   end
 
+  @doc "The user's saved default feed, resolved against `presets`."
+  def default_feed(presets, opts) do
+    resolve_default(presets, Settings.get([Bonfire.UI.Social.FeedLive, :default_feed], :my, opts))
+  end
+
   @doc """
   Builds a feed URL, encoding custom names as a single path segment.
 
