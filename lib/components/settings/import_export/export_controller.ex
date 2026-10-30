@@ -574,13 +574,12 @@ defmodule Bonfire.UI.Social.ExportController do
 
     all_memberships =
       Enum.flat_map(circles, fn circle ->
-        # list_members/2 already preloads subject.character.peered (for display_username locality)
-        members = Bonfire.Boundaries.Circles.list_members(circle, paginate: false)
+        members = Bonfire.Boundaries.Circles.list_member_users(circle)
 
         Enum.map(members, fn member ->
           %{
             circle: e(circle, :named, :name, nil) || "Unnamed Circle",
-            member: Bonfire.Me.Characters.display_username(e(member, :subject, nil), true)
+            member: Bonfire.Me.Characters.display_username(member, true)
           }
         end)
       end)
