@@ -53,6 +53,9 @@ defmodule Bonfire.UI.Social.SaveCustomFeedTest do
         |> wait_async()
         |> assert_has("#feed-description-title", text: name)
         |> assert_has("input[name='scope[boosts]']:not(:checked)")
+        # the open feed keeps its tab, so check from another feed
+        |> visit("/feed/local")
+        |> wait_async()
 
       session =
         if unquote(show_in_nav),

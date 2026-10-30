@@ -117,11 +117,18 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     |> assert_has("#feed-description", text: "Posts and conversations from people you follow.")
     |> refute_has("#feed-description dl")
     |> click_button("#feed-description-pin", "Show in feed tabs")
-    |> refute_has("#feed-tab-my")
     |> assert_has("#feed-description-pin[role=switch][aria-checked=false]",
       text: "Show in feed tabs"
     )
+    # the open feed keeps its tab, so check from another feed
+    |> visit("/feed/local")
+    |> wait_async()
+    |> refute_has("#feed-tab-my")
+    |> visit("/feed/my")
+    |> wait_async()
     |> click_button("#feed-description-pin", "Show in feed tabs")
+    |> visit("/feed/local")
+    |> wait_async()
     |> assert_has("#feed-tab-my")
     |> visit("/feed/my")
     |> wait_async()
@@ -154,9 +161,11 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     |> assert_has("#pin-feed-preset-my[aria-pressed=true]", text: "Unpin from feed tabs")
     |> click_button("#pin-feed-preset-my", "Unpin from feed tabs")
     |> assert_has("#pin-feed-preset-my[aria-pressed=false]", text: "Pin to feed tabs")
-    |> visit("/feed/my")
+    |> visit("/feed/local")
     |> wait_async()
     |> refute_has("#feed-tab-my")
+    |> visit("/feed/my")
+    |> wait_async()
     |> assert_has("#feed-description-pin[role=switch][aria-checked=false]",
       text: "Show in feed tabs"
     )
@@ -232,6 +241,8 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     |> wait_async()
     |> click_link("#sidebar-feeds-link", "Feeds")
     |> assert_path("/feed/sidebar_custom")
+    |> visit("/feed/local")
+    |> wait_async()
     |> refute_has("#feed-tab-sidebar_custom")
   end
 
