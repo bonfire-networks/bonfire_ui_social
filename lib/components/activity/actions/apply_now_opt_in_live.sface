@@ -1,5 +1,5 @@
 <Bonfire.UI.Common.OptInLive
-  :if={offered?(@group, @__context__)}
+  :if={offered?(@scope, @__context__)}
   name="apply_now"
   offer={offer()}
   what={what()}

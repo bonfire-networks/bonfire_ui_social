@@ -211,7 +211,7 @@
             <form phx-submit="Bonfire.Social.Flags:unpublish" phx-target={"##{@activity_component_id}"}>
               <input type="hidden" name="id" value={id(@object)}>
               <input type="hidden" name="context" value={id(@published_in) || @published_in}>
-              <Bonfire.UI.Social.ApplyNowOptInLive group={@published_in} />
+              <Bonfire.UI.Social.ApplyNowOptInLive scope={@published_in} />
               <button
                 type="submit"
                 data-role="remove_from_group_confirm"

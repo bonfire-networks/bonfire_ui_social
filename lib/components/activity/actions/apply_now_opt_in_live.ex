@@ -9,10 +9,10 @@ defmodule Bonfire.UI.Social.ApplyNowOptInLive do
   alias Bonfire.Social.Moderations
 
   @doc "The group the action is taken in"
-  prop group, :any, default: nil
+  prop scope, :any, default: nil
 
-  def offered?(group, context),
-    do: Moderations.moderating_elsewhere?(group, current_user(context))
+  def offered?(scope, context),
+    do: Moderations.moderating_elsewhere?(scope, current_user(context))
 
   def checked?, do: Moderations.apply_now?([])
 
