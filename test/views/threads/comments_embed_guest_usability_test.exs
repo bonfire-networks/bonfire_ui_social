@@ -165,18 +165,80 @@ defmodule Bonfire.UI.Social.CommentsEmbedGuestUsabilityTest do
     refute html =~ "/remote_interaction"
   end
 
-  test "empty state shows LOCAL sign-in even when auth_mode=remote (remote can't init a missing object)" do
-    uri = "https://blog.example.com/remote-still-local/"
+  test "empty state with auth_mode=remote offers a remote reply that starts the thread, as signing in does" do
+    allowlist("https://blog.example.com")
+    uri = "https://blog.example.com/remote-starts-it/"
 
     html =
       conn()
       |> static_get(uri, "&auth_mode=remote")
       |> html_response(200)
 
+    # loading the page creates nothing (no import author, no signed-in viewer)
+    assert {:error, :not_found} = Media.get_by_path(uri)
     assert html =~ "Be the first to comment"
+    # members can still sign in
     assert html =~ "embed_empty_signin"
-    assert html =~ "/login"
-    refute html =~ "/remote_interaction"
+
+    [_, href] =
+      Regex.run(~r/<a [^>]*id="embed_empty_remote_interaction"[^>]*href="([^"]+)"/s, html) ||
+        Regex.run(~r/<a [^>]*href="([^"]+)"[^>]*id="embed_empty_remote_interaction"/s, html)
+
+    params =
+      href |> String.replace("&amp;", "&") |> URI.parse() |> Map.get(:query) |> URI.decode_query()
+
+    assert href =~ "/remote_interaction"
+    assert params["media_uri"] == uri
+  end
+
+  test "a remote reply link from a page rendered before an import author was set creates the post and hands the visitor's instance its AP id" do
+    allowlist("https://blog.example.com")
+    uri = "https://blog.example.com/remote-flow/"
+
+    # the embed was rendered with no import author, so it showed the remote link but created nothing
+    assert static_get(conn(), uri, "&auth_mode=remote") |> html_response(200) =~
+             "embed_empty_remote_interaction"
+
+    assert {:error, :not_found} = Media.get_by_path(uri)
+
+    # the operator then configures an import author
+    author = fake_user!()
+    Process.put([:bonfire_ghost, :auto_import_as], author.id)
+
+    Tesla.Mock.mock_global(fn
+      %{url: "https://mastodon.local/.well-known/webfinger" <> _} ->
+        Tesla.Mock.json(%{
+          "subject" => "acct:visitor@mastodon.local",
+          "links" => [
+            %{
+              "rel" => "http://ostatus.org/schema/1.0/subscribe",
+              "template" => "https://mastodon.local/authorize_interaction?uri={uri}"
+            }
+          ]
+        })
+
+      %{url: "https://mastodon.local/" <> _} ->
+        %Tesla.Env{status: 404, body: ""}
+
+      _env ->
+        {:ok, %Tesla.Env{status: 200, body: "<html><head><title>A page</title></head></html>"}}
+    end)
+
+    # the visitor follows the remote link: the import author creates the post
+    {:ok, _view, html} =
+      live(conn(), "/remote_interaction?type=reply&media_uri=#{URI.encode_www_form(uri)}")
+
+    assert {:ok, media} = Media.get_by_path(uri)
+    assert {:ok, %{data: %{"id" => ap_id}}} = ActivityPub.Object.get_cached(pointer: media)
+    assert html =~ ~s(value="#{ap_id}")
+
+    # submitting their handle sends them to their own instance with the AP id, which it can fetch
+    conn =
+      post(conn(), "/pub/remote_interaction", %{
+        "outgoing" => %{"me" => "visitor@mastodon.local", "object" => ap_id, "type" => "reply"}
+      })
+
+    assert redirected_to(conn) == "https://mastodon.local/authorize_interaction?uri=#{ap_id}"
   end
 
   test "guest + configured import author + allowlisted host: anchor created on the static render" do

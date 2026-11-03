@@ -905,7 +905,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             activity_inception
           ),
         # of its media, only the one flagged as its primary image (a cover), whatever its type
-        else: {restricted_primary_image(activity, object), []}
+        else: {Bonfire.Social.RestrictedContent.preview(activity, object).primary_image, []}
 
     object_components =
       cond do
@@ -1024,7 +1024,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     ~F"""
     <div data-id="activity_not_visible">
       <StatelessComponent
-        :if={Bonfire.UI.Social.RestrictedContentLive.enabled?(@__context__)}
+        :if={Bonfire.Social.RestrictedContent.enabled?(@__context__)}
         module={maybe_component(Bonfire.UI.Social.RestrictedContentLive, @__context__)}
         object_id={@object_id}
       />
@@ -2723,12 +2723,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # defp primary_image_and_component_maybe_attachments(_, _activity, _object, _activity_inception), do: []
 
-  defp restricted_primary_image(activity, object) do
-    (e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
-       e(object, :media, nil))
-    |> Bonfire.Files.split_primary_image()
-    |> elem(0)
-  end
+  # `restricted_primary_image/2` moved to `Bonfire.Social.RestrictedContent.preview/2` on 2 November, shared with the API's statuses
 
   def do_primary_image_and_component_maybe_attachments(_id, files, object_type)
       when (is_list(files) and files != []) or is_map(files) do

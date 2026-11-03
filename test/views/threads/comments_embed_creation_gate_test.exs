@@ -2,7 +2,7 @@ defmodule Bonfire.UI.Social.CommentsEmbedCreationGateTest do
   @moduledoc """
   The generic `media_uri` branch creates a thread anchor on demand, unauthenticated, attributed to the instance's configured import author — which previously let anyone (a crawler, a curl, a forged iframe URL) mint public posts under that identity for arbitrary URIs.
 
-  Creation (unlike reading) is therefore gated (see `EmbedCommentsLive.maybe_create_anchor/3`): an anchor is created only for a URI whose host is allowlisted in `IFRAME_ALLOWED_ORIGINS` (host match, any scheme/port/path) AND when there is a creator (the configured import author, else the
+  Creation (unlike reading) is therefore gated (see `Bonfire.UI.Social.EmbedThreads.get_or_create/3`): an anchor is created only for a URI whose host is allowlisted in `IFRAME_ALLOWED_ORIGINS` (host match, any scheme/port/path) AND when there is a creator (the configured import author, else the
   signed-in viewer). The allowlist applies to everyone, with no signed-in bypass. Reading an existing thread needs neither the allowlist nor a creator.
   """
   use Bonfire.UI.Social.ConnCase, async: false

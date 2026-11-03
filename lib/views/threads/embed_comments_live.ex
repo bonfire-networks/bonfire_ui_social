@@ -42,7 +42,7 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
 
   A generic media thread is attributed to the instance's configured import author: the `auto_import_as` instance setting (`[:bonfire_ghost, :auto_import_as]`, set in the Ghost settings; read via `Bonfire.Ghost.auto_import_as/0`), else the signed-in viewer. The import author wins so an anchor isn't attributed to an incidental reader who merely opened the page; the viewer is the fallback so a blogger on an instance without a configured author can still start a thread by signing in. Either way the operator chooses the author in settings, not per-embed. Ghost articles are never created by this view: webhooks and the explicit historical backfill own imports, including their author, destination and audience.
 
-  Reading an existing thread is always allowed. A missing one is *created* (see `maybe_create_anchor/3`) only when there is a real account to attribute it to: the configured import author (`auto_import_as`), else the signed-in viewer. That import author is a genuine user the operator designates to stand in for imports (effectively a bot account, but a real one with its own boundaries and feeds), NOT a synthetic placeholder. What we never fall back to is an anonymous/placeholder subject, e.g. `Media.insert`'s `0AND0MSTRANGERS0FF1NTERNET` guests-circle sentinel: if no real account resolves, nothing is created and the empty state offers local sign-in so the blogger can sign in and start the discussion.
+  Reading an existing thread is always allowed. A missing one is *created* (see `Bonfire.UI.Social.EmbedThreads.get_or_create/3`) only when there is a real account to attribute it to: the configured import author (`auto_import_as`), else the signed-in viewer. That import author is a genuine user the operator designates to stand in for imports (effectively a bot account, but a real one with its own boundaries and feeds), NOT a synthetic placeholder. What we never fall back to is an anonymous/placeholder subject, e.g. `Media.insert`'s `0AND0MSTRANGERS0FF1NTERNET` guests-circle sentinel: if no real account resolves, nothing is created and the empty state offers local sign-in so the blogger can sign in and start the discussion.
 
   Creation also requires the URI's HOST to be one the operator allowlisted in `IFRAME_ALLOWED_ORIGINS` (host match via `Bonfire.UI.Common.EmbedOrigins.host_allowed?/1`; CSP-only values like `*` or `'self'` never qualify), or the embed to be a loopback dev preview (whose anchor is local-only anyway). This domain allowlist applies to everyone, with no bypass for signed-in viewers, so a blogger initializes a thread by signing in on their own (allowlisted) site.
 
@@ -87,6 +87,8 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
        # (a single button to the remote-interaction page, so guests can reply
        # from any fediverse server). Set via the `data-auth-mode` embed attr.
        auth_mode: e(params, "auth_mode", nil),
+       # set when the page's Media post doesn't exist yet: the remote-interaction page creates it
+       remote_reply_url: nil,
        participants: nil,
        sort_by: maybe_to_atom(e(params, "sort_by", nil)),
        sort_order: maybe_to_atom(e(params, "sort_order", nil)),
@@ -183,14 +185,40 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
 
     warn_ignored_params(params)
 
-    # read first, so displaying an existing thread needs no creator and no creation privileges.
-    # `get_by_url` matches the anchor by the media_uri whether it's the canonical `path` or a source url in `metadata.urls` (tracking params normalised away). TODO: cache result
-    case Bonfire.Files.Media.get_by_url(uri) do
+    # TODO: cache result
+    # the import author wins over the incidental signed-in viewer (the anchor stands in for the page)
+    case Bonfire.UI.Social.EmbedThreads.get_or_create(
+           uri,
+           params,
+           Bonfire.UI.Social.EmbedThreads.creator(current_user(socket))
+         ) do
       {:ok, %{id: id}} ->
         load_params(%{"id" => id}, nil, socket)
 
+      # no account to attribute to: don't create on page load; the empty state offers local sign-in, and a remote reply which creates it like signing in does
+      {:error, :no_creator} ->
+        {:noreply, assign(socket, :remote_reply_url, remote_reply_url(uri, socket))}
+
+      # a host that isn't allowlisted: nothing can be created, so only local sign-in is offered
+      {:error, :host_not_allowed} ->
+        {:noreply, socket}
+
       _ ->
-        maybe_create_anchor(uri, params, socket)
+        {:noreply, assign_error(socket, l("Could not make the discussion ready for commenting."))}
+    end
+  end
+
+  defp remote_reply_url(uri, socket) do
+    if assigns(socket)[:auth_mode] == "remote" and
+         maybe_apply(Bonfire.Federate.ActivityPub, :federating?, [], fallback_return: false) ==
+           true do
+      Bonfire.Common.URIs.base_url() <>
+        "/remote_interaction?" <>
+        URI.encode_query(
+          type: "reply",
+          media_uri: uri,
+          go: e(assigns(socket), :__context__, :go, nil) || uri
+        )
     end
   end
 
@@ -214,99 +242,6 @@ defmodule Bonfire.UI.Social.EmbedCommentsLive do
         )
     end
   end
-
-  # Create an anchor only when both hold, as described in the moduledoc: a real account to attribute
-  # it to, and an operator-approved domain.
-  defp maybe_create_anchor(uri, params, socket) do
-    # the import author wins over the incidental signed-in viewer (the anchor stands in for the page)
-    creator = embed_anchor_creator(socket)
-
-    cond do
-      # no account to attribute to (no configured import author and no signed-in viewer): don't create; the empty state offers local sign-in to init
-      is_nil(creator) ->
-        {:noreply, socket}
-
-      # the domain must be operator-allowlisted (for everyone, no bypass), unless a loopback preview on a dev/test instance
-      not (loopback_preview_allowed?(params) or
-               Bonfire.UI.Common.EmbedOrigins.host_allowed?(uri)) ->
-        warn(
-          uri,
-          "Not creating a thread anchor: the URI's host is not allowlisted in IFRAME_ALLOWED_ORIGINS"
-        )
-
-        {:noreply, socket}
-
-      true ->
-        case Bonfire.Files.Media.get_or_add_media_by_uri(
-               creator,
-               uri,
-               # a preview loaded from a localhost/loopback page is kept local-only so dev
-               # testing can't publish public/federated content
-               embed_boundary(params),
-               nil,
-               # backdate the anchor to the article's publication date (if given & in the past), so
-               # importing an old article doesn't jump to the top of feeds
-               update_existing: false,
-               id: embed_published_id(params)
-             ) do
-          {:ok, %{id: id}} ->
-            load_params(%{"id" => id}, nil, socket)
-
-          other ->
-            error(other, "Could not resolve media_uri to a thread")
-
-            {:noreply,
-             assign_error(socket, l("Could not make the discussion ready for commenting."))}
-        end
-    end
-  end
-
-  # server-decided: the configured import author wins, else the signed-in viewer
-  def embed_anchor_creator(socket) do
-    configured_import_author() || current_user(socket)
-  end
-
-  defp configured_import_author do
-    maybe_apply(Bonfire.Ghost, :auto_import_as, [], fallback_return: nil) ||
-      Config.get([:bonfire_ghost, :auto_import_as], nil)
-  end
-
-  # the boundary to give an anchor CREATED by this embed: local-only when the embedding page is a
-  # localhost/loopback origin (dev preview), so testing can't publish public/federated content
-  defp embed_boundary(params), do: if(loopback_origin?(params), do: "local", else: "public")
-
-  # a backdated id from the `published_at` param (nil when absent, unparseable, or in the future —
-  # `generate_ulid_if_past/1` only ever moves a post EARLIER), so importing an old article doesn't
-  # surface as freshly posted
-  defp embed_published_id(params) do
-    case e(params, "published_at", nil) do
-      date when is_binary(date) and date != "" ->
-        Bonfire.Common.DatesTimes.generate_ulid_if_past(date)
-
-      _ ->
-        nil
-    end
-  end
-
-  # `embed_parent` is supplied by the client, so anyone can claim a loopback page: only skip the allowlisted domains for one on a dev/test instance (it's still created local-only, see `embed_boundary/1`)
-  defp loopback_preview_allowed?(params) do
-    Config.get([:bonfire_ui_social, :embed_loopback_previews], Config.env() in [:dev, :test]) and
-      loopback_origin?(params)
-  end
-
-  # is the embedding page (or the media URI it points at) served from a loopback host?
-  defp loopback_origin?(params) do
-    loopback_host?(e(params, "embed_parent", nil) || e(params, "media_uri", nil))
-  end
-
-  defp loopback_host?(url) when is_binary(url) do
-    case URI.parse(url).host do
-      nil -> false
-      host -> host in ~w(localhost 0.0.0.0 ::1 [::1]) or String.starts_with?(host, "127.")
-    end
-  end
-
-  defp loopback_host?(_), do: false
 
   defp handle_ghost_params(slug_or_id, params, _url, socket) do
     socket = assign_global(socket, :go, e(params, "embed_parent", nil))

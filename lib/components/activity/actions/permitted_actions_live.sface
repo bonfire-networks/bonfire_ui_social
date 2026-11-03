@@ -116,7 +116,7 @@
             object={@thread_id}
             is_local_user
             type={:lock}
-            group={@published_in}
+            scope={@published_in}
             parent_id={@id}
             with_icon
             class="flex items-center gap-3 w-full text-sm text-base-content"

@@ -31,51 +31,7 @@ defmodule Bonfire.UI.Social.RestrictedContentLive do
   @doc "For the card: of its media, only the one flagged as its primary image (a cover), shown as an article's is"
   prop primary_image, :any, default: nil
 
-  def render(assigns) do
-    assigns
-    |> assign(
-      :rc_settings,
-      Settings.get(
-        [__MODULE__],
-        nil,
-        Settings.LiveHandler.scoped(:instance, assigns[:__context__])
-      )
-    )
-    |> render_sface()
-  end
+  def render(assigns), do: render_sface(assigns)
 
-  @doc """
-  Whether to show this screen instead of the standard permission error (also
-  checked by `Bonfire.Social.Objects.LiveHandler.not_found_fallback/3`).
-
-  Opt-in: only an explicit `modularity: true` (or `:enabled`) turns it on —
-  unset means off, unlike the usual modularity semantics. A boot-time default
-  would be clobbered by/clobber flavour config (extension `RuntimeConfig`s run
-  after compile-time config), so no default is written anywhere.
-  """
-  def enabled?(context \\ nil) do
-    Settings.get(
-      [__MODULE__, :modularity],
-      nil,
-      Settings.LiveHandler.scoped(:instance, context)
-    )
-    |> Bonfire.Common.Extend.enabled_value?()
-  end
-
-  @doc """
-  Why it isn't shown, in either size: the instance's configured title when it has enabled the screen (eg. "Upgrade to read"), else the group that keeps it to its members, else plainly. No noun for the object, which is shown around it, and whose gender would change the sentence in many languages.
-  """
-  def title(settings, published_in, context) do
-    (enabled?(context) && get_setting(settings, :title, nil)) ||
-      case e(published_in, :profile, :name, nil) do
-        nil -> l("You can't read this")
-        group -> l("Only members of %{group} can read this", group: group)
-      end
-  end
-
-  @doc "Read one of the configured copy fields, treating unset or empty values as `default`"
-  def get_setting(settings, key, default) do
-    e(settings, key, nil)
-    |> e(default)
-  end
+  # its wording is the instance's, read through `Bonfire.Social.RestrictedContent` (`why_not_shown/2`, `call_to_action/1`, `setting/3`, `enabled?/1`, moved there from here on 2 November), so the API's statuses say the same as this card
 end
