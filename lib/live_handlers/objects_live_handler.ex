@@ -497,9 +497,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
                 # only show the restricted-content screen when the object actually
                 # exists (the type may also come from a `?type=` param or a stale
                 # cache, e.g. for deleted objects)
-                Bonfire.UI.Social.RestrictedContentLive.enabled?(
-                  e(assigns(socket), :__context__, nil)
-                ) and
+                Bonfire.Social.RestrictedContent.enabled?(e(assigns(socket), :__context__, nil)) and
                     match?(
                       {:ok, _},
                       Bonfire.Common.Needles.one(uid, skip_boundary_check: true)

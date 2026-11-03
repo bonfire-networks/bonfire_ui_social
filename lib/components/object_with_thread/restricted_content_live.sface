@@ -19,15 +19,14 @@
       </div>
     {#match _}
   {/case}
-  {#case e(@object, :post_content, :name, nil) || e(@object, :name, nil)}
-    {#match nil}
-    {#match name}
-      <div data-role="name" class="translatable text-sm my-1 mt-2">{rich(name)}</div>
-  {/case}
-  {#case e(@object, :post_content, :summary, nil) || e(@object, :summary, nil)}
-    {#match nil}
-    {#match summary}
-      <div data-role="summary" class="translatable prose max-w-prose prose-p:pt-1">{rich(summary)}</div>
+  {#case Bonfire.Social.RestrictedContent.preview(nil, @object)}
+    {#match preview}
+      {#if preview.name}
+        <div data-role="name" class="translatable text-sm my-1 mt-2">{rich(preview.name)}</div>
+      {/if}
+      {#if preview.summary}
+        <div data-role="summary" class="translatable prose max-w-prose prose-p:pt-1">{rich(preview.summary)}</div>
+      {/if}
   {/case}
 
   <div
@@ -48,42 +47,47 @@
       />
     </div>
     <span class={"mt-4 type-heading text-base-content": @viewing_main_object}>
-      {title(@rc_settings, @published_in, @__context__)}
+      {Bonfire.Social.RestrictedContent.why_not_shown(@published_in, @__context__)}
     </span>
   </div>
 
   {#if @viewing_main_object}
     <p class="mt-1 text-sm text-muted max-w-prose">
-      {get_setting(@rc_settings, :message, l("It was shared with a limited audience."))}
+      {Bonfire.Social.RestrictedContent.setting(
+        :message,
+        l("It was shared with a limited audience."),
+        @__context__
+      )}
     </p>
 
-    {#if get_setting(@rc_settings, :cta_url, nil) || is_nil(current_user_id(@__context__))}
-      <div class="flex flex-wrap items-center justify-center gap-3 mt-6">
-        {#case get_setting(@rc_settings, :cta_url, nil)}
-          {#match nil}
-          {#match cta_url}
-            <a
-              href={cta_url}
-              target={e(@__context__, :link_target, nil) || "_top"}
-              rel={if e(@__context__, :link_target, nil) == "_blank", do: "noopener"}
-              class="btn btn-primary"
-              data-role="restricted_content_cta"
-            >
-              {get_setting(@rc_settings, :cta_label, l("Find out more"))}
-            </a>
-        {/case}
+    {#case Bonfire.Social.RestrictedContent.call_to_action(@__context__)}
+      {#match cta}
+        {#if cta || is_nil(current_user_id(@__context__))}
+          <div class="flex flex-wrap items-center justify-center gap-3 mt-6">
+            {#if cta}
+              <a
+                href={cta.url}
+                target={e(@__context__, :link_target, nil) || "_top"}
+                rel={if e(@__context__, :link_target, nil) == "_blank", do: "noopener"}
+                class="btn btn-primary"
+                data-role="restricted_content_cta"
+              >
+                {cta.label}
+              </a>
+            {/if}
 
-        {#if is_nil(current_user_id(@__context__))}
-          <LinkLive
-            to={path(:login, :index)}
-            class="btn btn-outline"
-            opts={"data-role": "restricted_login"}
-          >
-            {l("Sign in")}
-          </LinkLive>
+            {#if is_nil(current_user_id(@__context__))}
+              <LinkLive
+                to={path(:login, :index)}
+                class="btn btn-outline"
+                opts={"data-role": "restricted_login"}
+              >
+                {l("Sign in")}
+              </LinkLive>
+            {/if}
+          </div>
         {/if}
-      </div>
-    {/if}
+    {/case}
 
     {#if is_nil(current_user_id(@__context__))}
       {#case @object_id &&

@@ -148,6 +148,50 @@ defmodule Bonfire.UI.Social.CommentsEmbedGuestReplyTest do
     end
   end
 
+  describe "the remote-interaction link of a page-anchored thread carries its ActivityPub id" do
+    setup do
+      Tesla.Mock.mock_global(fn _env ->
+        {:ok, %Tesla.Env{status: 200, body: "<html><head><title>A page</title></head></html>"}}
+      end)
+
+      System.put_env("IFRAME_ALLOWED_ORIGINS", "https://blog.example.com")
+      on_exit(fn -> System.delete_env("IFRAME_ALLOWED_ORIGINS") end)
+
+      :ok
+    end
+
+    test "not the embedding page's URL, which the visitor's instance cannot fetch", %{user: user} do
+      Process.put([:bonfire_ghost, :auto_import_as], user.id)
+      page = "https://blog.example.com/ap-id-thread/"
+
+      # the real path: a guest load of the embed creates the Media post for the page
+      get(conn(), "/comments/embed?media_uri=#{URI.encode_www_form(page)}") |> html_response(200)
+      assert {:ok, media} = Bonfire.Files.Media.get_by_path(page)
+      assert {:ok, %{data: %{"id" => ap_id}}} = ActivityPub.Object.get_cached(pointer: media)
+
+      {:ok, view, _html} = live(conn(), "/comments/embed/#{media.id}?auth_mode=remote")
+
+      params = remote_link_params(render(view))
+
+      assert params["url"] == ap_id,
+             "the visitor's instance is handed #{inspect(params["url"])}, expected the AP id #{ap_id}"
+
+      refute params["url"] == page
+    end
+  end
+
+  # query params of the guest composer's remote-interaction link
+  defp remote_link_params(html) do
+    [tag] = Regex.run(~r/<a [^>]*id="inline_composer_remote_interaction_[^"]*"[^>]*>/s, html)
+    [_, href] = Regex.run(~r/href="([^"]+)"/, tag)
+
+    href
+    |> String.replace("&amp;", "&")
+    |> URI.parse()
+    |> Map.get(:query, "")
+    |> URI.decode_query()
+  end
+
   describe "reply_to_activity uses the pushed id, not nil LiveView assigns" do
     test "guest Reply in the embed resolves the object → remote interaction, not /login",
          %{root: root, reply: reply} do

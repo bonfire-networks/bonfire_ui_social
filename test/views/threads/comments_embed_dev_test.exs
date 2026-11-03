@@ -17,7 +17,7 @@ defmodule Bonfire.UI.Social.CommentsEmbedDevTest do
 
     bot = fake_user!()
     # configured embed import author, so the anchor can be created without a signed-in viewer
-    # (`embed_anchor_creator/1` falls back to `Bonfire.Ghost.auto_import_as/0`)
+    # (`Bonfire.UI.Social.EmbedThreads.creator/1` falls back to `Bonfire.Ghost.auto_import_as/0`)
     Process.put([:bonfire_ghost, :auto_import_as], bot.id)
 
     {:ok, bot: bot}
