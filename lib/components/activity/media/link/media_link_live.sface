@@ -2,7 +2,9 @@
   id={deterministic_dom_id("media_link", id(@media), @showing_within, @parent_id)}
   prompt_external_links={@showing_within == :flags}
 >
-  <div class={@css_borders || "rounded-box border-hair border-divider overflow-hidden"}>
+  {!-- overflow-hidden always: the flush cover and the hover fill are clipped by the card's
+       corners, also when MediaLive passes its own css_borders --}
+  <div class={[@css_borders || "rounded-box border-hair border-divider", "overflow-hidden"]}>
     <LinkLive
       opts={"data-id": "media_link"}
       to={if !@download_url, do: @media_url || @preview_img}
@@ -12,7 +14,7 @@
         "flex-col items-center": is_binary(@preview_img) and !@small_icon and !@activity_inception,
         "flex-row": @small_icon or @activity_inception,
         # every non-column layout (rows + favicon) keeps the thumbnail↔text gap; the column
-        # gets its rhythm from the inset image's mt-card + the content's p-card instead
+        # gets its rhythm from the flush cover + the content's p-card instead
         "gap-3": @small_icon or @activity_inception or !is_binary(@preview_img)
       }
       target="_blank"
@@ -33,12 +35,12 @@
           {#else}
             <div
               data-id="media_img"
-              class="flex relative items-center self-stretch rounded-box border-hair border-divider overflow-hidden shrink-0 bg-placeholder aspect-[1.91/1] place-content-center bg-no-repeat bg-cover"
+              class="flex relative items-center self-stretch overflow-hidden shrink-0 bg-placeholder aspect-[1.91/1] place-content-center bg-no-repeat bg-cover"
             >
               <div class="w-full h-full">
                 <LazyImage
                   parent_id={deterministic_dom_id(__MODULE__, id(@media), "icon", @parent_id)}
-                  class="object-cover rounded-box cursor-pointer m-image w-full h-full"
+                  class="object-cover cursor-pointer m-image w-full h-full"
                   fallback_class="size-8 text-muted"
                   src={@preview_img}
                   media={@media}
