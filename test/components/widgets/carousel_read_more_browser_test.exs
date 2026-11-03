@@ -80,7 +80,11 @@ defmodule Bonfire.UI.Social.CarouselReadMoreBrowserTest do
       |> Browser.assert_has(Query.css(card_b))
       |> assert_state(card_b, &(&1["maxHeight"] == @default_cap), "control: default cap")
       |> click_in_view(Query.css(card_a <> " [data-role=carousel_card_expand]"))
-      |> assert_state(card_a, &(&1["expanded"] and &1["height"] > 352), "A expanded past the default cap")
+      |> assert_state(
+        card_a,
+        &(&1["expanded"] and &1["height"] > 352),
+        "A expanded past the default cap"
+      )
 
     # A keeps growing for a moment (its text unclamps, its image loads), and the cap follows, so each poll measures A afresh
     session
