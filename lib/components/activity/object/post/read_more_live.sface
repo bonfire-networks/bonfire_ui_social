@@ -1,3 +1,4 @@
+{!-- The Read more and Read less buttons are now part of `Bonfire.UI.Common.TruncatableLive`, which clamps a post's body as well as bios and group descriptions, so nothing renders this component any more.
 <div
   id={deterministic_dom_id(
     __MODULE__,
@@ -29,3 +30,4 @@
     style="display: none;"
   >{l("Read less")}</button>
 </div>
+--}

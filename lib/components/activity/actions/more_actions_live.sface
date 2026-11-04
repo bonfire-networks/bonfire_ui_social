@@ -30,8 +30,7 @@
       type="button"
       phx-hook="Copy"
       id={deterministic_dom_id(__MODULE__, id(@activity), "more_action_copy_url", @parent_id)}
-      data-clipboard-text={URIs.canonical_url(@permalink, preload_if_needed: false) ||
-        URIs.canonical_url(@object, preload_if_needed: false)}
+      data-clipboard-text={URIs.canonical_url(@object) || URIs.canonical_url(@permalink)}
       class="flex items-center gap-3 text-sm text-base-content w-full"
     >
       <#Icon iconify="ph:copy-fill" class="size-4 shrink-0 text-muted" />
