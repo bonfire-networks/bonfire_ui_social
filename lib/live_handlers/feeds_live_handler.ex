@@ -843,6 +843,16 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       )
       |> debug("start by setting feed_default_assigns + feed_filter_assigns")
 
+    # Feed ids a caller passes, in its filters or as `runtime_filters`, were worked out by the page for its reader: they scope the query through `runtime_filters` only, and are taken out of the feed's own filters, so a saved feed can't keep them
+    caller_feed_ids =
+      Enum.uniq(
+        extract_feed_ids(filters_or_custom_query_or_feed_id_or_ids) ++
+          extract_feed_ids(e(assigns(socket), :runtime_filters, nil))
+      )
+
+    filters_or_custom_query_or_feed_id_or_ids =
+      without_feed_ids(filters_or_custom_query_or_feed_id_or_ids)
+
     # when custom filters are passed, they are what the query will use — don't let the
     # preset-default feed_filters from feed_default_assigns overwrite them on the component
     # while the async load is in flight (it would make the customize-feed widget flash stale
@@ -859,16 +869,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # Preserve caller-provided feed_ids when a preset name is also passed,
     # and alias the component under those feed_ids so `send_feed_updates`
     # (which dispatches off feed_ids broadcast by LivePush) can find it.
-    caller_feed_ids = extract_feed_ids(filters_or_custom_query_or_feed_id_or_ids)
-    assigns = merge_caller_feed_ids(assigns, caller_feed_ids)
-
-    if caller_feed_ids != [] and assigns[:feed_component_id] do
-      ComponentID.register_alias(
-        Bonfire.UI.Social.FeedLive,
-        caller_feed_ids,
-        assigns[:feed_component_id]
-      )
-    end
+    assigns = merge_caller_feed_ids(assigns, caller_feed_ids, socket)
+    register_feed_ids_alias(caller_feed_ids, assigns[:feed_component_id])
 
     feed_assigns_maybe_async_load(
       {feed_name, filters_or_custom_query_or_feed_id_or_ids},
@@ -884,17 +886,38 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     |> Enum.filter(&is_binary/1)
   end
 
-  defp merge_caller_feed_ids(assigns, []), do: assigns
+  defp without_feed_ids(%{__struct__: _} = filters), do: Map.put(filters, :feed_ids, nil)
+  defp without_feed_ids(%{} = filters), do: Map.drop(filters, [:feed_ids, "feed_ids"])
+  defp without_feed_ids(other), do: other
 
-  defp merge_caller_feed_ids(assigns, caller_feed_ids) do
-    merged_filters =
-      (assigns[:feed_filters] || %{})
+  defp register_feed_ids_alias([_ | _] = feed_ids, component_id) when not is_nil(component_id),
+    do: ComponentID.register_alias(Bonfire.UI.Social.FeedLive, feed_ids, component_id)
+
+  defp register_feed_ids_alias(_feed_ids, _component_id), do: nil
+
+  defp merge_caller_feed_ids(assigns, [], _socket), do: assigns
+
+  # defp merge_caller_feed_ids(assigns, caller_feed_ids) do
+  #   merged_filters =
+  #     (assigns[:feed_filters] || %{})
+  #     |> Map.put(:feed_ids, caller_feed_ids)
+  #
+  #   assigns
+  #   |> Keyword.put(:feed_ids, caller_feed_ids)
+  #   |> Keyword.put(:feed_id, List.first(caller_feed_ids))
+  #   |> Keyword.put(:feed_filters, merged_filters)
+  # end
+  # replaced: the ids go in `runtime_filters`, not `feed_filters`, so saving a feed can't keep them
+  defp merge_caller_feed_ids(assigns, caller_feed_ids, socket) do
+    runtime_filters =
+      (e(assigns(socket), :runtime_filters, nil) || %{})
+      |> Map.new()
       |> Map.put(:feed_ids, caller_feed_ids)
 
     assigns
     |> Keyword.put(:feed_ids, caller_feed_ids)
     |> Keyword.put(:feed_id, List.first(caller_feed_ids))
-    |> Keyword.put(:feed_filters, merged_filters)
+    |> Keyword.put(:runtime_filters, runtime_filters)
   end
 
   def feed_assigns_maybe_async(feed_name, socket, show_loader, reset_stream) do
@@ -911,6 +934,11 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         feed_load_ref: new_feed_load_ref()
       )
       |> debug("start by setting feed_default_assigns")
+
+    # a caller's runtime feed ids are also the feed this component shows (eg. a group's outbox, which tells an activity it is already in its group) and the feeds whose live updates it gets, as when they come in the filters
+    runtime_feed_ids = extract_feed_ids(e(assigns(socket), :runtime_filters, nil))
+    assigns = merge_caller_feed_ids(assigns, runtime_feed_ids, socket)
+    register_feed_ids_alias(runtime_feed_ids, assigns[:feed_component_id])
 
     feed_assigns_maybe_async_load(
       {feed_name, assigns[:feed_ids] || assigns[:feed_id]},
@@ -1198,6 +1226,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     base_opts =
       to_options(socket)
       |> maybe_surface_enable_marker(assigns)
+      # the runtime filters this load worked out, which the socket doesn't hold yet
+      |> then(fn opts ->
+        if assigns[:runtime_filters],
+          do: Keyword.put(opts, :runtime_filters, assigns[:runtime_filters]),
+          else: opts
+      end)
 
     # |> debug("ooopts")
     user_connected = user_socket_connected?(socket)
@@ -1336,7 +1370,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         e(assigns, :feed_filters, nil) || e(assigns(socket), :feed_filters, %{}),
         feed_filters_only(feed_name_id_or_tuple)
       ),
-      socket
+      if(assigns[:runtime_filters],
+        do: Keyword.put(to_options(socket), :runtime_filters, assigns[:runtime_filters]),
+        else: socket
+      )
     )
   end
 
@@ -1704,16 +1741,24 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  @doc "Compares two filter values ignoring atom-vs-string, list order, and the empty representations (nil/false/0/[])."
+  @doc "Compares two filter values ignoring atom-vs-string, list order, and the empty representations (nil/false/0/[]). A struct or map (eg. the reader's user, which a preset's `parameterized` filters put in `subjects`) compares by its id."
   def filter_value_matches?(a, b), do: normalize_filter_value(a) == normalize_filter_value(b)
 
   defp normalize_filter_value(value) do
     case value do
       empty when empty in [nil, false, 0, []] -> []
-      list when is_list(list) -> list |> Enum.map(&to_string/1) |> Enum.sort()
-      other -> [to_string(other)]
+      # list when is_list(list) -> list |> Enum.map(&to_string/1) |> Enum.sort()
+      # other -> [to_string(other)]
+      # replaced: `to_string` raises on a struct, eg. a parameterized `subjects: [%User{}]`
+      list when is_list(list) -> list |> Enum.map(&normalize_filter_item/1) |> Enum.sort()
+      other -> [normalize_filter_item(other)]
     end
   end
+
+  defp normalize_filter_item(item) when is_map(item),
+    do: to_string(Enums.id(item) || inspect(item))
+
+  defp normalize_filter_item(item), do: to_string(item)
 
   defp client_reading_position(opts, feed_name) when is_binary(feed_name) do
     positions =

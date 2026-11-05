@@ -93,4 +93,94 @@ defmodule Bonfire.UI.Social.Feeds.LikesFeed.Test do
     |> assert_has("[data-id=object_body]", text: alice_post_content)
     |> refute_has("[data-id=object_body]", text: bob_post_content)
   end
+
+  describe "filters on Likes" do
+    # a tagged post I liked, a plain post I liked, a tagged post someone else liked, and a tagged post nobody liked: the hashtag filter acts on the liked post, and Likes on who liked it
+    setup %{me: me, alice: alice, bob: bob} do
+      tagged =
+        Bonfire.Posts.Fake.fake_post!(alice, "public", %{
+          post_content: %{html_body: "about #noctilucent clouds"}
+        })
+
+      plain =
+        Bonfire.Posts.Fake.fake_post!(alice, "public", %{
+          post_content: %{html_body: "a plain post I liked"}
+        })
+
+      bobs =
+        Bonfire.Posts.Fake.fake_post!(bob, "public", %{
+          post_content: %{html_body: "another #noctilucent post"}
+        })
+
+      Bonfire.Posts.Fake.fake_post!(alice, "public", %{
+        post_content: %{html_body: "unliked #noctilucent post"}
+      })
+
+      {:ok, _} = Likes.like(me, tagged.id)
+      {:ok, _} = Likes.like(me, plain.id)
+      {:ok, _} = Likes.like(bob, bobs.id)
+
+      :ok
+    end
+
+    defp filter_by_noctilucent(session) do
+      session
+      |> click_button("[data-role=open_modal]", "More filters")
+      |> fill_in("Hashtags", with: "noctilucent")
+      |> click_button("Apply filters")
+      |> wait_async()
+    end
+
+    defp refute_other_likes(session) do
+      session
+      |> refute_has("[data-id=object_body]", text: "a plain post I liked")
+      |> refute_has("[data-id=object_body]", text: "another #noctilucent post")
+      |> refute_has("[data-id=object_body]", text: "unliked #noctilucent post")
+    end
+
+    test "Likes shows the feed controls, without activity type, people, Replies or Boosts", %{
+      conn: conn
+    } do
+      conn
+      |> visit("/feed/likes")
+      |> wait_async()
+      |> assert_has("[data-role=feed_advanced_filters]")
+      |> refute_has("input[name='scope[replies]']")
+      |> refute_has("input[name='scope[boosts]']")
+      |> click_button("[data-role=open_modal]", "More filters")
+      |> assert_has("[data-row=hashtags]")
+      |> refute_has("[data-row=activity_types]")
+      |> refute_has("[data-row=hide_own]")
+      |> refute_has("[data-row=from_people]")
+      |> refute_has("[data-row=not_people]")
+    end
+
+    test "a hashtag narrows Likes to my liked posts with it", %{conn: conn} do
+      conn
+      |> visit("/feed/likes")
+      |> wait_async()
+      |> filter_by_noctilucent()
+      |> assert_has("[data-id=object_body]", text: "about #noctilucent clouds")
+      |> refute_other_likes()
+    end
+
+    test "a feed saved from a filtered Likes reopens with only my likes with that tag", %{
+      conn: conn
+    } do
+      name = "saved-likes-" <> to_string(System.unique_integer([:positive]))
+
+      conn
+      |> visit("/feed/likes")
+      |> wait_async()
+      |> filter_by_noctilucent()
+      |> fill_in("Feed title", with: name)
+      |> click_button("Save feed")
+      |> visit("/settings/user/feeds")
+      |> visit(Bonfire.UI.Social.FeedNavigation.build_path(name))
+      |> wait_async()
+      |> assert_has("#feed-description-title", text: name)
+      |> assert_has("[data-id=object_body]", text: "about #noctilucent clouds")
+      |> refute_other_likes()
+    end
+  end
 end

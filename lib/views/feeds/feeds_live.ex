@@ -379,7 +379,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
     {preferences, details_feed} =
       case Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, assigns(socket)) do
-        {:ok, _preset} when feed_name != :curated ->
+        {:ok, preset} when feed_name != :curated ->
           preferences =
             if socket.assigns.hide_filters do
               []
@@ -391,7 +391,11 @@ defmodule Bonfire.UI.Social.FeedsLive do
                    event_target: "##{socket.assigns.feed_component_id}",
                    feed_id: socket.assigns.feed_id,
                    feed_name: feed_name,
-                   feed_filters: socket.assigns.feed_filters
+                   feed_filters: socket.assigns.feed_filters,
+                   # only filters carry over to a saved feed, so a feed with its own base query can't be saved
+                   can_save: is_nil(e(preset, :base_query_fun, nil)),
+                   # the controls the preset leaves out, eg. those that would empty it
+                   hide_filters: List.wrap(e(preset, :assigns, :hidden_filter_controls, nil))
                  ]}
               ]
             end

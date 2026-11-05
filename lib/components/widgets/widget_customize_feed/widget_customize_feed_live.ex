@@ -14,8 +14,12 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   prop feed_name, :any, default: nil
   prop showing_within, :atom, default: nil
   prop feed_filters, :any, default: nil
-  @doc "Keys of the content controls (`override_rows/2`) not to show, eg. `[:group_activity]` on a feed that is only group activities, as `FeedExtraControlsLive`'s `hide_filters` does for its own"
+
+  @doc "Keys of the controls not to show: the content switches (`override_rows/2`), eg. `[:group_activity]` on a feed that is only group activities, as `FeedExtraControlsLive`'s `hide_filters` does for its own, and the sections of the \"More filters\" editor (`FeedFiltersModalContentLive.sections/0`), eg. `:activity_types`. A key that is neither is ignored"
   prop hide_filters, :list, default: []
+
+  @doc "Whether the feed can be saved as a custom feed: false for a preset with its own query (`base_query_fun`), as only filters carry over to a saved feed"
+  prop can_save, :boolean, default: true
 
   data initial_preferences, :any, default: nil
   data default_preferences, :any, default: nil

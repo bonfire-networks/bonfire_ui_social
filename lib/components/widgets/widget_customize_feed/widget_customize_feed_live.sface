@@ -62,7 +62,7 @@
              line and only its expanded editor (`basis-full`) wraps onto a full-width line below; an opened
              save form takes the full width the same way. --}
         <div
-          :if={current_user(@__context__) && @default_preferences &&
+          :if={@can_save && current_user(@__context__) && @default_preferences &&
             preferences_changed?(@feed_filters, @default_preferences)}
           class="min-w-0 has-[details[open]]:basis-full"
         >
@@ -73,12 +73,13 @@
             summary_class="-ml-2 flex min-h-11 cursor-pointer items-center whitespace-nowrap rounded-selector px-2 text-sm font-medium text-primary transition-colors duration-150 ease-out hover:bg-primary/5 motion-reduce:transition-none focus-ring"
           />
         </div>
+        {!-- was `expander_wrapper_class="basis-full"`: as a flex item the editor's minimum width defaulted to its content's widest unbreakable line (a long type label beside its Only/Include/Hide control), so it grew wider than the sidebar, which clipped its right side and the Apply button. `min-w-0` holds it to the sidebar's width, as the save form beside it already does. --}
         <Bonfire.UI.Common.OpenExpanderLive
           parent_id={"feed_filters_#{@feed_name}"}
           modal_assigns={Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}
           open_modal_wrapper_class="contents"
           open_btn_wrapper_class="!w-auto ml-auto -mr-2 block rounded-selector focus-ring"
-          expander_wrapper_class="basis-full"
+          expander_wrapper_class="basis-full min-w-0"
           open_btn_class="flex min-h-11 cursor-pointer items-center whitespace-nowrap rounded-selector px-2 text-sm text-muted transition-colors duration-150 ease-out hover:bg-fill hover:text-base-content motion-reduce:transition-none"
           caret_class="hidden"
         >
@@ -91,7 +92,8 @@
               id={"feed_preferences_details_#{@feed_name}"}
               module={Bonfire.UI.Social.FeedFiltersModalContentLive}
               show_reset={false}
-              sections={Bonfire.UI.Social.FeedFiltersModalContentLive.sections() -- [:sort_order, :save_preset]}
+              sections={(Bonfire.UI.Social.FeedFiltersModalContentLive.sections() -- [:sort_order, :save_preset]) --
+                @hide_filters}
               {...Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}
             />
           </:default>

@@ -5,17 +5,18 @@
   )}
   {#match state}
     {!-- quiet tri-state row: the control shows the state, the label stays plain --}
+    {!-- was `class="flex items-center justify-between gap-3 min-h-10"` on the row and no `ml-auto` on the control: in a narrow column the control could not move, so it overflowed. Now it wraps under its label, kept to the right. --}
     <div
       data-toggle={@key}
       data-state={state}
-      class="flex items-center justify-between gap-3 min-h-10"
+      class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 min-h-10"
     >
       <span class="text-sm text-base-content truncate">{@label}</span>
 
       <div
         role="radiogroup"
         aria-label={l("Filter mode for %{label}", label: @label)}
-        class="inline-flex items-center rounded-full bg-base-content/[0.06] p-0.5 text-sm font-medium shrink-0"
+        class="ml-auto inline-flex items-center rounded-full bg-base-content/[0.06] p-0.5 text-sm font-medium shrink-0"
       >
         <button
           type="button"

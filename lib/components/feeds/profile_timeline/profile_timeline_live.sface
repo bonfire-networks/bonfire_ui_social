@@ -26,6 +26,7 @@
       feed_id={@feed_id}
       subject_user={@user}
       feed_filters={@feed_filters}
+      runtime_filters={@runtime_filters}
       page_title={@page_title}
       feed={@feed}
       page_info={@page_info}

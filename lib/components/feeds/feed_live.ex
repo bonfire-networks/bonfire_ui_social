@@ -70,6 +70,9 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop activity_class, :string, default: nil
   prop feed_filters, :any, default: nil
 
+  @doc "Filters the page worked out for its reader (eg. the outboxes of the groups they joined): they scope the query, through the socket's assigns (`to_options/1`) on every load, but stay out of `feed_filters`, so saving the feed can't keep them"
+  prop runtime_filters, :any, default: nil
+
   # keep flags in the feed (they're left out by default), for a page only moderators reach, eg. a group's moderation page. Reaches the loader as an option through the socket's assigns (`to_options/1`), on every page load; never a feed filter, which a request could set
   prop include_flags, :any, default: nil
 
@@ -599,6 +602,7 @@ defmodule Bonfire.UI.Social.FeedLive do
       )
     else
       case e(assigns(socket), :feed_ids, nil) |> Enums.filter_empty(nil) ||
+             e(assigns(socket), :runtime_filters, :feed_ids, nil) |> Enums.filter_empty(nil) ||
              e(assigns(socket), :feed_filters, :feed_ids, nil) |> Enums.filter_empty(nil) ||
              e(assigns(socket), :feed_id, nil) do
         nil ->
