@@ -14,6 +14,8 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   prop feed_name, :any, default: nil
   prop showing_within, :atom, default: nil
   prop feed_filters, :any, default: nil
+  @doc "Keys of the content controls (`override_rows/2`) not to show, eg. `[:group_activity]` on a feed that is only group activities, as `FeedExtraControlsLive`'s `hide_filters` does for its own"
+  prop hide_filters, :list, default: []
 
   data initial_preferences, :any, default: nil
   data default_preferences, :any, default: nil
@@ -141,8 +143,10 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
     end
   end
 
-  @doc "Common content inclusion controls, independent of ordering and source."
-  def override_rows(feed_filters) do
+  @doc "Common content inclusion controls, independent of ordering and source, less the keys in `hide_filters`."
+  def override_rows(feed_filters, hide_filters \\ []) do
+    hidden = Enum.map(List.wrap(hide_filters), &to_string/1)
+
     [
       %{
         key: :replies,
@@ -160,6 +164,7 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
         on: group_activities_included?(feed_filters)
       }
     ]
+    |> Enum.reject(&(to_string(&1.key) in hidden))
   end
 
   # spellings under which a group/category subject-type exclusion may be stored

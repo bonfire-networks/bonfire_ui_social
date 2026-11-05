@@ -5,17 +5,16 @@ defmodule Bonfire.UI.Social.FeedsSettingsLive do
 
   prop scope, :atom, default: nil
   data presets, :list, default: []
+  data available, :list, default: []
 
   @doc "Renders feed defaults and permitted built-in and custom preset settings."
   def render(assigns) do
-    scoped = Bonfire.Common.Settings.LiveHandler.scoped(assigns[:scope], assigns[:__context__])
-
     if assigns[:scope] == :instance and
          Bonfire.Boundaries.can?(assigns[:__context__], :configure, :instance) != true do
       raise Bonfire.Fail, :unauthorized
     else
+      # loaded once, for the default feed select and the list of pins
       available = FeedNavigation.list_presets(current_user: current_user(assigns))
-      preferred = Settings.get([Bonfire.UI.Social.FeedLive, :default_feed], :my, scoped)
 
       presets =
         available
@@ -29,7 +28,7 @@ defmodule Bonfire.UI.Social.FeedsSettingsLive do
       assigns
       |> assign(
         presets: presets,
-        default_feed: FeedNavigation.resolve_default(available, preferred),
+        available: available,
         default_feed_form: Phoenix.Component.to_form(%{})
       )
       |> render_sface()

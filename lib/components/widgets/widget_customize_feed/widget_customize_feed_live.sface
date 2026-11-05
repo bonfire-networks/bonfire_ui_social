@@ -49,7 +49,7 @@
           form_class="flex flex-col gap-0"
           row_class="min-h-11 -mx-2 rounded-selector px-2 transition-colors duration-150 ease-out hover:bg-fill active:bg-fill-strong"
           name_class="text-sm font-normal text-muted"
-          rows={Bonfire.UI.Social.WidgetCustomizeFeedLive.override_rows(@feed_filters)}
+          rows={Bonfire.UI.Social.WidgetCustomizeFeedLive.override_rows(@feed_filters, @hide_filters)}
           field_prefix="scope"
           toggle_role="feed_override_toggle"
         />
