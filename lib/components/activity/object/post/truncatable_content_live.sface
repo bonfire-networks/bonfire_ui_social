@@ -1,13 +1,12 @@
-<div
-  :hook
+{!-- the clamp, its hook and the Read more buttons are shared with bios and group descriptions; the post's own body sets the clamp class, so it is shown whole on its own page --}
+<Bonfire.UI.Common.TruncatableLive
   id={deterministic_dom_id(
     __MODULE__,
     id(@activity) || id(@object) || "no-id",
     "truncation_detector",
     @parent_id
   )}
-  data-showing-within={@showing_within}
-  data-viewing-main-object={@viewing_main_object}
+  read_more={@showing_within not in [:smart_input, :pinned]}
 >
   <Bonfire.UI.Social.Activity.HtmlBodyLive
     html_body={@html_body}
@@ -19,13 +18,4 @@
     viewing_main_object={@viewing_main_object}
     activity_inception={@activity_inception}
   />
-
-  <Bonfire.UI.Social.Activity.ReadMoreLive
-    :if={@showing_within not in [:smart_input, :pinned]}
-    activity={@activity}
-    object={@object}
-    parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
-    showing_within={@showing_within}
-    viewing_main_object={@viewing_main_object}
-  />
-</div>
+</Bonfire.UI.Common.TruncatableLive>

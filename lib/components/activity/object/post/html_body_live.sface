@@ -8,6 +8,7 @@
   data-ref={deterministic_dom_id(__MODULE__, id(@activity) || id(@object) || "no-id", "note_ref", @parent_id)}
   data-id="object_body"
   data-role="html_body"
+  data-truncatable
   data-inception={@activity_inception}
   data-rendered={@showing_within}
   data-main-object={@viewing_main_object}
@@ -29,6 +30,8 @@
     # remote content is stored in HTML, but local content may contain markdown and/or HTML
     skip_markdown: @is_remote,
     #  we want to sanitize rather than escape HTML in local content
-    sanitize: !@is_remote
+    sanitize: !@is_remote,
+    # a last line of only hashtags stays tagged but isn't shown (remote content gets this when it arrives)
+    hide_trailing_hashtags: true
   )}
 </div>

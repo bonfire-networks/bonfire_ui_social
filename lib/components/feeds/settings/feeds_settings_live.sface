@@ -11,16 +11,9 @@
         class="p-5"
         phx-change="Bonfire.Common.Settings:set"
       >
-        <Bonfire.UI.Common.SettingsSelectLive
-          stacked
-          keys={[Bonfire.UI.Social.FeedLive, :default_feed]}
+        <Bonfire.UI.Social.DefaultFeedSelectLive
+          presets={@available}
           id="default-feed-select"
-          current_value={@default_feed}
-          label_name={l("Default feed")}
-          name={l("Default feed")}
-          description={l("Choose which feed opens when you click Feeds in the sidebar.")}
-          options={Enum.map(@presets, fn preset -> {preset.id, FeedNavigation.get_name(preset, preset.id)} end)}
-          default_value={:my}
           scope={@scope}
         />
       </.form>

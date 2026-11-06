@@ -510,7 +510,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
             ),
           inherit_sensitive:
             e(reply_to, :sensitive, :is_sensitive, nil) ||
-              e(activity, :sensitive, :is_sensitive, nil) || false
+              e(activity, :sensitive, :is_sensitive, nil) || false,
+          # a reply in the thread of a group or topic marked sensitive opens with "sensitive" on, as the group's own composer does, and the author can turn it off
+          show_sensitive: Bonfire.Social.Objects.any_sensitive?(published_in)
         ],
         to_boundaries: [
           if(create_object_type != :message,

@@ -3,6 +3,18 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
 
   @moduletag :ui
 
+  # the default feed always keeps its tab, Following included when no default was chosen, so tests that unpin Following make Local the default first
+  defp user_with_local_default do
+    user = fake_user!()
+
+    {:ok, %{__context__: %{current_user: user}}} =
+      Bonfire.Common.Settings.put([Bonfire.UI.Social.FeedLive, :default_feed], :local,
+        current_user: user
+      )
+
+    user
+  end
+
   test "feed details set a default without allowing it to be unset" do
     conn(user: fake_user!())
     |> visit("/feed/my")
@@ -110,7 +122,7 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
   end
 
   test "feed details can unpin and repin the current feed" do
-    conn(user: fake_user!())
+    conn(user: user_with_local_default())
     |> visit("/feed/my")
     |> wait_async()
     |> assert_has("#feed-description-title", text: "Following")
@@ -156,7 +168,7 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
       false
     )
 
-    conn(user: fake_user!())
+    conn(user: user_with_local_default())
     |> visit("/settings/user/feeds")
     |> assert_has("#pin-feed-preset-my[aria-pressed=true]", text: "Unpin from feed tabs")
     |> click_button("#pin-feed-preset-my", "Unpin from feed tabs")
@@ -221,11 +233,25 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     user = fake_user!()
     name = Faker.Lorem.sentence()
 
-    assert {:ok, _} =
+    # keep the user the put returns, as settings are preloaded on it and the next put would drop this preset
+    assert {:ok, %{__context__: %{current_user: user}}} =
              Bonfire.Common.Settings.put(
                [:bonfire_social, Bonfire.Social.Feeds, :feed_presets, :sidebar_custom],
                %{
                  name: name,
+                 icon: "ph:rss-simple-fill",
+                 exclude_from_nav: true,
+                 filters: %{feed_name: :local}
+               },
+               current_user: user
+             )
+
+    # a second hidden preset, not the default, which stays out of the tabs
+    assert {:ok, _} =
+             Bonfire.Common.Settings.put(
+               [:bonfire_social, Bonfire.Social.Feeds, :feed_presets, :sidebar_hidden],
+               %{
+                 name: Faker.Lorem.sentence(),
                  icon: "ph:rss-simple-fill",
                  exclude_from_nav: true,
                  filters: %{feed_name: :local}
@@ -243,7 +269,10 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     |> assert_path("/feed/sidebar_custom")
     |> visit("/feed/local")
     |> wait_async()
-    |> refute_has("#feed-tab-sidebar_custom")
+    |> assert_has("#feed-tab-local[aria-current='page']")
+    # the default feed keeps its tab on every tab bar, even when hidden from the tabs
+    |> assert_has("a#feed-tab-sidebar_custom[href='/feed/sidebar_custom']", text: name)
+    |> refute_has("#feed-tab-sidebar_hidden")
   end
 
   test "a removed default falls back to Following" do

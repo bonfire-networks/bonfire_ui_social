@@ -30,10 +30,18 @@ defmodule Bonfire.UI.Social.Routes do
         get("/post/markdown/:id", MarkdownController, :download_markdown)
 
         live("/discussion/:id", DiscussionLive, as: Needle.Pointer)
+
+        # never matched (the line above is), but gives a message's path, `path(message)`, so a message is read in its discussion. A route takes one `as:`, and the line above keeps `Needle.Pointer`, the fallback for types without a route of their own
+        live("/discussion/:id", DiscussionLive, as: Bonfire.Data.Social.Message)
         live("/discussion/as/:id", DiscussionLive, as: Bonfire.Data.Social.APActivity)
         live("/discussion/:type/:id", DiscussionLive, as: Needle.Pointer)
         live("/discussion/:id/reply/:reply_id", DiscussionLive, as: Needle.Pointer)
+        live("/discussion/:id/reply/:reply_id", DiscussionLive, as: Bonfire.Data.Social.Message)
         live("/discussion/:id/reply/:level/:reply_id", DiscussionLive, as: Needle.Pointer)
+
+        live("/discussion/:id/reply/:level/:reply_id", DiscussionLive,
+          as: Bonfire.Data.Social.Message
+        )
 
         live("/discuss/:id", DiscussionLive, as: Bonfire.Data.Social.PostContent)
       end

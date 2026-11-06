@@ -149,12 +149,14 @@ defmodule Bonfire.UI.Social.MoreActionsPermitted.Test do
       |> assert_has("[data-role=label]", text: "Copy link")
     end
 
-    test "Copy link button wires up the clipboard hook with the post URL", %{conn: conn, me: me} do
+    test "Copy link button wires up the clipboard hook with the post's ActivityPub id", %{
+      conn: conn,
+      me: me
+    } do
       post = publish!(me, "feed post for copy link wiring")
 
-      permalink =
-        "/post/#{post.id}"
-        |> Bonfire.Common.URIs.canonical_url(preload_if_needed: false)
+      # a local post's id here, which opens its page in a browser
+      permalink = Bonfire.Common.URIs.base_url() <> "/pub/objects/#{post.id}"
 
       conn
       |> visit("/feed/local")
@@ -163,6 +165,22 @@ defmodule Bonfire.UI.Social.MoreActionsPermitted.Test do
       # <a href=...> the click just navigates away (issue #1951).
       |> assert_has(
         ~s(button[phx-hook="Copy"][data-clipboard-text="#{permalink}"]),
+        text: "Copy link"
+      )
+    end
+
+    test "Copy link on a remote post copies its address on the server it came from", %{
+      conn: conn
+    } do
+      {post, _} = Bonfire.Social.Fake.create_test_content(:remote, nil, nil)
+      # the positive first: the post has a remote address to copy
+      assert "https://example.local/post/1" =
+               Bonfire.Common.URIs.canonical_url(post, preload_if_needed: true)
+
+      conn
+      |> visit("/feed/remote")
+      |> assert_has(
+        ~s(button[phx-hook="Copy"][data-clipboard-text="https://example.local/post/1"]),
         text: "Copy link"
       )
     end

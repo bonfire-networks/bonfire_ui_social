@@ -14,6 +14,9 @@ defmodule Bonfire.UI.Social.ProfileTimelineLive do
   prop user, :map, default: %{}
   prop feed, :list, default: nil
   prop feed_filters, :any, default: nil
+
+  @doc "Passed on to `FeedLive`: filters the page worked out (eg. a group's outboxes), kept out of `feed_filters`"
+  prop runtime_filters, :any, default: nil
   prop page_info, :any, default: nil
   prop permalink, :string, default: nil
   prop showing_within, :atom, default: nil
