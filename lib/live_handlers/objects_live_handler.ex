@@ -523,7 +523,9 @@ defmodule Bonfire.Social.Objects.LiveHandler do
                             thing,
                             repo().maybe_preload(
                               restricted_object,
-                              [:peered, character: [:peered]], prune: true),
+                              [:peered, character: [:peered]],
+                              prune: true
+                            ),
                             socket
                           )
                       )

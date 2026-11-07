@@ -93,7 +93,9 @@ defmodule Bonfire.UI.Social.RestrictedContentLiveTest do
           "mentions",
           %{
             post_content: %{html_body: "<p>for other servers to read</p>"}
-          }, to_circles: %{Bonfire.Boundaries.Circles.get_id!(:activity_pub) => "read"})
+          },
+          to_circles: %{Bonfire.Boundaries.Circles.get_id!(:activity_pub) => "read"}
+        )
 
       # the positive first: other servers may read it, visitors here may not
       assert Bonfire.Boundaries.can?(:activity_pub, :read, post)
