@@ -206,6 +206,8 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       # )
       |> Bonfire.Social.Feeds.LiveHandler.preload_activity_and_object_assocs([:object],
         current_user: current_user,
+        # keyword matches are shown as a placeholder when `ActivityLive` renders it (`Bonfire.Social.Feeds.LiveHandler.put_hide_content/2`), not rewritten in the data
+        skip_keyword_filter: true,
         # TODO: use same logic as feeds preloads?
         preload:
           Bonfire.Social.Feeds.LiveHandler.feed_extra_preloads_list(

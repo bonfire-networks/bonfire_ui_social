@@ -153,6 +153,8 @@
                       hide_activity={@hide_activities}
                       subject_user={@subject_user}
                       activity_preloads={@activity_preloads}
+                      check_object_boundary={@check_object_boundary}
+                      show_restricted={@show_restricted}
                     />
                 {/case}
               </div>

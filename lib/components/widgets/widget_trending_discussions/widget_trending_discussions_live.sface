@@ -43,6 +43,8 @@
                       activity={fp.activity}
                       class="flex-1 spotlight_activity"
                       showing_within={:widget}
+                      check_object_boundary={current_user_id(@__context__) && [:see, :read]}
+                      show_restricted={false}
                       custom_actions={Bonfire.UI.Social.Activity.DiscussionPreviewActionsLive}
                     />
                   </div>

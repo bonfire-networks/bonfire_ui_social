@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.FeedBlockKeywordsReplyPreviewTest do
   @moduledoc """
-  A post matching one of the viewer's filtered keywords is not shown anywhere in the feed, including as the inline preview of the post a reply answers.
+  A post matching one of the viewer's filtered keywords shows as "[Content blocked by filters]" wherever the feed shows it, including as the inline preview of the post a reply answers.
 
   The keywords are stored in the viewer's settings row, as in production.
   """
@@ -61,6 +61,7 @@ defmodule Bonfire.UI.Social.FeedBlockKeywordsReplyPreviewTest do
     |> visit("/feed/local")
     |> wait_async()
     |> assert_has("[data-id=feed]", text: "A reply to it")
+    |> assert_has("[id*=reply_to_activity]", text: "[Content blocked by filters]")
     |> refute_has("[data-id=feed]", text: @spam)
   end
 end

@@ -10,6 +10,7 @@ defmodule Bonfire.UI.Social.WidgetTrendingDomIdsTest do
 
     account = fake_account!()
     me = fake_user!(account)
+    reset_trending_discussions_cache(me)
 
     post =
       Bonfire.Posts.Fake.fake_post!(me, "public", %{

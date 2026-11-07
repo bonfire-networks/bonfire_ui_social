@@ -90,6 +90,9 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop cute_gif, :any, default: nil
   prop custom_preview, :any, default: nil
   prop custom_actions, :any, default: nil
+  @doc "Passed on to each `ActivityLive`, eg. by a widget showing a cached feed"
+  prop check_object_boundary, :any, default: false
+  prop show_restricted, :boolean, default: true
 
   slot bottom_or_empty_feed
 

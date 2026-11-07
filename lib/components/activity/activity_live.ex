@@ -52,7 +52,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
   prop object_boundary, :any, default: :skip_boundary_preload
   prop cw, :any, default: nil
   prop emoji, :any, default: nil
-  prop check_object_boundary, :boolean, default: false
+
+  @doc "Re-check the viewer may see this card, in one batch with the other cards (`Bonfire.Boundaries.LiveHandler.maybe_check_boundaries/2`): `true` for `:read`, or the list of verbs to check, eg. `[:see, :read]` for a widget showing cached content, so authors the viewer silenced are dropped."
+  prop check_object_boundary, :any, default: false
+
+  @doc "When the viewer may not see this card, show the restricted content placeholder (if enabled), or `false` to render nothing (an empty `hidden` root), eg. in a widget."
+  prop show_restricted, :boolean, default: true
   prop is_remote, :any, default: nil
   prop show_minimal_subject_and_note, :any, default: false
   prop hide_activity, :any, default: nil
@@ -895,22 +900,45 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # one the viewer may find but not read shows its name and summary, never its body or media, whatever its type. Fails closed: the caller says when they may (`can_read?/2`)
     can_read? = opts[:can_read] == true
 
+    # its text matches the viewer's filtered keywords (`object_boundary.hide_content`): a placeholder, with nothing of its title, content warning, text, hashtags or media
+    hide_content? = opts[:hide_content] == true
+
     {primary_image, attachments_component} =
-      if can_read?,
-        do:
+      cond do
+        hide_content? ->
+          {nil, []}
+
+        can_read? ->
           primary_image_and_component_maybe_attachments(
             object_type,
             activity,
             object,
             activity_inception
-          ),
+          )
+
         # of its media, only the one flagged as its primary image (a cover), whatever its type
-        else: {Bonfire.Social.RestrictedContent.preview(activity, object).primary_image, []}
+        true ->
+          {Bonfire.Social.RestrictedContent.preview(activity, object).primary_image, []}
+      end
 
     object_components =
       cond do
         experience == :quote_request ->
           []
+
+        hide_content? ->
+          [
+            {Bonfire.UI.Social.Activity.NoteLive,
+             %{
+               object:
+                 Map.put(object || %{}, :post_content, %Bonfire.Data.Social.PostContent{
+                   html_body: l("[Content blocked by filters]")
+                 }),
+               cw: false,
+               # translating loads the post itself
+               translatable: false
+             }}
+          ]
 
         not can_read? ->
           [
@@ -925,7 +953,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # Show CW button at activity level when NoteLive isn't in the component list
     # (e.g., media-only posts with no text body)
     cw_fallback =
-      if can_read? and !!opts[:cw] and
+      if can_read? and not hide_content? and !!opts[:cw] and
            not Enum.any?(object_components, fn
              {Bonfire.UI.Social.Activity.NoteLive, _} -> true
              Bonfire.UI.Social.Activity.NoteLive -> true
@@ -972,7 +1000,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
          else: attachments_component
        ) ++
        component_maybe_quote_post(activity_component_id, quotes, opts[:cw]) ++
-       component_maybe_hashtags_footer(opts[:hashtags]) ++
+       component_maybe_hashtags_footer(if(not hide_content?, do: opts[:hashtags])) ++
        component_maybe_activity_name(activity) ++
        component_actions(
          experience,
@@ -1022,9 +1050,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   def render(%{object_boundary: :not_visible} = assigns) do
     ~F"""
-    <div data-id="activity_not_visible">
+    <div data-id="activity_not_visible" hidden={@show_restricted == false}>
       <StatelessComponent
-        :if={Bonfire.Social.RestrictedContent.enabled?(@__context__)}
+        :if={@show_restricted != false and Bonfire.Social.RestrictedContent.enabled?(@__context__)}
         module={maybe_component(Bonfire.UI.Social.RestrictedContentLive, @__context__)}
         object_id={@object_id}
       />
@@ -1263,6 +1291,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 current_user_context: @__context__,
                 cw: @cw,
                 hashtags: @hashtags,
+                hide_content: e(@object_boundary, :hide_content, nil) == true,
                 can_read:
                   can_read?(@__context__, @object_boundary) or
                     moderating_flag?(@__context__, @experienced_as, @showing_within)
@@ -1375,10 +1404,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   activity={maybe_get(component_assigns, :activity, @activity)}
                   object={maybe_get(component_assigns, :object, @object)}
                   viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
-                  cw={@cw}
+                  cw={maybe_get(component_assigns, :cw, @cw)}
                   thread_title={@thread_title}
                   is_remote={@is_remote}
                   hide_actions={@hide_actions}
+                  translatable={maybe_get(component_assigns, :translatable, true)}
                 />
               {#match _
                 when component in [
@@ -1509,6 +1539,39 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   object_type_name={@object_type_readable}
                   primary_image={maybe_get(component_assigns, :primary_image, nil)}
                   published_in={@published_in}
+                />
+              {#match Bonfire.UI.Social.ActivityLive}
+                {!-- a nested preview (a quoted post, the post replied to) is its own card: it loads its own boundary and keyword verdict in `update_many`, not its parent's --}
+                <StatefulComponent
+                  :if={@hide_activity != "dynamic"}
+                  module={component}
+                  id={maybe_get(component_assigns, :id, nil)}
+                  activity_component_id={maybe_get(component_assigns, :id, nil)}
+                  activity_inception={maybe_get(component_assigns, :activity_inception, @activity_inception)}
+                  showing_within={maybe_get(component_assigns, :showing_within, @showing_within)}
+                  thread_mode={@thread_mode}
+                  activity={maybe_get(component_assigns, :activity, @activity)}
+                  object={maybe_get(component_assigns, :object, @object)}
+                  object_id={maybe_get(component_assigns, :object_id, @object_id)}
+                  object_type={maybe_get(component_assigns, :object_type, @object_type)}
+                  object_type_readable={maybe_get(component_assigns, :object_type_readable, @object_type_readable)}
+                  date_ago={maybe_get(component_assigns, :date_ago, @date_ago)}
+                  verb={maybe_get(component_assigns, :verb, @verb)}
+                  experienced_as={maybe_get(component_assigns, :experienced_as, @experienced_as)}
+                  permalink={maybe_get(component_assigns, :permalink, @permalink)}
+                  thread_url={maybe_get(component_assigns, :thread_url, @thread_url)}
+                  thread_id={maybe_get(component_assigns, :thread_id, @thread_id)}
+                  thread_level={maybe_get(component_assigns, :thread_level, @thread_level)}
+                  viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
+                  show_minimal_subject_and_note={maybe_get(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
+                  hide_reply={maybe_get(component_assigns, :hide_reply, @hide_reply)}
+                  class={maybe_get(component_assigns, :class, nil)}
+                  is_remote={maybe_get(component_assigns, :is_remote, @is_remote)}
+                  hide_actions={maybe_get(component_assigns, :hide_actions, @hide_actions)}
+                  parent_id={@activity_component_id}
+                  cw={maybe_get(component_assigns, :cw, @cw)}
+                  thread_title={maybe_get(component_assigns, :thread_title, @thread_title)}
+                  subject={maybe_get(component_assigns, :subject, @subject_user)}
                 />
               {#match _}
                 <StatelessComponent

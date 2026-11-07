@@ -13,6 +13,9 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop activity_component_id, :string, default: nil
   prop parent_id, :any, default: nil
 
+  @doc "Whether to offer translating it. Off for a stand-in text (eg. the placeholder for a post matching the viewer's filtered keywords), since translating loads the post itself"
+  prop translatable, :boolean, default: true
+
   def preloads(),
     do: [
       :post_content,

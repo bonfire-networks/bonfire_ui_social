@@ -76,6 +76,7 @@
   </Bonfire.UI.Common.OpenExternalLinkLive>
 
   <Bonfire.UI.Social.Activity.TranslateButtonsLive
+    :if={@translatable}
     object={@object}
     activity={@activity}
     parent_id={@parent_id}

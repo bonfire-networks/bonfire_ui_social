@@ -13,6 +13,7 @@ defmodule Bonfire.UI.Social.WidgetTrendingReplyBoundaryTest do
     account = fake_account!()
     me = fake_user!(account)
     other = fake_user!()
+    reset_trending_discussions_cache(me)
 
     {:ok, post} =
       Bonfire.Posts.publish(

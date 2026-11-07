@@ -356,12 +356,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     # dump(data)
     current_user = current_user(socket)
 
-    # check if contains blocked keywords or blocked by other boundaries
+    # check if blocked by boundaries. A keyword match isn't dropped here: the card shows its placeholder like any other (`put_hide_content/2`)
+    # Bonfire.Social.show_activity?(activity, current_user: current_user) and
     permitted? =
-      Bonfire.Social.show_activity?(activity, current_user: current_user) and
-        Bonfire.Common.Needles.exists?([id: e(activity, :object, :id, nil) || id(activity)],
-          current_user: current_user
-        )
+      Bonfire.Common.Needles.exists?([id: e(activity, :object, :id, nil) || id(activity)],
+        current_user: current_user
+      )
 
     if permitted? && is_list(feed_ids) do
       my_home_feed_ids = Bonfire.Social.Feeds.my_home_feed_ids(current_user)
@@ -2108,6 +2108,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       Bonfire.Boundaries.LiveHandler.preload_boundaries(assigns_sockets,
         current_user: current_user
       )
+      |> put_hide_content(current_user)
 
     non_batch_opts =
       Keyword.merge(opts,
@@ -2151,6 +2152,59 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       _ ->
         false
     end || assigns_sockets
+  end
+
+  @doc """
+  Sets `hide_content` in each card's `object_boundary`: `true` when the card's own text (body, content warning, title) matches the viewer's filtered keywords (`Bonfire.Boundaries.BlockKeywords`), so `ActivityLive` shows a placeholder instead. Each card is decided once: here when its text is loaded, else in `do_preload_extras/2` once the postloads have loaded it.
+
+  Takes and returns `{assigns, socket}` pairs, as `Bonfire.Boundaries.LiveHandler.preload_boundaries/2` does.
+  """
+  def put_hide_content(assigns_sockets, current_user) do
+    case Bonfire.Boundaries.BlockKeywords.block_keywords_settings(current_user: current_user) do
+      nil ->
+        assigns_sockets
+
+      compiled ->
+        Enum.map(assigns_sockets, fn {assigns, socket} ->
+          {Map.update(
+             assigns,
+             :object_boundary,
+             nil,
+             &maybe_hide_content(&1, the_object(assigns), compiled)
+           ), socket}
+        end)
+    end
+  end
+
+  # only a loaded boundary map carries the verdict, and only once; a card whose text isn't loaded yet is left for the postloads
+  defp maybe_hide_content(%{} = object_boundary, object, compiled)
+       when not is_map_key(object_boundary, :hide_content) do
+    case e(object, :post_content, nil) do
+      %{html_body: _} = post_content ->
+        Map.put(
+          object_boundary,
+          :hide_content,
+          Bonfire.Boundaries.BlockKeywords.text_fields_match?(
+            post_content,
+            [:html_body, :summary, :name],
+            compiled
+          ) == true
+        )
+
+      _ ->
+        object_boundary
+    end
+  end
+
+  defp maybe_hide_content(object_boundary, _object, _compiled), do: object_boundary
+
+  defp maybe_put_hide_content(assigns, _object_boundary, _activity, nil), do: assigns
+
+  defp maybe_put_hide_content(assigns, object_boundary, activity, compiled) do
+    case maybe_hide_content(object_boundary, e(activity, :object, nil), compiled) do
+      ^object_boundary -> assigns
+      decided -> Map.put(assigns, :object_boundary, decided)
+    end
   end
 
   @decorate time()
@@ -2253,6 +2307,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       activity: activity,
       object: object,
       object_id: id(activity) || id(object),
+      object_boundary: ed(assigns, :object_boundary, nil),
       activity_preloads: ed(assigns, :activity_preloads, nil),
       showing_within: ed(assigns, :showing_within, nil),
       thread_mode: ed(assigns, :thread_mode, nil),
@@ -2415,7 +2470,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       with_cache: false,
       current_user: current_user,
       # skip_boundary_check because it should already be checked it the initial query
-      skip_boundary_check: true
+      skip_boundary_check: true,
+      # keyword matches are shown as a placeholder at render (`put_hide_content/2`), not rewritten in the data
+      skip_keyword_filter: true
     )
   end
 
@@ -2482,6 +2539,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         _ -> {nil, nil}
       end)
 
+    # the cards whose text wasn't loaded when `put_hide_content/2` ran get their verdict now
+    compiled_keywords =
+      if Enum.any?(
+           list_of_components,
+           &match?(%{object_boundary: %{} = b} when not is_map_key(b, :hide_content), &1)
+         ),
+         do: Bonfire.Boundaries.BlockKeywords.block_keywords_settings(opts)
+
     list_of_components
     # |> debug()
     |> Map.new(fn component ->
@@ -2490,11 +2555,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       {
         component.component_id,
         if(activity,
-          do: %{
-            activity: Map.put(activity, :emoji, list_of_emoji[component.object_id]),
-            # emoji: list_of_emoji[component.object_id],
-            activity_preloads: opts[:assign_activity_preloads]
-          }
+          do:
+            %{
+              activity: Map.put(activity, :emoji, list_of_emoji[component.object_id]),
+              # emoji: list_of_emoji[component.object_id],
+              activity_preloads: opts[:assign_activity_preloads]
+            }
+            |> maybe_put_hide_content(component[:object_boundary], activity, compiled_keywords)
         )
         # ActivityLive.assigns_from_activity(list_of_activities[component.object_id] || component.activity)
       }
