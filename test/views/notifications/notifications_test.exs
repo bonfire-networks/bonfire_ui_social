@@ -25,6 +25,50 @@ defmodule Bonfire.UI.Social.Notifications.Test do
     end
   end
 
+  describe "the time a notification shows" do
+    # a list sorted newest first that labels a fresh like with the age of the post it is on reads as out of order
+    test "is when it happened, not when the post it is about was written" do
+      account = fake_account!()
+      me = fake_user!(account)
+
+      old_post =
+        Bonfire.Posts.Fake.fake_post!(me, "public", %{
+          post_content: %{html_body: "<p>written a while ago</p>"},
+          id: Bonfire.Common.DatesTimes.past(3, :day) |> Bonfire.Common.DatesTimes.generate_ulid()
+        })
+
+      {:ok, like} = Bonfire.Social.Likes.like(fake_user!(), old_post)
+
+      liked_ago = Bonfire.Common.DatesTimes.date_from_now(id(like), format: :short)
+      written_ago = Bonfire.Common.DatesTimes.date_from_now(id(old_post), format: :short)
+      # the positive first: the two times read differently
+      assert liked_ago != written_ago
+      assert written_ago =~ "day"
+
+      conn(user: me, account: account)
+      |> visit("/notifications")
+      |> wait_async()
+      |> unwrap(fn view ->
+        html = Phoenix.LiveViewTest.render(view)
+
+        shown =
+          html
+          |> Floki.parse_document!()
+          |> Floki.find("[data-id=feed] article")
+          |> Enum.filter(&(Floki.text(&1) =~ "written a while ago"))
+          |> Floki.find("[data-role=subject] [data-date]")
+          |> Enum.map(&String.trim(Floki.text(&1)))
+
+        assert shown != []
+
+        # the like was a moment ago, so its label is in seconds, which tick on between the render and here: what matters is that the post's 3 days aren't shown
+        refute written_ago in shown, "the like's row says #{inspect(shown)}, the post's age"
+        refute Enum.any?(shown, &(&1 =~ "day")), inspect(shown)
+        html
+      end)
+    end
+  end
+
   describe "DO NOT show" do
     test "when not logged in" do
       conn = conn()

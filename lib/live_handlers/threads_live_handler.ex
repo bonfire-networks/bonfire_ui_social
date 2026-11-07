@@ -169,17 +169,22 @@ defmodule Bonfire.Social.Threads.LiveHandler do
     activity = e(assigns(socket), :activity, %{})
     object_boundary = e(assigns(socket), :object_boundary, nil)
 
-    reply_to =
-      e(assigns(socket), :object, nil) ||
-        e(activity, :object, nil) ||
-        e(assigns(socket), :object_id, nil) ||
-        e(activity, :object_id, nil)
+    # the socket's object when it is the one replied to, else the activity's (an activity component holds its object there)
+    reply_to = assigned_object_or_id(socket, reply_to_id, [[:object], [:activity, :object]])
 
-    if reply_to_id == Enums.id(reply_to) do
-      reply(reply_to, activity, object_boundary, socket)
-    else
-      reply(reply_to_id, activity, object_boundary, socket)
-    end
+    reply(reply_to, activity, object_boundary, socket)
+
+    # reply_to =
+    #   e(assigns(socket), :object, nil) ||
+    #     e(activity, :object, nil) ||
+    #     e(assigns(socket), :object_id, nil) ||
+    #     e(activity, :object_id, nil)
+    #
+    # if reply_to_id == Enums.id(reply_to) do
+    #   reply(reply_to, activity, object_boundary, socket)
+    # else
+    #   reply(reply_to_id, activity, object_boundary, socket)
+    # end
   end
 
   def handle_event("reply", _params, socket) do

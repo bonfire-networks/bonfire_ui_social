@@ -3,6 +3,7 @@
     module={maybe_component(Bonfire.UI.Social.RestrictedContentLive, @__context__)}
     object_type_name={@object_not_permitted}
     object_id={@object_id}
+    remote_interaction_url={@remote_interaction_url}
   />
 {#else}
   <Bonfire.UI.Social.VersionHistoryLive object={@object || @object_id} />

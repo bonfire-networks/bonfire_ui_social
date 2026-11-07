@@ -74,6 +74,54 @@ defmodule Bonfire.UI.Social.RestrictedContentLiveTest do
     end
   end
 
+  describe "opened, signed out" do
+    setup do
+      previous = Config.get([RestrictedContentLive], nil, :bonfire_ui_social)
+      on_exit(fn -> Config.put([RestrictedContentLive], previous, :bonfire_ui_social) end)
+      Config.put([RestrictedContentLive, :modularity], true, :bonfire_ui_social)
+
+      # someone from another instance can only use their account there if this one federates
+      Process.put(:federating, true)
+      :ok
+    end
+
+    # what other servers may read and visitors here may not: the one case where an account elsewhere gets them in
+    test "offers to use an account on another instance, which leads to the post" do
+      post =
+        Bonfire.Posts.Fake.fake_post!(
+          fake_user!(),
+          "mentions",
+          %{
+            post_content: %{html_body: "<p>for other servers to read</p>"}
+          }, to_circles: %{Bonfire.Boundaries.Circles.get_id!(:activity_pub) => "read"})
+
+      # the positive first: other servers may read it, visitors here may not
+      assert Bonfire.Boundaries.can?(:activity_pub, :read, post)
+      refute Bonfire.Boundaries.can?(:guest, :read, post)
+
+      conn()
+      |> visit("/post/#{id(post)}")
+      |> wait_async()
+      |> assert_has("[data-role=restricted_content]")
+      |> unwrap(fn view ->
+        html = Phoenix.LiveViewTest.render(view)
+
+        links =
+          html
+          |> Floki.parse_document!()
+          |> Floki.attribute("[data-role=remote_interaction]", "href")
+
+        assert [link] = links, "no link to use an account on another instance: #{inspect(links)}"
+
+        # what the visitor's own instance is to fetch, so the address of the post itself
+        assert URI.decode_www_form(link) =~
+                 Bonfire.Common.URIs.canonical_url(post, preload_if_needed: true)
+
+        html
+      end)
+    end
+  end
+
   # the instance's own words, set up in Settings > Instance > Restricted content screen, for both sizes alike, and only once it has enabled the screen
   describe "the instance's title" do
     setup do

@@ -31,6 +31,9 @@ defmodule Bonfire.UI.Social.ObjectThreadLive do
   # object (by `Objects.LiveHandler.not_found_fallback/3` or `check_read_permission/1`)
   prop object_not_permitted, :any, default: nil
 
+  # for a visitor not signed in, where to use an account on another instance to read it, worked out where the object was loaded (`not_found_fallback/3`) so the object itself never reaches the page
+  prop remote_interaction_url, :string, default: nil
+
   # when true, the rendered ActivityLive re-checks `:read` via `maybe_check_boundaries`
   # (nulls the object if the viewer may `:see` but not `:read` it) — used by the preview
   # modal so a see-only object's body isn't exposed.

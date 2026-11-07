@@ -31,6 +31,9 @@ defmodule Bonfire.UI.Social.RestrictedContentLive do
   @doc "For the card: of its media, only the one flagged as its primary image (a cover), shown as an article's is"
   prop primary_image, :any, default: nil
 
+  @doc "For the full screen, to a visitor not signed in: where to use an account on another instance, worked out by whoever loaded the object, so the object itself isn't needed here"
+  prop remote_interaction_url, :string, default: nil
+
   def render(assigns), do: render_sface(assigns)
 
   # its wording is the instance's, read through `Bonfire.Social.RestrictedContent` (`why_not_shown/2`, `call_to_action/1`, `setting/3`, `enabled?/1`, moved there from here on 2 November), so the API's statuses say the same as this card

@@ -2160,35 +2160,34 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   Takes and returns `{assigns, socket}` pairs, as `Bonfire.Boundaries.LiveHandler.preload_boundaries/2` does.
   """
   def put_hide_content(assigns_sockets, current_user) do
-    case Bonfire.Boundaries.BlockKeywords.block_keywords_settings(current_user: current_user) do
+    case Bonfire.Boundaries.BlockKeywords.block_keywords_lists(current_user: current_user) do
       nil ->
         assigns_sockets
 
-      compiled ->
+      lists ->
         Enum.map(assigns_sockets, fn {assigns, socket} ->
           {Map.update(
              assigns,
              :object_boundary,
              nil,
-             &maybe_hide_content(&1, the_object(assigns), compiled)
+             &maybe_hide_content(&1, the_object(assigns), lists)
            ), socket}
         end)
     end
   end
 
-  # only a loaded boundary map carries the verdict, and only once; a card whose text isn't loaded yet is left for the postloads
-  defp maybe_hide_content(%{} = object_boundary, object, compiled)
+  # only a loaded boundary map carries the verdict (`:reject`, `:warn` or `nil`), and only once; a card whose text isn't loaded yet is left for the postloads. Its text is read once for both lists (`BlockKeywords.verdict/2`)
+  defp maybe_hide_content(%{} = object_boundary, object, lists)
        when not is_map_key(object_boundary, :hide_content) do
     case e(object, :post_content, nil) do
       %{html_body: _} = post_content ->
         Map.put(
           object_boundary,
           :hide_content,
-          Bonfire.Boundaries.BlockKeywords.text_fields_match?(
-            post_content,
-            [:html_body, :summary, :name],
-            compiled
-          ) == true
+          Bonfire.Boundaries.BlockKeywords.verdict(
+            [post_content.html_body, post_content.summary, post_content.name],
+            lists
+          )
         )
 
       _ ->
@@ -2540,12 +2539,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       end)
 
     # the cards whose text wasn't loaded when `put_hide_content/2` ran get their verdict now
-    compiled_keywords =
+    keyword_lists =
       if Enum.any?(
            list_of_components,
            &match?(%{object_boundary: %{} = b} when not is_map_key(b, :hide_content), &1)
          ),
-         do: Bonfire.Boundaries.BlockKeywords.block_keywords_settings(opts)
+         do: Bonfire.Boundaries.BlockKeywords.block_keywords_lists(opts)
 
     list_of_components
     # |> debug()
@@ -2561,7 +2560,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
               # emoji: list_of_emoji[component.object_id],
               activity_preloads: opts[:assign_activity_preloads]
             }
-            |> maybe_put_hide_content(component[:object_boundary], activity, compiled_keywords)
+            |> maybe_put_hide_content(component[:object_boundary], activity, keyword_lists)
         )
         # ActivityLive.assigns_from_activity(list_of_activities[component.object_id] || component.activity)
       }

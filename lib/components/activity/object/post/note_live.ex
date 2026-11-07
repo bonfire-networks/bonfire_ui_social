@@ -16,6 +16,9 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   @doc "Whether to offer translating it. Off for a stand-in text (eg. the placeholder for a post matching the viewer's filtered keywords), since translating loads the post itself"
   prop translatable, :boolean, default: true
 
+  @doc "A warning that replaces the post's own one (eg. \"Hidden by filters\" for a post matching keywords the viewer hides behind a warning). It is always closed, and the post's title and summary move inside with the body, so nothing of it shows before it is opened"
+  prop cw_label, :string, default: nil
+
   def preloads(),
     do: [
       :post_content,

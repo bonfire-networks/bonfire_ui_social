@@ -90,18 +90,7 @@
     {/case}
 
     {#if is_nil(current_user_id(@__context__))}
-      {#case @object_id &&
-          maybe_apply(
-            Bonfire.UI.Me.RemoteInteractionLive,
-            :generate_url,
-            [
-              "read",
-              @object_type_name || l("content"),
-              Bonfire.Common.URIs.canonical_url(@object_id, preload_if_needed: true),
-              @__context__
-            ],
-            fallback_return: nil
-          )}
+      {#case @remote_interaction_url}
         {#match url when is_binary(url)}
           <LinkLive
             to={url}

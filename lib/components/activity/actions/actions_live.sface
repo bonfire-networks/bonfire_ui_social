@@ -188,6 +188,7 @@
               id(@object),
               @activity_component_id || id(@activity)
             )}
+            object={@object}
             object_id={id(@object)}
             creator={@creator}
             object_type={@object_type}
@@ -209,6 +210,7 @@
               id(@object),
               @activity_component_id || id(@activity)
             )}
+            object={@object}
             object_id={id(@object)}
             creator={@creator}
             object_boundary={@object_boundary}
@@ -229,6 +231,7 @@
               id(@object),
               @activity_component_id || id(@activity)
             )}
+            object={@object}
             object_id={id(@object)}
             creator={@creator}
             object_boundary={@object_boundary}

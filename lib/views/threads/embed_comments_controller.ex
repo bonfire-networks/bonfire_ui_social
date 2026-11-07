@@ -27,7 +27,7 @@ defmodule Bonfire.UI.Social.EmbedCommentsController do
              Bonfire.UI.Social.EmbedThreads.creator(nil)
            ),
          ap_id when is_binary(ap_id) <-
-           Bonfire.Common.URIs.canonical_url(media, preload_if_needed: true) do
+           Bonfire.Common.URIs.canonical_url(media) do
       conn
       |> Plug.Conn.put_resp_header("cache-control", "private, no-store")
       |> redirect(external: ap_id)

@@ -592,7 +592,12 @@ defmodule Bonfire.UI.Social.ActivityLive do
       object_type_readable: object_type_readable,
       # unit: :minute
       # NOTE: skip narrow format which gives odd results in some languages
-      date_ago: DatesTimes.date_from_now(object_id, format: :short),
+      # a notification is dated by when it happened (the like, the boost), since the list is in that order; elsewhere a row is dated by its object, so a boost shows when the post was written
+      date_ago:
+        DatesTimes.date_from_now(
+          if(e(assigns, :showing_within, nil) == :notifications, do: a_id, else: object_id),
+          format: :short
+        ),
       verb: verb,
       experienced_as: experienced_as,
       permalink: permalink,
@@ -900,13 +905,15 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # one the viewer may find but not read shows its name and summary, never its body or media, whatever its type. Fails closed: the caller says when they may (`can_read?/2`)
     can_read? = opts[:can_read] == true
 
-    # its text matches the viewer's filtered keywords (`object_boundary.hide_content`): a placeholder, with nothing of its title, content warning, text, hashtags or media
-    hide_content? = opts[:hide_content] == true
+    # its text matches keywords the viewer hides behind a warning (`object_boundary.hide_content: :warn`): shown as usual, closed behind "Hidden by filters", its media blurred and its quotes and hashtags hidden until opened. (`:reject`, hidden completely, never gets here: `render/1` has its own clause)
+    warn? = opts[:hide_content] == :warn
+    cw = opts[:cw] || warn?
 
     {primary_image, attachments_component} =
       cond do
-        hide_content? ->
-          {nil, []}
+        # Replaced by the `:warn` and `:reject` verdicts: a match is no longer shown as a placeholder
+        # hide_content? ->
+        #   {nil, []}
 
         can_read? ->
           primary_image_and_component_maybe_attachments(
@@ -926,19 +933,20 @@ defmodule Bonfire.UI.Social.ActivityLive do
         experience == :quote_request ->
           []
 
-        hide_content? ->
-          [
-            {Bonfire.UI.Social.Activity.NoteLive,
-             %{
-               object:
-                 Map.put(object || %{}, :post_content, %Bonfire.Data.Social.PostContent{
-                   html_body: l("[Content blocked by filters]")
-                 }),
-               cw: false,
-               # translating loads the post itself
-               translatable: false
-             }}
-          ]
+        # Replaced by the `:warn` and `:reject` verdicts: a match is no longer shown as a placeholder
+        # hide_content? ->
+        #   [
+        #     {Bonfire.UI.Social.Activity.NoteLive,
+        #      %{
+        #        object:
+        #          Map.put(object || %{}, :post_content, %Bonfire.Data.Social.PostContent{
+        #            html_body: l("[Content blocked by filters]")
+        #          }),
+        #        cw: false,
+        #        # translating loads the post itself
+        #        translatable: false
+        #      }}
+        #   ]
 
         not can_read? ->
           [
@@ -953,7 +961,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # Show CW button at activity level when NoteLive isn't in the component list
     # (e.g., media-only posts with no text body)
     cw_fallback =
-      if can_read? and not hide_content? and !!opts[:cw] and
+      if can_read? and !!cw and
            not Enum.any?(object_components, fn
              {Bonfire.UI.Social.Activity.NoteLive, _} -> true
              Bonfire.UI.Social.Activity.NoteLive -> true
@@ -962,9 +970,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
         [
           {Bonfire.UI.Social.Activity.CWLive,
            %{
-             cw: opts[:cw],
+             cw: cw,
              activity_component_id: activity_component_id,
-             summary: e(object, :post_content, :summary, nil)
+             summary:
+               if(warn?,
+                 do: l("Hidden by filters"),
+                 else: e(object, :post_content, :summary, nil)
+               )
            }}
         ]
       else
@@ -999,8 +1011,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
          do: [],
          else: attachments_component
        ) ++
-       component_maybe_quote_post(activity_component_id, quotes, opts[:cw]) ++
-       component_maybe_hashtags_footer(if(not hide_content?, do: opts[:hashtags])) ++
+       component_maybe_quote_post(activity_component_id, quotes, cw) ++
+       component_maybe_hashtags_footer(if(not warn?, do: opts[:hashtags])) ++
        component_maybe_activity_name(activity) ++
        component_actions(
          experience,
@@ -1015,6 +1027,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
     |> Enum.map(fn
       c when is_atom(c) -> {c, nil}
       other -> other
+    end)
+    |> Enum.map(fn
+      # behind "Hidden by filters": the note closed under that label, its media blurred
+      {Bonfire.UI.Social.Activity.NoteLive, assigns} when warn? ->
+        {Bonfire.UI.Social.Activity.NoteLive,
+         Map.merge(assigns || %{}, %{cw: true, cw_label: l("Hidden by filters")})}
+
+      {Bonfire.UI.Social.Activity.MediaLive, assigns} when warn? ->
+        {Bonfire.UI.Social.Activity.MediaLive, Map.merge(assigns || %{}, %{cw: true})}
+
+      other ->
+        other
     end)
     # a join request is its requester, the group and the decision (all in `SubjectMinimalLive`), wherever its edge is loaded: a moderator's notifications and a group's moderation page. The group's own card under it would only repeat the group, with buttons for following or deleting it
     |> Enum.filter(fn {component, _assigns} ->
@@ -1047,6 +1071,38 @@ defmodule Bonfire.UI.Social.ActivityLive do
        do: Bonfire.Boundaries.can?(context, :mediate, :instance) == true
 
   defp moderating_flag?(_context, _experienced_as, _showing_within), do: false
+
+  # it matches keywords the viewer hides completely (`object_boundary.hide_content: :reject`): gone, as if deleted. Nothing in a feed or a preview; in a thread the note a deleted post leaves, so the replies under it keep their place
+  def render(%{object_boundary: %{hide_content: :reject}} = assigns) do
+    assigns =
+      assign(assigns,
+        thread_note:
+          cond do
+            assigns[:viewing_main_object] == true ->
+              l("It may have been deleted, or you may not have permission to see it.")
+
+            assigns[:showing_within] in [:thread, :thread_embed, :messages] ->
+              l("This comment is unavailable. It may have been deleted or is not visible to you.")
+
+            true ->
+              nil
+          end
+      )
+
+    ~F"""
+    <div data-id="activity_hidden_by_filters" hidden={is_nil(@thread_note)}>
+      <div
+        :if={@thread_note}
+        data-role="comment-unavailable"
+        role="note"
+        class="mx-4 my-2 flex items-center gap-2 text-sm text-muted"
+      >
+        <#Icon iconify="ph:eye-slash-duotone" class="size-4 shrink-0" />
+        <span>{@thread_note}</span>
+      </div>
+    </div>
+    """
+  end
 
   def render(%{object_boundary: :not_visible} = assigns) do
     ~F"""
@@ -1291,7 +1347,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                 current_user_context: @__context__,
                 cw: @cw,
                 hashtags: @hashtags,
-                hide_content: e(@object_boundary, :hide_content, nil) == true,
+                hide_content: e(@object_boundary, :hide_content, nil),
                 can_read:
                   can_read?(@__context__, @object_boundary) or
                     moderating_flag?(@__context__, @experienced_as, @showing_within)
@@ -1409,6 +1465,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   is_remote={@is_remote}
                   hide_actions={@hide_actions}
                   translatable={maybe_get(component_assigns, :translatable, true)}
+                  cw_label={maybe_get(component_assigns, :cw_label, nil)}
                 />
               {#match _
                 when component in [
@@ -1447,7 +1504,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
                   media={maybe_get(component_assigns, :media, [])}
                   media_text_up_font?={maybe_get(component_assigns, :media_text_up_font?, false)}
-                  cw={@cw}
+                  cw={maybe_get(component_assigns, :cw, @cw)}
                   autoplay={@autoplay}
                 />
               {#match _

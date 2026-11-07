@@ -77,7 +77,9 @@
         class="mx-4 my-2 flex items-center gap-2 text-sm text-muted"
       >
         <#Icon iconify="ph:eye-slash-duotone" class="size-4 shrink-0" />
-        <span>{l("This comment is unavailable. It may have been deleted or is not visible to you.")}</span>
+        <span>{l("This comment is unavailable.")} {l(
+            "It may have been deleted, blocked by keyword filters, or you may not have permission to see it."
+          )}</span>
       </div>
     {#else}
       <ActivityLive
