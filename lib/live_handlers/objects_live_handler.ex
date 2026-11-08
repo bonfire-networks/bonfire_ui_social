@@ -206,6 +206,8 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       # )
       |> Bonfire.Social.Feeds.LiveHandler.preload_activity_and_object_assocs([:object],
         current_user: current_user,
+        # keyword matches are shown as a placeholder when `ActivityLive` renders it (`Bonfire.Social.Feeds.LiveHandler.put_hide_content/2`), not rewritten in the data
+        skip_keyword_filter: true,
         # TODO: use same logic as feeds preloads?
         preload:
           Bonfire.Social.Feeds.LiveHandler.feed_extra_preloads_list(
@@ -247,6 +249,7 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       object_id: id,
       object_loaded: true,
       object_not_permitted: nil,
+      remote_interaction_url: nil,
       canonical_url: canonical_url,
       activity: activity,
       object: object,
@@ -493,17 +496,40 @@ defmodule Bonfire.Social.Objects.LiveHandler do
 
               msg = l("Sorry, you can't view this %{thing}", thing: thing)
 
+              # only show the restricted-content screen when the object actually
+              # exists (the type may also come from a `?type=` param or a stale
+              # cache, e.g. for deleted objects)
+              restricted_object =
+                if Bonfire.Social.RestrictedContent.enabled?(
+                     e(assigns(socket), :__context__, nil)
+                   ) do
+                  case Bonfire.Common.Needles.get(uid, skip_boundary_check: true) do
+                    {:ok, object} -> object
+                    _ -> nil
+                  end
+                end
+
               cond do
-                # only show the restricted-content screen when the object actually
-                # exists (the type may also come from a `?type=` param or a stale
-                # cache, e.g. for deleted objects)
-                Bonfire.Social.RestrictedContent.enabled?(e(assigns(socket), :__context__, nil)) and
-                    match?(
-                      {:ok, _},
-                      Bonfire.Common.Needles.one(uid, skip_boundary_check: true)
-                    ) ->
+                restricted_object ->
                   socket
-                  |> assign(object_not_permitted: thing)
+                  |> assign(
+                    object_not_permitted: thing,
+                    # worked out here, where the object is loaded, so nothing of it reaches the page but its address. Only for a visitor not signed in, the one it's shown to
+                    remote_interaction_url:
+                      if(is_nil(current_user_id(socket)),
+                        do:
+                          Bonfire.UI.Common.remote_interaction_url(
+                            "read",
+                            thing,
+                            repo().maybe_preload(
+                              restricted_object,
+                              [:peered, character: [:peered]],
+                              prune: true
+                            ),
+                            socket
+                          )
+                      )
+                  )
 
                 current_user_id(socket) ->
                   {:error, msg}

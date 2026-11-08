@@ -52,6 +52,7 @@
             module={maybe_component(Bonfire.UI.Social.RestrictedContentLive, @__context__)}
             object_type_name={@object_not_permitted}
             object_id={@object_id || @post_id || @thread_id}
+            remote_interaction_url={@remote_interaction_url}
           />
         {#elseif is_nil(@activity) and is_nil(@object)}
           <div
@@ -62,7 +63,9 @@
               <#Icon iconify="ph:eye-slash-duotone" class="size-8 text-muted" />
             </div>
             <h2 class="mt-4 type-heading text-base-content">{l("Sorry, you cannot view this.")}</h2>
-            <p class="mt-1 text-sm text-muted">{l("It may have been deleted, or you may not have permission to see it.")}</p>
+            <p class="mt-1 text-sm text-muted">{l(
+                "It may have been deleted, blocked by keyword filters, or you may not have permission to see it."
+              )}</p>
           </div>
         {#else}
           {#if @custom_preview}

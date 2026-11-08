@@ -22,6 +22,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        post: nil,
        object: nil,
        object_not_permitted: nil,
+       remote_interaction_url: nil,
        object_id: nil,
        post_id: nil,
        reply_id: nil,

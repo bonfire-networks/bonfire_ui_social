@@ -18,6 +18,12 @@ defmodule Bonfire.UI.Social.EmbedThreads do
       {:ok, media} -> {:ok, media}
       _ -> maybe_create(uri, params, creator)
     end
+    # with its locality, which its callers need to name it by its ActivityPub id (`URIs.canonical_url/2`)
+    ~> Bonfire.Common.Repo.maybe_preload(:peered)
+    |> case do
+      %{id: _} = media -> {:ok, media}
+      other -> other
+    end
   end
 
   defp maybe_create(uri, params, creator) do

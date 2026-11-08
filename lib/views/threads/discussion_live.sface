@@ -3,6 +3,7 @@
     module={maybe_component(Bonfire.UI.Social.ObjectThreadLive)}
     myself={nil}
     object_not_permitted={@object_not_permitted}
+    remote_interaction_url={@remote_interaction_url}
     thread_title={@thread_title}
     thread_mode={@thread_mode}
     activity={@activity}

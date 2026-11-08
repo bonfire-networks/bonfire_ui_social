@@ -11,6 +11,8 @@
         feed_name={@feed_name}
         feed={feed}
         {...feed_assigns}
+        check_object_boundary={current_user_id(@__context__) && [:see, :read]}
+        show_restricted={false}
       />
     </Bonfire.UI.Common.WidgetBlockLive>
   {#match _error}

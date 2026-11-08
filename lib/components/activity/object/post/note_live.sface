@@ -31,7 +31,8 @@
       {#match nil}
       {#match name}
         <div
-          :if={name != @thread_title and @showing_within not in [:smart_input, :pinned]}
+          :if={is_nil(@cw_label) and name != @thread_title and
+            @showing_within not in [:smart_input, :pinned]}
           data-role="name"
           class="translatable text-sm my-1 mt-2"
         >
@@ -41,9 +42,15 @@
 
     {#case e(post_content(@object), :summary, nil)}
       {#match summary}
-        {#case @cw == true or (@cw != false and not is_nil(summary))}
+        {#case not is_nil(@cw_label) or @cw == true or (@cw != false and not is_nil(summary))}
           {#match cw}
-            {#if cw and e(post_content(@object), :html_body, nil)}
+            {#if @cw_label}
+              <Bonfire.UI.Social.Activity.CWLive
+                cw
+                activity_component_id={@activity_component_id}
+                summary={@cw_label}
+              />
+            {#elseif cw and e(post_content(@object), :html_body, nil)}
               <Bonfire.UI.Social.Activity.CWLive
                 cw={@cw}
                 activity_component_id={@activity_component_id}
@@ -56,6 +63,19 @@
             {/if}
 
             <div id={"content_#{@activity_component_id}"} class={[hidden: cw]}>
+              {!-- behind a replacing warning (`cw_label`), the post's own title and summary are part of what it hides --}
+              {#if @cw_label}
+                <div
+                  :if={e(post_content(@object), :name, nil)}
+                  data-role="name"
+                  class="translatable text-sm my-1 mt-2"
+                >
+                  {rich(e(post_content(@object), :name, nil))}
+                </div>
+                <div :if={summary} data-role="summary" class="translatable prose max-w-prose prose-p:pt-1">
+                  {rich(summary)}
+                </div>
+              {/if}
               {#case e(post_content(@object), :html_body, nil) ||
                   if !e(@activity, :media, nil), do: l("This content is not available.")}
                 {#match nil}
@@ -76,6 +96,7 @@
   </Bonfire.UI.Common.OpenExternalLinkLive>
 
   <Bonfire.UI.Social.Activity.TranslateButtonsLive
+    :if={@translatable}
     object={@object}
     activity={@activity}
     parent_id={@parent_id}

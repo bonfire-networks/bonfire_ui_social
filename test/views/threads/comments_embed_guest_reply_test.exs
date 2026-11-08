@@ -61,7 +61,9 @@ defmodule Bonfire.UI.Social.CommentsEmbedGuestReplyTest do
 
       html = render(view)
       assert html =~ "inline_composer_remote_interaction_"
-      assert html =~ URI.encode_www_form(root_url) or html =~ root_url
+
+      # the link names what to reply to, and the page it opens hands the visitor's instance its address
+      assert remote_page(html) =~ ~s(value="#{root_url}")
 
       # `send_self(reply_to_id: ...)` (what the guest reply handler does) is
       # delivered as `{:assign, ...}` to the LiveView process.
@@ -69,7 +71,7 @@ defmodule Bonfire.UI.Social.CommentsEmbedGuestReplyTest do
 
       html = render(view)
       assert assigns(view).reply_to_id == reply.id
-      assert html =~ URI.encode_www_form(reply_url) or html =~ reply_url
+      assert remote_page(html) =~ ~s(value="#{reply_url}")
     end
   end
 
@@ -124,21 +126,15 @@ defmodule Bonfire.UI.Social.CommentsEmbedGuestReplyTest do
           Regex.run(~r/<a [^>]*href="[^"]*remote_interaction[^"]*"[^>]*>/s, html)
 
       case remote_tag && Regex.run(~r/href="([^"]+)"/, hd(remote_tag)) do
-        [_, href] ->
-          # Regression: the carried url/uri param must never be empty
-          # (an empty `?uri=` dead-ends on the remote server).
-          query =
-            href
-            |> String.replace("&amp;", "&")
-            |> URI.decode()
-            |> URI.parse()
-            |> Map.get(:query)
-            |> Kernel.||("")
+        [_, _href] ->
+          # Regression: the visitor's instance must never be handed an empty
+          # address (an empty `?uri=` dead-ends on the remote server). The link
+          # names what to reply to; the page it opens either fills in a
+          # non-empty address or offers only to sign in.
+          page = remote_page(html)
 
-          params = URI.decode_query(query)
-
-          assert is_binary(params["url"]) and params["url"] != "",
-                 "remote-interaction url param must not be empty, got: #{inspect(params)} from #{href}"
+          assert page =~ ~r/value="https?:\/\/[^"]+"/ or not (page =~ "Interact remotely"),
+                 "the remote interaction page offers its form without an address"
 
         nil ->
           # Acceptable: when no resolvable URL exists the guard suppresses the
@@ -171,25 +167,26 @@ defmodule Bonfire.UI.Social.CommentsEmbedGuestReplyTest do
 
       {:ok, view, _html} = live(conn(), "/comments/embed/#{media.id}?auth_mode=remote")
 
-      params = remote_link_params(render(view))
+      # what the page the link opens hands the visitor's instance
+      remote = remote_page(render(view))
 
-      assert params["url"] == ap_id,
-             "the visitor's instance is handed #{inspect(params["url"])}, expected the AP id #{ap_id}"
+      assert remote =~ ~s(value="#{ap_id}"),
+             "the visitor's instance isn't handed the AP id #{ap_id}"
 
-      refute params["url"] == page
+      refute remote =~ ~s(value="#{page}")
     end
   end
 
-  # query params of the guest composer's remote-interaction link
-  defp remote_link_params(html) do
+  # the page the guest composer's remote-interaction link opens, as a visitor following it gets it
+  defp remote_page(html) do
     [tag] = Regex.run(~r/<a [^>]*id="inline_composer_remote_interaction_[^"]*"[^>]*>/s, html)
     [_, href] = Regex.run(~r/href="([^"]+)"/, tag)
 
-    href
-    |> String.replace("&amp;", "&")
-    |> URI.parse()
-    |> Map.get(:query, "")
-    |> URI.decode_query()
+    # the embed makes it absolute, for its iframe; this instance's path is what to open
+    %{path: path, query: query} = href |> String.replace("&amp;", "&") |> URI.parse()
+
+    {:ok, _view, remote_html} = live(conn(), "#{path}?#{query}")
+    remote_html
   end
 
   describe "reply_to_activity uses the pushed id, not nil LiveView assigns" do

@@ -22,8 +22,10 @@ defmodule Bonfire.UI.Social.FeedBlockKeywordsBenchmarkTest do
   @timed_runs 8
 
   @settings_get {Bonfire.Common.Settings, :__get__, 3}
-  @block_keywords {BlockKeywords, :block_keywords_settings, 1}
+  @block_keywords {BlockKeywords, :block_keywords_lists, 1}
   @activity_preloads {Bonfire.Social.Activities, :activity_preloads, 3}
+  @prepare {ActivityPub.MRF.KeywordMatcher, :prepare, 2}
+  @match {ActivityPub.MRF.KeywordMatcher, :match?, 3}
 
   setup do
     # the test default is 2, which would cut the page down to 2 activities
@@ -68,7 +70,9 @@ defmodule Bonfire.UI.Social.FeedBlockKeywordsBenchmarkTest do
       viewers: %{
         "0 keywords" => viewer_with_keywords("kw_ui_viewer_0", 0),
         "20 keywords" => viewer_with_keywords("kw_ui_viewer_20", 20),
-        "200 keywords" => viewer_with_keywords("kw_ui_viewer_200", 200)
+        "200 keywords" => viewer_with_keywords("kw_ui_viewer_200", 200),
+        # both lists: each card's text is read once, then each list's regex runs on it
+        "200 + 200 to warn about" => viewer_with_keywords("kw_ui_viewer_both", 200, 200)
       }
     }
   end
@@ -97,7 +101,7 @@ defmodule Bonfire.UI.Social.FeedBlockKeywordsBenchmarkTest do
       load_page.(viewer)
 
       counts =
-        call_counts([@settings_get, @block_keywords, @activity_preloads], fn ->
+        call_counts([@settings_get, @block_keywords, @activity_preloads, @prepare, @match], fn ->
           load_page.(viewer)
         end)
 
@@ -110,8 +114,9 @@ defmodule Bonfire.UI.Social.FeedBlockKeywordsBenchmarkTest do
 
       IO.puts(
         "#{label}: #{inspect(counts[@settings_get])} Settings.get, " <>
-          "#{inspect(counts[@block_keywords])} block_keywords_settings, " <>
-          "#{inspect(counts[@activity_preloads])} activity_preloads | " <>
+          "#{inspect(counts[@block_keywords])} block_keywords_lists, " <>
+          "#{inspect(counts[@activity_preloads])} activity_preloads, " <>
+          "#{inspect(counts[@prepare])} texts read, #{inspect(counts[@match])} matches | " <>
           "min #{fmt(hd(times_ms))} ms, median #{fmt(Enum.at(times_ms, div(@timed_runs, 2)))} ms, max #{fmt(List.last(times_ms))} ms"
       )
     end
@@ -119,12 +124,25 @@ defmodule Bonfire.UI.Social.FeedBlockKeywordsBenchmarkTest do
 
   defp fmt(ms), do: :erlang.float_to_binary(ms, decimals: 1)
 
-  defp viewer_with_keywords(name, count) do
+  defp viewer_with_keywords(name, count, warn_count \\ 0) do
     user = fake_user!(name)
 
-    if count > 0 do
-      keywords = ["viagra" | for(i <- 1..(count - 1)//1, do: "blockedword#{i}")]
-      {:ok, _} = BlockKeywords.put_block_keywords_settings(keywords, current_user: user)
+    lists =
+      Map.merge(
+        if(count > 0,
+          do: %{reject: ["viagra" | for(i <- 1..(count - 1)//1, do: "blockedword#{i}")]},
+          else: %{}
+        ),
+        if(warn_count > 0,
+          do: %{warn: for(i <- 1..warn_count//1, do: "warnword#{i}")},
+          else: %{}
+        )
+      )
+
+    # both lists in one write: a second write with the same `user` would start from the settings loaded before the first
+    if lists != %{} do
+      {:ok, _} =
+        Bonfire.Common.Settings.put_raw([:activity_pub, :mrf_keyword], lists, current_user: user)
     end
 
     {Bonfire.Common.Repo.preload(user, :settings, force: true), count}

@@ -14,6 +14,7 @@ defmodule Bonfire.UI.Social.WidgetTrendingDiscussionsTitleTest do
 
     account = fake_account!()
     me = fake_user!(account)
+    reset_trending_discussions_cache(me)
 
     {:ok, conn: conn(user: me, account: account), me: me}
   end
