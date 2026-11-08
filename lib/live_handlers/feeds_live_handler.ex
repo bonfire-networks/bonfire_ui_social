@@ -2622,6 +2622,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
          on_error: :ignore
        )},
       {ValueFlows.Planning.Intent, preview_preloads(ValueFlows.Planning.Intent)},
+      {ValueFlows.Proposal, preview_preloads(ValueFlows.Proposal)},
       {ValueFlows.Process,
        Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.ProcessListLive, :preloads, [],
          fallback_return: nil,
