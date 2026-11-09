@@ -1,60 +1,63 @@
 {#case {@grouped, e(@feed_filters, :sort_by, nil)}}
   {#match {grouped?, sort_by}}
-    <div
+    <nav
       data-role="discussions_view_options"
-      class="flex justify-end px-(--stream-content-padding) pt-1"
+      aria-label={l("Discussions layout")}
+      class="flex w-full border-b border-divider"
     >
-      <Dropdown
-        id={"#{@feed_id}-view-options"}
-        position="bottom"
-        menu={false}
-        focus_on_open="input:checked"
-        trigger_class="btn btn-sm btn-ghost !font-normal text-muted gap-1"
-        label={l("View options")}
-      >
-        <:trigger>
-          <span>{l("View options")}</span>
-          <#Icon iconify="mdi:chevron-down" class="size-4 opacity-60" aria-hidden="true" />
-        </:trigger>
-        <fieldset class="p-2">
-          <legend class="text-sm font-bold">{l("Layout")}</legend>
-          {#for {group?, label} <- [{true, l("Threads")}, {false, l("All posts")}]}
-            <label class="flex min-h-11 cursor-pointer items-center justify-between gap-3 px-2 text-base-content">
-              <span>{label}</span>
-              <input
-                id={"#{@feed_id}-grouping-#{group?}"}
-                type="radio"
-                name={"#{@feed_id}-grouping"}
-                value={to_string(group?)}
-                checked={group? == grouped?}
-                class="radio radio-sm radio-primary"
-                phx-click="set_filter"
-                phx-value-dedup_by_thread={to_string(group?)}
-                phx-target={@event_target}
-              />
-            </label>
-          {/for}
-        </fieldset>
-        <fieldset class="p-2">
-          <legend class="text-sm font-bold">{l("Sort order")}</legend>
-          {#for {sort, label} <- sorts(grouped?, @__context__)}
-            <label class="flex min-h-11 cursor-pointer items-center justify-between gap-3 px-2 text-base-content">
-              <span>{label}</span>
-              <input
-                id={"#{@feed_id}-sort-#{sort || :default}"}
-                type="radio"
-                name={"#{@feed_id}-sort"}
-                value={sort || :default}
-                checked={selected_sort(grouped?, sort_by) == sort}
-                class="radio radio-sm radio-primary"
-                phx-click="set_filter"
-                phx-value-sort_by={sort || "false"}
-                phx-value-sort_order="desc"
-                phx-target={@event_target}
-              />
-            </label>
-          {/for}
-        </fieldset>
-      </Dropdown>
-    </div>
+      {#for {group?, label} <- [{true, l("Discussions")}, {false, l("Latest updates")}]}
+        <div class="flex flex-1 justify-center">
+          {#if group? == grouped?}
+            {!-- the current tab has nowhere to switch to, so it opens the sort options instead, like the current topic chip opens the topic's actions --}
+            <Dropdown
+              id={"#{@feed_id}-sort-options"}
+              position="bottom"
+              menu={false}
+              focus_on_open="input:checked"
+              wrapper_class="flex w-full"
+              trigger_class={tab_class(true)}
+              label={l("Sort %{layout}", layout: label)}
+            >
+              <:trigger>
+                <span>{label}</span>
+                <span class="ml-0.5 flex items-center border-l border-base-content/20 pl-1">
+                  <#Icon iconify="carbon:chevron-down" class="size-4 shrink-0" />
+                </span>
+              </:trigger>
+              <fieldset class="p-2">
+                <legend class="text-sm font-bold">{l("Sort order")}</legend>
+                {#for {sort, sort_label} <- sorts(grouped?, @__context__)}
+                  <label class="flex min-h-11 cursor-pointer items-center justify-between gap-3 px-2 text-base-content">
+                    <span>{sort_label}</span>
+                    <input
+                      id={"#{@feed_id}-sort-#{sort || :default}"}
+                      type="radio"
+                      name={"#{@feed_id}-sort"}
+                      value={sort || :default}
+                      checked={selected_sort(grouped?, sort_by) == sort}
+                      class="radio radio-sm radio-primary"
+                      phx-click="set_filter"
+                      phx-value-sort_by={sort || "false"}
+                      phx-value-sort_order="desc"
+                      phx-target={@event_target}
+                    />
+                  </label>
+                {/for}
+              </fieldset>
+            </Dropdown>
+          {#else}
+            <button
+              type="button"
+              id={"#{@feed_id}-layout-#{group?}"}
+              class={tab_class(false)}
+              phx-click="set_filter"
+              phx-value-dedup_by_thread={to_string(group?)}
+              phx-target={@event_target}
+            >
+              {label}
+            </button>
+          {/if}
+        </div>
+      {/for}
+    </nav>
 {/case}

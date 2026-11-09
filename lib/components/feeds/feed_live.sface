@@ -126,7 +126,7 @@
             phx-update="stream"
             class="flex flex-col flex-1 h-full grow gap-(--feed-gap)"
           >
-            {!-- custom actions (eg. a group page's discussion footer) are for one-entry-per-thread feeds; ungrouped (eg. "All posts" or a group's posts tab), each entry gets the feed's normal actions. Worked out once per render, and only when the page sends custom actions --}
+            {!-- custom actions (eg. a group page's discussion footer) are for one-entry-per-thread feeds; ungrouped (eg. "Latest updates" or a group's posts tab), each entry gets the feed's normal actions. Worked out once per render, and only when the page sends custom actions --}
             {#case if @custom_actions && thread_grouped?(@feed_filters, @feed_name, @__context__),
                 do: @custom_actions}
               {#match custom_actions}

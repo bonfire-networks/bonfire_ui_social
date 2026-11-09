@@ -135,9 +135,12 @@ defmodule Bonfire.UI.Social.WidgetsRespectBlocksTest do
     |> assert_has("[data-id=instance_pinned_widget]", text: "widget post by a bystander")
     |> assert_has("[data-id=instance_pinned_widget]", text: "local-only spotlight post")
 
+    # a guest has no LiveView socket, so the page they get is the static render, which `visit` does not give (it connects a LiveView), and there is no async load to wait for
+    # conn()
+    # |> visit("/")
+    # |> wait_async()
     conn()
-    |> visit("/")
-    |> wait_async()
+    |> get_conn_render("/")
     |> assert_has("#guest-spotlight [data-role=pinned_card]", text: "widget post by a bystander")
     |> refute_has("#guest-spotlight", text: "local-only spotlight post")
     # not even a restricted card, which would show its name, summary and cover to someone who may not see it
@@ -221,9 +224,12 @@ defmodule Bonfire.UI.Social.WidgetsRespectBlocksTest do
     |> assert_has("[data-id=instance_pinned_widget]", text: "widget post by the author")
 
     # guests get the spotlight on the home page, not the dashboard
+    # a guest has no LiveView socket, so the page they get is the static render, which `visit` does not give (it connects a LiveView), and there is no async load to wait for
+    # conn()
+    # |> visit("/")
+    # |> wait_async()
     conn()
-    |> visit("/")
-    |> wait_async()
+    |> get_conn_render("/")
     |> assert_has("#guest-spotlight [data-role=pinned_card]", text: "widget post by the author")
   end
 end

@@ -679,7 +679,7 @@ defmodule Bonfire.UI.Social.FeedLive do
   defp notify_filter_changes(_assigns), do: :ok
 
   @doc """
-  Whether the feed lists one entry per thread (`dedup_by_thread`): as its filters say when they set it (eg. `false` from the "All posts" layout), else as its preset does. The loader merges a named preset's filters on its own (`Map.merge(preset_filters, filters)`), so `feed_filters` here may hold only what the page or the user set: on a group page, `%{time_limit: 7}` after a load more.
+  Whether the feed lists one entry per thread (`dedup_by_thread`): as its filters say when they set it (eg. `false` from the "Latest updates" tab), else as its preset does. The loader merges a named preset's filters on its own (`Map.merge(preset_filters, filters)`), so `feed_filters` here may hold only what the page or the user set: on a group page, `%{time_limit: 7}` after a load more.
   """
   def thread_grouped?(feed_filters, feed_name, context) do
     case e(feed_filters, :dedup_by_thread, nil) do

@@ -19,8 +19,11 @@ defmodule Bonfire.Social.Feeds.LocalFeed.Test do
     test "not logged in", %{user: user, account: account} do
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
+      # a guest has no LiveView socket, so the page they get is the static render, which `visit` does not give (it connects a LiveView)
+      # conn()
+      # |> visit("/feed/local")
       conn()
-      |> visit("/feed/local")
+      |> get_conn_render("/feed/local")
       |> assert_has("a", text: "Sign in")
       |> assert_has("[data-role=page_title]", text: "Explore local activities")
     end
@@ -143,8 +146,11 @@ defmodule Bonfire.Social.Feeds.LocalFeed.Test do
     assert Bonfire.Social.FeedLoader.feed_contains?(:local, public_post),
            "the public post is missing from the :local feed, so the feed data is at fault rather than the guest rendering"
 
+    # a guest has no LiveView socket, so the page they get is the static render, which `visit` does not give (it connects a LiveView)
+    # conn()
+    # |> visit("/feed/local")
     conn()
-    |> visit("/feed/local")
+    |> get_conn_render("/feed/local")
     |> assert_has("article", text: "post with guest_attrs")
     # Only public boundary posts should be visible to guests
     |> refute_has("article", text: "post with local_attrs")
