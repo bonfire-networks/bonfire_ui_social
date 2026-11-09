@@ -25,6 +25,15 @@
       />
     </div> --}
 
+    {!-- the discussions preset hides the feed's filters, so it gets its own grouping and sort options; signed-in only, as guests have no socket to send them --}
+    <Bonfire.UI.Social.DiscussionsViewOptionsLive
+      :if={@feed_name == :recent_discussions and current_user_id(@__context__)}
+      feed_id={@id}
+      feed_filters={@feed_filters}
+      grouped={thread_grouped?(@feed_filters, @feed_name, @__context__)}
+      event_target={@myself}
+    />
+
     {!-- show a slim indicator here while filters reload the feed in place --}
     <div
       :if={@reloading}
@@ -117,48 +126,53 @@
             phx-update="stream"
             class="flex flex-col flex-1 h-full grow gap-(--feed-gap)"
           >
-            {#for {entry_id, entry} <- @streams.feed}
-              <div
-                id={entry_id}
-                :if={@hide_activities != "component"}
-                class={
-                  "activity_wrapper",
-                  "infinite_scroll_hidden hidden": @hide_activities == "infinite_scroll",
-                  "fresh_hidden hidden": fresh_entry?(@fresh_ids, entry)
-                }
-              >
-                {#case entry}
-                  {#match %Bonfire.Files.Media{}}
-                    <Bonfire.UI.Social.TopLevelMediaLive
-                      link={entry}
-                      show_thumbnail
-                      featured={e(entry, :featured, false)}
-                    />
-                  {#match _}
-                    <ActivityLive
-                      id={ActivityLive.component_id(
-                        id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
-                          e(entry, :edge, :id, nil),
-                        "s_activity_#{entry_id}"
-                      )}
-                      activity={get_activity(entry)}
-                      custom_preview={e(@custom_preview, nil)}
-                      custom_actions={e(@custom_actions, nil)}
-                      showing_within={@showing_within}
-                      hide_actions={@hide_actions}
-                      verb_default={@verb_default}
-                      feed_name={@feed_name}
-                      feed_id={@feed_id || @feed_ids}
-                      class={@activity_class}
-                      hide_activity={@hide_activities}
-                      subject_user={@subject_user}
-                      activity_preloads={@activity_preloads}
-                      check_object_boundary={@check_object_boundary}
-                      show_restricted={@show_restricted}
-                    />
-                {/case}
-              </div>
-            {/for}
+            {!-- custom actions (eg. a group page's discussion footer) are for one-entry-per-thread feeds; ungrouped (eg. "Latest updates" or a group's posts tab), each entry gets the feed's normal actions. Worked out once per render, and only when the page sends custom actions --}
+            {#case if @custom_actions && thread_grouped?(@feed_filters, @feed_name, @__context__),
+                do: @custom_actions}
+              {#match custom_actions}
+                {#for {entry_id, entry} <- @streams.feed}
+                  <div
+                    id={entry_id}
+                    :if={@hide_activities != "component"}
+                    class={
+                      "activity_wrapper",
+                      "infinite_scroll_hidden hidden": @hide_activities == "infinite_scroll",
+                      "fresh_hidden hidden": fresh_entry?(@fresh_ids, entry)
+                    }
+                  >
+                    {#case entry}
+                      {#match %Bonfire.Files.Media{}}
+                        <Bonfire.UI.Social.TopLevelMediaLive
+                          link={entry}
+                          show_thumbnail
+                          featured={e(entry, :featured, false)}
+                        />
+                      {#match _}
+                        <ActivityLive
+                          id={ActivityLive.component_id(
+                            id(entry) || e(entry, :activity, :id, nil) || e(entry, :object, :id, nil) ||
+                              e(entry, :edge, :id, nil),
+                            "s_activity_#{entry_id}"
+                          )}
+                          activity={get_activity(entry)}
+                          custom_preview={e(@custom_preview, nil)}
+                          custom_actions={custom_actions}
+                          showing_within={@showing_within}
+                          hide_actions={@hide_actions}
+                          verb_default={@verb_default}
+                          feed_name={@feed_name}
+                          feed_id={@feed_id || @feed_ids}
+                          class={@activity_class}
+                          hide_activity={@hide_activities}
+                          subject_user={@subject_user}
+                          activity_preloads={@activity_preloads}
+                          check_object_boundary={@check_object_boundary}
+                          show_restricted={@show_restricted}
+                        />
+                    {/case}
+                  </div>
+                {/for}
+            {/case}
           </div>
         </div>
       {/if}
@@ -264,11 +278,12 @@
                                               e(@feed_filters, :sort_by, nil) == :date_created}
                                             {!-- we are sorting by date and can simply continue paginating but with no limit --}
                                             {!-- TODO: instead of switching to infinity, switch 1 level up from current limit, eg. from 1 week to 1 month --}
+                                            {!-- fires on scroll only with infinite scroll on auto, like the `load_all_time` button below; with hybrid it's a click --}
                                             <LoadMoreLive
                                               live_handler={Bonfire.Social.Feeds}
                                               page_info={@page_info || @previous_page_info}
                                               cursor={end_cursor || previous_end_cursor || final_end_cursor}
-                                              infinite_scroll={infinite_scroll}
+                                              infinite_scroll={infinite_scroll == true}
                                               target={@myself}
                                               hide_guest_fallback={@hide_guest_fallback}
                                               label={l("Show older activities")}
@@ -281,8 +296,12 @@
                                           {#else}
                                             {!-- do we need to reload the feed if not sorting by date? --}
                                             <div class="w-full flex items-center justify-center mb-4">
+                                              {!-- with infinite scroll on auto (`true`, not hybrid `:preload`), scrolling to it fires it like the cursor variant above: the LoadMore hook sends `phx-scroll` with the `phx-value-*` to `phx-target` --}
                                               <button
+                                                id={"#{@id}_load_all_time"}
                                                 data-id="load_all_time"
+                                                phx-hook={if infinite_scroll == true, do: "Bonfire.UI.Common.LoadMoreLive#LoadMore"}
+                                                phx-scroll={if infinite_scroll == true, do: "set_filter"}
                                                 class="inline-flex min-h-11 items-center justify-center gap-2 rounded-selector border-0 bg-transparent px-3 py-2 text-sm font-medium text-primary cursor-pointer hover:bg-primary/5 after:content-['↓'] phx-click-loading:after:hidden phx-scroll-loading:after:hidden"
                                                 phx-click="set_filter"
                                                 phx-value-time_limit={0}

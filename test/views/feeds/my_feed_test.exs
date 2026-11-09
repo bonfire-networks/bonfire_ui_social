@@ -27,8 +27,11 @@ defmodule Bonfire.Social.UI.Feeds.MyFeed.Test do
     } do
       feed_id = Bonfire.Social.Feeds.named_feed_id(:local)
 
+      # a guest has no LiveView socket, so the page they get is the static render, which `visit` does not give (it connects a LiveView)
+      # conn()
+      # |> visit("/feed")
       conn()
-      |> visit("/feed")
+      |> get_conn_render("/feed")
       |> assert_has("[id*='#{feed_id}']")
     end
 

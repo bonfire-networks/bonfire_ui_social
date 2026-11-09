@@ -101,26 +101,37 @@ defmodule Bonfire.UI.Social.RestrictedContentLiveTest do
       assert Bonfire.Boundaries.can?(:activity_pub, :read, post)
       refute Bonfire.Boundaries.can?(:guest, :read, post)
 
-      conn()
-      |> visit("/post/#{id(post)}")
-      |> wait_async()
-      |> assert_has("[data-role=restricted_content]")
-      |> unwrap(fn view ->
-        html = Phoenix.LiveViewTest.render(view)
+      # a guest has no LiveView socket, so the page they get is the static render, which `visit` does not give (it connects a LiveView), and there is no async load to wait for
+      # conn()
+      # |> visit("/post/#{id(post)}")
+      # |> wait_async()
+      # |> assert_has("[data-role=restricted_content]")
+      # |> unwrap(fn view ->
+      #   html = Phoenix.LiveViewTest.render(view)
+      #
+      #   links =
+      #     html
+      #     |> Floki.parse_document!()
+      #     |> Floki.attribute("[data-role=remote_interaction]", "href")
+      #
+      #   assert [link] = links, "no link to use an account on another instance: #{inspect(links)}"
+      #
+      #   # what the visitor's own instance is to fetch, so the address of the post itself
+      #   assert URI.decode_www_form(link) =~
+      #            Bonfire.Common.URIs.canonical_url(post, preload_if_needed: true)
+      #
+      #   html
+      # end)
 
-        links =
-          html
-          |> Floki.parse_document!()
-          |> Floki.attribute("[data-role=remote_interaction]", "href")
+      link =
+        conn()
+        |> get_conn_render("/post/#{id(post)}")
+        |> assert_has("[data-role=restricted_content]")
+        |> static_href("[data-role=remote_interaction]")
 
-        assert [link] = links, "no link to use an account on another instance: #{inspect(links)}"
-
-        # what the visitor's own instance is to fetch, so the address of the post itself
-        assert URI.decode_www_form(link) =~
-                 Bonfire.Common.URIs.canonical_url(post, preload_if_needed: true)
-
-        html
-      end)
+      # what the visitor's own instance is to fetch, so the address of the post itself
+      assert URI.decode_www_form(link) =~
+               Bonfire.Common.URIs.canonical_url(post, preload_if_needed: true)
     end
   end
 

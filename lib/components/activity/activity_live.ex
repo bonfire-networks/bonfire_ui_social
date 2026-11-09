@@ -89,6 +89,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
     |> Enum.map(fn
       {assigns, socket} ->
         maybe_update(assigns, socket)
+        # the parent may switch these on an entry it already showed (eg. a feed going from one entry per thread to every post drops the discussion footer), but the `maybe_update/2` clauses for a prepared entry keep only some assigns (eg. just `object_boundary`, which every feed update carries), so take them here whenever the parent sends them; updates that don't send them (eg. async preloads) leave them as they were
+        |> assign(Map.take(assigns, [:custom_actions]))
 
       socket ->
         maybe_update(assigns(socket), socket)

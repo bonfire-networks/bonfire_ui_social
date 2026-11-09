@@ -678,6 +678,25 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   defp notify_filter_changes(_assigns), do: :ok
 
+  @doc """
+  Whether the feed lists one entry per thread (`dedup_by_thread`): as its filters say when they set it (eg. `false` from the "Latest updates" tab), else as its preset does. The loader merges a named preset's filters on its own (`Map.merge(preset_filters, filters)`), so `feed_filters` here may hold only what the page or the user set: on a group page, `%{time_limit: 7}` after a load more.
+  """
+  def thread_grouped?(feed_filters, feed_name, context) do
+    case e(feed_filters, :dedup_by_thread, nil) do
+      nil ->
+        is_atom(feed_name) and not is_nil(feed_name) and
+          match?(
+            {:ok, %{dedup_by_thread: true}},
+            Bonfire.Social.FeedLoader.preset_feed_filters(feed_name,
+              current_user: current_user(context)
+            )
+          )
+
+      grouped? ->
+        grouped? == true
+    end
+  end
+
   def feed_name(assigns),
     do:
       assigns[:feed_name] || assigns[:feed_id] || assigns[:id] ||
@@ -1057,11 +1076,15 @@ defmodule Bonfire.UI.Social.FeedLive do
     case FeedFilters.validate(attrs) do
       {:ok, filters} ->
         existing_filters = assigns(socket)[:feed_filters] || %{}
-        # Validation fills in :desc even for content-only changes; keep the chosen direction.
-        filters =
-          if Map.has_key?(attrs, :sort_order) or Map.has_key?(attrs, "sort_order"),
-            do: filters,
-            else: Map.put(filters, :sort_order, e(existing_filters, :sort_order, :desc))
+
+        # `validate` returns a whole FeedFilters struct, so every field this event didn't send comes back at its default (eg. `dedup_by_thread: false`, `show_objects_only_once: true`, `sort_order: :desc`) and would overwrite the feed's own: keep only the fields it sent
+        filters = Map.take(filters, sent_filter_keys(attrs))
+
+        # # Validation fills in :desc even for content-only changes; keep the chosen direction.
+        # filters =
+        #   if Map.has_key?(attrs, :sort_order) or Map.has_key?(attrs, "sort_order"),
+        #     do: filters,
+        #     else: Map.put(filters, :sort_order, e(existing_filters, :sort_order, :desc))
 
         explicit_filter_replacements =
           if replace_lists do
@@ -1096,12 +1119,19 @@ defmodule Bonfire.UI.Social.FeedLive do
           |> Map.merge(explicit_filter_replacements)
           |> debug("merged"),
           socket,
+          # reload in place (`reset` false: old entries stay visible under the slim "reloading" indicator) except in tests, where feeds load synchronously and `reload` inserts the new edges with `reset: reset`, so `false` would append them to the old entries. The browser's async load always resets the stream. So tests don't run this in-place path (eg. a sticky `hide_activities` only showed in the browser)
           Config.env() == :test
         )
 
       e ->
         error(e)
     end
+  end
+
+  defp sent_filter_keys(attrs) do
+    Enum.filter(FeedFilters.supported_filters(), fn key ->
+      Map.has_key?(attrs, key) or Map.has_key?(attrs, to_string(key))
+    end)
   end
 
   defp explicit_filter_replacements(attrs, filters) do
@@ -1122,6 +1152,7 @@ defmodule Bonfire.UI.Social.FeedLive do
     end)
   end
 
+  # `reset` does two things: it picks the display (true: the big loading spinner with no entries, false: the slim "reloading" indicator over the old entries) and, when the feed loads synchronously (tests), whether the new edges replace the stream or are appended to it. An async load (the browser) always replaces the stream (`feed_assigns_maybe_async/4`'s `reset_stream` below)
   def reload(
         feed_filters \\ nil,
         socket,
@@ -1149,8 +1180,9 @@ defmodule Bonfire.UI.Social.FeedLive do
         # a stale count from the previous filters makes an empty result render the end-of-feed
         # message instead of the empty state
         feed_count: nil,
-        # the `preload_more` event sets this to "infinite_scroll" and it STICKS in assigns, so after any scroll-triggered preload every later stream render marks its entries `hidden`, waiting on scroll JS to reveal them. A reset batch is a fresh first page, so it has to be visible or the feed looks empty while holding rows
-        hide_activities: if(reset, do: nil, else: e(assigns, :hide_activities, nil)),
+        # the `preload_more` event sets this to "infinite_scroll" and it STICKS in assigns, so after any scroll-triggered preload every later stream render marks its entries `hidden`, waiting on scroll JS to reveal them. A reload is a fresh first page whether or not it resets the stream (`set_filters` reloads in place outside tests), so it has to be visible or the feed looks empty while holding rows
+        # hide_activities: if(reset, do: nil, else: e(assigns, :hide_activities, nil)),
+        hide_activities: nil,
         feed_filters: feed_filters
       )
 

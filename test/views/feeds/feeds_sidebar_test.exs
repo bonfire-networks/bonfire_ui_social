@@ -199,9 +199,12 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
   end
 
   test "guests see permitted feed tabs" do
+    # a guest has no LiveView socket, so the page they get is the static render, which `visit` does not give (it connects a LiveView), and there is no async load to wait for
+    # conn()
+    # |> visit("/feed/local")
+    # |> wait_async()
     conn()
-    |> visit("/feed/local")
-    |> wait_async()
+    |> get_conn_render("/feed/local")
     |> assert_has("#feed-tab-local[aria-current='page']", text: "Local")
     |> refute_has("#feed-tab-my")
     |> refute_has("#sidebar-bookmarks-link")
