@@ -3,6 +3,20 @@ defmodule Bonfire.UI.Social.Routes do
 
   defmacro __using__(_) do
     quote do
+      # downloads anyone can get: controllers, which don't load the user, so the locale comes from the browser. Before the scope below, since `/discussion/markdown/:id` must come before `/discussion/:type/:id`, which would otherwise shadow it
+      scope "/", Bonfire.UI.Social do
+        pipe_through(:browser_guest)
+
+        # Atom/RSS feeds with optional param (username, tag, etc.)
+        get "/feed/:feed_name/:param/feed.:format", FeedController, :feed
+        get "/feed/:feed_name/feed.:format", FeedController, :feed
+        get "/feed.:format", FeedController, :feed
+
+        # markdown download of any object with a post content (a Post, an Article, etc)
+        get("/discussion/markdown/:id", MarkdownController, :download_markdown)
+        get("/post/markdown/:id", MarkdownController, :download_markdown)
+      end
+
       # pages anyone can view
       scope "/", Bonfire.UI.Social do
         pipe_through(:browser)
@@ -15,19 +29,10 @@ defmodule Bonfire.UI.Social.Routes do
         # the events tagged with a category, named by its username or, if it has no character, its id
         live("/events/category/:category_ref", EventsLive, as: :events)
 
-        # Atom/RSS feeds with optional param (username, tag, etc.)
-        get "/feed/:feed_name/:param/feed.:format", FeedController, :feed
-        get "/feed/:feed_name/feed.:format", FeedController, :feed
-        get "/feed.:format", FeedController, :feed
-
         live("/bookmarks", FeedsLive, :bookmarks, as: :bookmarks)
 
         live("/discussion/:id/history", PostHistoryLive)
         live("/post/:id/history", PostHistoryLive)
-
-        # markdown download of any object with a post content (a Post, an Article, etc). NOTE: must come before `/discussion/:type/:id` below, which would otherwise shadow it
-        get("/discussion/markdown/:id", MarkdownController, :download_markdown)
-        get("/post/markdown/:id", MarkdownController, :download_markdown)
 
         live("/discussion/:id", DiscussionLive, as: Needle.Pointer)
 
