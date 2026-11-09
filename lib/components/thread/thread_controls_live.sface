@@ -14,7 +14,7 @@
     <fieldset class="p-2">
       <legend class="text-sm font-bold">{l("Thread layout")}</legend>
       {#for {mode, label} <- [{:nested, l("Threaded replies")}, {:flat, l("Linear replies")}]}
-        <label class="flex min-h-11 cursor-pointer items-center justify-between gap-3 px-2 text-base-content">
+        <label class="flex min-h-9 cursor-pointer items-center justify-between gap-3 px-2 text-sm text-base-content">
           <span>{label}</span>
           <input
             id={"thread-layout-#{@thread_id}-#{mode}"}
@@ -54,7 +54,7 @@
                 {:popularity_score, :desc, l("Trending")}
               ],
               else: []}
-        <label class="flex min-h-11 cursor-pointer items-center justify-between gap-3 px-2 text-base-content">
+        <label class="flex min-h-9 cursor-pointer items-center justify-between gap-3 px-2 text-sm text-base-content">
           <span>{label}</span>
           <input
             id={"thread-sort-#{@thread_id}-#{sort_by || :default}-#{sort_order}"}

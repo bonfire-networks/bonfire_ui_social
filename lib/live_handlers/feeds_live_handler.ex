@@ -2689,11 +2689,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
        )},
       {ValueFlows.Planning.Intent, preview_preloads(ValueFlows.Planning.Intent)},
       {ValueFlows.Proposal, preview_preloads(ValueFlows.Proposal)},
-      {ValueFlows.Process,
-       Utils.maybe_apply(Bonfire.UI.ValueFlows.Preview.ProcessListLive, :preloads, [],
-         fallback_return: nil,
-         on_error: :ignore
-       )}
+      # whichever extension renders a Process (`bonfire_ui_valueflows`, or `bonfire_divlab`'s lists) says what to load, as for Intent: without its creator, the activity's author has no name
+      {ValueFlows.Process, preview_preloads(ValueFlows.Process)}
     ]
     # a schema whose preview extension isn't installed (eg. `ValueFlows.Planning.Intent` without `bonfire_ui_valueflows`) has no preloads, and `Repo.preload/2` raises on `nil`
     |> Enum.reject(&match?({_schema, nil}, &1))
@@ -2706,6 +2703,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     case Bonfire.Common.Config.get([:ui, :object_preview, schema]) do
       module when is_atom(module) and not is_nil(module) ->
         Utils.maybe_apply(module, :preloads, [], fallback_return: nil, on_error: :ignore)
+
+      # some extensions register a function that picks the component (eg. `bonfire_ui_valueflows` for a Process): its module says what to load
+      fun when is_function(fun) ->
+        Utils.maybe_apply(Function.info(fun)[:module], :preloads, [],
+          fallback_return: nil,
+          on_error: :ignore
+        )
 
       _ ->
         nil
