@@ -128,14 +128,17 @@ defmodule Bonfire.UI.Social.InfiniteScrollSettingsTest do
       |> assert_has(~s|[data-id=load_more][phx-scroll$=":load_more"]|)
     end
 
-    test "in `:preload` mode the 'Show older activities' button uses preload_more",
+    # only auto (`true`) fires the button on scroll; in hybrid it's a click, so it never sends `preload_more`
+    test "in `:preload` mode the 'Show older activities' button only loads on click",
          %{conn: conn, me: me} do
       Settings.put([:ui, :infinite_scroll], :preload, current_user: me, scope: :user)
 
-      conn
-      |> visit("/feed/local?time_limit=1")
-      |> assert_has("[data-id=load_more]", text: "Show older activities")
-      |> assert_has(~s|[data-id=load_more][phx-scroll$=":preload_more"]|)
+      session =
+        conn
+        |> visit("/feed/local?time_limit=1")
+        |> assert_has("#load_more_show_older[data-id=load_more]", text: "Show older activities")
+
+      refute_has(session, "#load_more_show_older[phx-scroll]")
     end
 
     test "in disabled mode (`false`) the 'Show older activities' button only loads on click",
