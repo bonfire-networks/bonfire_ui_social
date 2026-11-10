@@ -63,6 +63,41 @@ defmodule Bonfire.UI.Social.SmartInputTest do
       |> visit("/feed/local")
       |> assert_has("#language_dropdown")
     end
+
+    test "each language is listed once, even when the user's and the instance's languages repeat",
+         %{
+           conn: conn,
+           me: me
+         } do
+      # the instance repeats `fr`, and the user's "Other languages I understand" repeat `en` and `fr`
+      Process.put([:bonfire_common, Bonfire.Common.Localise, :extra_locales], ["fr"])
+
+      {:ok, _} =
+        Bonfire.Common.Settings.put([Bonfire.Common.Localise.Cldr, :default_locale], "en",
+          current_user: me
+        )
+
+      me = Bonfire.Common.Repo.preload(me, :settings, force: true)
+
+      {:ok, _} =
+        Bonfire.Common.Settings.put([Bonfire.Common.Localise, :extra_locales], ["fr", "en"],
+          current_user: me
+        )
+
+      {:ok, view, _html} = Phoenix.LiveViewTest.live(conn, "/feed/local")
+
+      values =
+        view
+        |> Phoenix.LiveViewTest.render()
+        |> Floki.parse_document!()
+        |> Floki.attribute("input[name=language]", "value")
+
+      # control: the languages are listed
+      assert "en" in values
+      assert "fr" in values
+
+      assert Enum.frequencies(values) |> Enum.filter(fn {_, n} -> n > 1 end) == []
+    end
   end
 
   describe "publishing a post" do
