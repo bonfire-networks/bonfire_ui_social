@@ -2,6 +2,7 @@
 <Dropdown
   id={deterministic_dom_id(__MODULE__, id(@activity), "more_menu", @parent_id)}
   position="bottom-end"
+  sheet_on_mobile
   wrapper_class="feed_activity"
   expanded_touch_target
   trigger_class="btn btn-ghost group hover:bg-primary/10 btn-circle btn-sm"
@@ -31,10 +32,12 @@
       phx-hook="Copy"
       id={deterministic_dom_id(__MODULE__, id(@activity), "more_action_copy_url", @parent_id)}
       data-clipboard-text={URIs.canonical_url(@object) || URIs.canonical_url(@permalink)}
+      data-share
       class="flex items-center gap-3 text-sm text-base-content w-full"
     >
       <#Icon iconify="ph:copy-fill" class="size-4 shrink-0 text-muted" />
       <span class="flex-1 text-left truncate" data-role="label">{l("Copy link")}</span>
+      <span class="flex-1 text-left truncate" data-role="share-label">{l("Share")}</span>
     </button>
   </li>
 

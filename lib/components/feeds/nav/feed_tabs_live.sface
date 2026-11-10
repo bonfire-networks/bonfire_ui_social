@@ -8,7 +8,7 @@
     "w-full min-w-0 border-none",
     if(@sticky,
       do:
-        "sticky top-[calc(env(safe-area-inset-top)+3.75rem)] lg:top-page-header z-sticky bg-base-100/80 lg:bg-base-200/70 backdrop-blur-md before:absolute before:inset-x-0 before:bottom-full before:h-4 before:bg-base-100 lg:before:hidden transition-[translate,opacity] duration-200 ease-out motion-reduce:transition-none data-scroll-hidden:-translate-y-full lg:data-scroll-hidden:opacity-0 [html:has(&)]:scroll-pt-[calc(env(safe-area-inset-top)+6.75rem)] lg:[html:has(&)]:scroll-pt-[calc(var(--spacing-page-header)+3rem)]",
+        "sticky top-[calc(env(safe-area-inset-top)+var(--stream-header-height,3.75rem))] lg:top-page-header z-sticky bg-base-100/80 lg:bg-base-200/70 backdrop-blur-md before:absolute before:inset-x-0 before:bottom-full before:h-4 before:bg-base-100 lg:before:hidden transition-[translate,opacity] duration-200 ease-out motion-reduce:transition-none data-scroll-hidden:-translate-y-full lg:data-scroll-hidden:opacity-0 [html:has(&)]:scroll-pt-[calc(env(safe-area-inset-top)+var(--stream-header-height,3.75rem)+3rem)] lg:[html:has(&)]:scroll-pt-[calc(var(--spacing-page-header)+3rem)]",
       else: ""
     )
   ]}
