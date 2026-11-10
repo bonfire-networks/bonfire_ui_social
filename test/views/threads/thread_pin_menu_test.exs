@@ -12,6 +12,15 @@ defmodule Bonfire.UI.Social.ThreadPinMenu.Test do
   @answer "[data-role=mark_as_answer]"
   @pin "[data-role=pin_to_thread]"
 
+  # the reply's own menu, whose permission rows load when it opens (there are two menus on the page)
+  defp open_reply_menu(session, reply),
+    do:
+      click_button(
+        session,
+        ~s(article[data-object_id="#{id(reply)}"] [data-id=more_menu] button[id$=_trigger]),
+        "More actions"
+      )
+
   # answers are switched off in some flavours, so each viewer switches them on for themselves
   defp with_answers(user),
     do:
@@ -32,42 +41,51 @@ defmodule Bonfire.UI.Social.ThreadPinMenu.Test do
         boundary: "public"
       )
 
-    {:ok, _reply} =
+    {:ok, reply} =
       Posts.publish(
         current_user: replier,
         post_attrs: %{post_content: %{html_body: "<p>an answer</p>"}, reply_to_id: id(thread)},
         boundary: "public"
       )
 
-    {:ok, author: with_answers(author), replier: with_answers(replier), thread: thread}
+    {:ok,
+     author: with_answers(author), replier: with_answers(replier), thread: thread, reply: reply}
   end
 
   test "a participant who may not pin in the thread isn't offered either", %{
     replier: replier,
-    thread: thread
+    thread: thread,
+    reply: reply
   } do
     refute Bonfire.Boundaries.can?(replier, :pin, thread), "control: no :pin"
 
     conn(user: replier)
     |> visit("/post/#{id(thread)}")
     |> assert_has("article", text: "an answer")
+    |> open_reply_menu(reply)
     |> refute_has(@answer)
     |> refute_has(@pin)
   end
 
   test "Pin to thread sits in the Pin entry, Mark as answer beside it", %{
     author: author,
-    thread: thread
+    thread: thread,
+    reply: reply
   } do
     conn(user: author)
     |> visit("/post/#{id(thread)}")
     |> assert_has("article", text: "an answer")
+    |> open_reply_menu(reply)
     |> assert_has("[data-role=pin_menu] #{@pin}")
     |> assert_has(@answer)
     |> refute_has("[data-role=pin_menu] #{@answer}")
   end
 
-  test "someone granted :pin on the thread is offered both", %{author: author, thread: thread} do
+  test "someone granted :pin on the thread is offered both", %{
+    author: author,
+    thread: thread,
+    reply: reply
+  } do
     moderator = with_answers(fake_user!())
     {:ok, acl} = Acls.get_or_create_object_custom_acl(thread, author)
     Grants.grant(id(moderator), acl.id, :pin, true, current_user: author)
@@ -76,6 +94,7 @@ defmodule Bonfire.UI.Social.ThreadPinMenu.Test do
     conn(user: moderator)
     |> visit("/post/#{id(thread)}")
     |> assert_has("article", text: "an answer")
+    |> open_reply_menu(reply)
     |> assert_has(@answer)
     |> assert_has(@pin)
   end

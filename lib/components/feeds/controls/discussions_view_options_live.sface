@@ -27,7 +27,7 @@
               <fieldset class="p-2">
                 <legend class="text-sm font-bold">{l("Sort order")}</legend>
                 {#for {sort, sort_label} <- sorts(grouped?, @__context__)}
-                  <label class="flex min-h-11 cursor-pointer items-center justify-between gap-3 px-2 text-base-content">
+                  <label class="flex cursor-pointer items-center justify-between gap-3 text-sm h-8 text-base-content">
                     <span>{sort_label}</span>
                     <input
                       id={"#{@feed_id}-sort-#{sort || :default}"}

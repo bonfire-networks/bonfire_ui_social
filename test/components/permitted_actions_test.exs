@@ -96,6 +96,29 @@ defmodule Bonfire.UI.Social.PermittedActionsTest do
       refute_received {:fetched, _}
     end
 
+    test "with the boundary the feed loaded, decides the rows on open without fetching it", %{
+      me: me
+    } do
+      post = publish!(me, "preloaded")
+      loaded = Bonfire.Boundaries.boundaries_on_objects([id(post)], me) |> Map.get(id(post))
+      test_pid = self()
+
+      Repatch.patch(Bonfire.Boundaries, :boundaries_on_objects, fn ids, user ->
+        send(test_pid, {:fetched, ids})
+        Repatch.real(Bonfire.Boundaries, :boundaries_on_objects, [ids, user])
+      end)
+
+      {:noreply, socket} =
+        PermittedActionsLive.handle_event(
+          "load",
+          %{},
+          socket(me, %{object: post, object_boundary: loaded})
+        )
+
+      refute_received {:fetched, _}
+      assert %{edit: true, delete: true} = socket.assigns.permitted
+    end
+
     test "a stranger may neither edit nor delete", %{me: me} do
       post = publish!(fake_user!(fake_account!()), "theirs")
 

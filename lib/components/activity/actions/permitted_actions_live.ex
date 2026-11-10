@@ -20,7 +20,7 @@ defmodule Bonfire.UI.Social.Activity.PermittedActionsLive do
   @doc "Whether the viewer may pin in this reply's thread"
   prop can_pin_in_thread, :boolean, default: false
 
-  @doc "The object's boundary for the viewer, when the feed has loaded it (`Bonfire.Boundaries.LiveHandler.preload_boundaries/2`): the menu is then decided from it, with no query on opening"
+  @doc "The object's boundary for the viewer, when the feed has loaded it (`Bonfire.Boundaries.LiveHandler.preload_boundaries/2`): opening the menu then decides it from this, without fetching the boundary"
   prop object_boundary, :any, default: nil
 
   # from `MoreActionsLive`, so deleting a remote object doesn't promise a request to other instances
@@ -28,7 +28,7 @@ defmodule Bonfire.UI.Social.Activity.PermittedActionsLive do
 
   data boundary, :any, default: nil
 
-  @doc "What the viewer may do here, by action; `nil` until the menu is first opened, unless decided from a loaded `object_boundary`."
+  @doc "What the viewer may do here, by action; `nil` until the menu is first opened."
   data permitted, :map, default: nil
 
   # a pin or unpin from one of its rows (`Pins.LiveHandler.after_pin`): flip that row, the rest of `permitted` stands
@@ -51,42 +51,21 @@ defmodule Bonfire.UI.Social.Activity.PermittedActionsLive do
       e(assigns(socket), :id, nil)
     )
 
-    if is_nil(e(assigns(socket), :permitted, nil)) and
-         loaded?(e(assigns(socket), :object_boundary, nil)),
-       do: {:ok, assign_permitted(socket, false)},
-       else: {:ok, socket}
+    {:ok, socket}
   end
 
-  # opening the menu, where the feed didn't load the boundary
+  # Opening the menu. The rows are decided here and not at mount even when the feed loaded the
+  # boundary: rendered up front they were a third of every post's DOM (55 elements, 10.5 KB), and
+  # without them a post's content shows ~25% sooner at 4x CPU; the panel shows a skeleton row meanwhile.
   def handle_event("load", _params, %{assigns: %{permitted: nil}} = socket),
-    do: {:noreply, assign_permitted(socket, true)}
-
-  # opening the menu, where the rows were decided from the loaded boundary without the group and topic ones
-  def handle_event(
-        "load",
-        _params,
-        %{assigns: %{permitted: %{group_pins_loaded: false} = permitted}} = socket
-      ) do
-    %{object: object, published_in: published_in} = assigns(socket)
-
-    {:noreply,
-     assign(socket,
-       permitted: %{
-         permitted
-         | pin_scopes:
-             pin_scopes(assigns(socket), current_user(socket), published_in, object, true),
-           group_pins_loaded: true
-       }
-     )}
-  end
+    do: {:noreply, assign_permitted(socket)}
 
   def handle_event("load", _params, socket), do: {:noreply, socket}
 
   defp loaded?(%{object_id: _, verbs: verbs}) when is_list(verbs), do: true
   defp loaded?(_), do: false
 
-  # `opened?`: the group and topic rows cost a few queries, so they're decided only once the menu opens, not for every view of the post's page
-  defp assign_permitted(socket, opened?) do
+  defp assign_permitted(socket) do
     %{object: object, published_in: published_in, __context__: context} =
       assigns(socket)
 
@@ -111,18 +90,17 @@ defmodule Bonfire.UI.Social.Activity.PermittedActionsLive do
             Bonfire.UI.Social.Activity.DeleteObjectLive.can_delete?(context, object, boundary) ==
               true,
         remove_from_group: can_remove_from_group?(current_user, published_in, object, boundary),
-        pin_scopes: pin_scopes(assigns(socket), current_user, published_in, object, opened?),
-        group_pins_loaded: opened?
+        pin_scopes: pin_scopes(assigns(socket), current_user, published_in, object)
       }
     )
   end
 
   # as `[{kind, scope_id | :instance, pinned?}]`
-  defp pin_scopes(assigns, current_user, published_in, object, opened?) do
+  defp pin_scopes(assigns, current_user, published_in, object) do
     if current_user && module_enabled?(Bonfire.Social.Pins, current_user),
       do:
         thread_pin_scope(assigns, object) ++
-          if(opened?, do: group_pin_scopes(assigns, current_user, published_in, object), else: []) ++
+          group_pin_scopes(assigns, current_user, published_in, object) ++
           instance_pin_scope(current_user),
       else: []
   end

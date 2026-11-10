@@ -1,13 +1,22 @@
-{!-- "alt" caption dropdown overlaid on a media item; stops propagation so the
-     label click never triggers the surrounding open-modal button / link. --}
+{!-- "alt" caption popup overlaid on a media item. Stops propagation so the click
+     never reaches the surrounding open-modal button, and prevents the default so
+     where it sits inside the image link (the logged-out branch) tapping "alt" only
+     shows the caption instead of also opening the image. --}
 <div
   :if={@media_label}
   data-id="media_alt"
-  class="absolute z-50 bottom-3 left-3 dropdown dropdown-hover dropdown-top"
-  onclick="event.stopPropagation()"
+  class="absolute z-50 bottom-3 left-3"
+  onclick="event.preventDefault(); event.stopPropagation()"
 >
-  <label tabindex="0" class="text-white border-none btn btn-sm bg-black/60">{l("alt")}</label>
-  <div tabindex="0" class="p-2 rounded shadow dropdown-content bg-base-200 w-52">
+  <Bonfire.UI.Common.DropdownLive
+    id={@id}
+    position="top-start"
+    menu={false}
+    trigger_class="text-white border-none btn btn-sm bg-black/60"
+    label={l("Show alt text")}
+    panel_class="p-2 !w-52"
+  >
+    <:trigger>{l("alt")}</:trigger>
     <div class="prose-sm prose text-base-content">{@media_label}</div>
-  </div>
+  </Bonfire.UI.Common.DropdownLive>
 </div>
