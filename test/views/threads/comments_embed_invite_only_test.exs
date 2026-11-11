@@ -55,6 +55,15 @@ defmodule Bonfire.UI.Social.CommentsEmbedInviteOnlyTest do
     html = guest_embed(post)
 
     refute html =~ "inline_composer_remote_interaction_"
-    assert html =~ "Sign in"
+    # assert html =~ "Sign in"
+
+    [button] =
+      html
+      |> Floki.parse_document!()
+      |> Floki.find(~s(a[id^="inline_composer_login_"]))
+
+    assert Floki.text(button) |> String.trim() == "Reply"
+    assert [href] = Floki.attribute(button, "href")
+    assert href =~ "/remote_interaction?"
   end
 end

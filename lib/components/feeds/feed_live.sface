@@ -282,7 +282,7 @@
                                             <LoadMoreLive
                                               live_handler={Bonfire.Social.Feeds}
                                               page_info={@page_info || @previous_page_info}
-                                              cursor={end_cursor || previous_end_cursor || final_end_cursor}
+                                              cursor={end_cursor || final_end_cursor || previous_end_cursor}
                                               infinite_scroll={infinite_scroll == true}
                                               target={@myself}
                                               hide_guest_fallback={@hide_guest_fallback}

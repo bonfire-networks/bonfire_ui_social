@@ -153,6 +153,28 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       )
     end
 
+    # can't reach the case it was for: with deferred joins off, the last page in the time window still comes back with an `end_cursor`, so "Show older activities" only appears after an empty page, where its cursor is already right. The notifications follow tab covers it (`FollowChipPaginationTest`)
+    # test "As a logged-in user, after paging through the time window, Show older activities brings the next older activities",
+    #      %{alice: alice, account: account, limit: limit} do
+    #   conn(user: alice, account: account)
+    #   # today's, 2 and 3 days ago: more than one page
+    #   |> visit("/feed/local?time_limit=5")
+    #   |> wait_async()
+    #   |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]", count: limit)
+    #   |> click_button("[data-id=load_more]", "Load more")
+    #   |> wait_async()
+    #   |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]", count: 3)
+    #   |> assert_has_or_open_browser("[data-id=feed] article", text: "Three days ago content")
+    #   |> click_button("[data-id=load_more]", "Show older activities")
+    #   |> wait_async()
+    #   # a full page older than the last one shown: the week-old and the month-old posts
+    #   |> assert_has_or_open_browser("[data-id=feed] article", text: "Week-old content")
+    #   |> assert_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
+    #   |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]",
+    #     count: 3 + limit
+    #   )
+    # end
+
     test "As a logged-in user, when I click the load_all_time button with non-date sorting, it should reload the feed with no time limit",
          %{alice: alice, account: account, total_posts: total_posts, limit: limit} do
       conn = conn(user: alice, account: account)

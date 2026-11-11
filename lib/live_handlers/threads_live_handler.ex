@@ -906,6 +906,14 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         )
   end
 
+  @doc "For a reply page (the URL has a level), the focused reply and the depth down to which its descendants are also loaded: one max depth below it."
+  def maybe_include_descendants_of(reply_id, level, context) do
+    level = Types.maybe_to_integer(level, nil)
+
+    if reply_id && level,
+      do: {reply_id, level + max_depth(current_user: current_user(context))}
+  end
+
   def load_thread_assigns(socket, thread_id \\ nil) do
     debug("load comments")
     assigns = assigns(socket)
@@ -916,6 +924,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
       # debug(assigns)
 
       include_path_ids = e(assigns, :include_path_ids, nil)
+      include_descendants_of = e(assigns, :include_descendants_of, nil)
       thread_mode = e(assigns, :thread_mode, nil)
       sort_by = e(assigns, :sort_by, nil)
       sort_order = e(assigns, :sort_order, nil)
@@ -940,6 +949,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         after: e(assigns, :after, nil),
         max_depth: max_depth,
         include_path_ids: include_path_ids,
+        include_descendants_of: include_descendants_of,
         thread_mode: thread_mode,
         sort_by: sort_by,
         sort_order: sort_order,
@@ -971,6 +981,12 @@ defmodule Bonfire.Social.Threads.LiveHandler do
            thread_id: thread_id,
            #  include_path_ids: nil,
            depth_loaded: max_depth,
+           # the focused reply's branch is loaded deeper than the rest of the page
+           depth_loaded_under:
+             case include_descendants_of do
+               {reply_id, depth} -> %{reply_id => depth}
+               _ -> nil
+             end,
            reply_count: reply_count,
            has_replies: reply_count > 0,
            thread_boost_count:

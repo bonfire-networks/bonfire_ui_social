@@ -377,7 +377,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
       send_feed_updates(nil, feed_ids, [new_activity: activity], Bonfire.UI.Social.FeedLive)
     else
+      # a scheduled post is no longer pushed (`Bonfire.Social.LivePush.emit_live/3`), so this check is not needed
+      # if Bonfire.Common.DatesTimes.compare(
+      #      e(activity, :object, :id, nil) || id(activity),
+      #      Bonfire.Common.DatesTimes.now()
+      #    ) == :gt do
+      #   debug("not showing an activity scheduled for later")
+      # else
       err("I not have permission to view this new activity")
+      # end
     end
 
     {:noreply, socket}

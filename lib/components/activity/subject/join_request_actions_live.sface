@@ -50,6 +50,7 @@
         class={"btn btn-sm", "btn-primary": @request_status == :pending}
       >{if @request_status == :declined, do: l("Approve instead"), else: l("Approve")}</button>
     {/if}
+    {!-- TODO: a dropdown next to Decline with further options, such as rejecting the request (telling the requester) or blocking them --}
     <button
       :if={@request_status == :pending}
       id={"#{@id}-decline"}

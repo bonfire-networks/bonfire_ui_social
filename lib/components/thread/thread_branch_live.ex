@@ -28,6 +28,8 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
   prop activity_inception, :any, default: nil
   prop hide_actions, :any, default: false
   prop depth_loaded, :any, default: nil
+  # %{reply_id => depth}: that reply's branch is loaded deeper than `depth_loaded`
+  prop depth_loaded_under, :any, default: nil
   prop reply_generation, :integer, default: 0
 
   prop activity_preloads, :tuple, default: {nil, nil}
@@ -288,6 +290,14 @@ defmodule Bonfire.UI.Social.ThreadBranchLive do
     |> Enum.reject(&is_nil/1)
     |> Enum.uniq_by(&id/1)
     |> Enum.take(limit)
+  end
+
+  @doc "The depth this branch is loaded to: its own value from `depth_loaded_under` if the comment has one, else the page-wide `depth_loaded`."
+  def depth_loaded_for(comment, depth_loaded, depth_loaded_under) do
+    case {id(comment), depth_loaded_under} do
+      {id, %{} = under} when is_binary(id) -> Map.get(under, id, depth_loaded)
+      _ -> depth_loaded
+    end
   end
 
   def show_more_replies_button?(comment, thread_level, depth_loaded, threaded_replies_count) do

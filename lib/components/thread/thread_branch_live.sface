@@ -34,7 +34,12 @@
       <div
         :if={@show_thread_lines &&
           (has_replies?(@threaded_replies) ||
-             show_more_replies_button?(@comment, @thread_level, @depth_loaded, @threaded_replies_count))}
+             show_more_replies_button?(
+               @comment,
+               @thread_level,
+               depth_loaded_for(@comment, @depth_loaded, @depth_loaded_under),
+               @threaded_replies_count
+             ))}
         id={"line-#{@id}"}
         phx-click={if has_replies?(@threaded_replies) do
           JS.hide(to: "#replies-#{@id}")
@@ -125,7 +130,12 @@
 
     {#if @thread_mode != :flat}
       <div class="relative">
-        {#if show_more_replies_button?(@comment, @thread_level, @depth_loaded, @threaded_replies_count)}
+        {#if show_more_replies_button?(
+            @comment,
+            @thread_level,
+            depth_loaded_for(@comment, @depth_loaded, @depth_loaded_under),
+            @threaded_replies_count
+          )}
           <div
             class="relative flex items-center"
             style={"padding-left: calc(var(--comment-base-indent, 0px) + #{34 + (@visual_level - 1) * 34}px)"}
@@ -149,7 +159,7 @@
                 <span class="btn btn-sm">{more_replies_label(@comment, @threaded_replies_count)}</span>
               </button>
             {#else}
-              <LinkLive
+              {!-- a guest has no socket to load them in place, so the link opens this reply's own page, which shows the replies under it. It used to go to remote interaction:
                 to={maybe_apply(
                   Bonfire.UI.Me.RemoteInteractionLive,
                   :generate_url,
@@ -161,6 +171,9 @@
                   ],
                   fallback_return: "/login"
                 )}
+              --}
+              <LinkLive
+                to={"/discussion/#{@thread_id}/reply/#{@thread_level}/#{e(@comment, :id, nil)}"}
                 class="btn btn-sm ml-2"
               >
                 {more_replies_label(@comment, @threaded_replies_count)}</LinkLive>
@@ -254,7 +267,8 @@
                     activity_preloads={@activity_preloads}
                     hide_actions={@hide_actions}
                     can_pin_in_thread={@can_pin_in_thread}
-                    depth_loaded={@depth_loaded}
+                    depth_loaded={depth_loaded_for(@comment, @depth_loaded, @depth_loaded_under)}
+                    depth_loaded_under={@depth_loaded_under}
                     reply_generation={@reply_generation}
                     thread_reply_count={@thread_reply_count}
                     time_gap_before={time_gap_before(@comment, @threaded_replies, index)}

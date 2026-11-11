@@ -94,6 +94,84 @@ defmodule Bonfire.UI.Social.ReplyPostPageTest do
     assert {:ok, _view, _html} = live(conn, in_thread)
   end
 
+  describe "a reply link naming a reply that is not this thread's, or not visible to the viewer" do
+    setup %{post: post} do
+      alice = fake_user!()
+      bob = fake_user!()
+
+      publish = fn user, reply_to_id, body, boundary ->
+        {:ok, reply} =
+          Posts.publish(
+            current_user: user,
+            post_attrs: %{post_content: %{html_body: body}, reply_to_id: reply_to_id},
+            boundary: boundary
+          )
+
+        reply
+      end
+
+      # a deep visible reply of this thread, and a deep reply nobody but its author can see
+      deep =
+        Enum.scan(1..5, post, fn n, parent ->
+          publish.(alice, parent.id, "visible deep reply #{n}", "public")
+        end)
+        |> List.last()
+
+      hidden = publish.(alice, deep.id, "secret deep reply", "mentions")
+
+      {:ok, other_op} =
+        Posts.publish(
+          current_user: alice,
+          post_attrs: %{post_content: %{html_body: "other thread post"}},
+          boundary: "public"
+        )
+
+      other =
+        Enum.scan(1..5, other_op, fn n, parent ->
+          publish.(alice, parent.id, "other thread reply #{n}", "public")
+        end)
+        |> List.last()
+
+      {:ok,
+       bob_conn: conn(user: bob, account: bob.account),
+       guest_conn: conn(),
+       deep: deep,
+       hidden: hidden,
+       other: other}
+    end
+
+    defp main_text(conn, path) do
+      {:ok, view, _html} =
+        case live(conn, path) do
+          {:error, {_redirect, %{to: to}}} -> live(conn, to)
+          loaded -> loaded
+        end
+
+      view
+      |> render_async()
+      |> Floki.parse_document!()
+      |> Floki.find("[data-id=main_section]")
+      |> Floki.text()
+    end
+
+    for conn_name <- [:bob_conn, :guest_conn] do
+      test "shows the visible deep reply, but not the hidden one or another thread's (#{conn_name})",
+           ctx do
+        conn = ctx[unquote(conn_name)]
+        post = ctx.post
+
+        assert main_text(conn, "/discussion/#{post.id}/reply/6/#{ctx.deep.id}") =~
+                 "visible deep reply 5"
+
+        hidden_text = main_text(conn, "/discussion/#{post.id}/reply/7/#{ctx.hidden.id}")
+        refute hidden_text =~ "secret deep reply"
+
+        other_text = main_text(conn, "/discussion/#{post.id}/reply/6/#{ctx.other.id}")
+        refute other_text =~ "other thread reply"
+      end
+    end
+  end
+
   test "the start of a thread keeps its own page", %{conn: conn, post: post} do
     assert {:ok, view, _html} = live(conn, "/post/#{post.id}")
     # as text, since the HTML escapes the apostrophe
