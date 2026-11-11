@@ -587,8 +587,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       to_options(socket)
       |> Keyword.merge(opts)
 
-    preloads = e(opts, :activity_preloads, {[], []})
-
     _opts =
       opts
       |> Keyword.merge(
@@ -608,9 +606,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
           Keyword.new(attrs) |> Keyword.delete(:multiply_limit),
           Activities.order_pagination_opts(
             opts[:sort_by] || e(opts, :feed_filters, :sort_by, nil),
-            opts[:sort_order] || e(opts, :feed_filters, :sort_order, nil),
-            opts
-            |> Keyword.put(:preload, preloads |> elem(0))
+            opts[:sort_order] || e(opts, :feed_filters, :sort_order, nil)
           )
         )
       )
