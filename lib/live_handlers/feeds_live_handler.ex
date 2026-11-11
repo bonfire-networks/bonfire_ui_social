@@ -384,7 +384,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       #    ) == :gt do
       #   debug("not showing an activity scheduled for later")
       # else
-      err("I not have permission to view this new activity")
+      warn("User does not have permission to view this pushed activity, skipping")
       # end
     end
 
@@ -1259,7 +1259,14 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       rejoin_page =
         if user_connected,
           do:
-            rejoin_page(feed_name_id_or_tuple, assigns, opts, saved_cursor, base_opts, reset_stream)
+            rejoin_page(
+              feed_name_id_or_tuple,
+              assigns,
+              opts,
+              saved_cursor,
+              base_opts,
+              reset_stream
+            )
 
       if user_connected and is_nil(rejoin_page) do
         debug("load feed async")
@@ -1603,7 +1610,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       # after a reconnect, any date-sorted feed resumes from the post on screen; it comes from this same view, so custom filters don't matter
       is_binary(rejoin_resume_cursor(opts, feed_atom)) and
           chronological_desc_feed?(
-            Map.merge(e(opts, :feed_filters, nil) || %{}, feed_filters_only(feed_name_id_or_tuple))
+            Map.merge(
+              e(opts, :feed_filters, nil) || %{},
+              feed_filters_only(feed_name_id_or_tuple)
+            )
           ) ->
         rejoin_cursor = rejoin_resume_cursor(opts, feed_atom)
         debug(rejoin_cursor, "reading_pos: resuming :#{feed_atom} after a reconnect")
