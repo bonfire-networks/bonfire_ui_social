@@ -674,6 +674,69 @@ function loadJumpToTop({ initialScrollY = 0, reducedMotion = null } = {}) {
   };
 }
 
+// After a reconnect the server resumes any feed from the post the page shows as the socket comes back: the hook reports it for the join's params, and restores it even on feeds that save no position, without saving anything there.
+// values made in the hook's sandbox have another realm's prototypes, which deepEqual compares
+const rejoinParams = (state) => JSON.parse(JSON.stringify(state.window.Bonfire.feedRejoinParams()));
+
+test("a rejoin reports the feed and the first post on screen, read as the socket comes back", () => {
+  const first = "01KTEST0000000000000000001";
+  const second = "01KTEST0000000000000000002";
+  const top = activity(first, -150, 200);
+  const next = activity(second, 200, 600);
+  const state = loadTracker({
+    enabled: false,
+    feedName: "notifications",
+    activities: [top, next],
+  });
+
+  state.tracker.mounted();
+  assert.deepEqual(rejoinParams(state), { feed_rejoin: { notifications: first } });
+
+  // the reader scrolls on while offline: the first post leaves the screen
+  top.position = { top: -900, bottom: -550 };
+  next.position = { top: -550, bottom: 150 };
+
+  assert.deepEqual(rejoinParams(state), { feed_rejoin: { notifications: second } });
+
+  // a destroyed tracker no longer reports
+  state.tracker.destroyed();
+  assert.deepEqual(rejoinParams(state), {});
+});
+
+test("a rejoin at the feed top names the feed without a post", () => {
+  const state = loadTracker({
+    enabled: false,
+    feedName: "notifications",
+    activities: [activity("01KTEST0000000000000000001", 0, 300)],
+  });
+
+  state.tracker.mounted();
+
+  assert.deepEqual(rejoinParams(state), { feed_rejoin: { notifications: "" } });
+});
+
+test("a feed that saves no position restores the reported offset after a reconnect, saving nothing", () => {
+  const post = "01KTEST0000000000000000001";
+  const anchor = activity(post, -150, 200);
+  const state = loadTracker({ enabled: false, feedName: "notifications", activities: [anchor] });
+
+  state.tracker.mounted();
+  rejoinParams(state);
+
+  // the rejoined page starts at the top, the reader's post further down
+  anchor.position = { top: 300, bottom: 650 };
+  state.window.scrollY = 0;
+  state.el.dataset.resumeCursor = post;
+  state.tracker.updated();
+
+  assert.deepEqual(state.scrollCalls, [450]);
+  assert.deepEqual(state.savedLocalValues, []);
+  assert.equal(
+    state.pushedEvents.some(({ name }) => name.startsWith("Bonfire.Social.Feeds:reading_position")),
+    false,
+  );
+});
+
 test("the jump-to-top shortcut shows once scrolled past the opening viewport", () => {
   // the fake window is 800px tall
   const state = loadJumpToTop();
@@ -746,6 +809,7 @@ test("the scroll animation gives way as soon as the reader scrolls against it", 
   const interrupted = state.window.scrollY;
   // the reader flicks the page themselves mid-animation
   state.window.scrollY = interrupted + 500;
+  state.listeners.get("wheel")();
   state.runFrame(1200);
 
   assert.equal(state.window.scrollY, interrupted + 500, "the animation let go");

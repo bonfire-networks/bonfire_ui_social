@@ -15,11 +15,13 @@
       </button>
     </:action>
     <div class="flex flex-col gap-0" data-id="widget_customize_feed">
+      {!-- not recovered: LiveView replays an id'd phx-change form on every reconnect, and `set_feed_order` reloads the feed even for an unchanged order, which throws the reader away from their post and overwrites their saved reading position --}
       <form
         id={"feed_order_form_#{@feed_name || "default"}"}
         class="flex items-center justify-between gap-3"
         data-role="feed_order_row"
         phx-change="set_feed_order"
+        phx-auto-recover="ignore"
         phx-target={@event_target}
       >
         <label for={"feed_order_#{@feed_name || "default"}"} class="text-sm font-normal text-muted">{l("Sort")}</label>

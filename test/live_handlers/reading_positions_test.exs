@@ -365,6 +365,57 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
     end
   end
 
+  # After a reconnect the page sends the post each feed showed (`feed_resume`), and the feed restarts there, on any feed: LiveView clears streamed entries on every join, so the page has to come back in the join itself.
+  describe "resume after a reconnect" do
+    test "resumes a feed that saves no position from the post on screen", %{me: me} do
+      cursor = cursor_id()
+
+      assert {opts, ^cursor} =
+               LiveHandler.maybe_apply_reading_position(
+                 :notifications,
+                 rejoin_opts(me, client_feed_resume: %{"notifications" => cursor}),
+                 false
+               )
+
+      assert opts[:paginate][:after] == cursor
+      assert opts[:paginate][:cursor_inclusive] == true
+      assert opts[:time_limit] == 0
+    end
+
+    test "the post on screen wins over the stored marker", %{me: me} do
+      stored_cursor = cursor_id()
+      on_screen = cursor_id()
+      Markers.save_reading_position(me, "my", stored_cursor)
+
+      assert {opts, ^on_screen} =
+               LiveHandler.maybe_apply_reading_position(
+                 :my,
+                 rejoin_opts(me, enable_marker: true, client_feed_resume: %{"my" => on_screen}),
+                 false
+               )
+
+      assert opts[:paginate][:after] == on_screen
+    end
+
+    test "ignores the post on screen when the mount is not a reconnect", %{me: me} do
+      opts =
+        rejoin_opts(me, client_feed_resume: %{"notifications" => cursor_id()})
+        |> Keyword.put(:socket_rejoined?, false)
+
+      assert {^opts, nil} = LiveHandler.maybe_apply_reading_position(:notifications, opts, false)
+    end
+
+    test "ignores the post on screen on a feed not sorted newest first", %{me: me} do
+      opts =
+        rejoin_opts(me,
+          client_feed_resume: %{"explore" => cursor_id()},
+          feed_filters: %{sort_by: :like_count}
+        )
+
+      assert {^opts, nil} = LiveHandler.maybe_apply_reading_position(:explore, opts, false)
+    end
+  end
+
   describe "newer feed pagination" do
     test "loads consecutive server pages into the stream without gaps or duplicates", %{
       account: account,
@@ -528,6 +579,11 @@ defmodule Bonfire.UI.Social.ReadingPositionsTest do
           Map.new(opts)
         )
     }
+  end
+
+  # a reconnect's mount, on a feed that saves no position unless the test says otherwise
+  defp rejoin_opts(me, opts) do
+    resume_opts(me, Keyword.merge([socket_rejoined?: true, enable_marker: false], opts))
   end
 
   defp resume_opts(me, opts) do

@@ -1247,7 +1247,13 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       {opts, saved_cursor} =
         maybe_apply_reading_position(feed_name_id_or_tuple, base_opts, reset_stream)
 
-      if user_connected do
+      # nil unless this mount is a reconnect: then the page is loaded here, into the join
+      rejoin_page =
+        if user_connected,
+          do:
+            rejoin_page(feed_name_id_or_tuple, assigns, opts, saved_cursor, base_opts, reset_stream)
+
+      if user_connected and is_nil(rejoin_page) do
         debug("load feed async")
         pid = self()
 
@@ -1336,11 +1342,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
         # end of async
       else
-        debug("socket NOT connected, but logged in, so no need to load for SEO")
+        debug("no async load: the page was loaded for a rejoin, or the socket is not connected")
       end
 
-      # return temporary assigns in the meantime
-      assigns
+      rejoin_page || assigns
     else
       debug("socket not connected or not logged in, load feed synchronously")
 
@@ -1376,6 +1381,46 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       )
     )
   end
+
+  # LiveView clears streamed entries on every join, a rejoin included (phoenix_live_view dom_patch.ts), so after a reconnect the feed is loaded synchronously into the join instead of arriving after an empty page. nil: load as usual.
+  defp rejoin_page(feed_name_id_or_tuple, assigns, opts, saved_cursor, base_opts, reset_stream) do
+    feed_atom = feed_name_atom(feed_name_id_or_tuple)
+
+    if reset_stream != true and is_nil(base_opts[:paginate]) and
+         feed_rejoined?(base_opts, feed_atom) do
+      debug(saved_cursor, "rejoin: loading the reader's page in the mount")
+
+      case feed_assigns(feed_name_id_or_tuple, opts) do
+        {entries, new_assigns} when is_list(entries) and is_list(new_assigns) ->
+          {entries, new_assigns} =
+            maybe_restore_reading_position(
+              feed_name_id_or_tuple,
+              entries,
+              new_assigns,
+              saved_cursor,
+              base_opts
+            )
+
+          {entries, Keyword.merge(assigns, new_assigns)}
+
+        other ->
+          error(other, "Could not load the reader's page on a rejoin, loading the feed async")
+          nil
+      end
+    end
+  end
+
+  # Scoped by feed name: the rejoin flags stay in the context for the LiveView's life, and other feeds it loads later must load as usual.
+  defp feed_rejoined?(opts, feed_atom) when is_atom(feed_atom) and not is_nil(feed_atom) do
+    socket_rejoined?(opts) and
+      to_string(feed_atom) in (e(opts, :client_feeds_rejoined, nil) ||
+                                 e(opts, :__context__, :client_feeds_rejoined, nil) || [])
+  end
+
+  defp feed_rejoined?(_opts, _feed_atom), do: false
+
+  defp socket_rejoined?(opts),
+    do: e(opts, :socket_rejoined?, nil) || e(opts, :__context__, :socket_rejoined?, nil) || false
 
   def feed_assigns_non_live(feed_id, assigns, feed_filters, socket_or_opts) do
     opts = to_options(socket_or_opts)
@@ -1547,6 +1592,15 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       reset_stream == true or opts[:paginate] != nil ->
         {opts, nil}
 
+      # after a reconnect, any date-sorted feed resumes from the post on screen; it comes from this same view, so custom filters don't matter
+      is_binary(rejoin_resume_cursor(opts, feed_atom)) and
+          chronological_desc_feed?(
+            Map.merge(e(opts, :feed_filters, nil) || %{}, feed_filters_only(feed_name_id_or_tuple))
+          ) ->
+        rejoin_cursor = rejoin_resume_cursor(opts, feed_atom)
+        debug(rejoin_cursor, "reading_pos: resuming :#{feed_atom} after a reconnect")
+        {resume_from_cursor(opts, rejoin_cursor), rejoin_cursor}
+
       # Only explicitly-enabled presets resume; notifications, profile feeds, and
       # arbitrary component feeds always start at the top.
       opts[:enable_marker] != true ->
@@ -1576,12 +1630,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         if is_binary(cursor) and cursor != "" do
           debug(cursor, "reading_pos: restoring for :#{feed_atom}")
 
-          opts =
-            opts
-            |> Keyword.put(:paginate, after: cursor, cursor_inclusive: true)
-            |> Keyword.put(:time_limit, 0)
-
-          {opts, cursor}
+          {resume_from_cursor(opts, cursor), cursor}
         else
           {opts, nil}
         end
@@ -1590,6 +1639,21 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         {opts, nil}
     end
   end
+
+  # one page starting at the cursor itself, whatever its age
+  defp resume_from_cursor(opts, cursor) do
+    opts
+    |> Keyword.put(:paginate, after: cursor, cursor_inclusive: true)
+    |> Keyword.put(:time_limit, 0)
+  end
+
+  # the post on screen that the page sends with a reconnect (`LivePlugs.Helpers`)
+  defp rejoin_resume_cursor(opts, feed_atom) when is_atom(feed_atom) and not is_nil(feed_atom) do
+    if socket_rejoined?(opts),
+      do: client_cursor(opts, :client_feed_resume, to_string(feed_atom))
+  end
+
+  defp rejoin_resume_cursor(_opts, _feed_atom), do: nil
 
   # Saved reading positions are recorded against a feed's default view; when the current
   # filters deviate from the feed preset's own (custom feed filters via URL or the
@@ -1760,10 +1824,12 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   defp normalize_filter_item(item), do: to_string(item)
 
-  defp client_reading_position(opts, feed_name) when is_binary(feed_name) do
-    positions =
-      e(opts, :client_reading_positions, nil) ||
-        e(opts, :__context__, :client_reading_positions, nil)
+  defp client_reading_position(opts, feed_name),
+    do: client_cursor(opts, :client_reading_positions, feed_name)
+
+  # a cursor from one of the client's connect-param maps; untrusted, so ULIDs only
+  defp client_cursor(opts, key, feed_name) when is_binary(feed_name) do
+    positions = e(opts, key, nil) || e(opts, :__context__, key, nil)
 
     with %{} <- positions,
          cursor when is_binary(cursor) <-
@@ -1775,7 +1841,7 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  defp client_reading_position(_opts, _feed_name), do: nil
+  defp client_cursor(_opts, _key, _feed_name), do: nil
 
   defp feed_name_atom({name, _}) when is_atom(name), do: name
   defp feed_name_atom(name) when is_atom(name), do: name
