@@ -184,6 +184,30 @@ defmodule Bonfire.UI.Social.SmartInputTest do
     end
   end
 
+  describe "closing an empty composer" do
+    test "resets the content warning and the language for the next post", %{conn: conn} do
+      # a second language to pick, as in "each language is listed once"
+      Process.put([:bonfire_common, Bonfire.Common.Localise, :extra_locales], ["fr"])
+
+      conn
+      |> visit("/feed/local")
+      |> PhoenixTest.unwrap(fn view ->
+        import Phoenix.LiveViewTest
+        composer = Bonfire.UI.Common.Testing.Helpers.composer_view(view)
+
+        composer |> element("#sensitive_btn button") |> render_click()
+        composer |> element("#smart_input_form") |> render_change(%{"language" => "fr"})
+        assert has_element?(composer, "#sensitive_btn button[aria-pressed=true]")
+        assert has_element?(composer, "input[name=language][value=fr][checked]")
+
+        composer |> element("#close_composer_button") |> render_click()
+        assert has_element?(composer, "#sensitive_btn button[aria-pressed=false]")
+        refute has_element?(composer, "input[name=language][value=fr][checked]")
+        render(view)
+      end)
+    end
+  end
+
   describe "sensitive toggle" do
     test "sensitive checkbox is unchecked by default", %{conn: conn} do
       conn
