@@ -184,6 +184,44 @@ defmodule Bonfire.UI.Social.SmartInputTest do
     end
   end
 
+  describe "sending a post" do
+    test "a refused post leaves the composer as it was", %{conn: conn} do
+      conn
+      |> visit("/feed/local")
+      |> PhoenixTest.unwrap(fn view ->
+        import Phoenix.LiveViewTest
+        composer = Bonfire.UI.Common.Testing.Helpers.composer_view(view)
+
+        # refused: empty body (the error toast renders in another view)
+        composer
+        |> element("#smart_input_form")
+        |> render_submit(%{"post" => %{"post_content" => %{"html_body" => ""}}})
+
+        assert_push_event(composer, "js-exec-attr-event", %{to: "#main_smart_input_button", attr: "phx-reset"})
+        # not reset: text, content warning and local draft stay
+        refute_push_event(composer, "smart_input:reset", %{})
+        refute_push_event(composer, "smart_input:clear_cw", %{})
+        render(view)
+      end)
+    end
+
+    test "a published post resets the composer", %{conn: conn} do
+      conn
+      |> visit("/feed/local")
+      |> PhoenixTest.unwrap(fn view ->
+        import Phoenix.LiveViewTest
+        composer = Bonfire.UI.Common.Testing.Helpers.composer_view(view)
+
+        composer
+        |> element("#smart_input_form")
+        |> render_submit(%{"post" => %{"post_content" => %{"html_body" => "sent #{System.unique_integer()}"}}})
+
+        assert_push_event(composer, "smart_input:reset", %{})
+        render(view)
+      end)
+    end
+  end
+
   describe "closing an empty composer" do
     test "resets the content warning and the language for the next post", %{conn: conn} do
       # a second language to pick, as in "each language is listed once"
