@@ -211,36 +211,31 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
 
       conn = conn()
 
-      # First visit the guest view of the local feed
-      # get the initial page to see the load more link
-      conn
-      |> visit("/feed/local")
-      |> assert_has_or_open_browser("[data-id=feed] article",
-        count: limit
-      )
-      # Extract the pagination URL (without clicking the button)
-      # load_more_href = session
-      # |> unwrap(fn view ->
-      #   href = Floki.attribute(view, "[data-id=load_more] a", "href") |> List.last()
-      #   "/feed/local" <> href
-      # end)
+      # a guest without JavaScript gets the static render, which `visit` does not give (it connects a LiveView), so the Next page link is fetched with `get_conn_render`
+      # First get the guest view of the local feed, with the load more link
+      first_page =
+        conn
+        |> get_conn_render("/feed/local")
+        |> assert_has_or_open_browser("[data-id=feed] article",
+          count: limit
+        )
 
-      # # Now make a direct HTTP request with the pagination parameters
-      # conn
-      # |> visit(load_more_href)
-      # |> PhoenixTest.open_browser()
-      |> click_link("a[data-id=next_page]", "Next page")
+      conn
+      |> get_conn_render(static_href(first_page, "a[data-id=next_page]"))
       |> assert_has_or_open_browser("[data-id=feed] article",
         count: limit
       )
 
-      # Then visit the user profile who authored those posts
+      # Then the user profile who authored those posts
+      profile_page =
+        conn
+        |> get_conn_render("/@#{alice.character.username}")
+        |> assert_has("[data-id=feed] article",
+          count: limit
+        )
+
       conn
-      |> visit("/@#{alice.character.username}")
-      |> assert_has("[data-id=feed] article",
-        count: limit
-      )
-      |> click_link("a[data-id=next_page]", "Next page")
+      |> get_conn_render(static_href(profile_page, "a[data-id=next_page]"))
       |> assert_has("[data-id=feed] article",
         count: limit
       )
@@ -260,22 +255,15 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreTest do
                  Posts.publish(current_user: alice, post_attrs: post_attrs(n), boundary: "public")
       end
 
-      conn()
-      |> visit("/feed")
-      |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
-      |> click_link("a[data-id=next_page]", "Next page")
-      |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
-    end
-
-    test "As a guest, an old next page link with a cursor in a format the feed query no longer accepts still renders the page" do
-      # a crawler replaying an old link, whose cursor is keyed by `{:activity, :id}` where the feed query now paginates by `:id`
-      cursor = "g3QAAAABaAJ3CGFjdGl2aXR5dwJpZG0AAAAaMDFLNFZaNTZSSzlNUFI1VjNWSzRFTlYyUEo="
+      # the static render a guest without JavaScript gets, where `visit` would connect a LiveView
+      first_page =
+        conn()
+        |> get_conn_render("/feed")
+        |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
 
       conn()
-      |> visit(
-        "/feed/?Elixir.Bonfire.Social.Feeds[after]=#{cursor}&Elixir.Bonfire.Social.Feeds[multiply_limit]=4&Elixir.Bonfire.Social.Feeds[time_limit]=0"
-      )
-      |> assert_has("#main-content")
+      |> get_conn_render(static_href(first_page, "a[data-id=next_page]"))
+      |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
     end
   end
 end

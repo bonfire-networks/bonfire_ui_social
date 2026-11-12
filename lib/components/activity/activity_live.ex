@@ -562,7 +562,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
           path(object, [], preload_if_needed: false)
       end
 
-    permalink = if object_permalink == current_url, do: "", else: object_permalink
+    # permalink = if object_permalink == current_url, do: "", else: object_permalink
+    permalink =
+      cond do
+        # an ask (to follow, join or quote) opens where it can be accepted or declined, not at its object, which for a follow ask is the reader themselves
+        experienced_as in [:follow_request, :join_request, :quote_request, :request] ->
+          "/notifications/requests"
+
+        object_permalink == current_url ->
+          ""
+
+        true ->
+          object_permalink
+      end
 
     # |> debug()
 
@@ -1066,6 +1078,10 @@ defmodule Bonfire.UI.Social.ActivityLive do
     do: Bonfire.Boundaries.can?(context, :read, object_boundary) == true
 
   def can_read?(_context, _object_boundary), do: false
+
+  # the id of a stateful preview component: its card's id plus a short name from its module (eg. `..._question_live`), so each card gets its own instance
+  defp stateful_preview_id(component, parent_id),
+    do: "#{parent_id}_#{component |> Module.split() |> List.last() |> Macro.underscore()}"
 
   # a flag in the notifications or flags feeds shows what was flagged to whoever moderates the instance, even when they couldn't read it otherwise. Cached per process by `can?/3`, so a page of flags asks once
   defp moderating_flag?(context, :flag, showing_within)
@@ -1599,8 +1615,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   primary_image={maybe_get(component_assigns, :primary_image, nil)}
                   published_in={@published_in}
                 />
+                {!-- ActivityLive-specific branch, folded into the generic stateful branch below
               {#match Bonfire.UI.Social.ActivityLive}
-                {!-- a nested preview (a quoted post, the post replied to) is its own card: it loads its own boundary and keyword verdict in `update_many`, not its parent's --}
                 <StatefulComponent
                   :if={@hide_activity != "dynamic"}
                   module={component}
@@ -1632,47 +1648,96 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   thread_title={maybe_get(component_assigns, :thread_title, @thread_title)}
                   subject={maybe_get(component_assigns, :subject, @subject_user)}
                 />
+              --}
               {#match _}
-                <StatelessComponent
-                  :if={@hide_activity != "dynamic"}
-                  module={component}
-                  activity_component_id={id(component_assigns) || @activity_component_id}
-                  activity_prepared={:defer_to_render}
-                  activity_inception={maybe_get(component_assigns, :activity_inception, @activity_inception)}
-                  myself={nil}
-                  showing_within={maybe_get(component_assigns, :showing_within, @showing_within)}
-                  thread_mode={@thread_mode}
-                  activity={maybe_get(component_assigns, :activity, @activity)}
-                  object={maybe_get(component_assigns, :object, @object)}
-                  object_id={maybe_get(component_assigns, :object_id, @object_id)}
-                  object_boundary={maybe_get(component_assigns, :object_boundary, @object_boundary)}
-                  object_type={maybe_get(component_assigns, :object_type, @object_type)}
-                  object_type_readable={maybe_get(component_assigns, :object_type_readable, @object_type_readable)}
-                  date_ago={maybe_get(component_assigns, :date_ago, @date_ago)}
-                  verb={maybe_get(component_assigns, :verb, @verb)}
-                  experienced_as={maybe_get(component_assigns, :experienced_as, @experienced_as)}
-                  permalink={maybe_get(component_assigns, :permalink, @permalink)}
-                  thread_url={maybe_get(component_assigns, :thread_url, @thread_url)}
-                  thread_id={maybe_get(component_assigns, :thread_id, @thread_id)}
-                  thread_level={maybe_get(component_assigns, :thread_level, @thread_level)}
-                  viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
-                  show_minimal_subject_and_note={maybe_get(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
-                  hide_reply={maybe_get(component_assigns, :hide_reply, @hide_reply)}
-                  profile={maybe_get(component_assigns, :profile, nil)}
-                  character={maybe_get(component_assigns, :character, nil)}
-                  media={maybe_get(component_assigns, :media, nil)}
-                  json={maybe_get(component_assigns, :json, nil)}
-                  label={maybe_get(component_assigns, :label, nil)}
-                  class={maybe_get(component_assigns, :class, nil)}
-                  to={maybe_get(component_assigns, :to, nil)}
-                  is_remote={maybe_get(component_assigns, :is_remote, @is_remote)}
-                  hide_actions={maybe_get(component_assigns, :hide_actions, @hide_actions)}
-                  parent_id={@activity_component_id}
-                  cw={@cw}
-                  thread_title={maybe_get(component_assigns, :thread_title, @thread_title)}
-                  subject={maybe_get(component_assigns, :subject, @subject_user)}
-                  primary_image={maybe_get(component_assigns, :primary_image, nil)}
-                />
+                {!-- a preview component that is a LiveComponent is stateful: it gets its own id, so it can batch its data over the whole page in `update_many/1` and handle its own events. `component_type/1` is checked in a nested `{#case}` as it can't be called in a `{#match ... when ...}` guard --}
+                {#case Bonfire.UI.Common.component_type(component)}
+                  {#match component_type when component_type in [Surface.LiveComponent, Phoenix.LiveComponent]}
+                    {!-- a nested preview (a quoted post, the post replied to) is its own card: it loads its own boundary and keyword verdict in `update_many`, so it isn't given its parent's `object_boundary`. It gets no `profile` or `character` either: a stateful component has an `id` assign, and `current_user/1` takes assigns holding an id and a profile or character for a user --}
+                    <StatefulComponent
+                      :if={@hide_activity != "dynamic"}
+                      module={component}
+                      id={maybe_get(component_assigns, :id, nil) ||
+                        stateful_preview_id(component, id(component_assigns) || @activity_component_id)}
+                      __context__={@__context__}
+                      activity_component_id={id(component_assigns) || @activity_component_id}
+                      activity_prepared={if component == Bonfire.UI.Social.ActivityLive, do: nil, else: :defer_to_render}
+                      activity_inception={maybe_get(component_assigns, :activity_inception, @activity_inception)}
+                      showing_within={maybe_get(component_assigns, :showing_within, @showing_within)}
+                      thread_mode={@thread_mode}
+                      activity={maybe_get(component_assigns, :activity, @activity)}
+                      object={maybe_get(component_assigns, :object, @object)}
+                      object_id={maybe_get(component_assigns, :object_id, @object_id)}
+                      object_boundary={if component == Bonfire.UI.Social.ActivityLive,
+                        do: :skip_boundary_preload,
+                        else: maybe_get(component_assigns, :object_boundary, @object_boundary)}
+                      object_type={maybe_get(component_assigns, :object_type, @object_type)}
+                      object_type_readable={maybe_get(component_assigns, :object_type_readable, @object_type_readable)}
+                      date_ago={maybe_get(component_assigns, :date_ago, @date_ago)}
+                      verb={maybe_get(component_assigns, :verb, @verb)}
+                      experienced_as={maybe_get(component_assigns, :experienced_as, @experienced_as)}
+                      permalink={maybe_get(component_assigns, :permalink, @permalink)}
+                      thread_url={maybe_get(component_assigns, :thread_url, @thread_url)}
+                      thread_id={maybe_get(component_assigns, :thread_id, @thread_id)}
+                      thread_level={maybe_get(component_assigns, :thread_level, @thread_level)}
+                      viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
+                      show_minimal_subject_and_note={maybe_get(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
+                      hide_reply={maybe_get(component_assigns, :hide_reply, @hide_reply)}
+                      media={maybe_get(component_assigns, :media, nil)}
+                      json={maybe_get(component_assigns, :json, nil)}
+                      label={maybe_get(component_assigns, :label, nil)}
+                      class={maybe_get(component_assigns, :class, nil)}
+                      to={maybe_get(component_assigns, :to, nil)}
+                      is_remote={maybe_get(component_assigns, :is_remote, @is_remote)}
+                      hide_actions={maybe_get(component_assigns, :hide_actions, @hide_actions)}
+                      parent_id={@activity_component_id}
+                      cw={maybe_get(component_assigns, :cw, @cw)}
+                      thread_title={maybe_get(component_assigns, :thread_title, @thread_title)}
+                      subject={maybe_get(component_assigns, :subject, @subject_user)}
+                      primary_image={maybe_get(component_assigns, :primary_image, nil)}
+                    />
+                  {#match _}
+                    <StatelessComponent
+                      :if={@hide_activity != "dynamic"}
+                      module={component}
+                      activity_component_id={id(component_assigns) || @activity_component_id}
+                      activity_prepared={:defer_to_render}
+                      activity_inception={maybe_get(component_assigns, :activity_inception, @activity_inception)}
+                      myself={nil}
+                      showing_within={maybe_get(component_assigns, :showing_within, @showing_within)}
+                      thread_mode={@thread_mode}
+                      activity={maybe_get(component_assigns, :activity, @activity)}
+                      object={maybe_get(component_assigns, :object, @object)}
+                      object_id={maybe_get(component_assigns, :object_id, @object_id)}
+                      object_boundary={maybe_get(component_assigns, :object_boundary, @object_boundary)}
+                      object_type={maybe_get(component_assigns, :object_type, @object_type)}
+                      object_type_readable={maybe_get(component_assigns, :object_type_readable, @object_type_readable)}
+                      date_ago={maybe_get(component_assigns, :date_ago, @date_ago)}
+                      verb={maybe_get(component_assigns, :verb, @verb)}
+                      experienced_as={maybe_get(component_assigns, :experienced_as, @experienced_as)}
+                      permalink={maybe_get(component_assigns, :permalink, @permalink)}
+                      thread_url={maybe_get(component_assigns, :thread_url, @thread_url)}
+                      thread_id={maybe_get(component_assigns, :thread_id, @thread_id)}
+                      thread_level={maybe_get(component_assigns, :thread_level, @thread_level)}
+                      viewing_main_object={maybe_get(component_assigns, :viewing_main_object, @viewing_main_object)}
+                      show_minimal_subject_and_note={maybe_get(component_assigns, :show_minimal_subject_and_note, @show_minimal_subject_and_note)}
+                      hide_reply={maybe_get(component_assigns, :hide_reply, @hide_reply)}
+                      profile={maybe_get(component_assigns, :profile, nil)}
+                      character={maybe_get(component_assigns, :character, nil)}
+                      media={maybe_get(component_assigns, :media, nil)}
+                      json={maybe_get(component_assigns, :json, nil)}
+                      label={maybe_get(component_assigns, :label, nil)}
+                      class={maybe_get(component_assigns, :class, nil)}
+                      to={maybe_get(component_assigns, :to, nil)}
+                      is_remote={maybe_get(component_assigns, :is_remote, @is_remote)}
+                      hide_actions={maybe_get(component_assigns, :hide_actions, @hide_actions)}
+                      parent_id={@activity_component_id}
+                      cw={@cw}
+                      thread_title={maybe_get(component_assigns, :thread_title, @thread_title)}
+                      subject={maybe_get(component_assigns, :subject, @subject_user)}
+                      primary_image={maybe_get(component_assigns, :primary_image, nil)}
+                    />
+                {/case}
             {/case}
           {/for}
 

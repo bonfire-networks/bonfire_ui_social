@@ -109,14 +109,32 @@
         </div>
 
         <div class="flex-1 min-w-0 text-base leading-snug">
-          <LinkLive
-            to={@path}
-            opts={"data-id": "subject_name"}
-            parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
-            class="inline link link-hover font-medium text-base-content"
-          >
-            {@profile_name || @character_username}
-          </LinkLive>
+          {!-- what the reader asked for and was granted: the subject is the reader, so the row leads with what they were let into --}
+          {#if own_act?(@experienced_as, @subject_id, current_user_id(@__context__))}
+            {Bonfire.Social.Notifications.phrase_for(@experienced_as, :subject)}
+            <LinkLive
+              to={path(@object)}
+              opts={"data-id": "object_name"}
+              parent_id={deterministic_dom_id(__MODULE__, @object_id, "subject_minimal_object", @parent_id)}
+              class="inline link link-hover font-medium text-base-content"
+            >
+              {e(@object, :profile, :name, nil) || e(@object, :name, nil) || e(@object, :named, :name, nil) ||
+                e(@object, :character, :username, nil)}
+            </LinkLive>
+            {!-- an approved quote ask (`:quote`) shows as the quote post's own card, not in this arm
+          {#elseif @experienced_as == :quote_approved}
+            {Bonfire.Social.Notifications.phrase_for(@experienced_as)}
+          --}
+          {#else}
+            <LinkLive
+              to={@path}
+              opts={"data-id": "subject_name"}
+              parent_id={deterministic_dom_id(__MODULE__, @subject_id, "subject_minimal_name", @parent_id)}
+              class="inline link link-hover font-medium text-base-content"
+            >
+              {@profile_name || @character_username}
+            </LinkLive>
+          {/if}
 
           {#if Bonfire.Social.Notifications.aggregate?(@experienced_as) and @subjects_more != []}
             <Bonfire.UI.Social.Activity.SubjectListModalLive
@@ -130,17 +148,20 @@
             />
           {/if}
 
-          {#case notification_phrase(
-              @experienced_as,
-              @about_id || @object_id,
-              current_user_id(@__context__),
-              @object
-            )}
-            {#match nil}
-              {raw(Bonfire.Social.Activities.experience_display(@experienced_as, %{object: @object}))}
-            {#match phrase}
-              {phrase}
-          {/case}
+          {#if not own_act?(@experienced_as, @subject_id, current_user_id(@__context__))}
+            {#case notification_phrase(
+                @experienced_as,
+                @about_id || @object_id,
+                current_user_id(@__context__),
+                @object,
+                @subject_id
+              )}
+              {#match nil}
+                {raw(Bonfire.Social.Activities.experience_display(@experienced_as, %{object: @object}))}
+              {#match phrase}
+                {phrase}
+            {/case}
+          {/if}
         </div>
 
         {!-- join requests have their own controls (`JoinRequestActionsLive`) --}
@@ -155,6 +176,7 @@
         </button>
 
         {!-- declining is ignoring: the request is only marked ignored, and nothing is sent to the requester --}
+        {!-- TODO: a dropdown next to Ignore with further options, such as rejecting the request (telling the requester) or blocking them --}
         <button
           :if={@experienced_as == :follow_request}
           :on-click="Bonfire.Social.Graph.Follows:ignore"

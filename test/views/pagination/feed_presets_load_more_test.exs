@@ -93,6 +93,51 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
     end
   end
 
+  describe "Media feed pagination order" do
+    # Defect under test (Q423): `:per_media` feeds (any `media_types` filter) paginate a Media-rooted query ordered by `newest_activity_id`, but the Paginator cursor is the Media's own `:id`. When media ids and newest-activity ids order differently, page 2 (`id < last_media_id`) repeats or skips items.
+    # Deferred: media feeds paginate on the Media id while ordering by newest activity, so page 2 skips items; see the custom feeds perf plan.
+    @tag :todo
+    test "load more on the media feed shows each media once, newest activity first", %{
+      user1: user1,
+      account: account,
+      limit: limit
+    } do
+      assert limit == 2
+
+      # upload first, so the media ids run a < b < c < d
+      [a, b, c, d] =
+        Enum.map(~w(a b c d), fn label ->
+          Fake.upload_media(:images, user1, "Order #{label}")
+        end)
+
+      # then post in an order that differs from the media ids, so newest activity first is: a, c, b, d
+      for {label, media} <- [{"d", d}, {"b", b}, {"c", c}, {"a", a}] do
+        Fake.post_with_media(user1, media, "order-#{label}")
+      end
+
+      conn = conn(user: user1, account: account)
+
+      item = fn media -> "[data-id=top_level_media][data-object_id='#{media.id}']" end
+
+      session =
+        conn
+        |> visit("/feed/local_media")
+        |> wait_async()
+        |> assert_has("[data-id=top_level_media]", count: 2)
+        |> assert_has(item.(a), count: 1)
+        |> assert_has(item.(c), count: 1)
+        |> click_button("[data-id=load_more]", "Load more")
+        |> wait_async()
+
+      session
+      |> assert_has("[data-id=top_level_media]", count: 4)
+      |> assert_has(item.(a), count: 1)
+      |> assert_has(item.(b), count: 1)
+      |> assert_has(item.(c), count: 1)
+      |> assert_has(item.(d), count: 1)
+    end
+  end
+
   describe "Following Feed Pagination" do
     test "pagination loads the correct next set of posts from followed users", %{
       user1: user1,

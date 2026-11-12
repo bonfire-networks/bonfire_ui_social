@@ -13,6 +13,7 @@
     thread_id={@thread_id}
     reply_id={@reply_id}
     include_path_ids={@include_path_ids}
+    include_descendants_of={@include_descendants_of}
     participants={@participants}
     loading={@loading}
     replies={@replies}

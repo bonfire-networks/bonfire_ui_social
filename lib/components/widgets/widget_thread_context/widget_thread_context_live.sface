@@ -21,10 +21,12 @@
             </span>
           </div>
 
+          {!-- was: the summary as raw text inside this link, clamped to 2 lines (markdown shown literally, no way to expand). It is now below the link, since a Read more button can't sit inside an <a> without also following it
           <p
             :if={e(category, :profile, :summary, "") != ""}
             class="mt-1 text-sm text-muted leading-snug line-clamp-2"
           >{e(category, :profile, :summary, "")}</p>
+          --}
 
           {#case e(category, :type, nil)}
             {#match :group}
@@ -34,6 +36,17 @@
             {#match _}
           {/case}
         </LinkLive>
+
+        {!-- same clamp and Read more as the group hero's description (group_hero_live.sface) --}
+        {#case e(category, :profile, :summary, nil)}
+          {#match summary when summary in [nil, ""]}
+          {#match summary}
+            <Bonfire.UI.Common.TruncatableLive
+              id={"thread-context-summary-#{id(category)}"}
+              html={rich(summary)}
+              class="mt-2 prose prose-sm text-muted max-w-none [&>p:first-child]:mt-0 [&>p:last-child]:mb-0"
+            />
+        {/case}
       </Bonfire.UI.Common.WidgetBlockLive>
     </div>
   {#match _}

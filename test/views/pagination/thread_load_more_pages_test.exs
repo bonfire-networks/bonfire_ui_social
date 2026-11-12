@@ -172,29 +172,29 @@ defmodule Bonfire.UI.Social.Threads.LoadMoreTest do
 
       # Visit the discussion page. No-JS guests get a forward-only "Next page" link
       # (there is no "Previous page" in a thread).
-      session =
-        visit(conn, "/discussion/#{op.id}")
+      # the static render a guest without JavaScript gets, where `visit` would connect a LiveView
+      first_page =
+        get_conn_render(conn, "/discussion/#{op.id}")
         |> assert_has("[data-id='comment']", count: limit)
         |> assert_has("[data-id=load_more]")
         |> refute_has("[data-role=loading]")
         |> refute_has("a[data-id=previous_page]")
-        # |> PhoenixTest.open_browser()
-        |> click_link("a[data-id=next_page]", "Next page")
-        |> refute_has("[data-role=loading]")
-        # |> PhoenixTest.open_browser()
-        |> assert_has("[data-id='comment']", count: 2)
+
+      get_conn_render(conn, static_href(first_page, "a[data-id=next_page]"))
+      |> refute_has("[data-role=loading]")
+      |> assert_has("[data-id='comment']", count: 2)
 
       Process.put([:bonfire_ui_social, Bonfire.UI.Social.ThreadLive, :thread_mode], :flat)
 
       # Visit the discussion page in flat mode
-      session =
-        visit(conn, "/discussion/#{op.id}")
-        # |> PhoenixTest.open_browser()
+      first_flat_page =
+        get_conn_render(conn, "/discussion/#{op.id}")
         |> assert_has("[data-role='comment-flat']", count: limit)
         |> assert_has("[data-id=load_more]")
         |> refute_has("a[data-id=previous_page]")
-        |> click_link("a[data-id=next_page]", "Next page")
-        |> assert_has("[data-role='comment-flat']", count: 2)
+
+      get_conn_render(conn, static_href(first_flat_page, "a[data-id=next_page]"))
+      |> assert_has("[data-role='comment-flat']", count: 2)
     end
   end
 

@@ -23,6 +23,9 @@ defmodule Bonfire.UI.Social.ThreadLive do
   prop reply_to_id, :any, default: nil
   prop include_path_ids, :any, default: nil
   prop depth_loaded, :any, default: nil
+  prop include_descendants_of, :any, default: nil
+  # %{reply_id => depth}: that reply's branch is loaded deeper than `depth_loaded`
+  prop depth_loaded_under, :any, default: nil
 
   prop main_object_component_id, :any, default: nil
   # prop page, :any, default: "thread"

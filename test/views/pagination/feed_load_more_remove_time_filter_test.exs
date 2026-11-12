@@ -153,6 +153,28 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       )
     end
 
+    # can't reach the case it was for: with deferred joins off, the last page in the time window still comes back with an `end_cursor`, so "Show older activities" only appears after an empty page, where its cursor is already right. The notifications follow tab covers it (`FollowChipPaginationTest`)
+    # test "As a logged-in user, after paging through the time window, Show older activities brings the next older activities",
+    #      %{alice: alice, account: account, limit: limit} do
+    #   conn(user: alice, account: account)
+    #   # today's, 2 and 3 days ago: more than one page
+    #   |> visit("/feed/local?time_limit=5")
+    #   |> wait_async()
+    #   |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]", count: limit)
+    #   |> click_button("[data-id=load_more]", "Load more")
+    #   |> wait_async()
+    #   |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]", count: 3)
+    #   |> assert_has_or_open_browser("[data-id=feed] article", text: "Three days ago content")
+    #   |> click_button("[data-id=load_more]", "Show older activities")
+    #   |> wait_async()
+    #   # a full page older than the last one shown: the week-old and the month-old posts
+    #   |> assert_has_or_open_browser("[data-id=feed] article", text: "Week-old content")
+    #   |> assert_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
+    #   |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]",
+    #     count: 3 + limit
+    #   )
+    # end
+
     test "As a logged-in user, when I click the load_all_time button with non-date sorting, it should reload the feed with no time limit",
          %{alice: alice, account: account, total_posts: total_posts, limit: limit} do
       conn = conn(user: alice, account: account)
@@ -198,43 +220,38 @@ defmodule Bonfire.UI.Social.Feeds.LoadMoreRemoveTimeFilterTest do
       # Use a guest connection (no user)
       conn = conn()
 
+      # a guest with no socket gets the static render, which `visit` does not give (it connects a LiveView), so each link is fetched with `get_conn_render`
       # Visit feed with a time_limit of 1 day
-      conn
-      |> visit("/feed/?time_limit=1")
-      # Check that we only see posts from today
-      |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]", count: 1)
-      # Cannot use "seconds ago" in test as depends on the time of the test run can change to "now", but this is not meaningful for the test.
-      # |> PhoenixTest.open_browser()
-      # |> assert_has_or("[data-id=feed] article", [text: "seconds ago"], fn session ->
-      #   session
-      #   |> assert_has("[data-id=feed] article", text: "second ago")
-      # end)
+      first_page =
+        conn
+        |> get_conn_render("/feed/?time_limit=1")
+        # Check that we only see posts from today
+        |> assert_has_or_open_browser("[data-id=feed] article [data-id=object_body]", count: 1)
+        |> assert_has_or_open_browser("[data-id=load_all_time]")
 
-      # FIXME: body not preloaded in test env as guest
-
-      # Test clicking the "load_all_time" link (for guests without socket connection)
-      |> assert_has_or_open_browser("[data-id=load_all_time]")
-      |> click_link("[data-id=load_all_time]", "Show older activities")
-      |> wait_async()
-      # Now we should see posts without time limit, but still paginated
-      |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
-      |> assert_has_or_open_browser("[data-id=feed] article", text: "days ago")
+      # Test following the "load_all_time" link (for guests without socket connection)
+      all_time_page =
+        conn
+        |> get_conn_render(static_href(first_page, "a[data-id=load_all_time]"))
+        # Now we should see posts without time limit, but still paginated
+        |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
+        |> assert_has_or_open_browser("[data-id=feed] article", text: "days ago")
 
       # Load more using the next page links (since this is a no-socket scenario)
-      |> click_link("a[data-id=next_page]", "Next page")
-      |> wait_async()
-      |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
-      |> assert_has_or_open_browser("[data-id=feed] article",
-        text: DatesTimes.date_from_now(week_old_post, format: :short)
-      )
-      |> assert_has_or_open_browser("[data-id=feed] article",
-        text: DatesTimes.date_from_now(month_old_post, format: :short)
-      )
+      second_page =
+        conn
+        |> get_conn_render(static_href(all_time_page, "a[data-id=next_page]"))
+        |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
+        |> assert_has_or_open_browser("[data-id=feed] article",
+          text: DatesTimes.date_from_now(week_old_post, format: :short)
+        )
+        |> assert_has_or_open_browser("[data-id=feed] article",
+          text: DatesTimes.date_from_now(month_old_post, format: :short)
+        )
 
       # Continue pagination to see all posts
-      |> click_link("a[data-id=next_page]", "Next page")
-      |> wait_async()
-      # |> assert_has_or_open_browser("[data-id=feed] article", count: limit)
+      conn
+      |> get_conn_render(static_href(second_page, "a[data-id=next_page]"))
       |> assert_has_or_open_browser("[data-id=feed] article",
         text: DatesTimes.date_from_now(old_post, format: :short)
       )

@@ -33,6 +33,7 @@ defmodule Bonfire.UI.Social.DiscussionLive do
        replies: nil,
        threaded_replies: nil,
        include_path_ids: nil,
+       include_descendants_of: nil,
        thread_mode:
          (maybe_to_atom(e(params, "mode", nil)) ||
             Settings.get(
@@ -92,6 +93,12 @@ defmodule Bonfire.UI.Social.DiscussionLive do
         thread_id: id,
         reply_id: reply_id,
         #  url: url
+        include_descendants_of:
+          Bonfire.Social.Threads.LiveHandler.maybe_include_descendants_of(
+            reply_id,
+            e(params, "level", nil),
+            e(assigns(socket), :__context__, nil) || assigns(socket)
+          ),
         include_path_ids:
           Bonfire.Social.Threads.LiveHandler.maybe_include_path_ids(
             reply_id,

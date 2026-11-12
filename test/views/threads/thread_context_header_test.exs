@@ -44,4 +44,31 @@ defmodule Bonfire.UI.Social.Threads.ContextHeaderTest do
     )
     |> assert_has("[data-role='thread-context-bar']", text: name)
   end
+
+  # rendered as a component rather than by visiting the thread: the page only adds this widget from an async task that `load_thread_maybe_async/3` skips in the test env
+  test "the thread context widget renders the group's description as markdown, with a Read more control",
+       %{alice: alice} do
+    long = Enum.map_join(1..30, "\n\n", &"Line #{&1} of a long description.")
+
+    group =
+      Bonfire.Classify.Simulate.fake_group!(alice, %{
+        name: "Context widget group",
+        summary: "**Bold** words\n\n" <> long,
+        membership: "open",
+        visibility: "global"
+      })
+
+    html =
+      Phoenix.LiveViewTest.render_component(
+        &Bonfire.UI.Social.WidgetThreadContextLive.render/1,
+        %{category: group, __context__: %{current_user: alice}}
+      )
+
+    # the widget is there, with the group's name, so the assertions below are about the description
+    assert html =~ "Context widget group"
+    assert html =~ "<strong>Bold</strong>"
+    refute html =~ "**Bold**"
+    assert html =~ "read-more-controls"
+    assert html =~ "Read more"
+  end
 end

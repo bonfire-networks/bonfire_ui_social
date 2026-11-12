@@ -272,7 +272,10 @@
                                 <figcaption class="sr-only">{media_label}</figcaption>
                               </div>
                             </button>
-                            <Bonfire.UI.Social.Activity.AltCaptionLive id={deterministic_dom_id(__MODULE__, m, "alt", @parent_id)} media_label={media_label} />
+                            <Bonfire.UI.Social.Activity.AltCaptionLive
+                              id={deterministic_dom_id(__MODULE__, m, "alt", @parent_id)}
+                              media_label={media_label}
+                            />
                           {/if}
                         {#else}
                           {#if is_gif?(m.path, m.media_type, m)}
@@ -292,7 +295,10 @@
                                 alt={Bonfire.Files.Media.media_alt(m)}
                               />
                             {/if}
-                            <Bonfire.UI.Social.Activity.AltCaptionLive id={deterministic_dom_id(__MODULE__, m, "alt", @parent_id)} media_label={media_label} />
+                            <Bonfire.UI.Social.Activity.AltCaptionLive
+                              id={deterministic_dom_id(__MODULE__, m, "alt", @parent_id)}
+                              media_label={media_label}
+                            />
                             <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
                               GIF
                             </div>
@@ -333,7 +339,10 @@
                                     </div>
                                   {/if}
                               {/case}
-                              <Bonfire.UI.Social.Activity.AltCaptionLive id={deterministic_dom_id(__MODULE__, m, "alt", @parent_id)} media_label={media_label} />
+                              <Bonfire.UI.Social.Activity.AltCaptionLive
+                                id={deterministic_dom_id(__MODULE__, m, "alt", @parent_id)}
+                                media_label={media_label}
+                              />
                               <figcaption class="sr-only">{media_label}</figcaption>
                             </a>
                           {/if}

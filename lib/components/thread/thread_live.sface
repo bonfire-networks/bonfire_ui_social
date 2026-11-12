@@ -96,6 +96,7 @@
                       activity_inception={@activity_inception}
                       activity_preloads={@activity_preloads}
                       depth_loaded={@depth_loaded}
+                      depth_loaded_under={@depth_loaded_under}
                       reply_generation={@reply_generation}
                     />
                   {/for}
@@ -124,6 +125,7 @@
                       activity_inception={@activity_inception}
                       activity_preloads={@activity_preloads}
                       depth_loaded={@depth_loaded}
+                      depth_loaded_under={@depth_loaded_under}
                       reply_generation={@reply_generation}
                     />
                   {/for}

@@ -18,7 +18,7 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
   prop subject_peered, :any, default: nil
   # prop reply_to_id, :any, default: nil
 
-  @doc "Whose notification this is about (`Bonfire.Social.Notifications.about_id/2`): the id its category's `self`/`other` wording is decided on, in place of the object's."
+  @doc "Whose notification this is about (`Bonfire.Social.Notifications.about_id/2`): the id its category's `for_object`/`other` wording is decided on, in place of the object's."
   prop about_id, :any, default: nil
   # prop profile, :any, default: nil
   # prop character, :any, default: nil
@@ -92,18 +92,24 @@ defmodule Bonfire.UI.Social.Activity.SubjectMinimalLive do
 
   `nil` when neither has anything to say, and the caller shows the plain word instead. `current_user_id` comes in already resolved from the context, so "followed you" can differ from "followed".
   """
-  def notification_phrase(experience, object_id, current_user_id, object) do
-    Notifications.phrase_for(experience, object_id, current_user_id) ||
+  def notification_phrase(experience, object_id, current_user_id, object, subject_id \\ nil) do
+    Notifications.phrase_for(experience, object_id, current_user_id, subject_id) ||
       object_state_phrase(experience, object)
   end
 
-  @doc "What an email of this row says happened, as `notification_phrase/4` or else the plain word, the way the row's template does."
+  @doc "Whether the reader is the one who did it, for a follow or a join: their own request, granted. Its row leads with what they were let into, since they are the subject."
+  def own_act?(experience, subject_id, current_user_id),
+    do:
+      experience in [:follow, :join] and not is_nil(subject_id) and subject_id == current_user_id
+
+  @doc "What an email of this row says happened, as `notification_phrase/5` or else the plain word, the way the row's template does."
   def email_phrase(assigns) do
     notification_phrase(
       assigns[:experienced_as],
       assigns[:about_id] || assigns[:object_id],
       current_user_id(assigns[:__context__]),
-      assigns[:object]
+      assigns[:object],
+      assigns[:subject_id]
     ) ||
       Bonfire.Social.Activities.experience_display(assigns[:experienced_as], %{
         object: assigns[:object]
