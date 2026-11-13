@@ -656,7 +656,9 @@ defmodule Bonfire.Social.Threads.LiveHandler do
 
       {:noreply,
        socket
-       |> maybe_push_event("mention_suggestions", %{text: assigns[:mention_text] || ""})}
+       |> maybe_push_event("mention_suggestions", %{text: assigns[:mention_text] || ""})
+       # the reply opens ready to type (floating composer only)
+       |> maybe_push_event("focus-editor", %{to: "smart_input", reply_to: assigns[:reply_to_id]})}
     else
       false ->
         {:noreply,
