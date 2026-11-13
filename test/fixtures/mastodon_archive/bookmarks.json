@@ -1,0 +1,9 @@
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "id": "bookmarks.json",
+  "type": "OrderedCollection",
+  "orderedItems": [
+    "https://masto.local/users/alice/statuses/2210001",
+    "https://masto.local/users/carol/statuses/2210002"
+  ]
+}

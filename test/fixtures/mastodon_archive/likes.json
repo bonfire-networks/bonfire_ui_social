@@ -1,0 +1,10 @@
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "id": "likes.json",
+  "type": "OrderedCollection",
+  "orderedItems": [
+    "https://masto.local/users/alice/statuses/1596717",
+    "https://masto.local/users/bob/statuses/1669853",
+    "https://masto.local/users/carol/statuses/1717350"
+  ]
+}

@@ -53,7 +53,7 @@ defmodule Bonfire.UI.Social.ExportTest do
                post_attrs: %{
                  post_content: %{html_body: "Test post 2 content"}
                },
-               uploaded_files: [attachment_media]
+               uploaded_media: [attachment_media]
              )
 
     # Create messages
@@ -282,6 +282,10 @@ defmodule Bonfire.UI.Social.ExportTest do
     } do
       user_id = id(user)
 
+      # only this test reads likes.csv and boosts.csv, so they're made here rather than for every test in the module
+      assert {:ok, _like} = Bonfire.Social.Likes.like(user, post1)
+      assert {:ok, _boost} = Bonfire.Social.Boosts.boost(user, post2)
+
       # Initially should return false when no archive exists
       assert Bonfire.UI.Social.ExportController.archive_previous_date(user_id) == false
 
@@ -325,6 +329,8 @@ defmodule Bonfire.UI.Social.ExportTest do
         post_contents: ["Test post 1 content", "Test post 2 content"],
         message_contents: ["Hello message 1", "Hello message 2"],
         bookmarks: [post1, post2],
+        likes: [post1],
+        boosts: [post2],
         circles: [{circle1, [followee1, followee2]}, {circle2, [other_user]}],
         user: user,
         media_files: [profile_media, attachment_media]
@@ -481,6 +487,8 @@ defmodule Bonfire.UI.Social.ExportTest do
       "posts.csv",
       "messages.csv",
       "bookmarks.csv",
+      "likes.csv",
+      "boosts.csv",
       "circles.csv",
       "silenced.csv",
       "ghosted.csv",
@@ -567,6 +575,15 @@ defmodule Bonfire.UI.Social.ExportTest do
 
   defp verify_file_content("bookmarks.csv", data, %{bookmarks: bookmarks}) do
     verify_bookmarks_csv(data, bookmarks)
+  end
+
+  # likes and boosts are listed the way bookmarks are, one URL of the post per line
+  defp verify_file_content("likes.csv", data, %{likes: likes}) do
+    verify_bookmarks_csv(data, likes)
+  end
+
+  defp verify_file_content("boosts.csv", data, %{boosts: boosts}) do
+    verify_bookmarks_csv(data, boosts)
   end
 
   defp verify_file_content("circles.csv", data, %{circles: circles}) do

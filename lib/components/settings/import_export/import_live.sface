@@ -63,9 +63,14 @@
       {/if}
 
       <Form multipart submit="import" change="validate" opts={"phx-target": @myself}>
-        <div class="p-4">
+        <div class="p-4" x-data="{type: ''}">
           <div class="grid grid-cols-2 mt-5 items-center gap-3">
-            <div class="flex flex-col gap-1 flex-1" id="import_type" phx-update="ignore">
+            <div
+              class="flex flex-col gap-1 flex-1"
+              id="import_type"
+              phx-update="ignore"
+              x-on:change="type = $event.target.value"
+            >
               <h2 class="font-medium text-sm">{l("Import type")}</h2>
               <Select field={:type} class="select" options={options_list(@scope, @type, federating?)} />
             </div>
@@ -80,9 +85,55 @@
             </div>
           </div>
 
+          {!-- an outbox's boosts are only brought in when asked for, since an archive from Mastodon has no separate list of them --}
+          <label x-show="type == 'outbox'" x-cloak class="label cursor-pointer justify-start gap-3 mt-3">
+            <input type="checkbox" name="include_boosts" value="true" class="checkbox checkbox-sm">
+            <span class="label-text">{l("Also import boosts")}</span>
+          </label>
+
           <button class="btn mt-3 w-full btn-primary">{l("Upload")}</button>
         </div>
       </Form>
+
+      {!-- an uploaded archive, staged: pick what to bring in from what it holds --}
+      <form
+        :if={@staged}
+        id="archive_import_form"
+        class="p-4 flex flex-col gap-2"
+        phx-submit="import_archive"
+        phx-target={@myself}
+      >
+        <h2 class="font-medium text-sm">{l("What to import from this archive")}</h2>
+        {#for item <- Bonfire.Social.Import.staged_items(@staged)}
+          <label class={"label justify-start gap-3", "opacity-50": !item.importable?}>
+            <input
+              type="checkbox"
+              name="keys[]"
+              value={to_string(item.key)}
+              checked={item.importable?}
+              disabled={!item.importable?}
+              class="checkbox checkbox-sm"
+            />
+            <span class="label-text">{item.label}{cond do
+                item[:detail] -> " (#{item.detail})"
+                item.importable? and item.count -> " (#{item.count})"
+                true -> ""
+              end}</span>
+            <span :if={item.reason} class="text-xs text-muted">{item.reason}</span>
+          </label>
+          {!-- an outbox's boosts are only brought in when asked for, since an archive from Mastodon has no separate list of them --}
+          <label :if={item.key == :posts} class="label justify-start gap-3 ml-8">
+            <input type="checkbox" name="include_boosts" value="true" class="checkbox checkbox-sm">
+            <span class="label-text">{l("Also import boosts")}</span>
+          </label>
+        {/for}
+
+        <button class="btn mt-3 w-full btn-primary">{l("Import")}</button>
+      </form>
+
+      <ul :if={@report} id="archive_import_report" class="p-4 text-sm flex flex-col gap-1">
+        <li :for={line <- @report}><span class="font-medium">{line.label}</span>: {line.text}</li>
+      </ul>
 
       <div
         :if={@type != :blocks}
