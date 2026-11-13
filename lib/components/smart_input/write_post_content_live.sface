@@ -41,6 +41,7 @@
     {/if}
 
     <Bonfire.UI.Common.InputControlsLive
+      composer_policy={@composer_policy}
       preloaded_recipients={e(@preloaded_recipients, [])}
       open_boundaries={@open_boundaries}
       boundaries_modal_id={@boundaries_modal_id}
