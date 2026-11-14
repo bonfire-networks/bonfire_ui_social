@@ -2770,7 +2770,9 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       {ValueFlows.Planning.Intent, preview_preloads(ValueFlows.Planning.Intent)},
       {ValueFlows.Proposal, preview_preloads(ValueFlows.Proposal)},
       # whichever extension renders a Process (`bonfire_ui_valueflows`, or `bonfire_divlab`'s lists) says what to load, as for Intent: without its creator, the activity's author has no name
-      {ValueFlows.Process, preview_preloads(ValueFlows.Process)}
+      {ValueFlows.Process, preview_preloads(ValueFlows.Process)},
+      # its card (`bonfire_gatherings`) says what it needs: when and where
+      {Bonfire.Gatherings.Event, preview_preloads(Bonfire.Gatherings.Event)}
     ]
     # a schema whose preview extension isn't installed (eg. `ValueFlows.Planning.Intent` without `bonfire_ui_valueflows`) has no preloads, and `Repo.preload/2` raises on `nil`
     |> Enum.reject(&match?({_schema, nil}, &1))

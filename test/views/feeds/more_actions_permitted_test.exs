@@ -159,11 +159,9 @@ defmodule Bonfire.UI.Social.MoreActionsPermitted.Test do
 
       conn
       |> visit("/feed/local")
-      # The Copy JS hook needs to attach to a non-navigating element with
-      # the URL exposed via data-clipboard-text. If this renders as a plain
-      # <a href=...> the click just navigates away (issue #1951).
+      # A link that also carries the URL in data-clipboard-text: the Copy hook copies it and stops the navigation, and without the hook it still opens the link. Without the hook or the data, a click just navigated away and copied nothing (issue #1951).      
       |> assert_has(
-        ~s(button[phx-hook="Copy"][data-clipboard-text="#{permalink}"]),
+        ~s(a[phx-hook="Copy"][data-clipboard-text="#{permalink}"]),
         text: "Copy link"
       )
     end
@@ -179,7 +177,7 @@ defmodule Bonfire.UI.Social.MoreActionsPermitted.Test do
       conn
       |> visit("/feed/remote")
       |> assert_has(
-        ~s(button[phx-hook="Copy"][data-clipboard-text="https://example.local/post/1"]),
+        ~s(a[phx-hook="Copy"][data-clipboard-text="https://example.local/post/1"]),
         text: "Copy link"
       )
     end

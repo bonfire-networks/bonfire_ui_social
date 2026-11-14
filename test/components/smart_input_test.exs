@@ -197,7 +197,11 @@ defmodule Bonfire.UI.Social.SmartInputTest do
         |> element("#smart_input_form")
         |> render_submit(%{"post" => %{"post_content" => %{"html_body" => ""}}})
 
-        assert_push_event(composer, "js-exec-attr-event", %{to: "#main_smart_input_button", attr: "phx-reset"})
+        assert_push_event(composer, "js-exec-attr-event", %{
+          to: "#main_smart_input_button",
+          attr: "phx-reset"
+        })
+
         # not reset: text, content warning and local draft stay
         refute_push_event(composer, "smart_input:reset", %{})
         refute_push_event(composer, "smart_input:clear_cw", %{})
@@ -214,7 +218,9 @@ defmodule Bonfire.UI.Social.SmartInputTest do
 
         composer
         |> element("#smart_input_form")
-        |> render_submit(%{"post" => %{"post_content" => %{"html_body" => "sent #{System.unique_integer()}"}}})
+        |> render_submit(%{
+          "post" => %{"post_content" => %{"html_body" => "sent #{System.unique_integer()}"}}
+        })
 
         assert_push_event(composer, "smart_input:reset", %{})
         render(view)
@@ -223,12 +229,17 @@ defmodule Bonfire.UI.Social.SmartInputTest do
   end
 
   describe "composer header and the where/who line" do
-    test "a reply has a close and a minimise in the bar, the excerpt, and the audience above the toolbar", %{conn: conn} do
+    test "a reply has a close and a minimise in the bar, the excerpt, and the audience above the toolbar",
+         %{conn: conn} do
       author = fake_user!()
       text = "Reply target #{System.unique_integer()}"
 
       {:ok, post} =
-        Posts.publish(current_user: author, post_attrs: %{post_content: %{html_body: text}}, boundary: "public")
+        Posts.publish(
+          current_user: author,
+          post_attrs: %{post_content: %{html_body: text}},
+          boundary: "public"
+        )
 
       conn
       |> visit("/feed/local")
@@ -242,14 +253,29 @@ defmodule Bonfire.UI.Social.SmartInputTest do
         assert has_element?(composer, "#minimize_composer_summary_button")
         assert has_element?(composer, "#reply_peek", text)
         assert has_element?(composer, "#composer_policy_line", "Visible to")
-        assert has_element?(composer, "#composer_policy_line #composer_reply_visibility_trigger", "Same as original post")
+
+        assert has_element?(
+                 composer,
+                 "#composer_policy_line #composer_reply_visibility_trigger",
+                 "Same as original post"
+               )
+
         # one copy only: the header no longer has the chips
         refute has_element?(composer, "#composer_header #composer_policy_controls")
+
         # phones: one avatar (the bar's own avatar and the header row, with the second minimise, are hidden there)
         assert has_element?(composer, "#composer_summary .avatar[class~='max-md:!hidden']")
-        assert has_element?(composer, "#composer_header_actions[class~='max-md:hidden'] #minimize_composer_button")
+
+        assert has_element?(
+                 composer,
+                 "#composer_header_actions[class~='max-md:hidden'] #minimize_composer_button"
+               )
+
         # phones: Remove reply is in the excerpt (the header's reply menu is hidden there), and it works
-        composer |> element("#reply_peek #peek_convert_reply button[data-role=open_modal]") |> render_click()
+        composer
+        |> element("#reply_peek #peek_convert_reply button[data-role=open_modal]")
+        |> render_click()
+
         composer |> element("#peek_confirm_standalone_post") |> render_click()
         refute has_element?(composer, "#reply_peek")
         render(view)
@@ -295,7 +321,8 @@ defmodule Bonfire.UI.Social.SmartInputTest do
       end)
     end
 
-    test "resets a circle audience and per-action permissions, so they do not carry into the next post", %{conn: conn, me: me} do
+    test "resets a circle audience and per-action permissions, so they do not carry into the next post",
+         %{conn: conn, me: me} do
       {:ok, circle} = Bonfire.Boundaries.Circles.create(me, "Close friends")
 
       conn
@@ -325,11 +352,16 @@ defmodule Bonfire.UI.Social.SmartInputTest do
       end)
     end
 
-    test "a reply limit set in Custom boundaries survives the composer being reopened, and does not carry into a reply", %{conn: conn} do
+    test "a reply limit set in Custom boundaries survives the composer being reopened, and does not carry into a reply",
+         %{conn: conn} do
       author = fake_user!()
 
       {:ok, post} =
-        Posts.publish(current_user: author, post_attrs: %{post_content: %{html_body: "Reply target #{System.unique_integer()}"}}, boundary: "public")
+        Posts.publish(
+          current_user: author,
+          post_attrs: %{post_content: %{html_body: "Reply target #{System.unique_integer()}"}},
+          boundary: "public"
+        )
 
       conn
       |> visit("/feed/local")
@@ -339,8 +371,15 @@ defmodule Bonfire.UI.Social.SmartInputTest do
         composer = Bonfire.UI.Common.Testing.Helpers.composer_view(view)
 
         composer |> element("#define_permissions button[data-role=open_modal]") |> render_click()
-        composer |> element("#customize_boundary_live [data-role=action_toggle_reply]") |> render_click()
-        composer |> element("#customize_boundary_live [data-role=save_boundary]") |> render_click()
+
+        composer
+        |> element("#customize_boundary_live [data-role=action_toggle_reply]")
+        |> render_click()
+
+        composer
+        |> element("#customize_boundary_live [data-role=save_boundary]")
+        |> render_click()
+
         assert has_element?(composer, "#smart_input_form input[name^='verb_permissions[reply]']")
 
         # reopening goes through PersistentLive, which re-renders the composer from its own copy
@@ -451,9 +490,14 @@ defmodule Bonfire.UI.Social.SmartInputTest do
       |> assert_has("article", text: reply_content)
     end
 
-    test "posting from the post page clears a per-action limit, so it does not carry into the next post", %{conn: conn, me: me} do
+    test "posting from the post page clears a per-action limit, so it does not carry into the next post",
+         %{conn: conn, me: me} do
       {:ok, post} =
-        Posts.publish(current_user: me, post_attrs: %{post_content: %{html_body: "thread reset #{System.unique_integer()}"}}, boundary: "public")
+        Posts.publish(
+          current_user: me,
+          post_attrs: %{post_content: %{html_body: "thread reset #{System.unique_integer()}"}},
+          boundary: "public"
+        )
 
       {:ok, circle} = Bonfire.Boundaries.Circles.create(me, "Quote blockers")
 
@@ -472,7 +516,9 @@ defmodule Bonfire.UI.Social.SmartInputTest do
         assert has_element?(composer, "input[name^='verb_permissions[quote]']")
         render(view)
       end)
-      |> submit_composer("reply #{System.unique_integer()}", %{"reply_to" => %{"reply_to_id" => id(post)}})
+      |> submit_composer("reply #{System.unique_integer()}", %{
+        "reply_to" => %{"reply_to_id" => id(post)}
+      })
       |> wait_async()
       |> PhoenixTest.unwrap(fn view ->
         import Phoenix.LiveViewTest

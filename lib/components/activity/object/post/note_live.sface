@@ -80,10 +80,8 @@
                   if !e(@activity, :media, nil), do: l("This content is not available.")}
                 {#match nil}
                 {#match html_body}
-                  <Bonfire.UI.Social.Activity.TruncatableContentLive
+                  <Bonfire.UI.Common.TruncatableContentLive
                     html_body={html_body}
-                    activity={@activity}
-                    object={@object}
                     parent_id={deterministic_dom_id(__MODULE__, nil, nil, @parent_id)}
                     showing_within={@showing_within}
                     viewing_main_object={@viewing_main_object}

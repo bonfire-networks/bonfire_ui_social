@@ -27,6 +27,7 @@
   {/if}
 
   <li>
+    {!-- the shared Copy link item; the markup it replaced:
     <button
       type="button"
       phx-hook="Copy"
@@ -39,6 +40,12 @@
       <span class="flex-1 text-left truncate" data-role="label">{l("Copy link")}</span>
       <span class="flex-1 text-left truncate" data-role="share-label">{l("Share")}</span>
     </button>
+    --}
+    <Bonfire.UI.Common.CopyLinkLive
+      id={deterministic_dom_id(__MODULE__, id(@activity), "more_action_copy_url", @parent_id)}
+      url={URIs.canonical_url(@object) || URIs.canonical_url(@permalink)}
+      share
+    />
   </li>
 
   <#slot {@extra_items} />

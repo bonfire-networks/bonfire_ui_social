@@ -969,7 +969,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
           ]
 
         true ->
-          component_object(object, object_type, %{primary_image: primary_image})
+          # component_object(object, object_type, %{primary_image: primary_image})
+          component_object(object, object_type, %{
+            primary_image: primary_image,
+            viewing_main_object: viewing_main_object
+          })
       end
 
     # Show CW button at activity level when NoteLive isn't in the component list
@@ -2821,8 +2825,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     # Events are self-contained cards (location shown in-card), so skip nested previews that would otherwise duplicate the location as an empty box below:
     # if "Event" in types, do: [], else: 
+    # nested =
+    #   nested_object_components(json)
+    # an event's nested previews (its place, with a map) on its own page only, not in feeds
     nested =
-      nested_object_components(json)
+      if "Event" in types and not e(assigns, :viewing_main_object, false),
+        do: [],
+        else: nested_object_components(json)
 
     [
       {component, Enum.into(%{json: json, object_type_readable: type}, assigns)}
@@ -2831,12 +2840,28 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # def component_for_object_type(type, object) when type in [ValueFlows.Process], do: [Bonfire.UI.ValueFlows.Preview.ProcessListLive.activity_component(object)]
 
-  def component_for_object_type(type, object, _assigns) when is_atom(type) and not is_nil(type) do
+  # def component_for_object_type(type, object, _assigns) when is_atom(type) and not is_nil(type) do
+  #   component_def_for(:object_preview, type, object, &component_object_fallback/2)
+  # end
+  # a card that shows its primary image as a cover (`primary_image_as_cover?/0`) gets it, added to the assigns its config gives
+  def component_for_object_type(type, object, assigns) when is_atom(type) and not is_nil(type) do
     component_def_for(:object_preview, type, object, &component_object_fallback/2)
+    |> maybe_with_primary_image(e(assigns, :primary_image, nil))
   end
 
   def component_for_object_type(type, object, _assigns) do
     component_object_fallback(type, object)
+  end
+
+  defp maybe_with_primary_image(components, nil), do: components
+
+  defp maybe_with_primary_image(components, primary_image) do
+    Enum.map(components, fn
+      {mod, a} when is_map(a) -> {mod, Map.put(a, :primary_image, primary_image)}
+      {mod, a} when is_list(a) -> {mod, Keyword.put(a, :primary_image, primary_image)}
+      mod when is_atom(mod) -> {mod, %{primary_image: primary_image}}
+      other -> other
+    end)
   end
 
   defp component_def_for(key, type, object, fallback) when is_atom(type) and not is_nil(type) do
@@ -2900,8 +2925,18 @@ defmodule Bonfire.UI.Social.ActivityLive do
        ) do
     do_primary_image_and_component_maybe_attachments(
       id(object) || id(activity),
-      e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
-        e(object, :media, nil),
+      # e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
+      #   e(object, :media, nil),
+      # the first that has any: an empty list is truthy, so a loaded but empty `activity.files` hid the object's own
+      Enum.find_value(
+        [
+          e(activity, :files, nil),
+          e(object, :files, nil),
+          e(activity, :media, nil),
+          e(object, :media, nil)
+        ],
+        &Enums.filter_empty(&1, nil)
+      ),
       object_type
     )
 
@@ -2916,8 +2951,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
       when (is_list(files) and files != []) or is_map(files) do
     # for articles, the media flagged as `primary_image` becomes the cover; any
     # remaining attachments still render via MediaLive like they do for posts
+    # {primary_image, files} =
+    #   if object_type == :article, do: Bonfire.Files.split_primary_image(files), else: {nil, files}
+    # whichever card shows its primary image as a cover says so (articles, events), rather than a list of types here
     {primary_image, files} =
-      if object_type == :article, do: Bonfire.Files.split_primary_image(files), else: {nil, files}
+      if primary_image_as_cover?(object_type),
+        do: Bonfire.Files.split_primary_image(files),
+        else: {nil, files}
 
     {primary_image,
      if files == [] or is_nil(files) do
@@ -2925,6 +2965,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
      else
        [{Bonfire.UI.Social.Activity.MediaLive, %{media: files}}]
      end}
+  end
+
+  @doc "Whether the card registered for `object_type` (`[:ui, :object_preview]`) shows the object's primary image as its cover, which it says with `primary_image_as_cover?/0`."
+  def primary_image_as_cover?(object_type) do
+    case Bonfire.Common.Config.get([:ui, :object_preview, object_type]) do
+      module when is_atom(module) and not is_nil(module) ->
+        maybe_apply(module, :primary_image_as_cover?, [], fallback_return: false) == true
+
+      _ ->
+        false
+    end
   end
 
   # when the object IS itself a media (link/article/image/audio/video/Media),

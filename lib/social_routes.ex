@@ -24,10 +24,11 @@ defmodule Bonfire.UI.Social.Routes do
         live("/feed", FeedsLive, as: :feed)
         live("/feed/local", FeedsLive, :local, as: :feed)
 
-        live("/events", EventsLive, as: :events)
+        # `/events` moved to `bonfire_gatherings` (`Bonfire.Gatherings.Web.EventsLive`), which lists native events
+        # live("/events", EventsLive, as: :events)
 
-        # the events tagged with a category, named by its username or, if it has no character, its id
-        live("/events/category/:category_ref", EventsLive, as: :events)
+        # # the events tagged with a category, named by its username or, if it has no character, its id
+        # live("/events/category/:category_ref", EventsLive, as: :events)
 
         live("/bookmarks", FeedsLive, :bookmarks, as: :bookmarks)
 
