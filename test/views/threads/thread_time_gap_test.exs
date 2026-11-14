@@ -110,7 +110,7 @@ defmodule Bonfire.UI.Social.Threads.TimeGapTest do
       post
     end
 
-    test "a necro'd thread shows a divider above the much older reply", %{
+    test "a necro'd thread shows a divider above the much newer reply", %{
       conn: conn,
       alice: alice,
       op: op
@@ -120,13 +120,13 @@ defmodule Bonfire.UI.Social.Threads.TimeGapTest do
       # if the explicit id were silently dropped, the reply wouldn't be backdated and
       # the whole test would pass vacuously — fail loudly instead
       assert id(old_reply) == old_id
-      _fresh_reply = publish_reply(alice, id(op), "fresh reply")
+      fresh_reply = publish_reply(alice, id(op), "fresh reply")
 
       conn
       |> visit("/post/#{id(op)}")
-      |> assert_has("[data-role='time-gap']", text: "2 years earlier")
-      # the divider belongs to the older reply's branch
-      |> assert_has("#nested_#{id(old_reply)} [data-role='time-gap']")
+      |> assert_has("[data-role='time-gap']", text: "2 years later")
+      # thread order reads oldest first, so the divider belongs to the fresh reply's branch
+      |> assert_has("#nested_#{id(fresh_reply)} [data-role='time-gap']")
     end
 
     test "a thread with only recent replies shows no dividers", %{

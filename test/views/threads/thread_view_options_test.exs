@@ -38,4 +38,39 @@ defmodule Bonfire.UI.Social.Threads.ViewOptionsTest do
     |> assert_has("input[type=radio][value=default-asc][checked]")
     |> refute_has("input[type=radio][value=latest_reply-desc][checked]")
   end
+
+  test "a thread opens in thread order: replies oldest first, with Thread order selected" do
+    account = fake_account!()
+    user = fake_user!(account)
+
+    {:ok, op} =
+      Posts.publish(
+        current_user: user,
+        post_attrs: %{post_content: %{html_body: "the opening post"}},
+        boundary: "public"
+      )
+
+    for text <- ["first reply", "second reply", "third reply"] do
+      {:ok, _} =
+        Posts.publish(
+          current_user: user,
+          post_attrs: %{post_content: %{html_body: text}, reply_to_id: op.id},
+          boundary: "public"
+        )
+    end
+
+    conn(user: user, account: account)
+    |> visit("/post/#{id(op)}")
+    |> assert_has("input[type=radio][value=default-asc][checked]")
+    |> assert_has("div", text: "third reply")
+    |> unwrap(fn view ->
+      html = Phoenix.LiveViewTest.render(view)
+      position = fn text -> html |> :binary.match(text) |> elem(0) end
+
+      assert position.("first reply") < position.("second reply")
+      assert position.("second reply") < position.("third reply")
+
+      html
+    end)
+  end
 end
