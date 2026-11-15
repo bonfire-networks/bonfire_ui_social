@@ -15,6 +15,7 @@ defmodule Bonfire.UI.Social.ImportLive do
        page_title: "Blocks Import"
      )
      |> assign_new(:staged, fn -> nil end)
+     |> assign_new(:staging, fn -> false end)
      |> assign_new(:report, fn -> nil end)
      |> allow_upload(:file,
        accept: ~w(.csv .json .zip),
@@ -32,21 +33,52 @@ defmodule Bonfire.UI.Social.ImportLive do
     # an archive is a person's own account, never imported instance-wide
     if String.ends_with?(String.downcase(client_name), ".zip") and
          e(assigns(socket), :scope, nil) != :instance_wide do
-      case consume_uploaded_entry(socket, entry, fn %{path: path} ->
-             {:ok, Bonfire.Social.Import.stage_archive(path)}
-           end) do
-        {:ok, staged} ->
-          {:noreply, assign(socket, staged: staged, report: nil)}
+      # LiveView deletes its copy of the upload once this callback returns, so it's copied for the staging that runs after
+      copy =
+        consume_uploaded_entry(socket, entry, fn %{path: path} ->
+          copy =
+            Path.join(System.tmp_dir!(), "upload-#{Needle.UID.generate()}.zip")
 
-        e ->
-          {:noreply, assign_error(socket, error_text(e) || l("Could not read this archive"))}
-      end
+          File.cp!(path, copy)
+          {:ok, copy}
+        end)
+
+      # read in the background, so the page says it's being read rather than freezing until it's done
+      {:noreply,
+       socket
+       |> assign(staging: true, staged: nil, report: nil)
+       |> start_async(:stage_archive, fn ->
+         try do
+           Bonfire.Social.Import.stage_archive(copy)
+         after
+           File.rm(copy)
+         end
+       end)}
     else
       {:noreply, socket}
     end
   end
 
   def handle_progress(_name, _entry, socket), do: {:noreply, socket}
+
+  def handle_async(:stage_archive, {:ok, {:ok, staged}}, socket),
+    do: {:noreply, assign(socket, staging: false, staged: staged)}
+
+  def handle_async(:stage_archive, {:ok, e}, socket),
+    do:
+      {:noreply,
+       socket
+       |> assign(staging: false)
+       |> assign_error(error_text(e) || l("Could not read this archive"))}
+
+  def handle_async(:stage_archive, {:exit, reason}, socket) do
+    error(reason, "Staging an uploaded archive failed")
+
+    {:noreply,
+     socket
+     |> assign(staging: false)
+     |> assign_error(l("Could not read this archive"))}
+  end
 
   def handle_event("import_archive", params, %{assigns: %{staged: %{} = staged}} = socket) do
     current_user = current_user_required!(socket)

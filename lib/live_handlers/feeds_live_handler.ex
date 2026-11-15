@@ -346,6 +346,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
         maybe_send_update(Bonfire.UI.Common.BadgeCounterLive, "unseen_count_#{feed_id}", assigns)
   end
 
+  # `PersistentLive` hosts no `FeedLive`, so there is no feed to update: leave it unhandled (the flag `LiveHandlers` sets when no handler matches) before any query, so the router falls through to the view's own `handle_info` clause
+  def handle_info({:new_activity, _data}, %{view: Bonfire.UI.Common.PersistentLive} = socket),
+    do: {:noreply, assign(socket, :__no_handle_info_handled__, true)}
+
   def handle_info({:new_activity, data}, socket) do
     feed_ids = e(data, :feed_ids, nil)
 

@@ -82,6 +82,12 @@
                 <!-- <span>{l("Upload or drop")}</span> -->
                 <Phoenix.Component.live_file_input upload={@uploads.file} class="file-input" />
               </label>
+              {!-- a big archive takes a while to upload, so say how far along it is --}
+              <div :for={entry <- @uploads.file.entries} :if={!entry.done?} class="text-sm text-muted">
+                <progress class="progress w-full max-w-md" value={entry.progress} max="100" />
+                {l("Uploading %{name}: %{progress}%", name: entry.client_name, progress: entry.progress)}
+              </div>
+              <div :if={@staging} class="text-sm text-muted">{l("Reading the archive…")}</div>
             </div>
           </div>
 
