@@ -79,9 +79,20 @@ defmodule Bonfire.UI.Social.ExportTest do
     {:ok, circle1} = Bonfire.Boundaries.Circles.create(me, "Friends")
     {:ok, circle2} = Bonfire.Boundaries.Circles.create(me, "Work")
 
-    assert {:ok, _} = Bonfire.Boundaries.Circles.add_to_circles(followee1, circle1)
-    assert {:ok, _} = Bonfire.Boundaries.Circles.add_to_circles(followee2, circle1)
-    assert {:ok, _} = Bonfire.Boundaries.Circles.add_to_circles(other_user, circle2)
+    assert {:ok, _} =
+             Bonfire.Boundaries.Circles.add_to_circles(followee1, circle1,
+               skip_boundary_check: true
+             )
+
+    assert {:ok, _} =
+             Bonfire.Boundaries.Circles.add_to_circles(followee2, circle1,
+               skip_boundary_check: true
+             )
+
+    assert {:ok, _} =
+             Bonfire.Boundaries.Circles.add_to_circles(other_user, circle2,
+               skip_boundary_check: true
+             )
 
     {:ok,
      conn: conn,

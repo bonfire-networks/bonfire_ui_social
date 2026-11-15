@@ -235,7 +235,8 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
         })
 
       # Add user2 to circle
-      {:ok, _} = Bonfire.Boundaries.Circles.add_to_circles(user2, circle)
+      {:ok, _} =
+        Bonfire.Boundaries.Circles.add_to_circles(user2, circle, skip_boundary_check: true)
 
       # share the circle
       Bonfire.Social.Objects.publish(user1, :boost, circle,

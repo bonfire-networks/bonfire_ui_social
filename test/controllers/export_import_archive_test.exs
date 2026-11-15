@@ -33,7 +33,7 @@ defmodule Bonfire.UI.Social.ExportImportArchiveTest do
     assert {:ok, _} = Follows.follow(a, remote)
 
     {:ok, circle} = Circles.create(a, "Archive friends")
-    assert {:ok, _} = Circles.add_to_circles(member, circle)
+    assert {:ok, _} = Circles.add_to_circles(member, circle, skip_boundary_check: true)
 
     assert {:ok, other_post} =
              Bonfire.Posts.publish(

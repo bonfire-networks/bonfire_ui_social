@@ -6,6 +6,9 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
   """
   use Bonfire.UI.Common.Web, :stateful_component
 
+  # the pending filters live in this component's state only until they are applied
+  @guest_allowed_events ~w(apply set_filter any_media clear_media reset_pending set_tags set_instances)
+
   alias Bonfire.Social.FeedFilters
 
   @filter_fields [
@@ -200,7 +203,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
   def handle_event("set_filter", attrs, socket) do
     {:noreply,
      update_pending_fn(socket, fn filters ->
-       Enums.merge_as_map(filters, Enums.naughty_to_atoms!(attrs))
+       Enums.merge_as_map(filters, Enums.input_to_atoms(attrs, discard_unknown_keys: true))
      end)}
   end
 

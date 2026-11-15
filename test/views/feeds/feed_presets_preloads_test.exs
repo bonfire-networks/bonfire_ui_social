@@ -277,7 +277,7 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
 
   defp verify_thread_name(conn, expected?, activity) do
     if expected? do
-      if title = e(activity, :replied, :thread, :named, :name, nil) do
+      if title = e(activity, :replied, :thread_named, :name, nil) do
         # Check if thread name is displayed in the HTML
         # This might be in a header or title element
         conn

@@ -241,8 +241,8 @@ defmodule Bonfire.Social.Objects.LiveHandler do
          e(activity, :created, :creator, nil))
       |> repo().maybe_preload(:settings)
 
-    thread_id = e(activity, :replied, :thread_id, id)
-    thread_title = e(activity, :replied, :thread, :named, :name, nil)
+    thread_id = e(activity, :replied, :thread, :id, nil) || id
+    thread_title = e(activity, :replied, :thread_named, :name, nil)
 
     socket
     |> assign_generic(
@@ -291,7 +291,9 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     assigns = assigns(socket)
     object = assigns[:object]
     replied = e(object, :replied, nil) || e(assigns[:activity], :replied, nil)
-    thread_id = e(replied, :thread_id, nil) || id(e(replied, :thread, nil))
+
+    # the loaded thread only: a root the viewer can't read isn't loaded, so the reply's page isn't sent to an address that names it
+    thread_id = id(e(replied, :thread, nil))
 
     # only a reply, ie. in a thread started by something else: decided on the object rather than on the link's shape, since what starts a thread can have a `/discussion/` page of its own, which would redirect to itself
     if object && thread_id && thread_id != id(object),
@@ -304,12 +306,20 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     thread_id = e(assigns(socket), :thread_id, nil) || e(assigns(socket), :object_id, nil)
 
     if thread_id && current_user_id(socket) &&
+         thread_bell?(e(assigns(socket), :object, nil)) &&
          module_enabled?(Bonfire.Notify.Web.BellButtonLive, socket) do
       assign(socket, page_header_aside: thread_bell_aside(thread_id))
     else
       socket
     end
   end
+
+  @doc """
+  Whether a thread started by or containing this object offers a bell for its replies. Not a direct message's: its replies reach everyone in it by being addressed to them, which a bell doesn't change.
+
+  TODO: a bell in a direct message could quiet the thread, or follow only one branch of it, once its replies notify through bells and a bell turned off quiets the replies addressed to you there.
+  """
+  def thread_bell?(object), do: Types.object_type(object) != Bonfire.Data.Social.Message
 
   def thread_bell_aside(thread_id, id_prefix \\ "thread_bell")
 
@@ -347,6 +357,8 @@ defmodule Bonfire.Social.Objects.LiveHandler do
       :with_creator,
       :with_post_content,
       # :with_reply_to,
+      # the thread root, only when the viewer can read it: what the page links a reply into
+      :with_thread,
       :with_thread_name,
       :with_parent,
       :with_media,

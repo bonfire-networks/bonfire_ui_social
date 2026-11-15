@@ -30,8 +30,9 @@ defmodule Bonfire.UI.Social.ImportLive do
 
   # an archive is staged as soon as its upload finishes, so the person can pick from what it holds before importing anything
   def handle_progress(:file, %{done?: true, client_name: client_name} = entry, socket) do
-    # an archive is a person's own account, never imported instance-wide
-    if String.ends_with?(String.downcase(client_name), ".zip") and
+    # only someone signed in has an archive to stage, and an archive is a person's own account, never imported instance-wide
+    if not is_nil(current_user(socket)) and
+         String.ends_with?(String.downcase(client_name), ".zip") and
          e(assigns(socket), :scope, nil) != :instance_wide do
       # LiveView deletes its copy of the upload once this callback returns, so it's copied for the staging that runs after
       copy =

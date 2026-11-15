@@ -1,6 +1,8 @@
 defmodule Bonfire.UI.Social.Activity.PermittedActionsLive do
   use Bonfire.UI.Common.Web, :stateful_component
 
+  @guest_allowed_events ~w(load)
+
   prop activity, :any, default: nil
   prop object, :any, required: true
   prop object_type, :any, default: nil

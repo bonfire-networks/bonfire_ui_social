@@ -1,5 +1,8 @@
 defmodule Bonfire.UI.Social.FeedLive do
   use Bonfire.UI.Common.Web, :stateful_component
+
+  # view state of the feed only
+  @guest_allowed_events ~w(refresh show_fresh jump_to_top load_newer set_feed_order set_filter_overrides)
   use_if_enabled(Bonfire.UI.Common.Web.Native, :stateful_component)
   import Untangle
 
@@ -368,8 +371,10 @@ defmodule Bonfire.UI.Social.FeedLive do
       e(new_activity, :subject, :id, nil) ||
         e(new_activity, :activity, :subject, :id, nil)
 
+    current_user_id = current_user_id(socket)
+
     is_own_activity? =
-      current_user_id(socket) != nil and current_user_id(socket) == subject_id
+      current_user_id != nil and current_user_id == subject_id
 
     current_fresh_ids = e(assigns(socket), :fresh_ids, nil) || MapSet.new()
 
@@ -967,18 +972,6 @@ defmodule Bonfire.UI.Social.FeedLive do
     else
       set_filters(attrs, socket, true)
     end
-  end
-
-  def handle_event(
-        "set",
-        attrs,
-        socket
-      ) do
-    reload(
-      assigns(socket)[:feed_filters],
-      socket
-      |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
-    )
   end
 
   # Pull-to-refresh: unlike "set" this also discards the fresh set and reading position

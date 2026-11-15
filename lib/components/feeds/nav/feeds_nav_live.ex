@@ -8,7 +8,8 @@ defmodule Bonfire.UI.Social.FeedsNavLive do
   declare_nav_component("Links to user's feeds", exclude_from_nav: false)
 
   def render(assigns) do
-    available = FeedNavigation.list_presets(current_user: current_user(assigns))
+    current_user = current_user(assigns)
+    available = FeedNavigation.list_presets(current_user: current_user)
 
     default = FeedNavigation.default_feed(available, assigns[:__context__])
 
@@ -17,7 +18,7 @@ defmodule Bonfire.UI.Social.FeedsNavLive do
         url when is_binary(url) ->
           case URI.parse(url).path |> to_string() |> String.split("/", trim: true) do
             ["feed", slug | _] -> URI.decode(slug)
-            ["feed"] -> if(current_user(assigns), do: "my", else: "local")
+            ["feed"] -> if(current_user, do: "my", else: "local")
             _ -> nil
           end
 
@@ -38,7 +39,7 @@ defmodule Bonfire.UI.Social.FeedsNavLive do
     ]
 
     links =
-      if current_user(assigns) &&
+      if current_user &&
            Enum.any?(available, fn {slug, _} -> to_string(slug) == "bookmarks" end) do
         links ++
           [

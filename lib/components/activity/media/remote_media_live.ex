@@ -1,5 +1,7 @@
 defmodule Bonfire.UI.Social.Activity.RemoteMediaLive do
   use Bonfire.UI.Common.Web, :stateful_component
+
+  @guest_allowed_events ~w(show_embed)
   alias Bonfire.UI.Social.Activity.MediaLive
 
   prop media, :map, default: nil
