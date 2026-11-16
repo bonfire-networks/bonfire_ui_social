@@ -94,10 +94,9 @@
                       "mt-2 text-sm text-justify text-base-content break-words",
                       "line-clamp-5": @showing_within in [:feed, :profile]
                     }>
-                      {raw(
-                        e(@metadata, "citation_abstract", nil) || e(@metadata, "abstractNote", nil) ||
-                          Bonfire.Files.Media.description(@media) |> Text.text_only()
-                      )}
+                      {(e(@metadata, "citation_abstract", nil) || e(@metadata, "abstractNote", nil) ||
+                         Bonfire.Files.Media.description(@media))
+                      |> Text.text_only()}
                     </div>
                     {!-- {e(@metadata, "subject", nil)} --}
                   </div>

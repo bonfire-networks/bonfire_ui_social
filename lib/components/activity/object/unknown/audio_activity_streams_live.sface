@@ -57,7 +57,7 @@
     {/case}
     <div class="py-2">
       <div class="font-medium text-base-content">
-        {rich(object_field(debug(@json, "apjson"), "name") || l("Untitled audio"))}
+        {rich_untrusted(object_field(debug(@json, "apjson"), "name") || l("Untitled audio"))}
       </div>
 
       <p class="mt-1 text-xs text-muted">
@@ -76,7 +76,9 @@
         <article class={"text-sm mt-3 text-muted ", p_line_clamp_4: !@viewing_main_object}>
           {!-- "p_line_clamp_6": @viewing_main_object --}
           {!-- TODO: show more button for long descriptions like in NoteLive --}
-          {rich(object_field(@json, "content") || e(object_field(@json, "description"), "content", nil))}
+          {rich_untrusted(
+            object_field(@json, "content") || e(object_field(@json, "description"), "content", nil)
+          )}
         </article>
       </div>
     </div>

@@ -22,10 +22,10 @@
   {#case Bonfire.Social.RestrictedContent.preview(nil, @object)}
     {#match preview}
       {#if preview.name}
-        <div data-role="name" class="translatable text-sm my-1 mt-2">{rich(preview.name)}</div>
+        <div data-role="name" class="translatable text-sm my-1 mt-2">{rich_untrusted(preview.name)}</div>
       {/if}
       {#if preview.summary}
-        <div data-role="summary" class="translatable prose max-w-prose prose-p:pt-1">{rich(preview.summary)}</div>
+        <div data-role="summary" class="translatable prose max-w-prose prose-p:pt-1">{rich_untrusted(preview.summary)}</div>
       {/if}
   {/case}
 

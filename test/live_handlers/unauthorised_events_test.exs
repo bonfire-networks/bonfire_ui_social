@@ -124,7 +124,9 @@ defmodule Bonfire.UI.Social.UnauthorisedEventsTest do
                  describer.id,
                  acl.id,
                  [:see, :read, :describe],
-                 true, current_user: owner)
+                 true,
+                 current_user: owner
+               )
 
       assert Bonfire.Boundaries.can?(describer, :describe, post)
       refute Bonfire.Boundaries.can?(describer, :edit, post)

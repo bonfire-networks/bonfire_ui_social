@@ -10,13 +10,13 @@ defmodule Bonfire.UI.Social.EmbedThreads do
   @doc """
   The Media post for `uri` (an embedding page's URL), created when missing and allowed.
 
-  `params` are the embed's request params (`embed_parent`, `published_at`). Returns `{:ok, media}`, `{:error, :no_creator}`, `{:error, :host_not_allowed}`, or `{:error, reason}` when creation failed.
+  `params` are the embed's request params (`embed_parent`, `published_at`). A missing thread is created only for a page its origin serves (a loopback preview on a dev/test instance excepted), and, with `rate_limit_ip:` in `opts`, at most a few attempts a minute from that IP. Returns `{:ok, media}`, `{:error, :no_creator}`, `{:error, :host_not_allowed}`, `{:error, :rate_limited}`, or `{:error, reason}` when creation failed (also when the page is not served).
   """
-  def get_or_create(uri, params, creator) when is_binary(uri) do
+  def get_or_create(uri, params, creator, opts \\ []) when is_binary(uri) do
     # read first, so displaying an existing thread needs no creator and no creation privileges. `get_by_url` matches by the canonical `path` or a source url in `metadata.urls` (tracking params normalised away)
     case Bonfire.Files.Media.get_by_url(uri) do
       {:ok, media} -> {:ok, media}
-      _ -> maybe_create(uri, params, creator)
+      _ -> maybe_create(uri, params, creator, opts)
     end
     # with its locality, which its callers need to name it by its ActivityPub id (`URIs.canonical_url/2`)
     ~> Bonfire.Common.Repo.maybe_preload(:peered)
@@ -26,7 +26,7 @@ defmodule Bonfire.UI.Social.EmbedThreads do
     end
   end
 
-  defp maybe_create(uri, params, creator) do
+  defp maybe_create(uri, params, creator, opts) do
     cond do
       is_nil(creator) ->
         {:error, :no_creator}
@@ -39,6 +39,11 @@ defmodule Bonfire.UI.Social.EmbedThreads do
 
         {:error, :host_not_allowed}
 
+      # every attempt to start a thread counts, whether or not its page exists: a guest asking for pages one after the other is told to wait
+      match?({:error, _}, rate_limit(opts[:rate_limit_ip])) ->
+        warn(uri, "Not creating a thread anchor: too many attempts from this address")
+        {:error, :rate_limited}
+
       true ->
         case Bonfire.Files.Media.get_or_add_media_by_uri(
                creator,
@@ -48,7 +53,9 @@ defmodule Bonfire.UI.Social.EmbedThreads do
                nil,
                # backdate the anchor to the article's publication date (if given & in the past), so importing an old article doesn't jump to the top of feeds
                update_existing: false,
-               id: published_id(params)
+               id: published_id(params),
+               # the fetch that makes the preview is also the check that the page exists: one its origin does not serve (the address is a guest's choice) makes no thread. A loopback dev preview may have no server
+               require_ok_status: not loopback_preview_allowed?(params)
              ) do
           {:ok, %{id: _} = media} ->
             {:ok, media}
@@ -57,6 +64,14 @@ defmodule Bonfire.UI.Social.EmbedThreads do
             error(other, "Could not resolve media_uri to a thread")
         end
     end
+  end
+
+  # per IP, as the forms are (`:throttle_forms`); no IP given (a caller that is not a guest's request) is not limited
+  defp rate_limit(nil), do: :ok
+
+  defp rate_limit(ip) do
+    # tunable: `:bonfire, :rate_limit, :embed_threads` (`scale_ms`, `limit`)
+    Bonfire.UI.Common.RateLimit.check(:embed_threads, ip, 60_000, 5)
   end
 
   @doc "Who a newly created Media post is attributed to: the configured import author, else the signed-in viewer (`nil` when neither)."

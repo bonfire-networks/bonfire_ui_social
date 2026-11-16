@@ -12,7 +12,7 @@
         "text-xl": @viewing_main_object,
         "text-lg": !@viewing_main_object
       }>
-        {rich(object_field(@json, "name") || l("Untitled recipe"))}
+        {rich_untrusted(object_field(@json, "name") || l("Untitled recipe"))}
       </h2>
     </a>
 
@@ -26,7 +26,7 @@
           "mt-3 prose prose-sm prose-p:my-0 max-w-prose text-muted",
           "line-clamp-3": !@viewing_main_object
         }>
-          {rich(description)}
+          {rich_untrusted(description)}
         </article>
     {/case}
 
@@ -83,7 +83,7 @@
                 <li class="flex items-start gap-3">
                   <span class="flex items-center justify-center shrink-0 size-6 rounded-full bg-base-200 text-xs font-medium tabular-nums">{index}</span>
                   <article class="prose prose-sm prose-p:my-0 max-w-prose min-w-0 text-muted">
-                    {rich(e(step, "content", ""))}
+                    {rich_untrusted(e(step, "content", ""))}
                   </article>
                 </li>
               {/for}

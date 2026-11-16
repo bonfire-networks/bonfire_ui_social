@@ -36,7 +36,7 @@
           <span class="absolute inset-0" />
           {object_field(@json, "name")}
         </h3>
-        <p class="mt-5 text-sm leading-6 text-muted line-clamp-4">{rich(object_field(@json, "content"))}</p>
+        <p class="mt-5 text-sm leading-6 text-muted line-clamp-4">{rich_untrusted(object_field(@json, "content"))}</p>
       </div>
     </div>
   </article>

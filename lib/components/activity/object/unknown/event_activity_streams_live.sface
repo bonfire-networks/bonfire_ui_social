@@ -5,7 +5,7 @@
       {l("Event")}
     </div>
     <h2 class="mt-2 font-medium text-base-content">
-      {rich(object_field(@json, "name") || l("Untitled event"))}
+      {rich_untrusted(object_field(@json, "name") || l("Untitled event"))}
     </h2>
   </div>
 {#else}
@@ -43,7 +43,7 @@
           "text-xl": @viewing_main_object,
           "text-lg": !@viewing_main_object
         }>
-          {rich(object_field(@json, "name") || l("Untitled event"))}
+          {rich_untrusted(object_field(@json, "name") || l("Untitled event"))}
         </h2>
       </a>
 
@@ -93,7 +93,7 @@
             "mt-4 text-muted prose max-w-prose",
             "prose-sm line-clamp-2 !text-muted": !@viewing_main_object
           }>
-            {rich(content)}
+            {rich_untrusted(content)}
           </article>
       {/case}
 
