@@ -48,6 +48,42 @@
     />
   </li>
 
+  {!-- remote actions of the thread's main post, also for guests --}
+  {#case @viewing_main_object && e(@object, :peered, :canonical_uri, nil)}
+    {#match canonical_uri when is_binary(canonical_uri)}
+      <li data-role="view_remotely">
+        <a
+          href={canonical_uri}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center gap-3 text-sm text-base-content w-full"
+        >
+          <#Icon iconify="ph:arrow-square-out" class="size-4 shrink-0 text-muted" />
+          <span class="flex-1 truncate">{l("View remotely")}</span>
+        </a>
+      </li>
+      <li data-role="fetch_thread">
+        <button
+          type="button"
+          phx-click="Bonfire.Social.Feeds:fetch_thread"
+          phx-value-id={id(@object)}
+          class="flex items-center gap-3 text-sm text-base-content w-full"
+        >
+          <#Icon
+            iconify="ph:arrows-clockwise"
+            class="size-4 shrink-0 text-muted phx-click-loading:hidden"
+            aria-hidden="true"
+          />
+          <span
+            class="loading loading-spinner loading-xs shrink-0 hidden phx-click-loading:inline-block"
+            aria-hidden="true"
+          />
+          <span class="flex-1 text-left truncate">{l("Get latest replies")}</span>
+        </button>
+      </li>
+    {#match _}
+  {/case}
+
   <#slot {@extra_items} />
 
   {#if current_user_id(@__context__)}

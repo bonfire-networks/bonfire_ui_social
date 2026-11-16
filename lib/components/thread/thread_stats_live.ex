@@ -3,9 +3,6 @@ defmodule Bonfire.UI.Social.Activity.ThreadStatsLive do
   # alias Bonfire.Common.Text
 
   prop object, :any, default: nil
-  prop activity, :any, default: nil
-  prop event_target, :any, default: nil
-  prop is_remote, :boolean, default: false
   prop thread_boost_count, :any, default: nil
   prop thread_like_count, :any, default: nil
   prop thread_quote_count, :any, default: nil

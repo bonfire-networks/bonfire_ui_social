@@ -11,15 +11,12 @@
 >
   <Bonfire.UI.Social.Activity.ThreadStatsLive
     :if={!@hide_thread_stats}
-    event_target={@myself}
     showing_within={@showing_within}
     object={@object}
-    activity={@activity}
     thread_boost_count={@thread_boost_count}
     thread_like_count={@thread_like_count}
     thread_quote_count={@thread_quote_count}
     thread_id={@thread_id}
-    is_remote={e(@object, :peered, :canonical_uri, nil) != nil}
   >
     <Bonfire.UI.Social.ThreadControlsLive
       event_target={@myself}

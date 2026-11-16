@@ -15,58 +15,14 @@
       thread_id={@thread_id}
     />
 
-    {!-- Right: thread controls + remote actions, unified into one segmented toolbar --}
+    {!-- Right: thread controls (remote actions are in the main post's more menu) --}
     <div
-      :if={socket_connected?(@__context__) and
-        (current_user_id(@__context__) || e(@object, :peered, :canonical_uri, nil) || @is_remote)}
+      :if={socket_connected?(@__context__) and current_user_id(@__context__)}
       class="flex items-center gap-1 ml-auto"
       role="group"
       aria-label={l("Thread controls")}
     >
       <#slot />
-
-      {#case e(@object, :peered, :canonical_uri, nil) || @is_remote}
-        {#match nil}
-        {#match false}
-        {#match canonical_uri}
-          {!-- Divider separating view controls from remote actions --}
-          <div
-            :if={current_user_id(@__context__)}
-            class="w-px h-6 bg-fill-strong mx-0.5"
-            aria-hidden="true"
-          />
-
-          <button
-            type="button"
-            phx-click="Bonfire.Social.Feeds:fetch_thread"
-            phx-target={@event_target}
-            phx-value-id={id(@object) || id(@activity)}
-            class="tooltip tooltip-bottom btn btn-ghost btn-primary btn-sm btn-circle"
-            data-tip={l("Get latest replies")}
-            aria-label={l("Get latest replies")}
-          >
-            <#Icon
-              iconify="ph:arrows-clockwise"
-              class="size-5 shrink-0 phx-click-loading:hidden"
-              aria-hidden="true"
-            />
-            <span
-              class="loading loading-spinner loading-sm hidden phx-click-loading:inline"
-              aria-hidden="true"
-            />
-          </button>
-
-          <a
-            href={canonical_uri}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="tooltip tooltip-bottom btn btn-ghost btn-primary btn-sm btn-circle"
-            data-tip={l("View remotely")}
-            aria-label={l("View remotely")}
-          >
-            <#Icon iconify="ph:arrow-square-out" class="size-5 shrink-0" aria-hidden="true" />
-          </a>
-      {/case}
     </div>
   </div>
 </div>
