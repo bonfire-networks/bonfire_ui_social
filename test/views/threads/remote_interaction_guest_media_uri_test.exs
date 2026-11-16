@@ -101,4 +101,56 @@ defmodule Bonfire.UI.Social.RemoteInteractionGuestMediaUriTest do
 
     assert {:error, :not_found} = Media.get_by_path(uri)
   end
+
+  describe "behind a trusted proxy (the test connection comes from loopback)" do
+    # the address a guest has when the proxy forwards it, new on every call as counters outlive a test
+    defp forwarded_ip, do: "203.0.113.#{rem(System.unique_integer([:positive]), 250) + 1}"
+
+    defp visit_forwarded(uri, ip) do
+      conn()
+      |> Plug.Conn.put_req_header("x-forwarded-for", ip)
+      |> live("/remote_interaction?type=reply&media_uri=#{URI.encode_www_form(uri)}")
+    end
+
+    test "control: with no forwarded address the attempt counts against the connection's own address" do
+      page_exists!()
+      Bonfire.UI.Common.RateLimit.set("embed_threads:127.0.0.1", 60_000, @max_per_minute)
+      uri = random_uri()
+
+      {:ok, _view, _html} = visit_remote_interaction(conn(), uri)
+
+      assert {:error, :not_found} = Media.get_by_path(uri)
+    end
+
+    # the guest's forwarded address has used up its attempts, so the page starts no thread for a served address
+    test "a guest's attempt counts against the guest's forwarded address" do
+      page_exists!()
+      ip = forwarded_ip()
+      Bonfire.UI.Common.RateLimit.set("embed_threads:#{ip}", 60_000, @max_per_minute)
+      uri = random_uri()
+
+      {:ok, _view, _html} = visit_forwarded(uri, ip)
+
+      assert {:error, :not_found} = Media.get_by_path(uri),
+             "the attempt was counted against the proxy's address, not the guest's #{ip}"
+    end
+
+    # the proxy's own address has used up its attempts (other guests), but this guest's has not
+    test "a guest with attempts left is not held back by the other guests of the same proxy", %{
+      bot: bot
+    } do
+      page_exists!()
+      ip = forwarded_ip()
+      Bonfire.UI.Common.RateLimit.set("embed_threads:127.0.0.1", 60_000, @max_per_minute)
+      Bonfire.UI.Common.RateLimit.set("embed_threads:#{ip}", 60_000, 0)
+      uri = random_uri()
+
+      {:ok, _view, _html} = visit_forwarded(uri, ip)
+
+      assert {:ok, media} = Media.get_by_path(uri),
+             "the guest shared the proxy's budget instead of having a budget of their own"
+
+      assert media.creator_id == bot.id
+    end
+  end
 end
