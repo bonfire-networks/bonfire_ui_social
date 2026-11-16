@@ -253,6 +253,9 @@ defmodule Bonfire.UI.Social.SmartInputTest do
         assert has_element?(composer, "#minimize_composer_summary_button")
         assert has_element?(composer, "#reply_peek", text)
         assert has_element?(composer, "#composer_policy_line", "Visible to")
+        # a reply has no type to pick
+        refute has_element?(composer, "#composer_type_menu")
+        refute has_element?(composer, "#bar_composer_type_menu")
 
         assert has_element?(
                  composer,
