@@ -93,7 +93,7 @@
               {#case Bonfire.Files.Media.media_label(m)}
                 {#match nil}
                 {#match label}
-                  <h2 data-id="media_title" class="font-medium text-base-content text-pretty">{rich(label)}</h2>
+                  <h2 data-id="media_title" class="font-medium text-base-content text-pretty">{Bonfire.Common.Text.text_only(label)}</h2>
               {/case}
               {#case Bonfire.Files.Media.description(m)}
                 {#match nil}

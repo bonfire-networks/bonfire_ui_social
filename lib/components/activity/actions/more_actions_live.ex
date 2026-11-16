@@ -76,6 +76,9 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
         assigns[:parent_id]
       )
 
+  # a direct message's replies reach everyone in it by being addressed to them (`Bonfire.Social.Objects.LiveHandler.thread_bell?/1`)
+  def show_bell?(%{object_type: Bonfire.Data.Social.Message}), do: false
+
   def show_bell?(%{viewing_main_object: true, thread_id: thread_id, object: object}),
     do: not is_nil(thread_id) and thread_id != id(object)
 

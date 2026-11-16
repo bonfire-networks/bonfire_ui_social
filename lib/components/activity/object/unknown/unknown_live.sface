@@ -14,7 +14,7 @@
         <span :if={@object_type_readable && @object_type_readable != "" && @object_type_readable != "apactivity"}>
           {String.capitalize(@object_type_readable || "Unknown")}:
         </span>
-        {rich(
+        {rich_untrusted(
           ed(
             object |> debug("Unsupported type or deleted object"),
             :name,
@@ -41,7 +41,7 @@
         {#match nil}
         {#match summary}
           <h3 class="text-xs tracking-wider text-primary-content-600 uppercase">Summary</h3>
-          <div class="mb-2 prose-sm prose text-primary-content-700 max-w-prose">{rich(summary)}</div>
+          <div class="mb-2 prose-sm prose text-primary-content-700 max-w-prose">{rich_untrusted(summary)}</div>
       {/case}
 
       {#case ed(object, :content, nil) || ed(object, :html_body, nil) ||
@@ -49,7 +49,7 @@
         {#match nil}
         {#match content}
           <article class="prose-sm prose max-w-prose">
-            {rich(content)}
+            {rich_untrusted(content)}
           </article>
       {/case}
   {/case}

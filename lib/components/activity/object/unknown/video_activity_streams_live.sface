@@ -19,7 +19,7 @@
   {/case}
   <div class="p-4">
     <h2 class="mb-0 font-medium text-base-content">
-      {rich(object_field(debug(@json, "apjson"), "name") || l("Untitled video"))}
+      {rich_untrusted(object_field(debug(@json, "apjson"), "name") || l("Untitled video"))}
     </h2>
     <div class="flex items-baseline gap-2 py-2">
       {#case object_field(@json, "published")}
@@ -50,7 +50,7 @@
       p_line_clamp_6: @viewing_main_object
     }>
       {!-- TODO: show more button for long descriptions like in NoteLive --}
-      {rich(object_field(@json, "content"))}
+      {rich_untrusted(object_field(@json, "content"))}
     </article>
   </div>
 </div>

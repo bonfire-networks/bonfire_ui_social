@@ -1,5 +1,8 @@
 defmodule Bonfire.Social.Feeds.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
+
+  # pagination, opening an activity, and replying (a guest is sent to the remote interaction flow by the handler itself)
+  @guest_allowed_events ~w(load_more preload_more open_activity reply_to_activity)
   use Untangle
   alias Bonfire.Social.Activities
   alias Bonfire.Data.Social.Activity
@@ -140,8 +143,8 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
   end
 
   def handle_event("delete", %{"id" => id} = _params, socket) do
-    # TODO: check permission
-    with num when is_integer(num) <- Bonfire.Social.Activities.delete(id) do
+    with num when is_integer(num) <-
+           Bonfire.Social.Activities.delete(id, current_user: current_user_required!(socket)) do
       Bonfire.UI.Common.OpenModalLive.close()
 
       {:noreply,
@@ -150,35 +153,41 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
-  def handle_event("publish", %{"to" => to} = params, socket) do
-    current_user = current_user(socket)
+  # the only feeds a client may publish into are the instance moderators' notifications (escalating something the user can see): anyone else's feeds and notifications are not the client's to choose
+  def handle_event("publish", %{"to" => "instance_moderators"} = params, socket) do
+    current_user = current_user_required!(socket)
     activity = e(assigns(socket), :activity, nil) || id(params)
 
     if activity do
       object = e(assigns(socket), :object, nil) || activity
 
-      to =
-        case to do
-          "instance_moderators" -> [notifications: Bonfire.Social.Flags.instance_moderators()]
-          # TODO
-          to -> to
+      if Bonfire.Boundaries.can?(current_user, :read, e(activity, :object_id, nil) || object) ==
+           true do
+        to =
+          [notifications: Bonfire.Social.Flags.instance_moderators()]
+          |> FeedActivities.get_publish_feed_ids()
+
+        with {:ok, _} <-
+               FeedActivities.maybe_feed_publish(current_user, activity, object, to,
+                 current_user: current_user
+               ) do
+          {:noreply,
+           socket
+           |> assign_flash(:info, l("Done!"))}
         end
-        |> FeedActivities.get_publish_feed_ids()
-
-      # |> debug("tooo")
-
-      # TODO: check permission
-      with {:ok, _} <-
-             FeedActivities.maybe_feed_publish(current_user, activity, object, to,
-               current_user: current_user
-             ) do
-        {:noreply,
-         socket
-         |> assign_flash(:info, l("Done!"))}
+      else
+        error(object, "No permission to publish this")
+        {:error, :not_permitted}
       end
     else
       error("No activity to publish")
     end
+  end
+
+  def handle_event("publish", %{"to" => _to}, socket) do
+    current_user_required!(socket)
+    error("No permission to publish to these feeds")
+    {:error, :not_permitted}
   end
 
   def handle_event("open_activity", %{"ignore" => "true"} = _params, socket) do
@@ -345,6 +354,10 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
       do:
         maybe_send_update(Bonfire.UI.Common.BadgeCounterLive, "unseen_count_#{feed_id}", assigns)
   end
+
+  # `PersistentLive` hosts no `FeedLive`, so there is no feed to update: leave it unhandled (the flag `LiveHandlers` sets when no handler matches) before any query, so the router falls through to the view's own `handle_info` clause
+  def handle_info({:new_activity, _data}, %{view: Bonfire.UI.Common.PersistentLive} = socket),
+    do: {:noreply, assign(socket, :__no_handle_info_handled__, true)}
 
   def handle_info({:new_activity, data}, socket) do
     feed_ids = e(data, :feed_ids, nil)

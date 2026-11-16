@@ -221,9 +221,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     verb = extras[:verb] || Activities.verb_slug(activity)
 
+    current_user = current_user(assigns)
+
     experienced_as =
       extras[:experienced_as] ||
-        prepare_experience(activity, e(assigns, :verb_default, nil), current_user(assigns))
+        prepare_experience(activity, e(assigns, :verb_default, nil), current_user)
 
     activity_actor = get_activity_actor(experienced_as, activity)
 
@@ -296,7 +298,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       thread_title:
         e(assigns, :thread_title, nil) || e(socket_assigns, :thread_title, nil) ||
           e(extras[:thread], :named, :name, nil) ||
-          e(activity, :replied, :thread, :named, :name, nil) ||
+          e(activity, :replied, :thread_named, :name, nil) ||
           e(activity, :named, :name, nil) ||
           e(object, :named, :name, nil),
       hide_actions:
@@ -311,7 +313,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                    :hide_until_hovered
                  ],
                  nil,
-                 current_user(assigns) || current_user(socket_assigns)
+                 current_user || current_user(socket_assigns)
                )) && "until_hovered"
 
           hide_actions ->
@@ -364,9 +366,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
         ),
       # rendered in the preview's header by PreviewContentLive
       page_header_aside:
-        Bonfire.Social.Objects.LiveHandler.thread_bell_aside(
-          thread_id || object_id,
-          "preview_thread_bell"
+        if(Bonfire.Social.Objects.LiveHandler.thread_bell?(object || e(activity, :object, nil)),
+          do:
+            Bonfire.Social.Objects.LiveHandler.thread_bell_aside(
+              thread_id || object_id,
+              "preview_thread_bell"
+            ),
+          else: []
         ),
       modal_component: Bonfire.UI.Social.ObjectThreadLive,
       modal_component_stateful?: true,
@@ -452,20 +458,19 @@ defmodule Bonfire.UI.Social.ActivityLive do
   def prepare_assigns(assigns), do: Map.put(assigns, :activity_prepared, :skipped)
 
   @doc """
-  The loaded thread when there is one, as `prepare_assigns` builds its URL from it, else its id.
+  The loaded thread when there is one, as `prepare_assigns` builds its URL from it, else the page's thread id. The reply's own `thread_id` column is never used: a root the viewer can't read isn't loaded, and its id isn't named.
 
       iex> Bonfire.UI.Social.ActivityLive.thread(%{thread_object: %{id: "given"}, thread_id: "page"}, %{thread_id: "own"})
       %{id: "given"}
 
       iex> Bonfire.UI.Social.ActivityLive.thread(%{thread_id: "page"}, %{thread_id: "own"})
-      "own"
+      "page"
 
       iex> Bonfire.UI.Social.ActivityLive.thread(%{thread_id: "page"}, nil)
       "page"
   """
   def thread(assigns, replied) do
-    e(assigns, :thread_object, nil) || e(replied, :thread, nil) || e(replied, :thread_id, nil) ||
-      e(assigns, :thread_id, nil)
+    e(assigns, :thread_object, nil) || e(replied, :thread, nil) || e(assigns, :thread_id, nil)
   end
 
   defp do_prepare_assigns(%{activity: activity, object: object} = assigns)
@@ -874,8 +879,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
       e(activity, :replied, nil) ||
         e(object, :replied, nil)
 
-    thread =
-      e(replied, :thread, nil) || e(replied, :thread_id, nil)
+    thread = e(replied, :thread, nil)
 
     reply_to =
       if show_reply_to?(experience, activity, showing_within),

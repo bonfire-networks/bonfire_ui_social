@@ -41,12 +41,34 @@ defmodule Bonfire.UI.Social.ImportArchiveFormTest do
     {:ok, view, _html} = live(conn, "/settings/user/import")
 
     view
-    |> file_input(@import_form, :file, [
-      %{name: "archive.zip", content: archive_zip(), type: "application/zip"}
-    ])
+    |> archive_input()
     |> render_upload("archive.zip")
 
+    # staging reads the archive in the background
+    render_async(view)
+
     view
+  end
+
+  defp archive_input(view),
+    do:
+      file_input(view, @import_form, :file, [
+        %{name: "archive.zip", content: archive_zip(), type: "application/zip"}
+      ])
+
+  test "an archive being uploaded shows how far along it is", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/settings/user/import")
+
+    assert view |> archive_input() |> render_upload("archive.zip", 50) =~ "50%"
+  end
+
+  # the archive is read in the background once uploaded. The "Reading the archive…" shown meanwhile isn't asserted: this small zip is often read before the upload's own render comes back, so that would fail at random
+  test "an uploaded archive is read in the background, then lists what it holds", %{conn: conn} do
+    {:ok, view, _html} = live(conn, "/settings/user/import")
+
+    view |> archive_input() |> render_upload("archive.zip")
+
+    assert render_async(view) =~ "What to import from this archive"
   end
 
   # the import jobs, leaving out the staged dir's cleanup, which staging always queues

@@ -194,7 +194,8 @@ defmodule Bonfire.UI.Social.WidgetsRespectBlocksTest do
       {:ok, _} =
         Bonfire.Boundaries.Circles.add_to_circles(
           author,
-          Bonfire.Boundaries.Scaffold.Instance.suggested_profiles_circle()
+          Bonfire.Boundaries.Scaffold.Instance.suggested_profiles_circle(),
+          skip_boundary_check: true
         )
 
       Bonfire.Boundaries.Circles.list_suggested_profiles(cache: :reset)

@@ -46,7 +46,7 @@
             class="w-full bg-fill-strong input input-bordered mt-3"
             placeholder={l("Set a name for the thread...")}
             aria-label={l("Discussion title")}
-            value={@thread_title || e(@activity, :replied, :thread, :named, :name, nil) ||
+            value={@thread_title || e(@activity, :replied, :thread_named, :name, nil) ||
               e(@object, :post_content, :name, nil) ||
               e(@object, :post_content, :summary, nil) || e(@object, :post_content, :html_body, nil) ||
               e(@object, :profile, :name, nil) || e(@object, :name, nil)}

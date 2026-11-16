@@ -1,5 +1,8 @@
 defmodule Bonfire.Social.Threads.LiveHandler do
   use Bonfire.UI.Common.Web, :live_handler
+
+  # pagination, and replying (a guest is sent to the remote interaction flow by the handler itself)
+  @guest_allowed_events ~w(load_more_replies reply)
   import Untangle
 
   alias Bonfire.Social.Threads
@@ -842,6 +845,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
            load_thread_assigns(socket) do
       thread_mode = e(assigns, :thread_mode, nil)
       assigns = mark_loaded(assigns)
+      current_user = current_user(assigns) || current_user(socket)
 
       if thread_mode != :flat and is_list(replies) and
            e(assigns, :reply_count, 0) > 0 do
@@ -856,7 +860,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
              sort_by: e(assigns, :sort_by, nil),
              sort_order: e(assigns, :sort_order, nil),
              thread_id: e(assigns, :thread_id, nil),
-             current_user: current_user(assigns) || current_user(socket)
+             current_user: current_user
            )},
           opts
         )
@@ -866,7 +870,7 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         |> insert_comments(
           {:replies,
            Bonfire.Social.Activities.prepare_subject_and_creator(replies,
-             current_user: current_user(assigns) || current_user(socket)
+             current_user: current_user
            )},
           opts
         )
@@ -944,9 +948,10 @@ defmodule Bonfire.Social.Threads.LiveHandler do
         Bonfire.Social.Feeds.LiveHandler.feed_extra_preloads_list(showing_within, thread_mode)
 
       max_depth = max_depth(assigns)
+      current_user = current_user(assigns)
 
       opts = [
-        current_user: current_user(assigns),
+        current_user: current_user,
         preload: preloads,
         after: e(assigns, :after, nil),
         max_depth: max_depth,
@@ -993,11 +998,11 @@ defmodule Bonfire.Social.Threads.LiveHandler do
            has_replies: reply_count > 0,
            thread_boost_count:
              Bonfire.Social.Boosts.count([objects: thread_id],
-               current_user: current_user(assigns)
+               current_user: current_user
              ),
            thread_like_count:
              Bonfire.Social.Likes.count([objects: thread_id],
-               current_user: current_user(assigns)
+               current_user: current_user
              ),
            # Quote counts are disabled until their production query cost is addressed.
            # thread_quote_count:

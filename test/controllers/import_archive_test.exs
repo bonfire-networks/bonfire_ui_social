@@ -69,6 +69,27 @@ defmodule Bonfire.UI.Social.ImportArchiveTest do
     |> write_zip!()
   end
 
+  # the fixture as someone gets it after unzipping their archive and zipping the folder again: everything one or more folders down, with entries for the folders themselves
+  defp nested_masto_zip!(prefix) do
+    files =
+      for path <- Path.wildcard(Path.join(@fixture, "**/*")), File.regular?(path) do
+        {prefix <> Path.relative_to(path, @fixture), File.read!(path)}
+      end
+
+    folders =
+      for {name, _} <- files,
+          folder <- folders_of(name),
+          uniq: true,
+          do: {folder, ""}
+
+    write_zip!(folders ++ files)
+  end
+
+  defp folders_of(name) do
+    parts = name |> Path.dirname() |> Path.split()
+    for n <- 1..length(parts), do: Path.join(Enum.take(parts, n)) <> "/"
+  end
+
   defp fixture_json(name), do: @fixture |> Path.join(name) |> File.read!() |> Jason.decode!()
 
   defp outbox_item(object_id),
@@ -112,6 +133,32 @@ defmodule Bonfire.UI.Social.ImportArchiveTest do
     Process.put(:federating, true)
     serve()
     :ok
+  end
+
+  describe "a Mastodon archive zipped again inside folders" do
+    test "is read from the folder holding its files, pictures included" do
+      prefix = "2026.10.22 @olduser@masto.local Mastodon archive/archive-20261022/"
+      zip = nested_masto_zip!(prefix)
+
+      assert {:ok, staged} = Import.stage_archive(zip)
+      items = Map.new(Import.staged_items(staged), &{&1.key, &1})
+      assert %{importable?: true, count: 8} = items.posts
+      assert %{importable?: true, count: 3} = items.likes
+      assert %{importable?: true} = items.profile
+
+      b = fake_user!("FromNestedMastodon")
+      assert {:ok, _} = Import.import_staged(b, staged, only: [:posts])
+
+      # the picture is extracted where the import looks for it, under the archive's folder
+      extracted = Path.join([Import.staged_dir(staged), prefix, @image_entry])
+
+      assert File.regular?(extracted),
+             "not extracted at #{extracted}, the staged dir holds: #{inspect(Path.wildcard(Path.join(Import.staged_dir(staged), "**/*.png")))}"
+
+      Oban.drain_queue(queue: :import)
+
+      assert [_media] = media_of(imported_post(@image_post))
+    end
   end
 
   describe "a Mastodon archive" do
@@ -238,6 +285,26 @@ defmodule Bonfire.UI.Social.ImportArchiveTest do
       assert {:ok, _} = Import.import_staged(b, staged, only: [:profile])
 
       assert Bonfire.Common.Repo.preload(b, :profile, force: true).profile.summary == summary
+    end
+
+    test "the posts are imported before the likes, bookmarks and other lists" do
+      b = fake_user!("FromMastodonPostsFirst")
+
+      assert {:ok, staged} = Import.stage_archive(masto_zip!())
+      assert {:ok, _} = Import.import_staged(b, staged, only: [:posts, :likes, :bookmarks])
+
+      jobs =
+        for %{args: %{"op" => op}, priority: priority} <-
+              Oban.Testing.all_enqueued(Bonfire.Common.Repo, worker: Bonfire.Social.Import),
+            op != "archive_cleanup",
+            do: {op, priority}
+
+      posts = for {op, p} <- jobs, op in ["outbox_import", "outbox_creations_import"], do: p
+      lists = for {op, p} <- jobs, op in ["likes_import", "bookmarks_import"], do: p
+
+      assert posts != [] and lists != []
+      # Oban runs a lower number first
+      assert Enum.max(posts) < Enum.min(lists)
     end
 
     test "staging lists only what the zip holds, with its counts" do

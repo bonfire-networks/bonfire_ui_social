@@ -12,7 +12,7 @@ defmodule Bonfire.UI.Social.PostContentSEOTest do
     end
 
     test "falls back to the thread name" do
-      post = %{title: nil, activity: %{replied: %{thread: %{named: %{name: "A thread"}}}}}
+      post = %{title: nil, activity: %{replied: %{thread_named: %{name: "A thread"}}}}
       assert PostContentSEO.title(post, "alice") == "A thread"
     end
 

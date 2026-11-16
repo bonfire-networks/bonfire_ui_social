@@ -45,7 +45,7 @@ defmodule Bonfire.UI.Social.PostContentSEO do
 
   def title(post_content, author) do
     e(post_content, :title, nil) ||
-      e(post_content, :activity, :replied, :thread, :named, :name, nil) ||
+      e(post_content, :activity, :replied, :thread_named, :name, nil) ||
       if(author, do: l("Post by %{author}", author: author))
   end
 

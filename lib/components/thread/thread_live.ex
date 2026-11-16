@@ -1,6 +1,9 @@
 defmodule Bonfire.UI.Social.ThreadLive do
   use Bonfire.UI.Common.Web, :stateful_component
   import Untangle
+
+  # `set` only re-reads the thread the visitor can already see, applying the view options from a fixed list (unknown keys are ignored), so it is what pull-to-refresh sends
+  @guest_allowed_events ~w(set)
   # alias Bonfire.Fake
   #
   # alias Bonfire.Me.Users
@@ -139,6 +142,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     debug("adding new reply")
 
     thread_id = e(assigns(socket), :thread_id, nil)
+    current_user = current_user(socket)
 
     object_id =
       e(new_reply, :object, :id, nil) || e(new_reply, :activity, :object, :id, nil) ||
@@ -155,7 +159,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
     permitted? =
       object_id &&
         Bonfire.Common.Needles.exists?([id: object_id],
-          current_user: current_user(socket)
+          current_user: current_user
         )
         |> debug("double check boundary upon receiving a LivePush")
 
@@ -212,7 +216,7 @@ defmodule Bonfire.UI.Social.ThreadLive do
               LiveHandler.component_id(reply_to_id, "nested"),
               [insert_stream: insert],
               ThreadBranchLive,
-              current_user: current_user(socket)
+              current_user: current_user
             )
 
             {:ok, bump_reply_count(socket)}
@@ -368,9 +372,42 @@ defmodule Bonfire.UI.Social.ThreadLive do
       |> assign(replies: [])
       |> stream(:replies, [], reset: true)
       |> stream(:threaded_replies, [], reset: true)
-      |> Bonfire.UI.Common.LiveHandlers.assign_attrs(attrs)
+      |> assign_view_options(attrs)
       |> LiveHandler.load_thread_maybe_async(true, true)
       # |> debug("seeet")
     }
   end
+
+  # Only the view options offered by the thread controls can be set by the client, each from its fixed list of values.
+  defp assign_view_options(socket, attrs) do
+    assigns =
+      Enum.reduce(attrs, %{}, fn {key, value}, acc ->
+        case view_option(key, value) do
+          {:ok, option, atom} ->
+            Map.put(acc, option, atom)
+
+          _ ->
+            debug(key, "ignoring non-view option")
+            acc
+        end
+      end)
+
+    cond do
+      assigns == %{} -> socket
+      attrs["assign_global"] == "true" -> assign_global(socket, assigns)
+      true -> assign_generic(socket, assigns)
+    end
+  end
+
+  defp view_option("thread_mode", "nested"), do: {:ok, :thread_mode, :nested}
+  defp view_option("thread_mode", "flat"), do: {:ok, :thread_mode, :flat}
+  defp view_option("sort_by", "nil"), do: {:ok, :sort_by, nil}
+  defp view_option("sort_by", "latest_reply"), do: {:ok, :sort_by, :latest_reply}
+  defp view_option("sort_by", "reply_count"), do: {:ok, :sort_by, :reply_count}
+  defp view_option("sort_by", "boost_count"), do: {:ok, :sort_by, :boost_count}
+  defp view_option("sort_by", "like_count"), do: {:ok, :sort_by, :like_count}
+  defp view_option("sort_by", "popularity_score"), do: {:ok, :sort_by, :popularity_score}
+  defp view_option("sort_order", "asc"), do: {:ok, :sort_order, :asc}
+  defp view_option("sort_order", "desc"), do: {:ok, :sort_order, :desc}
+  defp view_option(_key, _value), do: :error
 end

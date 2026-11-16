@@ -59,7 +59,11 @@ defmodule Bonfire.UI.Social.WidgetHeaderActionsTest do
     end
 
     defp suggest!(user) do
-      {:ok, _} = Circles.add_to_circles(user, Instance.suggested_profiles_circle())
+      {:ok, _} =
+        Circles.add_to_circles(user, Instance.suggested_profiles_circle(),
+          skip_boundary_check: true
+        )
+
       Circles.list_suggested_profiles(cache: :reset)
       user
     end

@@ -10,6 +10,8 @@ defmodule Bonfire.UI.Social.ParticipantsListLive do
   """
   use Bonfire.UI.Common.Web, :stateful_component
 
+  @guest_allowed_events ~w(toggle_participants)
+
   @doc "The full (already sorted/prepared) list of participants to render."
   prop participants, :list, default: []
 

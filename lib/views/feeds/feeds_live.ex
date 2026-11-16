@@ -376,6 +376,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
   defp configure_widgets(socket) do
     feed_name = FeedLive.feed_name(assigns(socket))
+    current_user_id = current_user_id(socket)
 
     {preferences, details_feed} =
       case Bonfire.Social.Feeds.feed_preset_if_permitted(feed_name, assigns(socket)) do
@@ -415,7 +416,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
 
     # the details popover hangs off a page header toggle, which only shows actions to signed-in users (guests get the sidebar widget instead), and isn't shown on notifications
     details_feed =
-      if socket.assigns[:live_action] != :notifications and current_user_id(socket),
+      if socket.assigns[:live_action] != :notifications and current_user_id,
         do: details_feed
 
     details_button =
@@ -426,7 +427,7 @@ defmodule Bonfire.UI.Social.FeedsLive do
     assign(socket,
       page_header_aside: socket.assigns.page_header_aside ++ details_button,
       preferences_widget_id:
-        if(preferences != [] and not is_nil(current_user_id(socket)),
+        if(preferences != [] and not is_nil(current_user_id),
           do: "feed_preferences_#{socket.assigns.feed_component_id}"
         ),
       sidebar_widgets: [
