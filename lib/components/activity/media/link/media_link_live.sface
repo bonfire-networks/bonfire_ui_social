@@ -18,8 +18,7 @@
         "flex-row": (@small_icon or @activity_inception) and (!is_binary(@preview_img) or @no_cover),
         # every non-column layout (rows + favicon) keeps the thumbnail↔text gap; the column
         # gets its rhythm from the flush cover + the content's p-card instead
-        "gap-3":
-          ((@small_icon or @activity_inception) and @no_cover) or !is_binary(@preview_img)
+        "gap-3": ((@small_icon or @activity_inception) and @no_cover) or !is_binary(@preview_img)
       }
       target="_blank"
     >
