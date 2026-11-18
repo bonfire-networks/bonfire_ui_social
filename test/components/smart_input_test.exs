@@ -877,6 +877,125 @@ defmodule Bonfire.UI.Social.SmartInputTest do
     # end
   end
 
+  describe "draft status after a discard" do
+    @discard "#composer_close #discard_composer button[aria-label='Close and discard draft']"
+
+    defp type_draft(composer, text) do
+      composer
+      |> element("#smart_input_form")
+      |> render_change(%{
+        "_target" => ["post", "post_content", "html_body"],
+        "post" => %{"post_content" => %{"html_body" => text}}
+      })
+    end
+
+    # as the composer's ✕ and the "Start a discussion…" pill push them (phx-target="#smart_input")
+    defp discard(composer),
+      do:
+        composer
+        |> with_target("#smart_input")
+        |> render_click("Bonfire.UI.Common.SmartInput:reset_to_default", %{})
+
+    defp reopen(composer),
+      do:
+        composer
+        |> with_target("#smart_input")
+        |> render_click("Bonfire.UI.Common.SmartInput:select_smart_input", %{
+          "opts" => Jason.encode!(%{open: true}),
+          "merge_opts" => true
+        })
+
+    test "a draft restored on reopening still counts as a draft", %{conn: conn} do
+      conn
+      |> visit("/feed/local")
+      |> PhoenixTest.unwrap(fn view ->
+        import Phoenix.LiveViewTest
+        composer = Bonfire.UI.Common.Testing.Helpers.composer_view(view)
+
+        type_draft(composer, "Where should we hike")
+        discard(composer)
+        refute has_element?(composer, @discard)
+
+        # In the browser the restored editor's validate reaches the server while the reopen is
+        # still being handled, so the reopen's forward to PersistentLive (a send-to-self) runs
+        # after it. Here the forward runs first: record it, then deliver it again after validate.
+        :erlang.trace(composer.pid, true, [:send])
+        reopen(composer)
+        :erlang.trace(composer.pid, false, [:send])
+        pid = composer.pid
+
+        assert_receive {:trace, ^pid, :send,
+                        {:assign_persistent_self, {:smart_input, _}} = forward, ^pid}
+
+        type_draft(composer, "Where should we hike")
+        send(pid, forward)
+
+        assert has_element?(composer, @discard)
+        refute has_element?(composer, "#close_composer_button")
+        render(view)
+      end)
+    end
+
+    test "discarding clears the draft status", %{conn: conn} do
+      conn
+      |> visit("/feed/local")
+      |> PhoenixTest.unwrap(fn view ->
+        import Phoenix.LiveViewTest
+        composer = Bonfire.UI.Common.Testing.Helpers.composer_view(view)
+
+        type_draft(composer, "A half-written thought")
+        assert has_element?(composer, @discard)
+
+        discard(composer)
+        reopen(composer)
+
+        assert has_element?(composer, "#composer_close #close_composer_button")
+        refute has_element?(composer, "#discard_composer")
+        render(view)
+      end)
+    end
+
+    test "switching type with text keeps it a draft", %{conn: conn} do
+      conn
+      |> visit("/feed/local")
+      |> PhoenixTest.unwrap(fn view ->
+        import Phoenix.LiveViewTest
+        composer = Bonfire.UI.Common.Testing.Helpers.composer_view(view)
+
+        type_draft(composer, "Where should we hike")
+
+        composer
+        |> element("#composer_type_menu_panel button[phx-click*='CreateArticleLive']")
+        |> render_click()
+
+        assert has_element?(composer, "#composer_type_menu_trigger[aria-label*='Article']")
+        assert has_element?(composer, @discard)
+        render(view)
+      end)
+    end
+
+    test "an inline composer keeps its draft status when its page renders it again", %{conn: conn} do
+      conn
+      |> visit("/write")
+      |> PhoenixTest.unwrap(fn view ->
+        import Phoenix.LiveViewTest
+
+        type_draft(view, "Where should we hike")
+        refute has_element?(view, "#submit_btn[disabled]")
+
+        # the page passes its opts down again, as on any change of its own assigns: they name no status
+        Phoenix.LiveView.send_update(view.pid, Bonfire.UI.Common.SmartInputInlineLive,
+          id: :smart_input,
+          smart_input_opts: [inline_only: true, hide_buttons: true]
+        )
+
+        assert has_element?(view, "#submit_btn")
+        refute has_element?(view, "#submit_btn[disabled]")
+        render(view)
+      end)
+    end
+  end
+
   describe "boundary update via send_update" do
     # NOTE: SmartInputContainerLive lives inside PersistentLive (a separate live_render),
     # so we can't easily target it with send_update from the test process (which only has
