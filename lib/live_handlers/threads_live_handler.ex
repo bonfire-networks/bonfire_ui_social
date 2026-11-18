@@ -1227,16 +1227,18 @@ defmodule Bonfire.Social.Threads.LiveHandler do
   def component_id(entry, prefix), do: "#{prefix}_#{id(entry)}"
 
   def maybe_subscribe(socket, thread_id) do
-    if thread_id && !e(assigns(socket), :pubsub_subscribed, nil) do
+    # the `:pubsub_subscribed` assign guard below is replaced by `subscribe_once`, which guards per process rather than per socket
+    # if thread_id && !e(assigns(socket), :pubsub_subscribed, nil) do
+    if thread_id do
       debug(thread_id, "subscribing to live thread updates")
-      PubSub.subscribe(thread_id, socket)
+      PubSub.subscribe_once(thread_id, socket)
 
       socket
       |> assign(:pubsub_subscribed, true)
     else
       debug(
         thread_id,
-        "no thread_id known, or already subscribed not subscribing to live thread updates"
+        "no thread_id known, not subscribing to live thread updates"
       )
 
       socket
