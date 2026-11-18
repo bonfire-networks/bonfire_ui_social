@@ -2156,8 +2156,20 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
+  @doc "Called by `update_many` on `ActivityLive`. The batch is grouped by `activity_preloads` through `Enums.map_grouped/3`, and each group runs once with its own cards, so each card gets the postloads its own assigns ask for (eg. a widget's and the feed's). A batch with one value runs as one group. The results come back in the order of the batch, as LiveView needs."
   @decorate time()
   def activity_update_many(assigns_sockets, opts) do
+    Enums.map_grouped(
+      assigns_sockets,
+      &update_many_partition_key(&1, [:activity_preloads]),
+      &do_activity_update_many(&1, opts)
+    )
+  end
+
+  defp update_many_partition_key({assigns, _socket}, keys),
+    do: Enum.map(keys, &ed(assigns, &1, nil))
+
+  defp do_activity_update_many(assigns_sockets, opts) do
     feed_live_update_many_preload_mode = feed_live_update_many_preload_mode()
 
     override_live_update_many_preload_mode =
@@ -2181,7 +2193,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
             e(first_assigns, :thread_id, nil) || id(first_assigns)
       )
 
-    # FIXME: can't just use the first component's assigns to define our opts, but rather check all of them and group by different opts (specifically preloads) and execute them separately (in parallel), or merge them
     {current_user, opts} =
       opts_for_update_many_async(List.first(assigns_sockets), opts)
 
@@ -2299,8 +2310,17 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
+  @doc "Called by `update_many` on `ActionsLive`. The batch is grouped by `showing_within` through `Enums.map_grouped/3`, and each group runs once with its own cards, so each card gets the Boosts preload when its own `showing_within` allows it. A batch with one value runs as one group. The results come back in the order of the batch, as LiveView needs."
   @decorate time()
   def actions_update_many(assigns_sockets, opts) do
+    Enums.map_grouped(
+      assigns_sockets,
+      &update_many_partition_key(&1, [:showing_within]),
+      &do_actions_update_many(&1, opts)
+    )
+  end
+
+  defp do_actions_update_many(assigns_sockets, opts) do
     if feed_live_update_many_preload_mode() in [:async_actions, :inline] do
       {first_assigns, _} = List.first(assigns_sockets)
 
@@ -2318,7 +2338,6 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
               e(first_assigns, :thread_id, nil) || id(first_assigns)
         )
 
-      # FIXME: can't just use the first component's assigns to define our opts, but rather check all of them and group by different opts (specifically preloads) and execute them separately (in parallel), or merge them
       {current_user, opts} =
         opts_for_update_many_async(List.first(assigns_sockets), opts)
 

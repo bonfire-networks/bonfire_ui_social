@@ -646,7 +646,8 @@ defmodule Bonfire.UI.Social.FeedLive do
     if already_pubsub_subscribed == feed_id do
       socket
     else
-      PubSub.subscribe(feed_id, socket)
+      # a feed id, or a list of them
+      PubSub.subscribe_once(feed_id, socket)
 
       socket
       |> assign(feed_pubsub_subscribed: feed_id)
