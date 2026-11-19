@@ -17,7 +17,10 @@ defmodule Bonfire.UI.Social.FeedPubsubSubscriptionTest do
     b = "feed_b_#{System.unique_integer([:positive])}"
 
     socket = feed_socket(a) |> FeedLive.maybe_subscribe()
-    socket = %{socket | assigns: Map.put(socket.assigns, :feed_ids, b)} |> FeedLive.maybe_subscribe()
+
+    socket =
+      %{socket | assigns: Map.put(socket.assigns, :feed_ids, b)} |> FeedLive.maybe_subscribe()
+
     %{socket | assigns: Map.put(socket.assigns, :feed_ids, a)} |> FeedLive.maybe_subscribe()
 
     :ok = PubSub.broadcast(a, {:probe, a})
