@@ -1,6 +1,8 @@
 <li id={@id} data-id="permitted_actions" class="w-full">
   <ul class="m-0 p-0 w-full min-w-0 whitespace-normal before:hidden">
     {#if @permitted}
+      <#slot {@author_rows} />
+
       <li data-id="boundary_details">
         <Bonfire.UI.Common.OpenModalLive id={"#{@id}_boundary"} title_text={l("Boundary")} no_actions>
           <StatefulComponent

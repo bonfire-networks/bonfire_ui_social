@@ -140,7 +140,8 @@
       {/case}
     {/if}
 
-    <li :if={(current_user_id(@__context__) && current_user_id(@__context__) != @creator_id) and
+    <li :if={not @late_rows and
+      (current_user_id(@__context__) && current_user_id(@__context__) != @creator_id) and
       Types.object_type(@creator) == Bonfire.Data.Identity.User}>
       <StatelessComponent
         module={maybe_component(Bonfire.UI.Boundaries.AddToCircleLive, @__context__)}
@@ -168,7 +169,7 @@
     {#match _}
   {/case}
 
-  {#if current_user_id(@__context__) != @creator_id and @verb != "Flag" and
+  {#if not @late_rows and current_user_id(@__context__) != @creator_id and @verb != "Flag" and
       module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}
     <li role="separator" class="-mx-2 my-1 border-t border-divider" />
 
@@ -223,7 +224,7 @@
 
   {!-- Block the author, etc --}
   <StatelessComponent
-    :if={@creator_id && current_user_id(@__context__) != @creator_id}
+    :if={not @late_rows and (@creator_id && current_user_id(@__context__) != @creator_id)}
     module={maybe_component(Bonfire.UI.Boundaries.BlockMenuButtonsLive, @__context__)}
     parent_id={@activity_component_id || id(@activity)}
     object={@creator || @creator_id}
@@ -234,7 +235,7 @@
     with_icon
   />
 
-  {!-- boundary details, edit, delete, etc: from the card's loaded boundary when it has one, else loaded when the menu opens --}
+  {!-- boundary details, edit, delete, etc: from the card's loaded boundary when it has one, else loaded when the menu opens. The author rows go with them, so a closed menu holds none of their modals --}
   <StatefulComponent
     :if={permitted_actions?(assigns)}
     module={maybe_component(Bonfire.UI.Social.Activity.PermittedActionsLive, @__context__)}
@@ -257,7 +258,68 @@
     object_boundary={@object_boundary}
     can_pin_in_thread={@can_pin_in_thread}
     is_remote={@is_remote || not is_nil(e(@object, :peered, :canonical_uri, nil))}
-  />
+  >
+    <:author_rows>
+      <li :if={current_user_id(@__context__) != @creator_id and
+        Types.object_type(@creator) == Bonfire.Data.Identity.User}>
+        <StatelessComponent
+          module={maybe_component(Bonfire.UI.Boundaries.AddToCircleLive, @__context__)}
+          user_id={@creator_id}
+          name={e(@creator, :profile, :name, nil)}
+          parent_id={id(@activity_component_id || @activity)}
+        />
+      </li>
+
+      {#if current_user_id(@__context__) != @creator_id and @verb != "Flag" and
+          module_enabled?(Bonfire.UI.Moderation.FlagActionLive, @__context__)}
+        <li role="separator" class="-mx-2 my-1 border-t border-divider" />
+
+        {!-- Flag the object --}
+        <li data-role="flag_object">
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Moderation.FlagActionLive)}
+            object={@object}
+            permalink={@permalink}
+            flagged={@flagged}
+            is_remote={@is_remote || not is_nil(e(@object, :peered, :canonical_uri, nil))}
+            parent_id={deterministic_dom_id(
+              __MODULE__,
+              id(@activity_component_id || @activity),
+              "flag_object",
+              @parent_id
+            )}
+            object_type={e(@object_type_readable, l("object"))}
+            label={l("Flag this %{object}", object: e(@object_type_readable, l("object")))}
+          />
+        </li>
+
+        {!-- Flag the author --}
+        <li data-role="flag_author" :if={not is_nil(@creator_id)}>
+          <StatelessComponent
+            module={maybe_component(Bonfire.UI.Moderation.FlagActionLive)}
+            object={@creator_id}
+            flagged={@flagged}
+            is_remote={@is_remote || not is_nil(e(@creator, :peered, :canonical_uri, nil))}
+            parent_id={deterministic_dom_id(__MODULE__, id(@activity_component_id || @activity), "flag_user", @parent_id)}
+            object_type={@creator_name || lc("object", "user", [], :bonfire_me)}
+          />
+        </li>
+      {/if}
+
+      {!-- Block the author, etc --}
+      <StatelessComponent
+        :if={@creator_id && current_user_id(@__context__) != @creator_id}
+        module={maybe_component(Bonfire.UI.Boundaries.BlockMenuButtonsLive, @__context__)}
+        parent_id={@activity_component_id || id(@activity)}
+        object={@creator || @creator_id}
+        permalink={@permalink}
+        hide_object={@object}
+        extra_object_label={l("this %{object}", object: e(@object_type_readable, l("object")))}
+        peered={e(@object, :peered, nil)}
+        with_icon
+      />
+    </:author_rows>
+  </StatefulComponent>
 
   <#slot {@admin_items} />
 </Dropdown>

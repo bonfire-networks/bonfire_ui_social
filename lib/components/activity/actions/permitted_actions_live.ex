@@ -28,6 +28,9 @@ defmodule Bonfire.UI.Social.Activity.PermittedActionsLive do
   # from `MoreActionsLive`, so deleting a remote object doesn't promise a request to other instances
   prop is_remote, :boolean, default: nil
 
+  @doc "Add to circle, flag and block rows from `MoreActionsLive`, rendered with the permitted rows once the menu opens."
+  slot author_rows, required: false
+
   data boundary, :any, default: nil
 
   @doc "What the viewer may do here, by action; `nil` until the menu is first opened."

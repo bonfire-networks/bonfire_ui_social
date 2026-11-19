@@ -39,6 +39,8 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
       creator_name:
         e(creator, :profile, :name, nil) || e(creator, :character, :username, nil) ||
           l("the user"),
+      # guests and direct messages have no `PermittedActionsLive` to carry the author rows
+      late_rows: permitted_actions?(assigns),
       trigger_opts:
         case load_on_open(assigns) do
           %JS{ops: []} -> []
@@ -60,7 +62,8 @@ defmodule Bonfire.UI.Social.Activity.MoreActionsLive do
   def permitted_actions?(assigns),
     do:
       not is_nil(current_user_id(assigns[:__context__])) and
-        assigns[:object_type] != Bonfire.Data.Social.Message
+        assigns[:object_type] != Bonfire.Data.Social.Message and
+        module_enabled?(Bonfire.UI.Social.Activity.PermittedActionsLive, assigns[:__context__])
 
   def bell?(assigns),
     do:
