@@ -3,7 +3,7 @@ defmodule Bonfire.UI.Social.ExportImportBookmarksTest do
   use Bonfire.UI.Social.ConnCase, async: false
 
   alias Bonfire.Common.URIs
-  alias Bonfire.Social.Import
+  alias Bonfire.Common.Import
 
   setup do
     account = fake_account!()

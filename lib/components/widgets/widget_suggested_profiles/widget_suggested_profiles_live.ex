@@ -1,6 +1,12 @@
 defmodule Bonfire.UI.Social.WidgetSuggestedProfilesLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
+  declare_widget(l("Who to follow"),
+    id: :suggested_profiles,
+    current_user_required: true,
+    props: [widget_title: l("Who to follow")]
+  )
+
   prop widget_title, :string, default: nil
 
   @doc """

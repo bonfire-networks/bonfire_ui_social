@@ -55,7 +55,7 @@
           <Bonfire.UI.Common.SettingsToggleLive
             name={l("Fetch replies on import")}
             description={l("Automatically fetch replies to my imported posts.")}
-            keys={[Bonfire.Social.Import, :fetch_threads_on_import]}
+            keys={[Bonfire.Federate.ActivityPub.Import.OutboxOps, :fetch_threads_on_import]}
             scope={@scope}
             default_value={false}
           />
@@ -110,7 +110,7 @@
         phx-target={@myself}
       >
         <h2 class="font-medium text-sm">{l("What to import from this archive")}</h2>
-        {#for item <- Bonfire.Social.Import.staged_items(@staged)}
+        {#for item <- Bonfire.Common.Import.staged_items(@staged)}
           <label class={"label justify-start gap-3", "opacity-50": !item.importable?}>
             <input
               type="checkbox"
@@ -127,19 +127,39 @@
               end}</span>
             <span :if={item.reason} class="text-xs text-muted">{item.reason}</span>
           </label>
-          {!-- an outbox's boosts are only brought in when asked for, since an archive from Mastodon has no separate list of them --}
-          <label :if={item.key == :posts} class="label justify-start gap-3 ml-8">
-            <input type="checkbox" name="include_boosts" value="true" class="checkbox checkbox-sm">
-            <span class="label-text">{l("Also import boosts")}</span>
+          {!-- how the item is imported, as its source offers it to this person (eg. an archive's boosts, a WordPress site's authors) --}
+          <label
+            :for={option <- Bonfire.Common.Import.offered_options(item, current_user(@__context__))}
+            :if={item.importable?}
+            class="label justify-start gap-3 ml-8"
+          >
+            <input
+              type="checkbox"
+              name="options[]"
+              value={to_string(option.key)}
+              checked={option.default}
+              class="checkbox checkbox-sm"
+            />
+            <span class="label-text">{option.label}</span>
           </label>
         {/for}
+
+        {!-- what importing will do, said before it starts (eg. what's left out, what's already imported) --}
+        <ul
+          :if={Bonfire.Common.Import.staged_summary(@staged) != []}
+          id="archive_import_summary"
+          class="text-sm flex flex-col gap-1 mt-2"
+        >
+          <li :for={line <- Bonfire.Common.Import.staged_summary(@staged)}><span class="font-medium">{line.key}</span>: {line.reason}</li>
+        </ul>
 
         <button class="btn mt-3 w-full btn-primary">{l("Import")}</button>
       </form>
 
-      <ul :if={@report} id="archive_import_report" class="p-4 text-sm flex flex-col gap-1">
-        <li :for={line <- @report}><span class="font-medium">{line.label}</span>: {line.text}</li>
-      </ul>
+      <div :if={@import_started} id="archive_import_started" class="p-4 text-sm">
+        {l("Import started.")}
+        <Bonfire.UI.Common.LinkLive to="/settings/user/import_status" class="link">{l("Follow its progress")}</Bonfire.UI.Common.LinkLive>
+      </div>
 
       <div
         :if={@type != :blocks}

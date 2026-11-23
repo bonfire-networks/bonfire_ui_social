@@ -1,0 +1,11 @@
+<Bonfire.UI.Common.SettingsSelectLive
+  stacked
+  keys={[Bonfire.UI.Social.WidgetFeedLive, :feed]}
+  id={@id}
+  current_value={@feed}
+  label_name={l("Feed shown on the dashboard")}
+  name={l("Feed shown on the dashboard")}
+  description={l("The feed in the dashboard's feed widget. It can differ from your default feed.")}
+  options={@options}
+  scope={@scope}
+/>

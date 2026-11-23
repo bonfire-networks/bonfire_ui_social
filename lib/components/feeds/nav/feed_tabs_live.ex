@@ -14,19 +14,26 @@ defmodule Bonfire.UI.Social.FeedTabsLive do
   @doc "Presets already loaded with `FeedNavigation.list_presets/1`, if any."
   prop available, :list, default: nil
 
+  @doc "The feed whose tab stays even when it's hidden from the nav, eg. the feed the dashboard shows; defaults to the user's default feed."
+  prop kept_feed, :any, default: nil
+
   @doc "Renders the user's visible feed presets as navigation beneath the page header."
   def render(assigns) do
     path = assigns.path || (&FeedNavigation.build_path/1)
     selected = to_string(assigns.selected_feed)
     current_user = current_user(assigns)
     available = assigns.available || FeedNavigation.list_presets(current_user: current_user)
-    default = to_string(FeedNavigation.default_feed(available, current_user: current_user))
+
+    kept =
+      to_string(
+        assigns.kept_feed || FeedNavigation.default_feed(available, current_user: current_user)
+      )
 
     presets =
       available
-      # the open feed and the user's default feed keep their tab even if hidden from the nav
+      # the open feed and the kept one keep their tab even if hidden from the nav
       |> Enum.filter(fn {slug, preset} ->
-        preset[:exclude_from_nav] == false or to_string(slug) in [selected, default]
+        preset[:exclude_from_nav] == false or to_string(slug) in [selected, kept]
       end)
       |> Enum.map(fn {slug, preset} ->
         %{

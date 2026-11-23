@@ -10,6 +10,13 @@ defmodule Bonfire.UI.Social.WidgetTrendingDiscussionsLive do
   use Bonfire.UI.Common.Web, :stateless_component
   alias Bonfire.Common.Vocabulary
 
+  # no `widget_title` in props: a title passed in beats the widget's own, which follows the vocabulary preset the instance or the user chose
+  declare_widget(l("Top discussions"),
+    id: :trending_discussions,
+    current_user_required: true,
+    props: [limit: 5]
+  )
+
   prop limit, :integer, default: 3
   prop widget_title, :string, default: nil
 

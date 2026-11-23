@@ -1794,6 +1794,29 @@ defmodule Bonfire.UI.Social.ActivityLive do
     shown_user(id, e(assigns, :activity, nil), e(assigns, :object, nil), current_user_id(assigns))
   end
 
+  @doc """
+  Whether `creator_id` is the activity's subject, comparing ids only (no preload needed): uses `subject_id`, else the id of a loaded `subject`. False when `creator_id` is nil.
+
+    iex> creator_is_subject?("alice", %{subject_id: "alice"})
+    true
+
+    iex> creator_is_subject?("alice", %{subject_id: "bob"})
+    false
+
+    iex> creator_is_subject?("alice", %{subject: %{id: "alice"}})
+    true
+
+    iex> creator_is_subject?(nil, %{subject_id: "alice"})
+    false
+
+    iex> creator_is_subject?(nil, %{})
+    false
+  """
+  def creator_is_subject?(creator_id, activity) do
+    not is_nil(creator_id) and
+      creator_id == (e(activity, :subject_id, nil) || id(e(activity, :subject, nil)))
+  end
+
   defp shown_user(subject_id, activity, object, current_user_id)
        when is_binary(subject_id) and subject_id != current_user_id do
     # under a boost or like the byline shows the post's creator, not the actor

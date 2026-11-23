@@ -1,5 +1,5 @@
 defmodule Bonfire.UI.Social.DefaultFeedSelectLive do
-  @moduledoc "The \"Default feed\" select. Rendered by the feeds settings and the dashboard settings, inside their own form: both write `[Bonfire.UI.Social.FeedLive, :default_feed]` through `Bonfire.Common.Settings:set`."
+  @moduledoc "The \"Default feed\" select, rendered by the feeds settings inside their own form: it writes `[Bonfire.UI.Social.FeedLive, :default_feed]` through `Bonfire.Common.Settings:set`."
   use Bonfire.UI.Common.Web, :stateless_component
 
   alias Bonfire.UI.Social.FeedNavigation
@@ -22,11 +22,7 @@ defmodule Bonfire.UI.Social.DefaultFeedSelectLive do
 
     assigns
     |> assign(
-      # pinned feeds first
-      options:
-        available
-        |> Enum.sort_by(fn {_slug, preset} -> preset[:exclude_from_nav] != false end)
-        |> Enum.map(fn {slug, preset} -> {slug, FeedNavigation.get_name(preset, slug)} end),
+      options: FeedNavigation.select_options(available),
       default_feed: FeedNavigation.resolve_default(available, preferred)
     )
     |> render_sface()

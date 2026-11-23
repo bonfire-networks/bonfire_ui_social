@@ -16,9 +16,12 @@ defmodule Bonfire.UI.Social.ImportLive do
      )
      |> assign_new(:staged, fn -> nil end)
      |> assign_new(:staging, fn -> false end)
-     |> assign_new(:report, fn -> nil end)
+     # set once an import of a staged file is queued, to say it started and where to follow it
+     |> assign_new(:import_started, fn -> false end)
+     # the type picked in the dropdown, as the form sent it, so an upload is staged by the source that type names
+     |> assign_new(:import_type, fn -> nil end)
      |> allow_upload(:file,
-       accept: ~w(.csv .json .zip),
+       accept: ~w(.csv .json .zip .xml),
        # an archive with media is much bigger than a list
        max_file_size:
          Bonfire.Common.Config.get([Bonfire.UI.Social.ImportLive, :max_upload_size], 500_000_000),
@@ -28,17 +31,22 @@ defmodule Bonfire.UI.Social.ImportLive do
      )}
   end
 
-  # an archive is staged as soon as its upload finishes, so the person can pick from what it holds before importing anything
+  # a whole file (an account archive, a WordPress export…) is staged as soon as its upload finishes, so the person can pick from what it holds before importing anything
   def handle_progress(:file, %{done?: true, client_name: client_name} = entry, socket) do
+    type = staging_type(e(assigns(socket), :import_type, nil), client_name)
+
     # only someone signed in has an archive to stage, and an archive is a person's own account, never imported instance-wide
     if not is_nil(current_user(socket)) and
-         String.ends_with?(String.downcase(client_name), ".zip") and
+         not is_nil(Bonfire.Common.Import.archive_source(type)) and
          e(assigns(socket), :scope, nil) != :instance_wide do
       # LiveView deletes its copy of the upload once this callback returns, so it's copied for the staging that runs after
       copy =
         consume_uploaded_entry(socket, entry, fn %{path: path} ->
           copy =
-            Path.join(System.tmp_dir!(), "upload-#{Needle.UID.generate()}.zip")
+            Path.join(
+              System.tmp_dir!(),
+              "upload-#{Needle.UID.generate()}#{String.downcase(Path.extname(client_name))}"
+            )
 
           File.cp!(path, copy)
           {:ok, copy}
@@ -47,10 +55,10 @@ defmodule Bonfire.UI.Social.ImportLive do
       # read in the background, so the page says it's being read rather than freezing until it's done
       {:noreply,
        socket
-       |> assign(staging: true, staged: nil, report: nil)
+       |> assign(staging: true, staged: nil, import_started: false)
        |> start_async(:stage_archive, fn ->
          try do
-           Bonfire.Social.Import.stage_archive(copy)
+           Bonfire.Common.Import.stage_archive(type, copy)
          after
            File.rm(copy)
          end
@@ -61,6 +69,12 @@ defmodule Bonfire.UI.Social.ImportLive do
   end
 
   def handle_progress(_name, _entry, socket), do: {:noreply, socket}
+
+  # the dropdown's pick, or the account archive for a zip uploaded before picking anything
+  defp staging_type(type, client_name) when type in [nil, ""],
+    do: if(String.ends_with?(String.downcase(client_name), ".zip"), do: "archive")
+
+  defp staging_type(type, _client_name), do: type
 
   def handle_async(:stage_archive, {:ok, {:ok, staged}}, socket),
     do: {:noreply, assign(socket, staging: false, staged: staged)}
@@ -87,21 +101,19 @@ defmodule Bonfire.UI.Social.ImportLive do
 
     # a ticked box's value is matched against the items the archive offered, never turned into an atom
     keys =
-      for %{importable?: true, key: key} <- Bonfire.Social.Import.staged_items(staged),
+      for %{importable?: true, key: key} <- Bonfire.Common.Import.staged_items(staged),
           to_string(key) in ticked,
           do: key
 
-    case Bonfire.Social.Import.import_staged(current_user, staged,
-           only: keys,
-           include_boosts: params["include_boosts"] == "true"
+    # the import is prepared and done in the background, so a big import never holds up the page: what it will do was shown before the click, and its progress is on the import status page. The ticked options are matched against what was offered there, never turned into atoms
+    case Bonfire.Common.Import.queue_import(
+           current_user,
+           staged,
+           keys,
+           List.wrap(params["options"])
          ) do
-      {:ok, result} ->
-        report = archive_report(staged, result)
-
-        {:noreply,
-         socket
-         |> assign(report: report)
-         |> assign_flash(:info, Enum.map_join(report, "\n", &"#{&1.label}: #{&1.text}"))}
+      {:ok, _job} ->
+        {:noreply, assign(socket, staged: nil, import_started: true)}
 
       e ->
         {:noreply, assign_error(socket, error_text(e) || l("Nothing was imported"))}
@@ -111,8 +123,8 @@ defmodule Bonfire.UI.Social.ImportLive do
   def handle_event("import_archive", _params, socket),
     do: {:noreply, assign_error(socket, l("Please upload an archive first"))}
 
-  def handle_event("validate", _params, socket) do
-    {:noreply, socket}
+  def handle_event("validate", params, socket) do
+    {:noreply, assign(socket, import_type: params["type"])}
   end
 
   def handle_event("import", %{"type" => type} = params, socket) do
@@ -131,13 +143,21 @@ defmodule Bonfire.UI.Social.ImportLive do
                     # with %{ok: num} <-
                     # do
                     case maybe_to_atom(type) do
+                      # an ActivityPub outbox, read by the federation extension
                       :outbox ->
-                        Bonfire.Social.Import.import_from_json_file(:outbox, scope, path,
-                          include_boosts: params["include_boosts"] == "true"
+                        Bonfire.Common.Utils.maybe_apply(
+                          Bonfire.Federate.ActivityPub.Import.OutboxOps,
+                          :import_from_json_file,
+                          [
+                            :outbox,
+                            scope,
+                            path,
+                            [include_boosts: params["include_boosts"] == "true"]
+                          ]
                         )
 
                       type ->
-                        Bonfire.Social.Import.import_from_csv_file(type, scope, path)
+                        Bonfire.Common.Import.import_from_csv_file(type, scope, path)
                     end
 
                     #   {:ok, "#{num}"}
@@ -147,7 +167,7 @@ defmodule Bonfire.UI.Social.ImportLive do
           {
             :noreply,
             socket
-            # what came in differently (eg. a post visible only to the person) or was left out is said too, as the archive import's report does
+            # what came in differently (eg. a post visible only to the person) or was left out is said too, as the archive import's checklist does
             |> assign_flash(
               :info,
               Enum.join(
@@ -183,37 +203,6 @@ defmodule Bonfire.UI.Social.ImportLive do
   defp error_text({:error, msg}) when is_binary(msg), do: msg
   defp error_text(_), do: nil
 
-  # one line per thing imported (how many were queued, or that the profile was updated), then each thing left out with why
-  defp archive_report(staged, result) do
-    labels = Map.new(Bonfire.Social.Import.staged_items(staged), &{&1.key, &1.label})
-
-    queued =
-      for {key, %{} = counts} <- Map.drop(result, [:skipped, :notes, :profile]) do
-        %{
-          label: labels[key] || to_string(key),
-          text:
-            l("%{queued} queued, %{failed} failed",
-              queued: Map.get(counts, :ok, 0),
-              failed: Map.get(counts, :error, 0)
-            )
-        }
-      end
-
-    profile =
-      if Map.has_key?(result, :profile),
-        # the checkbox's long label already said what's filled in, so the report keeps it short
-        do: [%{label: l("Profile"), text: l("Filled in what your profile didn't have yet")}],
-        else: []
-
-    # what came in differently from the rest (eg. a post visible only to the person), then what was left out
-    notes_and_skipped =
-      for %{key: key, reason: reason} <-
-            List.wrap(result[:notes]) ++ List.wrap(result[:skipped]),
-          do: %{label: to_string(key), text: reason}
-
-    queued ++ profile ++ notes_and_skipped
-  end
-
   # def handle_progress(
   #       type,
   #       entry,
@@ -245,17 +234,32 @@ defmodule Bonfire.UI.Social.ImportLive do
     }
 
   def options_list(_, _, _),
-    do: %{
-      "" => nil,
-      l("Archive of another account (ZIP)") => :archive,
-      l("List of profiles to follow (CSV)") => :following,
-      l("Posts/creations in outbox (JSON)") => :outbox,
-      l("List of bookmarks (CSV)") => :bookmarks,
-      l("List of likes (CSV)") => :likes,
-      l("List of boosts (CSV)") => :boosts,
-      l("List of lists/circles and their members (CSV))") => :circles,
-      l("List of profiles/instances to ghost (CSV)") => :ghosts,
-      l("List of profiles/instances to silence (CSV)") => :silences,
-      l("List of profiles/instances to block (CSV)") => :blocks
-    }
+    do:
+      Map.merge(
+        archive_source_options(),
+        %{
+          "" => nil,
+          l("List of profiles to follow (CSV)") => :following,
+          l("Posts/creations in outbox (JSON)") => :outbox,
+          l("List of bookmarks (CSV)") => :bookmarks,
+          l("List of likes (CSV)") => :likes,
+          l("List of boosts (CSV)") => :boosts,
+          l("List of lists/circles and their members (CSV))") => :circles,
+          l("List of profiles/instances to ghost (CSV)") => :ghosts,
+          l("List of profiles/instances to silence (CSV)") => :silences,
+          l("List of profiles/instances to block (CSV)") => :blocks
+        }
+      )
+
+  # one option per source a whole file can be staged from (the account archive, and any an extension registers), named by the source
+  defp archive_source_options do
+    for {key, source} <- Bonfire.Common.Import.archive_sources(), into: %{} do
+      label =
+        if Code.ensure_loaded?(source) and function_exported?(source, :import_source_label, 0),
+          do: source.import_source_label(),
+          else: to_string(key)
+
+      {label, key}
+    end
+  end
 end

@@ -454,16 +454,6 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
 
   defp type_group_queues(_), do: nil
 
-  defp format_operation_type("follows_import"), do: l("Follow")
-  defp format_operation_type("blocks_import"), do: l("Block")
-  defp format_operation_type("silences_import"), do: l("Silence")
-  defp format_operation_type("ghosts_import"), do: l("Ghost")
-  defp format_operation_type("bookmarks_import"), do: l("Bookmark")
-  defp format_operation_type("circles_import"), do: l("Circle")
-  defp format_operation_type("outbox_import"), do: l("Posts & boosts")
-  defp format_operation_type("outbox_creations_import"), do: l("Posts/Creations")
-  defp format_operation_type("likes_import"), do: l("Like")
-  defp format_operation_type("boosts_import"), do: l("Boost")
   defp format_operation_type("fetch_remote"), do: l("Fetch content")
   defp format_operation_type("publish"), do: l("Prep for federation")
   defp format_operation_type("publish_one"), do: l("Outgoing federation")
@@ -472,7 +462,8 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
   defp format_operation_type("incoming_unverified_ap_doc"),
     do: l("Incoming federation (unverified)")
 
-  defp format_operation_type(other), do: other
+  # an import op is named by the extension that handles it (see `Bonfire.Common.ImportModule`), so a new kind of import needs nothing here
+  defp format_operation_type(other), do: Bonfire.Common.Import.op_label(other) || other
 
   defp format_state("pre_existing"), do: {l("Pre-existing"), "text-info/70"}
   defp format_state("completed"), do: {l("Completed"), "text-success"}
@@ -519,42 +510,37 @@ defmodule Bonfire.UI.Social.BackgroundProcessingStatusLive do
 
   def extract_domain(other), do: other
 
-  # User-friendly operation names with optional context
-  def friendly_operation(operation, context \\ nil)
+  # What a job is doing, picked by its op code (never by matching its label, which is translated), with optional context
+  def friendly_operation(op_code, context \\ nil)
 
   # Fetch content with specific context - provide detailed info for admins
-  def friendly_operation("Fetch content", "fix_in_reply_to"), do: l("Fetching parent post")
-  def friendly_operation("Fetch content", "fix_replies"), do: l("Fetching replies")
-  def friendly_operation("Fetch content", "fix_context"), do: l("Fetching thread context")
-  def friendly_operation("Fetch content", "Object.normalize"), do: l("Normalizing object")
+  def friendly_operation("fetch_remote", "fix_in_reply_to"), do: l("Fetching parent post")
+  def friendly_operation("fetch_remote", "fix_replies"), do: l("Fetching replies")
+  def friendly_operation("fetch_remote", "fix_context"), do: l("Fetching thread context")
+  def friendly_operation("fetch_remote", "Object.normalize"), do: l("Normalizing object")
 
-  def friendly_operation("Fetch content", "fetch_fresh_object_from_id"),
+  def friendly_operation("fetch_remote", "fetch_fresh_object_from_id"),
     do: l("Fetching fresh object")
 
-  def friendly_operation("Fetch content", "handle_incoming"), do: l("Processing incoming")
+  def friendly_operation("fetch_remote", "handle_incoming"), do: l("Processing incoming")
 
-  def friendly_operation("Fetch content", detail) when is_binary(detail),
+  def friendly_operation("fetch_remote", detail) when is_binary(detail),
     do: l("Fetching content") <> " (#{detail})"
 
-  def friendly_operation("Fetch content", _), do: l("Fetching content")
+  def friendly_operation("fetch_remote", _), do: l("Fetching content")
 
-  # Other operations
-  def friendly_operation("Incoming federation", _), do: l("Receiving activity")
-  def friendly_operation("Incoming federation (unverified)", _), do: l("Receiving activity")
-  def friendly_operation("Outgoing federation", _), do: l("Sending activity")
-  def friendly_operation("Prep for federation", _), do: l("Preparing to send")
-  def friendly_operation("Follow", _), do: l("Following user")
-  def friendly_operation("Block", _), do: l("Blocking or instance")
-  def friendly_operation("Silence", _), do: l("Silencing user or instance")
-  def friendly_operation("Ghost", _), do: l("Ghosting user or instance")
-  def friendly_operation("Bookmark", _), do: l("Importing bookmark")
-  def friendly_operation("Circle", _), do: l("Adding to circle")
-  def friendly_operation("Posts & boosts", _), do: l("Importing object or boost")
-  def friendly_operation("Posts/Creations", _), do: l("Importing object")
-  def friendly_operation("Like", _), do: l("Importing like")
-  def friendly_operation("Boost", _), do: l("Importing boost")
-  def friendly_operation(other, detail) when is_binary(detail), do: "#{other} (#{detail})"
-  def friendly_operation(other, _), do: other
+  # Other federation operations
+  def friendly_operation("incoming_ap_doc", _), do: l("Receiving activity")
+  def friendly_operation("incoming_unverified_ap_doc", _), do: l("Receiving activity")
+  def friendly_operation("publish_one", _), do: l("Sending activity")
+  def friendly_operation("publish", _), do: l("Preparing to send")
+
+  # an import op says what its jobs do through the extension that handles it, else its label, else its code
+  def friendly_operation(op_code, detail) do
+    name = Bonfire.Common.Import.op_phrase(op_code) || format_operation_type(op_code)
+
+    if is_binary(detail), do: "#{name} (#{detail})", else: name
+  end
 
   defp format_errors(errors) when is_list(errors) do
     errors

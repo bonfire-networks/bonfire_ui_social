@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.ImportArchiveFormTest do
   @moduledoc """
-  A person uploads their whole account archive (a zip) in the import settings. Once the upload finishes they see one checkbox per thing the archive holds, ticked and with its count, and the things that can't be imported, greyed with why. They untick what they don't want, import, and get a report of what was queued and what was skipped.
+  A person uploads their whole account archive (a zip) in the import settings. Once the upload finishes they see one checkbox per thing the archive holds, ticked and with its count, and the things that can't be imported, greyed with why. They see what importing will do, untick what they don't want, and import, which starts in the background.
   """
   use Bonfire.UI.Social.ConnCase, async: false
   use Oban.Testing, repo: Bonfire.Common.Repo
@@ -75,7 +75,7 @@ defmodule Bonfire.UI.Social.ImportArchiveFormTest do
   defp queued_ops,
     do:
       for(
-        job <- all_enqueued(worker: Bonfire.Social.Import),
+        job <- all_enqueued(worker: Bonfire.Common.Import),
         job.args["op"] != "archive_cleanup",
         do: job.args["op"]
       )
@@ -94,23 +94,60 @@ defmodule Bonfire.UI.Social.ImportArchiveFormTest do
     refute has_element?(view, "#{@archive_form} input[value=circles]")
   end
 
-  test "unticking an item imports the rest and leaves it alone, then reports what was queued",
+  # runs the queued jobs of `op` here (tests queue them without running them, unless federating)
+  defp run_jobs(op),
+    do:
+      for(
+        job <- all_enqueued(worker: Bonfire.Common.Import),
+        job.args["op"] == op,
+        do: Bonfire.Common.Import.perform(job)
+      )
+
+  test "unticking an item imports the rest and leaves it alone, said before importing, then started in the background",
        %{conn: conn} do
     view = upload_archive(conn)
+
+    # what the import will do is said before importing: the post addressed to nobody comes in for the person alone
+    preview = render(view)
+    assert preview =~ "Bookmarks"
+    assert preview =~ "visible only to you"
 
     html =
       view
       |> form(@archive_form, %{"keys" => ["posts", "bookmarks"]})
       |> render_submit()
 
+    assert html =~ "Import started"
+    # the click only queues the job preparing the import, which then queues the items
+    assert queued_ops() == ["import_materialize"]
+    run_jobs("import_materialize")
+
     ops = queued_ops()
     assert "bookmarks_import" in ops
     assert "outbox_creations_import" in ops
     refute "likes_import" in ops
+  end
 
-    assert html =~ "Bookmarks"
-    # the post addressed to nobody is reported as imported for the person alone
-    assert html =~ "visible only to you"
+  test "the archive's content offers an unticked option to also import its boosts, which imports them when ticked",
+       %{conn: conn} do
+    view = upload_archive(conn)
+
+    assert has_element?(
+             view,
+             "#{@archive_form} input[type=checkbox][name='options[]'][value=include_boosts]"
+           )
+
+    refute has_element?(view, "#{@archive_form} input[value=include_boosts][checked]")
+
+    view
+    |> form(@archive_form)
+    |> render_submit(%{"keys" => ["posts"], "options" => ["include_boosts"]})
+
+    run_jobs("import_materialize")
+
+    # the outbox with its boosts, rather than only its posts
+    assert "outbox_import" in queued_ops()
+    refute "outbox_creations_import" in queued_ops()
   end
 
   test "a key the archive didn't offer is refused, never turned into an atom", %{conn: conn} do

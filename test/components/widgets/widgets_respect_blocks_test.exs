@@ -141,12 +141,14 @@ defmodule Bonfire.UI.Social.WidgetsRespectBlocksTest do
     # |> wait_async()
     conn()
     |> get_conn_render("/")
-    |> assert_has("#guest-spotlight [data-role=pinned_card]", text: "widget post by a bystander")
-    |> refute_has("#guest-spotlight", text: "local-only spotlight post")
+    |> assert_has("[data-widget-id=instance_pinned] [data-role=pinned_card]",
+      text: "widget post by a bystander"
+    )
+    |> refute_has("[data-widget-id=instance_pinned]", text: "local-only spotlight post")
     # not even a restricted card, which would show its name, summary and cover to someone who may not see it
-    |> refute_has("#guest-spotlight [data-id=restricted_content]")
+    |> refute_has("[data-widget-id=instance_pinned] [data-id=restricted_content]")
     # only the two public pins from the setup, so no card at all for the local-only one, however it would be marked
-    |> assert_has("#guest-spotlight [data-role=pinned_card]", count: 2)
+    |> assert_has("[data-widget-id=instance_pinned] [data-role=pinned_card]", count: 2)
   end
 
   test "recent articles drop an article once I silence its author, and keep the others", %{
@@ -231,6 +233,8 @@ defmodule Bonfire.UI.Social.WidgetsRespectBlocksTest do
     # |> wait_async()
     conn()
     |> get_conn_render("/")
-    |> assert_has("#guest-spotlight [data-role=pinned_card]", text: "widget post by the author")
+    |> assert_has("[data-widget-id=instance_pinned] [data-role=pinned_card]",
+      text: "widget post by the author"
+    )
   end
 end

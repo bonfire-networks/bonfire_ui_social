@@ -51,7 +51,7 @@ defmodule Bonfire.UI.Social.ImportOutboxBoostsTest do
   end
 
   defp queued_ops,
-    do: for(job <- all_enqueued(worker: Bonfire.Social.Import), do: job.args["op"])
+    do: for(job <- all_enqueued(worker: Bonfire.Common.Import), do: job.args["op"])
 
   test "the outbox import offers an unticked option to also import boosts", %{conn: conn} do
     {:ok, view, _html} = live(conn, "/settings/user/import")

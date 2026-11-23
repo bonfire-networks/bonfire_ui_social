@@ -1,8 +1,32 @@
-<Bonfire.UI.Common.WidgetBlockLive>
-  <Bonfire.UI.Social.FeedExtraControlsLive
-    event_target={@event_target}
-    feed_name={@feed_name}
-    feed_filters={@feed_filters}
-    showing_within={@showing_within}
-  />
-</Bonfire.UI.Common.WidgetBlockLive>
+{!-- with no feed it stays empty, and places hide a widget with no block --}
+<div data-id="feed">
+  {#case Bonfire.UI.Social.WidgetFeedLive.feed_props(@__context__, @requested_feed)}
+    {#match nil}
+    {#match feed}
+      <Bonfire.UI.Common.WidgetBlockLive class="w-full">
+        {!-- on the dashboard, below 80rem the heading is visually hidden (interface.css, next to the page header rule) --}
+        <div data-role="widget-header" class="flex items-center">
+          <h2 id="feed_heading" data-role="widget-heading">{if current_user_id(@__context__),
+              do: feed[:page_title] || l("Feed"),
+              else: l("Recent activity")}</h2>
+        </div>
+        <StatelessComponent
+          :if={@feed_tabs_path}
+          module={maybe_component(Bonfire.UI.Social.FeedTabsLive, @__context__)}
+          available={feed[:nav_presets]}
+          selected_feed={feed[:feed_name]}
+          kept_feed={Bonfire.UI.Social.FeedNavigation.widget_feed(feed[:nav_presets] || [],
+            current_user: current_user(@__context__)
+          )}
+          path={@feed_tabs_path}
+          sticky={false}
+        />
+        <StatefulComponent
+          module={maybe_component(Bonfire.UI.Social.FeedLive, @__context__)}
+          id={feed[:feed_component_id]}
+          {...Keyword.delete(feed, :feed_component_id)}
+          hide_filters
+        />
+      </Bonfire.UI.Common.WidgetBlockLive>
+  {/case}
+</div>

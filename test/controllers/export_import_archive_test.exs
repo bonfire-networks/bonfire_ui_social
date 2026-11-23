@@ -8,7 +8,7 @@ defmodule Bonfire.UI.Social.ExportImportArchiveTest do
   import Tesla.Mock
   import Bonfire.Files.Simulation
 
-  alias Bonfire.Social.Import
+  alias Bonfire.Common.Import
   alias Bonfire.Social.Graph.Follows
   alias Bonfire.Boundaries.Blocks
   alias Bonfire.Boundaries.Circles

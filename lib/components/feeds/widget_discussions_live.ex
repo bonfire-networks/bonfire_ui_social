@@ -1,6 +1,11 @@
 defmodule Bonfire.UI.Social.WidgetDiscussionsLive do
   use Bonfire.UI.Common.Web, :stateless_component
 
+  declare_widget(l("Popular discussions"),
+    id: :popular_discussions,
+    props: [widget_title: l("Popular discussions")]
+  )
+
   prop feed_name, :any, default: :explore
   prop widget_title, :string, default: nil
 

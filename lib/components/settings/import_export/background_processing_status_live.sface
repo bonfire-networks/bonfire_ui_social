@@ -224,7 +224,7 @@
             <div class="flex items-start justify-between gap-2">
               <div class="min-w-0">
                 <h3 class="font-medium text-sm text-base-content">
-                  {friendly_operation(job.operation, job[:context])}
+                  {friendly_operation(job.op_code, job[:context])}
                 </h3>
 
                 {!-- Show source and/or destination based on operation type --}

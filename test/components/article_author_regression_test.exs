@@ -32,7 +32,23 @@ defmodule Bonfire.UI.Social.ArticleAuthorRegressionTest do
     )
   end
 
-  test "an article reading byline keeps the author name on one line" do
+  test "an article's feed card has no byline when its author is the activity's subject" do
+    author = fake_user!("article_feed_author")
+
+    Bonfire.Articles.Fake.fake_article!(author, "public", %{
+      post_content: %{
+        name: "Article by the subject #{System.unique_integer()}",
+        html_body: "The article body"
+      }
+    })
+
+    conn(user: author)
+    |> visit("/@#{author.character.username}")
+    |> assert_has("[data-id=activity_article]")
+    |> refute_has("[data-id=activity_article] [data-role=article_byline]")
+  end
+
+  test "an article reading view has no byline when its author is the activity's subject" do
     author = fake_user!("article_byline_author")
 
     article =
@@ -45,12 +61,7 @@ defmodule Bonfire.UI.Social.ArticleAuthorRegressionTest do
 
     conn(user: author)
     |> visit("/discussion/#{article.id}")
-    |> assert_has(
-      "[data-id=activity_article] [data-role=article_byline].self-start.max-w-full > [data-scope=avatar].shrink-0"
-    )
-    |> assert_has(
-      "[data-id=activity_article] [data-role=article_byline].self-start.max-w-full > span.min-w-0.truncate",
-      text: author.profile.name
-    )
+    |> assert_has("[data-id=activity_article]")
+    |> refute_has("[data-id=activity_article] [data-role=article_byline]")
   end
 end

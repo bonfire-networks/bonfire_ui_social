@@ -58,6 +58,29 @@ defmodule Bonfire.UI.Social.FeedNavigation do
   end
 
   @doc """
+  The feed the feed widget shows: the one chosen for it (`[Bonfire.UI.Social.WidgetFeedLive, :feed]`) if it is still permitted, else the first permitted preset that isn't the user's default feed, so the widget and the Feeds link don't open the same feed, else the default feed.
+  """
+  def widget_feed(presets, opts) do
+    chosen = Settings.get([Bonfire.UI.Social.WidgetFeedLive, :feed], nil, opts)
+    default = default_feed(presets, opts)
+
+    chosen_slug =
+      chosen &&
+        Enum.find_value(presets, fn {slug, _} -> to_string(slug) == to_string(chosen) && slug end)
+
+    chosen_slug ||
+      Enum.find_value(presets, fn {slug, _} -> to_string(slug) != to_string(default) && slug end) ||
+      default
+  end
+
+  @doc "The options of a feed select: pinned feeds first, as `{slug, name}`."
+  def select_options(presets) do
+    presets
+    |> Enum.sort_by(fn {_slug, preset} -> preset[:exclude_from_nav] != false end)
+    |> Enum.map(fn {slug, preset} -> {slug, get_name(preset, slug)} end)
+  end
+
+  @doc """
   Builds a feed URL, encoding custom names as a single path segment.
 
       iex> Bonfire.UI.Social.FeedNavigation.build_path("My feed")

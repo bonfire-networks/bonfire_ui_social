@@ -10,7 +10,7 @@ defmodule Bonfire.UI.Social.ImportArchiveTest do
 
   import Tesla.Mock
 
-  alias Bonfire.Social.Import
+  alias Bonfire.Common.Import
 
   @moduletag :backend
 
@@ -295,7 +295,7 @@ defmodule Bonfire.UI.Social.ImportArchiveTest do
 
       jobs =
         for %{args: %{"op" => op}, priority: priority} <-
-              Oban.Testing.all_enqueued(Bonfire.Common.Repo, worker: Bonfire.Social.Import),
+              Oban.Testing.all_enqueued(Bonfire.Common.Repo, worker: Bonfire.Common.Import),
             op != "archive_cleanup",
             do: {op, priority}
 
@@ -343,7 +343,11 @@ defmodule Bonfire.UI.Social.ImportArchiveTest do
 
       for name <- ["FirstImporter", "SecondImporter"] do
         b = fake_user!(name)
-        Import.import_from_json(:outbox, b, %{"orderedItems" => [item]})
+
+        Bonfire.Federate.ActivityPub.Import.OutboxOps.import_from_json(:outbox, b, %{
+          "orderedItems" => [item]
+        })
+
         Oban.drain_queue(queue: :import)
 
         assert Bonfire.Social.Boosts.boosted?(b, imported_post(@image_post)),
@@ -366,7 +370,11 @@ defmodule Bonfire.UI.Social.ImportArchiveTest do
       })
 
       b = fake_user!("OutboxOnly")
-      Import.import_from_json(:outbox, b, %{"orderedItems" => [outbox_item(@image_post)]})
+
+      Bonfire.Federate.ActivityPub.Import.OutboxOps.import_from_json(:outbox, b, %{
+        "orderedItems" => [outbox_item(@image_post)]
+      })
+
       Oban.drain_queue(queue: :import)
 
       assert [media] = media_of(imported_post(@image_post))
@@ -381,7 +389,11 @@ defmodule Bonfire.UI.Social.ImportArchiveTest do
         |> put_in(["object", "id"], offline_id)
 
       serve()
-      Import.import_from_json(:outbox, b, %{"orderedItems" => [offline]})
+
+      Bonfire.Federate.ActivityPub.Import.OutboxOps.import_from_json(:outbox, b, %{
+        "orderedItems" => [offline]
+      })
+
       assert %{success: 1} = Oban.drain_queue(queue: :import)
       assert [] = media_of(imported_post(offline_id))
     end
@@ -404,10 +416,10 @@ defmodule Bonfire.UI.Social.ImportArchiveTest do
     end
 
     test "a zip over the size limit is refused before extraction" do
-      Config.put([Bonfire.Social.Import, :max_archive_size], 10, :bonfire_social)
+      Config.put([Bonfire.Common.Import, :max_archive_size], 10, :bonfire_common)
 
       on_exit(fn ->
-        Config.put([Bonfire.Social.Import, :max_archive_size], nil, :bonfire_social)
+        Config.put([Bonfire.Common.Import, :max_archive_size], nil, :bonfire_common)
       end)
 
       zip = write_zip!([{"outbox.json", "{}"}, {"big.bin", String.duplicate("a", 1000)}])
@@ -433,10 +445,10 @@ defmodule Bonfire.UI.Social.ImportArchiveTest do
     assert :ok = Import.perform(%Oban.Job{args: %{"op" => "archive_cleanup", "dir" => dir}})
     assert File.dir?(dir)
 
-    Config.put([Bonfire.Social.Import, :archive_retention], 0, :bonfire_social)
+    Config.put([Bonfire.Common.Import, :archive_retention], 0, :bonfire_common)
 
     on_exit(fn ->
-      Config.put([Bonfire.Social.Import, :archive_retention], nil, :bonfire_social)
+      Config.put([Bonfire.Common.Import, :archive_retention], nil, :bonfire_common)
     end)
 
     assert :ok = Import.perform(%Oban.Job{args: %{"op" => "archive_cleanup", "dir" => dir}})

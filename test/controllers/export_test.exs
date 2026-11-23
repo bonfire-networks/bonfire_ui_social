@@ -7,7 +7,7 @@ defmodule Bonfire.UI.Social.ExportTest do
   import Bonfire.Common.Simulation
   import Bonfire.Files.Simulation
   alias Bonfire.Social.Graph.Follows
-  alias Bonfire.Social.Import
+  alias Bonfire.Common.Import
 
   setup do
     # Keep federation scoped to this test process so publishing always creates the ActivityPub objects required by the outbox export.

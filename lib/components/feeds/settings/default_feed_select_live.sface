@@ -5,7 +5,7 @@
   current_value={@default_feed}
   label_name={l("Default feed")}
   name={l("Default feed")}
-  description={l("Opens from Feeds in the sidebar, and in Latest activity on your dashboard.")}
+  description={l("Opens when you select Feeds in the navigation sidebar.")}
   options={@options}
   default_value={:my}
   scope={@scope}
