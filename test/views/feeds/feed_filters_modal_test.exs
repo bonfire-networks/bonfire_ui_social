@@ -57,7 +57,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       conn
       |> visit("/feed/my")
       |> open_filters_modal()
-      |> assert_has("h4", text: "Time range")
+      |> assert_has("h4", text: "Posted")
       |> refute_has("[data-row=sort_order]")
       |> assert_has("h4", text: "Content types")
       |> assert_has("h4", text: "Activity types")
@@ -91,11 +91,11 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       {:ok, today_post: today_post, old_post: old_post}
     end
 
-    test "selecting Last Day and applying filters only recent posts", %{conn: conn} do
+    test "selecting Today and applying filters only recent posts", %{conn: conn} do
       conn
       |> visit("/feed/local")
       |> open_filters_modal()
-      |> click_button("Last Day")
+      |> click_button("Today")
       |> apply_filters()
       |> assert_has("[data-id=feed] article", text: "posted today")
       |> refute_has("[data-id=feed] article", text: "posted long ago")
@@ -105,7 +105,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       conn
       |> visit("/feed/local")
       |> open_filters_modal()
-      |> click_button("Last Day")
+      |> click_button("Today")
       |> click_button("All time")
       |> apply_filters()
       |> assert_has("[data-id=feed] article", text: "posted today")
@@ -116,10 +116,10 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       conn
       |> visit("/feed/local")
       |> open_filters_modal()
-      |> click_button("Last Week")
+      |> click_button("This week")
       |> apply_filters()
       # the inline editor stays open after applying
-      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "Last Week")
+      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "This week")
     end
   end
 
@@ -272,9 +272,9 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       conn
       |> visit("/feed/local")
       |> open_filters_modal()
-      |> click_button("Last Month")
+      |> click_button("This month")
       |> apply_filters()
-      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "Last Month")
+      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "This month")
     end
 
     test "exclude boost filter hides boost activities", %{
@@ -309,7 +309,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       conn
       |> visit("/feed/local")
       |> open_filters_modal()
-      |> click_button("Last Week")
+      |> click_button("This week")
       |> apply_filters()
       |> fill_in("Feed title", with: "weekly-filter-review")
       |> click_button("Save feed")
@@ -318,7 +318,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> assert_has("div", text: "weekly-filter-review")
       |> visit("/feed/weekly-filter-review")
       |> open_filters_modal()
-      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "Last Week")
+      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "This week")
     end
   end
 
@@ -337,8 +337,8 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> assert_has("[data-id=feed] article", text: "visible post")
       |> open_filters_modal()
       # Toggle a filter — feed should NOT change yet
-      |> click_button("Last Day")
-      |> assert_has("button.btn-primary", text: "Last Day")
+      |> click_button("Today")
+      |> assert_has("button.btn-primary", text: "Today")
       |> assert_has("[data-id=feed] article", text: "visible post")
       |> apply_filters()
       |> refute_has("[data-id=feed] article", text: "visible post")
@@ -355,12 +355,12 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> wait_async()
       |> click_button("Reset feed preferences")
       |> open_filters_modal()
-      |> click_button("Last Day")
+      |> click_button("Today")
       |> click_button("Reset feed preferences")
       |> wait_async()
-      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "Last Month")
+      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "This month")
       |> apply_filters()
-      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "Last Month")
+      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "This month")
     end
 
     test "header Reset restores the configured time window and sort order", %{
@@ -384,14 +384,14 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> open_filters_modal()
       |> PhoenixTest.select("Sort", option: "Oldest first")
       |> wait_async()
-      |> click_button("Last Day")
+      |> click_button("Today")
       |> apply_filters()
       |> refute_has("[data-id=feed] article", text: "reset restores this older post")
       |> click_button("Reset feed preferences")
       |> wait_async()
       |> assert_has("[data-id=feed] article", text: "reset restores this older post")
       |> refute_has("[data-id=feed] article", text: "outside the configured default window")
-      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "Last Week")
+      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "This week")
       |> assert_has("select[name=feed_order] option[value=newest][selected]")
     end
 
@@ -399,7 +399,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       conn
       |> visit("/feed/local")
       |> open_filters_modal()
-      |> click_button("Last Week")
+      |> click_button("This week")
       |> refute_has("[data-role=reset_filters]")
       |> assert_has("button[aria-label='Reset feed preferences']")
     end
@@ -525,7 +525,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> assert_has("button[aria-expanded='true'] [data-role=feed_advanced_filters]")
       |> assert_has("button", text: "Apply filters")
       # applying reloads the feed but the expander stays open
-      |> click_button("Last Day")
+      |> click_button("Today")
       |> apply_filters()
       |> assert_has("button", text: "Apply filters")
       # collapsing unmounts the editor again
@@ -533,7 +533,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> assert_has("button[aria-expanded='false'] [data-role=feed_advanced_filters]")
       |> refute_has("button", text: "Apply filters")
       |> click_button("[data-role=open_modal]", "More filters")
-      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "Last Day")
+      |> assert_has("[data-row=time_range] [data-role=row_value]", text: "Today")
     end
   end
 
@@ -545,5 +545,122 @@ defmodule Bonfire.UI.Social.FeedFiltersModal.Test do
       |> click_button("[data-toggle='article'] button", "Only")
       |> assert_has("[data-row=object_types] summary [data-role=row_value]", text: "1 only")
     end
+  end
+
+  test "\"Posted\" (when it was posted) and \"Happening\" (when it happens) are told apart, and \"Happening\" is on every feed, with a hint that it only shows dated things",
+       %{conn: conn} do
+    for path <- ["/feed/events", "/feed/local"] do
+      conn
+      |> visit(path)
+      |> open_filters_modal()
+      |> assert_has("[data-row=time_range] summary", text: "Posted")
+      |> assert_has("[data-row=time_range]", text: "When it was posted")
+      |> assert_has("[data-row=happening] summary", text: "Happening")
+      |> assert_has("[data-row=happening]",
+        text: "When it happens. Only things with dates, like events."
+      )
+    end
+  end
+
+  test "\"Nearby\" is on every feed, with a hint on what it shows; the radius is hidden until there is a location, with the button to detect it",
+       %{conn: conn, user: user} do
+    for path <- ["/feed/events", "/feed/local"] do
+      conn
+      |> visit(path)
+      |> open_filters_modal()
+      |> assert_has("[data-row=nearby] summary", text: "Nearby")
+      |> assert_has("[data-row=nearby]",
+        text:
+          "Where it is. Things with a place within this distance, plus online ones with no place, unless you turn that off."
+      )
+      |> assert_has("[data-row=nearby] input[name=place]")
+      |> assert_has(
+        "[data-row=nearby] button[data-role=detect_location][aria-label='Detect location']"
+      )
+      |> refute_has("[data-row=nearby] select[name=radius]")
+      |> refute_has("[data-row=nearby] input[name=include_no_place][type=checkbox]")
+    end
+
+    # with a saved location the radius can be chosen
+    {:ok, _} =
+      Bonfire.Common.Settings.put([Bonfire.Geolocate, :location], "50.432,-3.684",
+        current_user: user,
+        scope: :user
+      )
+
+    conn
+    |> visit("/feed/events")
+    |> open_filters_modal()
+    |> assert_has("[data-row=nearby] select[name=radius]")
+    |> assert_has("[data-row=nearby] input[name=include_no_place][type=checkbox]")
+  end
+
+  test "\"Happening\" and every built-in row stay where they were, and \"Nearby\" comes right after \"Happening\"",
+       %{conn: conn} do
+    conn
+    |> visit("/feed/local")
+    |> open_filters_modal()
+    |> unwrap(fn view ->
+      rows =
+        view
+        |> Phoenix.LiveViewTest.render()
+        |> Floki.parse_document!()
+        |> Floki.attribute("[data-row]", "data-row")
+
+      assert Enum.find_index(rows, &(&1 == "happening")) + 1 ==
+               Enum.find_index(rows, &(&1 == "nearby"))
+
+      declared =
+        Enum.map(Bonfire.UI.Common.FeedFilterControlModule.controls(), &to_string(&1.name))
+
+      for section <- Bonfire.UI.Social.FeedFiltersModalContentLive.sections(),
+          to_string(section) not in declared,
+          # the customize widget leaves out the sort order and the preset form, and the others show only for some feeds or users
+          section not in [:save_preset, :sort_order, :hide_own, :subject_types, :activity_types] do
+        assert to_string(section) in rows, "the #{section} row is missing"
+      end
+
+      Phoenix.LiveViewTest.render(view)
+    end)
+  end
+
+  test "there is no \"Nearby\" row once the user disables the geolocate extension, and the other rows stay",
+       %{conn: conn, user: user} do
+    conn
+    |> visit("/feed/local")
+    |> open_filters_modal()
+    |> assert_has("[data-row=nearby]")
+    |> assert_has("[data-row=happening]")
+
+    {:ok, _} =
+      Bonfire.Common.Settings.put([:bonfire_geolocate, :modularity], :disabled,
+        current_user: user,
+        scope: :user
+      )
+
+    conn
+    |> visit("/feed/local")
+    |> open_filters_modal()
+    |> assert_has("[data-row=happening]")
+    |> refute_has("[data-row=nearby]")
+  end
+
+  test "choosing a radius in the Nearby row shows it in the row, and Apply sends it to the feed",
+       %{conn: conn, user: user} do
+    {:ok, _} =
+      Bonfire.Common.Settings.put([Bonfire.Geolocate, :location], "50.432,-3.684",
+        current_user: user,
+        scope: :user
+      )
+
+    conn
+    |> visit("/feed/events")
+    |> open_filters_modal()
+    |> unwrap(fn view ->
+      view
+      |> Phoenix.LiveViewTest.element("[data-row=nearby] form[phx-change]")
+      |> Phoenix.LiveViewTest.render_change(%{"radius" => "10"})
+    end)
+    |> assert_has("[data-row=nearby] [data-role=row_value]", text: "Within 10 km")
   end
 end

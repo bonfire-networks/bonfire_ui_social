@@ -2,6 +2,8 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
   @moduledoc """
   Shared filter editor for feeds and search. Rows expand inline to edit their values; changes stay pending until Apply in both contexts.
 
+  Extensions can add rows of their own for a filter they own (eg. geolocate's "Nearby"): a stateless component declared with `declare_feed_filter_control/2` (see `Bonfire.UI.Common.FeedFilterControlModule`), shown when the host's `sections` names it. Its events carry the extension's prefix and reach that extension's `LiveHandler` with this component's socket, which changes the draft through `put_pending/2`.
+
   Hosts supply available rows, type options, draft identity and an explicit Apply recipient. Component recipients receive `apply_filters` through `send_update`; the parent LiveView receives `{__MODULE__, :apply, filters}`.
   """
   use Bonfire.UI.Common.Web, :stateful_component
@@ -18,6 +20,8 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
     not_people: [:exclude_subjects],
     hashtags: [:tags],
     time_range: [:time_limit],
+    # when things happen (eg. events), not when they were published
+    happening: [:time_span, :happening_from, :happening_until],
     sort_order: [:sort_by, :sort_order],
     object_types: [:object_types, :exclude_object_types],
     activity_types: [:activity_types, :exclude_activity_types],
@@ -40,10 +44,21 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
   prop media_types, :list, default: [:link, :image, :video, :audio, :research]
   prop feed_filters, :any, default: nil
 
-  prop sections, :list, default: Keyword.keys(@filter_fields)
+  @doc "Whether the sort row offers sorting by when things happen even with no Happening filter, for a host that lists only things with dates (eg. the events page)."
+  prop starts_sort, :boolean, default: false
 
-  @doc "Available editor sections, so hosts can omit controls they already provide."
-  def sections, do: Keyword.keys(@filter_fields)
+  @doc "Whether each change applies at once, with no Apply button, as the sort and the switches of the customize-feed widget do, for the rows it shows above its \"More filters\"."
+  prop apply_on_change, :boolean, default: false
+
+  # prop sections, :list, default: Keyword.keys(@filter_fields)
+  @doc "The rows to show; all of them (see `sections/0`) when not given, which includes the rows extensions declare."
+  prop sections, :list, default: nil
+
+  @doc "Available editor sections, so hosts can omit controls they already provide: the built-in rows, then the rows extensions declare (see `Bonfire.UI.Common.FeedFilterControlModule`)."
+  # def sections, do: Keyword.keys(@filter_fields)
+  def sections(controls \\ Bonfire.UI.Common.FeedFilterControlModule.controls()) do
+    Enum.uniq(Keyword.keys(@filter_fields) ++ Enum.map(controls, & &1.name))
+  end
 
   data pending_filters, :map, default: nil
   # Applied filters and host context identify the draft.
@@ -54,11 +69,16 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
   # raw text inputs (parsed into pending_filters on change, kept raw so typing isn't janky)
   data pending_tags_text, :string, default: ""
   data pending_instances_text, :string, default: ""
+  # the controls extensions declare (see `Bonfire.UI.Common.FeedFilterControlModule`)
+  data controls, :list, default: []
+
+  # what the controls extensions declare keep between events, by control name (written by that extension's LiveHandler); reset with the draft
+  data control_state, :map, default: %{}
 
   def update(assigns, socket) do
     socket = assign(socket, assigns)
     context = assigns[:__context__] || socket.assigns[:__context__]
-    sections = socket.assigns.sections
+    sections = socket.assigns[:sections] || sections()
 
     filters =
       Enums.maybe_to_map(e(assigns, :feed_filters, nil) || socket.assigns[:feed_filters]) || %{}
@@ -83,6 +103,7 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
         assign(socket,
           init_state: state,
           pending_filters: filters,
+          control_state: %{},
           my_circles: my_circles,
           selected_authors: load_authors(filters[:subjects]),
           selected_excluded_authors: load_authors(filters[:exclude_subjects]),
@@ -101,30 +122,13 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
 
     {:ok,
      socket
-     |> assign(sections: sections)
+     |> assign(sections: sections, controls: Bonfire.UI.Common.FeedFilterControlModule.controls())
      |> assign_derived()}
   end
 
   # Apply reads pending state rather than a phx-value snapshot from the last render.
   def handle_event("apply", _params, socket) do
-    assigns = assigns(socket)
-    {applied, _context} = assigns[:init_state]
-    pending = assigns[:pending_filters]
-
-    filters = filters_to_apply(pending, applied)
-
-    case assigns[:apply_to] do
-      {module, host_id} ->
-        Phoenix.LiveView.send_update(module, id: host_id, apply_filters: filters)
-
-      %Phoenix.LiveComponent.CID{} = cid ->
-        Phoenix.LiveView.send_update(cid, apply_filters: filters)
-
-      :parent ->
-        send(self(), {__MODULE__, :apply, filters})
-    end
-
-    {:noreply, socket}
+    {:noreply, apply_pending(socket)}
   end
 
   # --- Feed-style filters ---
@@ -133,8 +137,27 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
     {:noreply, update_pending(socket, :time_limit, Types.maybe_to_integer(time_limit))}
   end
 
+  # by when things happen (eg. events start), earliest first, or latest first when the draft is about past things
+  def handle_event("set_filter", %{"sort_by" => "starts_at"}, socket) do
+    {:noreply,
+     update_pending_fn(socket, fn filters ->
+       filters
+       |> Map.put(:sort_by, :starts_at)
+       |> Map.put(
+         :sort_order,
+         if(e(filters, :time_span, nil) in [:past, :past_and_current], do: :desc, else: :asc)
+       )
+     end)}
+  end
+
+  # Newest or oldest first is about when things were published, so it replaces a sort by when they happen
   def handle_event("set_filter", %{"sort_order" => sort_order}, socket) do
-    {:noreply, update_pending(socket, :sort_order, maybe_to_atom(sort_order))}
+    {:noreply,
+     update_pending_fn(socket, fn filters ->
+       filters
+       |> then(&if(&1[:sort_by] == :starts_at, do: Map.delete(&1, :sort_by), else: &1))
+       |> Map.put(:sort_order, maybe_to_atom(sort_order))
+     end)}
   end
 
   def handle_event("set_filter", %{"origin" => "all"}, socket) do
@@ -198,6 +221,23 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
       end
 
     {:noreply, socket}
+  end
+
+  # "When": which side of now, or a period (a preset, in the viewer's time zone); each replaces the other, cleared explicitly as the host merges what's applied
+  def handle_event("set_filter", %{"happening" => happening}, socket) do
+    {:noreply, update_pending_fn(socket, &Map.merge(&1, happening_filters(happening, socket)))}
+  end
+
+  # "When", in advanced mode: from the start of one day to the end of another
+  def handle_event("set_filter", %{"happening_from_date" => _} = attrs, socket) do
+    period =
+      FeedFilters.happening_dates(
+        attrs["happening_from_date"],
+        attrs["happening_until_date"],
+        viewer_time_zone(socket)
+      )
+
+    {:noreply, update_pending_fn(socket, &Map.merge(&1, Map.put(period, :time_span, nil)))}
   end
 
   def handle_event("set_filter", attrs, socket) do
@@ -325,9 +365,17 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
       iex> Bonfire.UI.Social.FeedFiltersModalContentLive.filters_to_apply(%{time_limit: 30}, %{time_limit: 1})
       %{time_limit: 30}
   """
-  def filters_to_apply(pending, applied) do
+  def filters_to_apply(
+        pending,
+        applied,
+        controls \\ Bonfire.UI.Common.FeedFilterControlModule.controls()
+      ) do
+    # the keys a declared control owns, each with the value that means "off"
+    off_values = controls |> Enum.flat_map(&(&1[:filters] || [])) |> Map.new()
+
     (Map.keys(applied) -- Map.keys(pending))
     |> Enum.reduce(pending, fn
+      key, acc when is_map_key(off_values, key) -> Map.put(acc, key, off_values[key])
       :origin, acc -> Map.put(acc, :origin, :all)
       :time_limit, acc -> Map.put(acc, :time_limit, 0)
       :sort_by, acc -> Map.put(acc, :sort_by, false)
@@ -348,8 +396,21 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
       iex> Bonfire.UI.Social.FeedFiltersModalContentLive.reset_filters(%{subjects: ["owner"], in_feeds: ["notifications"], time_limit: 7, media_types: [:image]}, [:time_range, :media_types])
       %{subjects: ["owner"], in_feeds: ["notifications"]}
   """
-  def reset_filters(filters, sections) do
-    keys = sections |> Enum.flat_map(&Keyword.get(@filter_fields, &1, []))
+  # def reset_filters(filters, sections) do
+  #   keys = sections |> Enum.flat_map(&Keyword.get(@filter_fields, &1, []))
+  #   Map.drop(filters, keys)
+  # end
+  def reset_filters(
+        filters,
+        sections,
+        controls \\ Bonfire.UI.Common.FeedFilterControlModule.controls()
+      ) do
+    declared = controls |> Map.new(&{&1.name, Keyword.keys(&1[:filters] || [])})
+
+    keys =
+      sections
+      |> Enum.flat_map(&(Keyword.get(@filter_fields, &1) || Map.get(declared, &1, [])))
+
     Map.drop(filters, keys)
   end
 
@@ -500,10 +561,21 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
 
   @doc "Human-readable summary shown in the collapsed Sort order section header."
   def sort_order_summary(filters) do
-    case e(filters, :sort_order, nil) do
-      :asc -> l("Oldest first")
-      _ -> l("Newest first")
+    cond do
+      e(filters, :sort_by, nil) == :starts_at ->
+        Bonfire.UI.Social.SortItemsDropdownLive.starts_sort_label(filters)
+
+      e(filters, :sort_order, nil) == :asc ->
+        l("Oldest first")
+
+      true ->
+        l("Newest first")
     end
+  end
+
+  @doc "Whether the sort row offers sorting by when things happen (the `time_span` mixin): when the host says so (`starts_sort`), or the draft has a Happening filter."
+  def starts_sort?(filters, host_offers? \\ false) do
+    host_offers? == true or Bonfire.UI.Social.SortItemsDropdownLive.starts_sort?(filters)
   end
 
   @doc """
@@ -578,6 +650,74 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
     end
   end
 
+  @happening_sides ~w(upcoming current past past_and_current current_and_upcoming)
+
+  @doc "The \"When\" choices, in the order the menu offers them: which side of now, then periods (`Bonfire.Social.FeedFilters.happening_presets/0`)."
+  def happening_options do
+    [
+      {"current_and_upcoming", l("Now and upcoming")},
+      {"upcoming", l("Upcoming")},
+      {"current", l("Happening now")},
+      {"past", l("Past")},
+      {"today", l("Today")},
+      {"tomorrow", l("Tomorrow")},
+      {"this_weekend", l("This weekend")},
+      {"this_week", l("This week")},
+      {"next_week", l("Next week")},
+      {"this_month", l("This month")},
+      {"next_month", l("Next month")}
+    ]
+  end
+
+  defp happening_filters(side, _socket) when side in @happening_sides,
+    do: %{time_span: String.to_existing_atom(side), happening_from: nil, happening_until: nil}
+
+  defp happening_filters(preset, socket) when is_binary(preset) and preset != "" do
+    case Enum.find(FeedFilters.happening_presets(), &(to_string(&1) == preset)) do
+      nil ->
+        happening_filters("", socket)
+
+      preset ->
+        FeedFilters.happening_range(preset, DateTime.utc_now(), viewer_time_zone(socket))
+        |> Map.put(:time_span, nil)
+    end
+  end
+
+  # anything, any time
+  defp happening_filters(_, _socket),
+    do: %{time_span: nil, happening_from: nil, happening_until: nil}
+
+  # the browser's time zone (sent when the socket connects), else UTC
+  # TODO: a saved time zone setting (instance default and user choice) as a fallback, or to override the browser's; nothing stores one yet
+  defp viewer_time_zone(socket) do
+    e(socket.assigns, :__context__, :client_timezone, nil) ||
+      e(socket.assigns, :client_timezone, nil) ||
+      "Etc/UTC"
+  end
+
+  @doc "Human-readable summary shown in the collapsed \"When\" section header."
+  def happening_summary(filters) do
+    cond do
+      side = e(filters, :time_span, nil) ->
+        Enum.find_value(happening_options(), fn {v, label} ->
+          if v == to_string(side), do: label
+        end)
+
+      e(filters, :happening_from, nil) || e(filters, :happening_until, nil) ->
+        l("Dates")
+
+      true ->
+        l("Any time")
+    end
+  end
+
+  @doc """
+  Merges a map of filters into the draft and recomputes what is derived from it, for the handler of a control an extension declared (see `Bonfire.UI.Common.FeedFilterControlModule`), which receives this editor's socket. A `nil` value is kept as an explicit `nil`, which Apply sends so the host drops that filter.
+  """
+  def put_pending(socket, patch) when is_map(patch) do
+    update_pending_fn(socket, &Map.merge(&1, patch))
+  end
+
   defp update_pending(socket, key, value) do
     update_pending_fn(socket, &Map.put(&1, key, value))
   end
@@ -585,9 +725,33 @@ defmodule Bonfire.UI.Social.FeedFiltersModalContentLive do
   defp update_pending_fn(socket, fun) do
     pending = socket.assigns[:pending_filters] || %{}
 
+    socket =
+      socket
+      |> assign(:pending_filters, fun.(pending))
+      |> assign_derived()
+
+    if socket.assigns[:apply_on_change], do: apply_pending(socket), else: socket
+  end
+
+  defp apply_pending(socket) do
+    assigns = assigns(socket)
+    {applied, _context} = assigns[:init_state]
+    pending = assigns[:pending_filters]
+
+    filters = filters_to_apply(pending, applied)
+
+    case assigns[:apply_to] do
+      {module, host_id} ->
+        Phoenix.LiveView.send_update(module, id: host_id, apply_filters: filters)
+
+      %Phoenix.LiveComponent.CID{} = cid ->
+        Phoenix.LiveView.send_update(cid, apply_filters: filters)
+
+      :parent ->
+        send(self(), {__MODULE__, :apply, filters})
+    end
+
     socket
-    |> assign(:pending_filters, fun.(pending))
-    |> assign_derived()
   end
 
   defp assign_derived(socket) do

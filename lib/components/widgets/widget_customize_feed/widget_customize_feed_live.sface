@@ -17,6 +17,7 @@
     <div class="flex flex-col gap-0" data-id="widget_customize_feed">
       {!-- not recovered: LiveView replays an id'd phx-change form on every reconnect, and `set_feed_order` reloads the feed even for an unchanged order, which throws the reader away from their post and overwrites their saved reading position --}
       <form
+        :if={:sort_by not in @hide_filters}
         id={"feed_order_form_#{@feed_name || "default"}"}
         class="flex items-center justify-between gap-3"
         data-role="feed_order_row"
@@ -30,7 +31,7 @@
           name="feed_order"
           class="min-h-11 min-w-0 max-w-[70%] cursor-pointer appearance-none truncate border-0 bg-transparent p-0 text-right text-sm text-base-content underline decoration-base-content/30 underline-offset-4 transition-colors duration-150 ease-out hover:decoration-base-content focus-ring rounded-selector"
         >
-          {#for {value, label} <- Bonfire.UI.Social.WidgetCustomizeFeedLive.order_options()}
+          {#for {value, label} <- Bonfire.UI.Social.WidgetCustomizeFeedLive.order_options(@feed_filters)}
             <option
               value={value}
               selected={Bonfire.UI.Social.WidgetCustomizeFeedLive.current_order(@feed_filters) == value}
@@ -56,6 +57,21 @@
           toggle_role="feed_override_toggle"
         />
       </fieldset>
+      {#case @top_sections -- @hide_filters}
+        {#match []}
+        {#match top}
+          {!-- the editor's own rows, shown here instead of in "More filters"; a change applies at once, as the sort's does --}
+          <div class="flex flex-col gap-0" data-role="feed_top_filters">
+            <StatefulComponent
+              id={"feed_preferences_top_#{@feed_name}"}
+              module={Bonfire.UI.Social.FeedFiltersModalContentLive}
+              show_reset={false}
+              apply_on_change
+              sections={top}
+              {...Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}
+            />
+          </div>
+      {/case}
       <div
         class="mt-1.5 flex flex-wrap items-center gap-x-3 border-t border-divider pt-1"
         data-role="feed_advanced_filters_wrapper"
@@ -94,8 +110,8 @@
               id={"feed_preferences_details_#{@feed_name}"}
               module={Bonfire.UI.Social.FeedFiltersModalContentLive}
               show_reset={false}
-              sections={(Bonfire.UI.Social.FeedFiltersModalContentLive.sections() -- [:sort_order, :save_preset]) --
-                @hide_filters}
+              sections={((Bonfire.UI.Social.FeedFiltersModalContentLive.sections() -- [:sort_order, :save_preset]) --
+                 @hide_filters) -- @top_sections}
               {...Bonfire.UI.Social.FeedControlsLive.feed_filters_modal_assigns(assigns)}
             />
           </:default>

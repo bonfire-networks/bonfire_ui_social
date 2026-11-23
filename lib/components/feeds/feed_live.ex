@@ -939,34 +939,12 @@ defmodule Bonfire.UI.Social.FeedLive do
 
   def handle_event("set_filter_overrides", %{"key" => key, "on" => on}, socket)
       when on in ["true", "false"] do
-    filters = assigns(socket)[:feed_filters] || %{}
-    on? = on == "true"
-
     attrs =
-      case key do
-        "replies" ->
-          if on? == Bonfire.UI.Social.FeedExtraControlsLive.replies_excluded?(filters),
-            do: toggle_exclude_activity_type(%{}, filters, :reply, not on?),
-            else: %{}
-
-        "boosts" ->
-          if on? == Bonfire.UI.Social.FeedExtraControlsLive.boosts_excluded?(filters),
-            do: toggle_exclude_activity_type(%{}, filters, :boost, not on?),
-            else: %{}
-
-        "group_activity" ->
-          if on? ==
-               Bonfire.UI.Social.WidgetCustomizeFeedLive.group_activities_included?(filters),
-             do: %{},
-             else:
-               Bonfire.UI.Social.WidgetCustomizeFeedLive.group_activities_toggle_filters(
-                 filters,
-                 on?
-               )
-
-        _ ->
-          %{}
-      end
+      Bonfire.Social.Feeds.LiveHandler.override_filters(
+        key,
+        on == "true",
+        assigns(socket)[:feed_filters] || %{}
+      )
 
     if attrs == %{} do
       {:noreply, socket}
@@ -1194,32 +1172,6 @@ defmodule Bonfire.UI.Social.FeedLive do
     socket = LiveHandler.insert_feed(socket, feed_assigns, reset: reset)
     notify_filter_changes(assigns(socket))
     {:noreply, socket}
-  end
-
-  defp reject_types(list, types) do
-    types = Enum.map(List.wrap(types), &to_string/1)
-    Enum.reject(list, &(to_string(&1) in types))
-  end
-
-  # Adds/removes one activity type in exclude_activity_types (and drops it from the
-  # include list when hiding), composing with values another toggle already put in attrs
-  # in the same event. Rejects before appending so a pre-existing string "reply"/"boost"
-  # doesn't duplicate the atom.
-  defp toggle_exclude_activity_type(attrs, filters, type, hide?) do
-    exclude =
-      Map.get(attrs, :exclude_activity_types) ||
-        List.wrap(e(filters, :exclude_activity_types, []) || [])
-
-    if hide? do
-      include =
-        Map.get(attrs, :activity_types) || List.wrap(e(filters, :activity_types, []) || [])
-
-      attrs
-      |> Map.put(:exclude_activity_types, reject_types(exclude, [type]) ++ [type])
-      |> Map.put(:activity_types, reject_types(include, [type]))
-    else
-      Map.put(attrs, :exclude_activity_types, reject_types(exclude, [type]))
-    end
   end
 
   defp set_type(include_field, exclude_field, type, value, socket) do

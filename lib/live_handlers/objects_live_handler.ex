@@ -434,7 +434,11 @@ defmodule Bonfire.Social.Objects.LiveHandler do
     Bonfire.Social.Feeds.LiveHandler.object_preloads()
     |> Enum.find_value(object, fn
       {^object_type, preloads} when not is_nil(preloads) and preloads != [] ->
-        Bonfire.Common.Repo.maybe_preload(object, preloads, current_user: current_user)
+        # the page's main object also gets what its component asks for only here (`extra_preloads/0`)
+        extra =
+          Bonfire.Social.Feeds.LiveHandler.preview_extra_preloads(object_type) || []
+
+        Bonfire.Common.Repo.maybe_preload(object, preloads ++ extra, current_user: current_user)
 
       _ ->
         nil

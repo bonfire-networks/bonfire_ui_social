@@ -136,6 +136,50 @@ defmodule Bonfire.UI.Social.FeedFiltersHelpersTest do
     assert other_host.assigns.pending_tags_text == ""
   end
 
+  describe "rows declared by extensions" do
+    @controls [%{name: :stub, filters: [stub_key: nil, stub_list: []], after: :happening}]
+
+    test "sections are the built-in keys, then the declared names" do
+      sections = FeedFiltersModalContentLive.sections(@controls)
+
+      assert :stub in sections
+      assert List.last(sections) == :stub
+      assert :happening in sections
+      assert FeedFiltersModalContentLive.sections([]) == FeedFiltersModalContentLive.sections([])
+      refute :stub in FeedFiltersModalContentLive.sections([])
+    end
+
+    test "Reset drops a declared control's keys, and keeps a host's scope keys" do
+      filters = %{subjects: ["owner"], stub_key: %{a: 1}, stub_list: ["x"], time_limit: 7}
+
+      assert FeedFiltersModalContentLive.reset_filters(filters, [:stub], @controls) ==
+               %{subjects: ["owner"], time_limit: 7}
+
+      # a control the host does not list is not touched
+      assert FeedFiltersModalContentLive.reset_filters(filters, [:time_range], @controls) ==
+               %{subjects: ["owner"], stub_key: %{a: 1}, stub_list: ["x"]}
+    end
+
+    test "Apply sends a declared control's off value for what was applied and is gone" do
+      assert FeedFiltersModalContentLive.filters_to_apply(
+               %{},
+               %{stub_key: %{a: 1}, stub_list: ["x"], other: %{b: 2}},
+               @controls
+             ) == %{stub_key: nil, stub_list: []}
+
+      # a key no control owns behaves as before
+      assert FeedFiltersModalContentLive.filters_to_apply(%{}, %{time_limit: 1}, @controls) ==
+               %{time_limit: 0}
+
+      assert FeedFiltersModalContentLive.filters_to_apply(
+               %{stub_key: %{c: 3}},
+               %{stub_key: %{a: 1}},
+               @controls
+             ) ==
+               %{stub_key: %{c: 3}}
+    end
+  end
+
   describe "ToggleTypeLive.check_throuple/3" do
     test "returns true when value is in include only" do
       assert ToggleTypeLive.check_throuple(:post, [:post], []) == true

@@ -1832,6 +1832,68 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
     end
   end
 
+  @doc """
+  The filter updates for switching one of the feed preferences' content switches (`WidgetCustomizeFeedLive.override_rows/2`): `key` is `"replies"`, `"boosts"` or `"group_activity"`, `on?` the new state. Empty when the switch already is in that state, or the key is unknown.
+
+      iex> Bonfire.Social.Feeds.LiveHandler.override_filters("boosts", false, %{})
+      %{exclude_activity_types: [:boost], activity_types: []}
+
+      iex> Bonfire.Social.Feeds.LiveHandler.override_filters("boosts", true, %{})
+      %{}
+
+      iex> Bonfire.Social.Feeds.LiveHandler.override_filters("boosts", true, %{exclude_activity_types: [:boost, :reply]})
+      %{exclude_activity_types: [:reply]}
+
+      iex> Bonfire.Social.Feeds.LiveHandler.override_filters("unknown", false, %{})
+      %{}
+  """
+  def override_filters("replies", on?, filters) do
+    if on? == Bonfire.UI.Social.FeedExtraControlsLive.replies_excluded?(filters),
+      do: toggle_exclude_activity_type(%{}, filters, :reply, not on?),
+      else: %{}
+  end
+
+  def override_filters("boosts", on?, filters) do
+    if on? == Bonfire.UI.Social.FeedExtraControlsLive.boosts_excluded?(filters),
+      do: toggle_exclude_activity_type(%{}, filters, :boost, not on?),
+      else: %{}
+  end
+
+  def override_filters("group_activity", on?, filters) do
+    if on? == Bonfire.UI.Social.WidgetCustomizeFeedLive.group_activities_included?(filters),
+      do: %{},
+      else:
+        Bonfire.UI.Social.WidgetCustomizeFeedLive.group_activities_toggle_filters(filters, on?)
+  end
+
+  def override_filters(_key, _on?, _filters), do: %{}
+
+  defp reject_types(list, types) do
+    types = Enum.map(List.wrap(types), &to_string/1)
+    Enum.reject(list, &(to_string(&1) in types))
+  end
+
+  # Adds/removes one activity type in exclude_activity_types (and drops it from the
+  # include list when hiding), composing with values another toggle already put in attrs
+  # in the same event. Rejects before appending so a pre-existing string "reply"/"boost"
+  # doesn't duplicate the atom.
+  defp toggle_exclude_activity_type(attrs, filters, type, hide?) do
+    exclude =
+      Map.get(attrs, :exclude_activity_types) ||
+        List.wrap(e(filters, :exclude_activity_types, []) || [])
+
+    if hide? do
+      include =
+        Map.get(attrs, :activity_types) || List.wrap(e(filters, :activity_types, []) || [])
+
+      attrs
+      |> Map.put(:exclude_activity_types, reject_types(exclude, [type]) ++ [type])
+      |> Map.put(:activity_types, reject_types(include, [type]))
+    else
+      Map.put(attrs, :exclude_activity_types, reject_types(exclude, [type]))
+    end
+  end
+
   @doc "Compares two filter values ignoring atom-vs-string, list order, and the empty representations (nil/false/0/[]). A struct or map (eg. the reader's user, which a preset's `parameterized` filters put in `subjects`) compares by its id."
   def filter_value_matches?(a, b), do: normalize_filter_value(a) == normalize_filter_value(b)
 
@@ -2814,16 +2876,27 @@ defmodule Bonfire.Social.Feeds.LiveHandler do
 
   # the preloads of whichever component `[:ui, :object_preview]` registers for `schema`, so the extension that renders a schema also says what it needs loaded (several extensions can render an Intent)
   defp preview_preloads(schema) do
+    if module = preview_module(schema) do
+      Utils.maybe_apply(module, :preloads, [], fallback_return: nil, on_error: :ignore)
+    end
+  end
+
+  @doc "What the component that previews `schema` also needs loaded on the object's own page (its optional `extra_preloads/0`), which feeds don't load."
+  def preview_extra_preloads(schema) do
+    if module = preview_module(schema) do
+      Utils.maybe_apply(module, :extra_preloads, [], fallback_return: nil, on_error: :ignore)
+    end
+  end
+
+  # whichever component `[:ui, :object_preview]` registers for `schema`
+  defp preview_module(schema) do
     case Bonfire.Common.Config.get([:ui, :object_preview, schema]) do
       module when is_atom(module) and not is_nil(module) ->
-        Utils.maybe_apply(module, :preloads, [], fallback_return: nil, on_error: :ignore)
+        module
 
       # some extensions register a function that picks the component (eg. `bonfire_ui_valueflows` for a Process): its module says what to load
       fun when is_function(fun) ->
-        Utils.maybe_apply(Function.info(fun)[:module], :preloads, [],
-          fallback_return: nil,
-          on_error: :ignore
-        )
+        Function.info(fun)[:module]
 
       _ ->
         nil

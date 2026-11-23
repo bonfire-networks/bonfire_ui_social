@@ -121,23 +121,23 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
     # after applying, so filters are chained without re-opening.
     |> click_button("[data-role=open_modal]", "Advanced filters")
 
-    # Set to "Last Day"
-    |> click_button("Last Day")
+    # Set to "Today"
+    |> click_button("Today")
     |> click_button("Apply filters")
     |> wait_async()
     |> assert_has_or_open_browser("[data-id=feed] article")
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
     |> refute_has_or_open_browser("[data-id=feed] article", text: "Post from 60 days ago")
-    |> assert_has("button[aria-label='Remove filter: Last Day']")
+    |> assert_has("button[aria-label='Remove filter: Today']")
 
-    # Set to "Last Month"
-    |> click_button("Last Month")
+    # Set to "This month"
+    |> click_button("This month")
     |> click_button("Apply filters")
     |> wait_async()
     |> assert_has_or_open_browser("[data-id=feed] article")
     |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
     |> refute_has_or_open_browser("[data-id=feed] article", text: "Post from 60 days ago")
-    |> assert_has("button[aria-label='Remove filter: Last Month']")
+    |> assert_has("button[aria-label='Remove filter: This month']")
 
     # Set to "All time"
     |> click_button("All time")
@@ -148,7 +148,7 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
     |> assert_has("[data-id=feed] article", text: "Post from 60 days ago")
   end
 
-  # FIXME (regression from the filters-in-widget move): applying "Last Month" doesn't widen the
+  # FIXME (regression from the filters-in-widget move): applying "This month" doesn't widen the
   # window beyond the 7-day default — the month-old post stays hidden, i.e. the applied
   # time_limit doesn't survive the apply→set_filters→reload merge (same family as the
   # "All time" regression documented in feed_filters_modal_test.exs).
@@ -165,7 +165,7 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
     # Select Month filter
     |> wait_async()
     |> click_button("[data-role=open_modal]", "Advanced filters")
-    |> click_button("Last Month")
+    |> click_button("This month")
     |> click_button("Apply filters")
     |> wait_async()
     |> assert_has_or_open_browser("[data-id=feed] article")
@@ -189,46 +189,46 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
       |> visit("/feed/local")
       # |> PhoenixTest.open_browser()
       # Select Day from dropdown
-      |> click_link("Last Day")
+      |> click_link("Today")
       |> assert_has_or_open_browser("[data-id=feed] article")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Week-old content")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Year-old content")
-      |> assert_has("label", text: "Last Day")
+      |> assert_has("label", text: "Today")
 
       # Test with Week filter
 
-      |> click_link("Last Week")
+      |> click_link("This week")
       |> wait_async()
       |> assert_has_or_open_browser("[data-id=feed] article")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Week-old content")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Year-old content")
-      |> assert_has("label", text: "Last Week")
+      |> assert_has("label", text: "This week")
 
       # Test with Month filter
 
-      |> click_link("Last Month")
+      |> click_link("This month")
       |> wait_async()
       |> assert_has_or_open_browser("[data-id=feed] article")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Week-old content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Year-old content")
-      |> assert_has("label", text: "Last Month")
+      |> assert_has("label", text: "This month")
 
       # Test with Year filter
 
-      |> click_link("Last Year")
+      |> click_link("This year")
       |> wait_async()
       |> assert_has_or_open_browser("[data-id=feed] article")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Today's post content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Week-old content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Month-old content")
       |> assert_has_or_open_browser("[data-id=feed] article", text: "Year-old content")
-      |> assert_has("label", text: "Last Year")
+      |> assert_has("label", text: "This year")
 
       # Test with All Time filter (should show everything)
 
@@ -256,13 +256,13 @@ defmodule Bonfire.UI.Social.FeedsFilterTimeLimit.Test do
       conn(user: user)
       |> visit("/hashtag/test_tag")
       # Select Month from dropdown
-      |> click_link("Last Month")
+      |> click_link("This month")
       |> wait_async()
       # Should show recent tagged post but not old tagged or untagged posts
       |> assert_has("[data-id=feed] article", text: "Recent content with #test_tag")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Old content with #test_tag")
       |> refute_has_or_open_browser("[data-id=feed] article", text: "Recent content without tag")
-      |> assert_has("label", text: "Last Month")
+      |> assert_has("label", text: "This month")
     end
   end
 end

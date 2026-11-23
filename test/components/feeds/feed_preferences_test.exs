@@ -4,6 +4,33 @@ defmodule Bonfire.UI.Social.FeedPreferencesTest do
   doctest Bonfire.UI.Social.WidgetCustomizeFeedLive,
     only: [order_filters: 2, preferences_changed?: 2]
 
+  doctest Bonfire.Social.Feeds.LiveHandler, only: [override_filters: 3]
+
+  @widget Bonfire.UI.Social.WidgetCustomizeFeedLive
+
+  defp values(filters), do: Enum.map(@widget.order_options(filters), &elem(&1, 0))
+
+  test "Soonest first is offered with a Happening filter or a feed of events only, as Most recent first for the past" do
+    assert {"starts_at", "Most recent first"} in @widget.order_options(%{time_span: :past})
+    assert {"starts_at", "Soonest first"} in @widget.order_options(%{time_span: :upcoming})
+
+    refute "starts_at" in values(%{})
+    refute "starts_at" in values(nil)
+    refute "starts_at" in values(%{object_types: ["Post", "Event"]})
+    assert "starts_at" in values(%{time_span: :upcoming})
+    assert "starts_at" in values(%{happening_from: ~U[2030-01-01 00:00:00Z]})
+    assert "starts_at" in values(%{object_types: ["Event"]})
+  end
+
+  test "ordering by the start date is earliest first, latest first for the past" do
+    assert @widget.order_filters("starts_at", %{}) == %{sort_by: :starts_at, sort_order: :asc}
+
+    assert @widget.order_filters("starts_at", %{time_span: :past}) ==
+             %{sort_by: :starts_at, sort_order: :desc}
+
+    assert @widget.current_order(%{sort_by: :starts_at, sort_order: :asc}) == "starts_at"
+  end
+
   test "ranking preserves an explicitly selected time range, including All time" do
     for order <- ["reply_count", "boost_count", "like_count", "popularity_score", "latest_reply"],
         time_limit <- [0, "0", 30] do

@@ -69,7 +69,7 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
     |> wait_async()
     # Set time limit via the advanced-filters editor (expanded inline from the customize widget)
     |> click_button("[data-role=open_modal]", "More filters")
-    |> click_button("Last Day")
+    |> click_button("Today")
     |> click_button("Apply filters")
     |> wait_async()
 
@@ -98,7 +98,7 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
     |> wait_async()
     # saving is offered once something differs from the defaults, so the filter change is what brings the form into the page rather than incidental setup
     |> click_button("[data-role=open_modal]", "More filters")
-    |> click_button("Last Day")
+    |> click_button("Today")
     |> click_button("Apply filters")
     |> wait_async()
     |> fill_in("Feed title", with: preset_name)
@@ -108,7 +108,7 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
   end
 
   # FIXME (regression from the filters-in-widget move): visiting the saved preset's feed and
-  # expanding the editor shows no "Last Day" chip — the preset's time_limit isn't reflected in
+  # expanding the editor shows no "Today" chip — the preset's time_limit isn't reflected in
   # the effective feed_filters (same merge family as the "All time" regression documented in
   # feed_filters_modal_test.exs).
   @tag :fixme
@@ -129,7 +129,7 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
     |> wait_async()
     # Set time limit via the advanced-filters editor (expanded inline from the customize widget)
     |> click_button("[data-role=open_modal]", "Advanced filters")
-    |> click_button("Last Day")
+    |> click_button("Today")
     |> click_button("Apply filters")
     |> wait_async()
 
@@ -145,11 +145,11 @@ defmodule Bonfire.UI.Social.CustomFeedTest do
     |> visit("/feed/#{preset_name}")
     |> wait_async()
     |> click_button("[data-role=open_modal]", "Advanced filters")
-    |> assert_has("button[aria-label='Remove filter: Last Day']")
+    |> assert_has("button[aria-label='Remove filter: Today']")
     # Verify the time limit reverts to default on other feeds
     |> visit("/feed/local")
     |> wait_async()
     |> click_button("[data-role=open_modal]", "Advanced filters")
-    |> refute_has("button[aria-label='Remove filter: Last Day']")
+    |> refute_has("button[aria-label='Remove filter: Today']")
   end
 end

@@ -81,8 +81,10 @@ defmodule Bonfire.UI.Social.FeedControlsLive do
   end
 
   defp sort_filter(filters) do
-    case e(filters, :sort_order, nil) do
-      :asc -> [{l("Oldest first"), nil, :sort_order, :asc}]
+    case {e(filters, :sort_by, nil), e(filters, :sort_order, nil)} do
+      # by when things happen: the order is of start dates, not "oldest first"
+      {:starts_at, _} -> []
+      {_, :asc} -> [{l("Oldest first"), nil, :sort_order, :asc}]
       _ -> []
     end
   end

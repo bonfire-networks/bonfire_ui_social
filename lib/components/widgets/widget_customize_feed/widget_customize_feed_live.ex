@@ -15,8 +15,11 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   prop showing_within, :atom, default: nil
   prop feed_filters, :any, default: nil
 
-  @doc "Keys of the controls not to show: the content switches (`override_rows/2`), eg. `[:group_activity]` on a feed that is only group activities, as `FeedExtraControlsLive`'s `hide_filters` does for its own, and the sections of the \"More filters\" editor (`FeedFiltersModalContentLive.sections/0`), eg. `:activity_types`. A key that is neither is ignored"
+  @doc "Keys of the controls not to show: the sort row (`:sort_by`, eg. on a map, whose markers have no order), the content switches (`override_rows/2`), eg. `[:group_activity]` on a feed that is only group activities, as `FeedExtraControlsLive`'s `hide_filters` does for its own, and the sections of the \"More filters\" editor (`FeedFiltersModalContentLive.sections/0`), eg. `:activity_types`. A key that is neither is ignored"
   prop hide_filters, :list, default: []
+
+  @doc "Sections of the \"More filters\" editor (`FeedFiltersModalContentLive.sections/0`) to show above it instead, as the same rows, eg. `[:happening, :nearby]` on a page of events. They apply as soon as they change, as the sort and the switches do, and are not in \"More filters\" too. Keys in `hide_filters` stay hidden"
+  prop top_sections, :list, default: []
 
   @doc "Whether the feed can be saved as a custom feed: false for a preset with its own query (`base_query_fun`), as only filters carry over to a saved feed"
   prop can_save, :boolean, default: true
@@ -27,6 +30,12 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
 
   def handle_event("reset_preferences", _, %{assigns: %{event_target: "#" <> feed_id}} = socket) do
     Phoenix.LiveView.send_update(Bonfire.UI.Social.FeedLive, id: feed_id, reset_preferences: true)
+    {:noreply, assign(socket, reset_revision: socket.assigns.reset_revision + 1)}
+  end
+
+  # a host that is a LiveView, not a feed component (no `event_target`), gets the reset as a message, as it gets the filters applied from the editor
+  def handle_event("reset_preferences", _, %{assigns: %{event_target: nil}} = socket) do
+    send(self(), {__MODULE__, :reset})
     {:noreply, assign(socket, reset_revision: socket.assigns.reset_revision + 1)}
   end
 
@@ -88,17 +97,34 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
       )
   end
 
-  @doc "Order choices supported by the feed loader, independent of content filters."
-  def order_options do
+  @doc "Order choices supported by the feed loader, independent of content filters. With the feed's `filters`, it also offers the order of the dates things happen on (eg. events) when there is a Happening filter or the feed is of events only: things without dates have no start to sort by."
+  def order_options(filters \\ nil) do
     [
       {"newest", l("Newest first")},
-      {"oldest", l("Oldest first")},
-      {"reply_count", l("Most replied")},
-      {"boost_count", l("Most boosted")},
-      {"like_count", l("Most liked")},
-      {"latest_reply", l("Latest reply")},
-      {"popularity_score", l("Popularity")}
-    ]
+      {"oldest", l("Oldest first")}
+    ] ++
+      if(starts_sort_offered?(filters),
+        do: [{"starts_at", Bonfire.UI.Social.SortItemsDropdownLive.starts_sort_label(filters)}],
+        else: []
+      ) ++
+      [
+        {"reply_count", l("Most replied")},
+        {"boost_count", l("Most boosted")},
+        {"like_count", l("Most liked")},
+        {"latest_reply", l("Latest reply")},
+        {"popularity_score", l("Popularity")}
+      ]
+  end
+
+  defp starts_sort_offered?(filters) do
+    Bonfire.UI.Social.SortItemsDropdownLive.starts_sort?(filters) or events_only?(filters)
+  end
+
+  defp events_only?(filters) do
+    case List.wrap(e(filters, :object_types, nil) || []) do
+      [] -> false
+      types -> Enum.all?(types, &(to_string(&1) in ["Event", "event"]))
+    end
   end
 
   @doc "The selected order, including ordering configured through the detailed editor."
@@ -129,6 +155,13 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   """
   def order_filters("newest", _filters), do: %{sort_by: :date_created, sort_order: :desc}
   def order_filters("oldest", _filters), do: %{sort_by: :date_created, sort_order: :asc}
+
+  # earliest start first, or latest first when looking at what has passed
+  def order_filters("starts_at", filters),
+    do: %{
+      sort_by: :starts_at,
+      sort_order: if(e(filters, :time_span, nil) in [:past, "past"], do: :desc, else: :asc)
+    }
 
   def order_filters(value, filters) do
     case Enum.find(

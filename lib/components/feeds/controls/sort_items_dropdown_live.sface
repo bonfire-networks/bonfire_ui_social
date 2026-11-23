@@ -20,6 +20,11 @@
           do: l("Sort: least liked"),
           else: l("Sort: most liked")
 
+      :starts_at ->
+        if Bonfire.UI.Social.SortItemsDropdownLive.starts_sort_desc?(@feed_filters),
+          do: l("Sort: most recent first"),
+          else: l("Sort: soonest first")
+
       _ ->
         l("Sort: chronological")
     end}
@@ -40,6 +45,11 @@
           <span class="flex items-center">
             <#Icon iconify="ph:fire-fill" class="lg:hidden block h-5 w-4.5" />
             <span class="hidden lg:block">{if e(@feed_filters, :sort_order, nil) == :asc, do: l("Least liked"), else: l("Most liked")}</span>
+          </span>
+        {#match :starts_at}
+          <span class="flex items-center">
+            <#Icon iconify="mdi:order-alphabetical-ascending" class="lg:hidden block size-4" />
+            <span class="hidden lg:block">{Bonfire.UI.Social.SortItemsDropdownLive.starts_sort_label(@feed_filters)}</span>
           </span>
         {#match _}
           <span class="flex items-center">
@@ -63,7 +73,30 @@
         {l("Chronological")}
         <div class="size-5 flex items-center justify-center border border-divider rounded-full">
           <span
-            :if={e(@feed_filters, :sort_by, nil) not in [:reply_count, :boost_count, :like_count]}
+            :if={e(@feed_filters, :sort_by, nil) not in [:reply_count, :boost_count, :like_count, :starts_at]}
+            class="size-3.5 bg-primary rounded-full"
+          />
+        </div>
+      </button>
+    </li>
+
+    {!-- only where things have dates: the feed has a Happening filter --}
+    <li :if={starts_sort?(@feed_filters)}>
+      <button
+        type="button"
+        role="menuitem"
+        phx-click="set_filter"
+        phx-value-sort_by="starts_at"
+        phx-value-sort_order={if Bonfire.UI.Social.SortItemsDropdownLive.starts_sort_desc?(@feed_filters),
+          do: "desc",
+          else: "asc"}
+        phx-target={@event_target}
+        class="w-full flex gap-3 px-2 text-base-content justify-between items-center"
+      >
+        {Bonfire.UI.Social.SortItemsDropdownLive.starts_sort_label(@feed_filters)}
+        <div class="size-5 flex items-center justify-center border border-divider rounded-full">
+          <span
+            :if={e(@feed_filters, :sort_by, nil) == :starts_at}
             class="size-3.5 bg-primary rounded-full"
           />
         </div>

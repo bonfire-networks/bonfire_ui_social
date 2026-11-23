@@ -21,32 +21,16 @@
 
   <div class="flex flex-col overflow-y-auto flex-1 min-h-0">
     {!-- WHERE IT WAS POSTED --}
-    <details
+    <Bonfire.UI.Common.FeedFilterRowLive
       :if={:origin in @sections}
-      class="group"
-      data-row="origin"
-      id={"#{@id}_origin_section"}
-      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+      id={@id}
+      name="origin"
+      label={l("Origin")}
+      label_id={"#{@id}_origin_label"}
+      value_class="max-w-45"
+      active={!Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, :all)}
+      value={Bonfire.UI.Social.FeedFiltersModalContentLive.origin_summary(@pending_filters)}
     >
-      <summary class="feed-filter-summary">
-        <h4 id={"#{@id}_origin_label"} class="text-sm font-normal text-muted">{l("Origin")}</h4>
-        <span class="flex items-center gap-2 min-w-0">
-          <span
-            data-role="row_value"
-            class={
-              "text-sm truncate max-w-45",
-              "text-primary":
-                !Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, :all),
-              "text-muted":
-                Bonfire.UI.Social.FeedFiltersModalContentLive.origin_matches?(@pending_filters, :all)
-            }
-          >{Bonfire.UI.Social.FeedFiltersModalContentLive.origin_summary(@pending_filters)}</span>
-          <span
-            aria-hidden="true"
-            class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90"
-          >›</span>
-        </span>
-      </summary>
       <div class="pb-3 flex flex-col gap-2">
         {#case @preset_origin_info}
           {#match %{preset_has_fixed_origin: true, preset_origin: preset_origin}}
@@ -116,7 +100,7 @@
             {/if}
         {/case}
       </div>
-    </details>
+    </Bonfire.UI.Common.FeedFilterRowLive>
 
     <div :if={:hide_own in @sections and current_user_id(@__context__)} data-row="hide_own">
       <label class="flex min-h-10 [@media(pointer:coarse)]:min-h-11 cursor-pointer items-center justify-between gap-3">
@@ -136,30 +120,15 @@
     </div>
 
     {!-- FROM PEOPLE --}
-    <details
+    <Bonfire.UI.Common.FeedFilterRowLive
       :if={:from_people in @sections}
-      class="group"
-      data-row="from_people"
-      id={"#{@id}_from_people_section"}
-      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+      id={@id}
+      name="from_people"
+      label={l("From people")}
+      value_class="max-w-45"
+      active={@selected_authors != []}
+      value={Bonfire.UI.Social.FeedFiltersModalContentLive.people_summary(@selected_authors, :include)}
     >
-      <summary class="feed-filter-summary">
-        <h4 class="text-sm font-normal text-muted">{l("From people")}</h4>
-        <span class="flex items-center gap-2 min-w-0">
-          <span
-            data-role="row_value"
-            class={
-              "text-sm truncate max-w-45",
-              "text-primary": @selected_authors != [],
-              "text-muted": @selected_authors == []
-            }
-          >{Bonfire.UI.Social.FeedFiltersModalContentLive.people_summary(@selected_authors, :include)}</span>
-          <span
-            aria-hidden="true"
-            class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90"
-          >›</span>
-        </span>
-      </summary>
       <div class="pb-3 flex flex-col gap-1">
         <form phx-change="multi_select" phx-target={@myself} id={"#{@id}_author_form"}>
           <Bonfire.UI.Common.MultiselectLive.UserSelectorLive
@@ -175,33 +144,18 @@
         </form>
         <p class="text-xs text-muted">{l("Backspace removes the last person")}</p>
       </div>
-    </details>
+    </Bonfire.UI.Common.FeedFilterRowLive>
 
     {!-- NOT FROM PEOPLE --}
-    <details
+    <Bonfire.UI.Common.FeedFilterRowLive
       :if={:not_people in @sections}
-      class="group"
-      data-row="not_people"
-      id={"#{@id}_not_people_section"}
-      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+      id={@id}
+      name="not_people"
+      label={l("Not from people")}
+      value_class="max-w-45"
+      active={@selected_excluded_authors != []}
+      value={Bonfire.UI.Social.FeedFiltersModalContentLive.people_summary(@selected_excluded_authors, :exclude)}
     >
-      <summary class="feed-filter-summary">
-        <h4 class="text-sm font-normal text-muted">{l("Not from people")}</h4>
-        <span class="flex items-center gap-2 min-w-0">
-          <span
-            data-role="row_value"
-            class={
-              "text-sm truncate max-w-45",
-              "text-primary": @selected_excluded_authors != [],
-              "text-muted": @selected_excluded_authors == []
-            }
-          >{Bonfire.UI.Social.FeedFiltersModalContentLive.people_summary(@selected_excluded_authors, :exclude)}</span>
-          <span
-            aria-hidden="true"
-            class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90"
-          >›</span>
-        </span>
-      </summary>
       <div class="pb-3 flex flex-col gap-1">
         <form phx-change="multi_select_exclude" phx-target={@myself} id={"#{@id}_exclude_author_form"}>
           <Bonfire.UI.Common.MultiselectLive.UserSelectorLive
@@ -217,7 +171,7 @@
         </form>
         <p class="text-xs text-muted">{l("Their posts are left out even when they match everything else.")}</p>
       </div>
-    </details>
+    </Bonfire.UI.Common.FeedFilterRowLive>
 
     {#if :subject_types in @sections}
       {#for key <- @pending_filters[:subject_types] || []}
@@ -235,30 +189,14 @@
       {/for}
     {/if}
 
-    <details
+    <Bonfire.UI.Common.FeedFilterRowLive
       :if={:circles in @sections}
-      class="group"
-      data-row="circles"
-      id={"#{@id}_circles_section"}
-      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+      id={@id}
+      name="circles"
+      label={l("Filter by circles")}
+      active={List.wrap(e(@pending_filters, :subject_circles, [])) != []}
+      value={Bonfire.UI.Social.FeedFiltersModalContentLive.circles_summary(@pending_filters)}
     >
-      <summary class="feed-filter-summary">
-        <h4 class="text-sm font-normal text-muted">{l("Filter by circles")}</h4>
-        <span class="flex items-center gap-2 min-w-0">
-          <span
-            data-role="row_value"
-            class={
-              "text-sm truncate",
-              "text-primary": List.wrap(e(@pending_filters, :subject_circles, [])) != [],
-              "text-muted": List.wrap(e(@pending_filters, :subject_circles, [])) == []
-            }
-          >{Bonfire.UI.Social.FeedFiltersModalContentLive.circles_summary(@pending_filters)}</span>
-          <span
-            aria-hidden="true"
-            class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90"
-          >›</span>
-        </span>
-      </summary>
       <div class="pb-3">
         {#case @my_circles}
           {#match []}
@@ -283,33 +221,18 @@
             </div>
         {/case}
       </div>
-    </details>
+    </Bonfire.UI.Common.FeedFilterRowLive>
 
     {!-- HASHTAGS --}
-    <details
+    <Bonfire.UI.Common.FeedFilterRowLive
       :if={:hashtags in @sections}
-      class="group"
-      data-row="hashtags"
-      id={"#{@id}_hashtags_section"}
-      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+      id={@id}
+      name="hashtags"
+      label={l("Hashtags")}
+      value_class="max-w-45"
+      active={List.wrap(e(@pending_filters, :tags, [])) != []}
+      value={Bonfire.UI.Social.FeedFiltersModalContentLive.hashtags_summary(@pending_filters)}
     >
-      <summary class="feed-filter-summary">
-        <h4 class="text-sm font-normal text-muted">{l("Hashtags")}</h4>
-        <span class="flex items-center gap-2 min-w-0">
-          <span
-            data-role="row_value"
-            class={
-              "text-sm truncate max-w-45",
-              "text-primary": List.wrap(e(@pending_filters, :tags, [])) != [],
-              "text-muted": List.wrap(e(@pending_filters, :tags, [])) == []
-            }
-          >{Bonfire.UI.Social.FeedFiltersModalContentLive.hashtags_summary(@pending_filters)}</span>
-          <span
-            aria-hidden="true"
-            class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90"
-          >›</span>
-        </span>
-      </summary>
       <form
         id={"#{@id}_tags_form"}
         phx-change="set_tags"
@@ -336,33 +259,18 @@
           {/if}
         </p>
       </form>
-    </details>
+    </Bonfire.UI.Common.FeedFilterRowLive>
 
-    <details
+    <Bonfire.UI.Common.FeedFilterRowLive
       :if={:time_range in @sections}
-      class="group"
-      data-row="time_range"
-      id={"#{@id}_time_range_section"}
-      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+      id={@id}
+      name="time_range"
+      label={l("Posted")}
+      active={e(@pending_filters, :time_limit, 0) not in [nil, 0]}
+      value={Bonfire.UI.Social.FeedFiltersModalContentLive.time_range_summary(@pending_filters)}
     >
-      <summary class="feed-filter-summary">
-        <h4 class="text-sm font-normal text-muted">{l("Time range")}</h4>
-        <span class="flex items-center gap-2 min-w-0">
-          <span
-            data-role="row_value"
-            class={
-              "text-sm truncate",
-              "text-primary": e(@pending_filters, :time_limit, 0) not in [nil, 0],
-              "text-muted": e(@pending_filters, :time_limit, 0) in [nil, 0]
-            }
-          >{Bonfire.UI.Social.FeedFiltersModalContentLive.time_range_summary(@pending_filters)}</span>
-          <span
-            aria-hidden="true"
-            class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90"
-          >›</span>
-        </span>
-      </summary>
       <div class="pb-3 flex flex-wrap gap-2">
+        <p class="w-full text-xs text-muted">{l("When it was posted")}</p>
         {#for {days, label} <- Bonfire.UI.Social.TimeControlLive.default_options()}
           <button
             type="button"
@@ -380,39 +288,93 @@
           </button>
         {/for}
       </div>
-    </details>
+    </Bonfire.UI.Common.FeedFilterRowLive>
 
-    <details
-      :if={:sort_order in @sections}
-      class="group"
-      data-row="sort_order"
-      id={"#{@id}_sort_order_section"}
-      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+    {!-- when things happen (eg. events), not when they were published: a preset, or two dates in advanced mode, in the viewer's time zone --}
+    <Bonfire.UI.Common.FeedFilterRowLive
+      :if={:happening in @sections}
+      id={@id}
+      name="happening"
+      label={l("Happening")}
+      value={Bonfire.UI.Social.FeedFiltersModalContentLive.happening_summary(@pending_filters)}
     >
-      <summary class="feed-filter-summary">
-        <h4 class="text-sm font-normal text-muted">{l("Sort order")}</h4>
-        <span class="flex items-center gap-2 min-w-0">
-          <span
-            data-role="row_value"
-            class={
-              "text-sm truncate",
-              "text-primary": e(@pending_filters, :sort_order, nil) == :asc,
-              "text-muted": e(@pending_filters, :sort_order, nil) != :asc
-            }
-          >{Bonfire.UI.Social.FeedFiltersModalContentLive.sort_order_summary(@pending_filters)}</span>
-          <span
-            aria-hidden="true"
-            class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90"
-          >›</span>
-        </span>
-      </summary>
+      <div class="pb-3 flex flex-col gap-3">
+        <p class="text-xs text-muted">{l("When it happens. Only things with dates, like events.")}</p>
+        <form phx-change="set_filter" phx-target={@myself}>
+          <label for={"#{@id}_happening"} class="sr-only">{l("Happening")}</label>
+          <select id={"#{@id}_happening"} name="happening" class="select select-sm w-full">
+            <option value="">{l("Any time")}</option>
+            {#for {value, label} <- Bonfire.UI.Social.FeedFiltersModalContentLive.happening_options()}
+              <option value={value} selected={to_string(e(@pending_filters, :time_span, "")) == value}>{label}</option>
+            {/for}
+          </select>
+        </form>
+        <details class="text-sm">
+          <summary class="cursor-pointer text-muted">{l("Advanced: pick dates")}</summary>
+          <form
+            phx-submit="set_filter"
+            phx-target={@myself}
+            class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2 items-end"
+          >
+            <label class="flex flex-col gap-1">
+              <span class="text-muted">{l("From")}</span>
+              <input type="date" name="happening_from_date" class="input input-sm w-full">
+            </label>
+            <label class="flex flex-col gap-1">
+              <span class="text-muted">{l("Until")}</span>
+              <input type="date" name="happening_until_date" class="input input-sm w-full">
+            </label>
+            <button type="submit" class="btn btn-sm sm:col-span-2">{l("Use these dates")}</button>
+          </form>
+        </details>
+      </div>
+    </Bonfire.UI.Common.FeedFilterRowLive>
+
+    {!-- rows that extensions declare to come right after "Happening" (eg. "Nearby", geolocate's: things within a radius of the viewer), see `Bonfire.UI.Common.FeedFilterControlModule` --}
+    {#for control <- @controls,
+        control[:after] == :happening,
+        control.name in @sections,
+        module_enabled?(control.module, @__context__)}
+      <StatelessComponent
+        module={control.module}
+        id={@id}
+        feed_filters={@pending_filters}
+        target={@myself}
+        control_state={@control_state}
+      />
+    {/for}
+
+    <Bonfire.UI.Common.FeedFilterRowLive
+      :if={:sort_order in @sections}
+      id={@id}
+      name="sort_order"
+      label={l("Sort order")}
+      active={e(@pending_filters, :sort_order, nil) == :asc or e(@pending_filters, :sort_by, nil) == :starts_at}
+      value={Bonfire.UI.Social.FeedFiltersModalContentLive.sort_order_summary(@pending_filters)}
+    >
       <div class="pb-3 flex flex-wrap gap-2">
+        {!-- by when things happen (eg. events start), where there are things with dates: the host lists only those, or the draft has a Happening filter --}
+        <button
+          :if={Bonfire.UI.Social.FeedFiltersModalContentLive.starts_sort?(@pending_filters, @starts_sort)}
+          type="button"
+          phx-click="set_filter"
+          phx-value-sort_by="starts_at"
+          phx-target={@myself}
+          class={"btn btn-sm", "btn-primary": e(@pending_filters, :sort_by, nil) == :starts_at}
+        >
+          {Bonfire.UI.Social.SortItemsDropdownLive.starts_sort_label(@pending_filters)}
+        </button>
         <button
           type="button"
           phx-click="set_filter"
           phx-value-sort_order={:desc}
           phx-target={@myself}
-          class={"btn btn-sm", "btn-primary": e(@pending_filters, :sort_order, :desc) == :desc}
+          class={
+            "btn btn-sm",
+            "btn-primary":
+              e(@pending_filters, :sort_by, nil) != :starts_at and
+                e(@pending_filters, :sort_order, :desc) == :desc
+          }
         >
           {l("Newest first")}
         </button>
@@ -421,43 +383,27 @@
           phx-click="set_filter"
           phx-value-sort_order={:asc}
           phx-target={@myself}
-          class={"btn btn-sm", "btn-primary": e(@pending_filters, :sort_order, nil) == :asc}
+          class={
+            "btn btn-sm",
+            "btn-primary":
+              e(@pending_filters, :sort_by, nil) != :starts_at and
+                e(@pending_filters, :sort_order, nil) == :asc
+          }
         >
           {l("Oldest first")}
         </button>
       </div>
-    </details>
+    </Bonfire.UI.Common.FeedFilterRowLive>
 
     {!-- CONTENT TYPES --}
-    <details
+    <Bonfire.UI.Common.FeedFilterRowLive
       :if={:object_types in @sections}
-      class="group"
-      data-row="object_types"
-      id={"#{@id}_object_types_section"}
-      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+      id={@id}
+      name="object_types"
+      label={l("Content types")}
+      active={Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :object_types)}
+      value={Bonfire.UI.Social.FeedFiltersModalContentLive.types_summary(@pending_filters, :object_types)}
     >
-      <summary class="feed-filter-summary">
-        <h4 class="text-sm font-normal text-muted">{l("Content types")}</h4>
-        <span class="flex items-center gap-2 min-w-0">
-          <span
-            data-role="row_value"
-            class={
-              "text-sm truncate",
-              "text-primary":
-                Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :object_types),
-              "text-muted":
-                !Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(
-                  @pending_filters,
-                  :object_types
-                )
-            }
-          >{Bonfire.UI.Social.FeedFiltersModalContentLive.types_summary(@pending_filters, :object_types)}</span>
-          <span
-            aria-hidden="true"
-            class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90"
-          >›</span>
-        </span>
-      </summary>
       <div class="pb-3 flex flex-col gap-1">
         {#for {key, label} <- [
               {:post, l("Posts")},
@@ -500,40 +446,16 @@
         {/for}
         <p class="pt-1 text-xs text-muted"><b class="font-medium text-muted">{l("Only")}</b> {l("shows just these")} · <b class="font-medium text-muted">{l("Hide")}</b> {l("leaves them out")}</p>
       </div>
-    </details>
+    </Bonfire.UI.Common.FeedFilterRowLive>
 
     {#if :activity_types in @sections and extension_enabled?(:bonfire_ui_reactions, @__context__)}
-      <details
-        class="group"
-        data-row="activity_types"
-        id={"#{@id}_activity_types_section"}
-        phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+      <Bonfire.UI.Common.FeedFilterRowLive
+        id={@id}
+        name="activity_types"
+        label={l("Activity types")}
+        active={Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :activity_types)}
+        value={Bonfire.UI.Social.FeedFiltersModalContentLive.types_summary(@pending_filters, :activity_types)}
       >
-        <summary class="feed-filter-summary">
-          <h4 class="text-sm font-normal text-muted">{l("Activity types")}</h4>
-          <span class="flex items-center gap-2 min-w-0">
-            <span
-              data-role="row_value"
-              class={
-                "text-sm truncate",
-                "text-primary":
-                  Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(
-                    @pending_filters,
-                    :activity_types
-                  ),
-                "text-muted":
-                  !Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(
-                    @pending_filters,
-                    :activity_types
-                  )
-              }
-            >{Bonfire.UI.Social.FeedFiltersModalContentLive.types_summary(@pending_filters, :activity_types)}</span>
-            <span
-              aria-hidden="true"
-              class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90"
-            >›</span>
-          </span>
-        </summary>
         <div class="pb-3 flex flex-col gap-1">
           {#for {key, label} <- [
               {:boost, l("Boosts")},
@@ -563,36 +485,19 @@
             />
           {/for}
         </div>
-      </details>
+      </Bonfire.UI.Common.FeedFilterRowLive>
     {/if}
 
     {!-- MEDIA --}
-    <details
+    <Bonfire.UI.Common.FeedFilterRowLive
       :if={:media_types in @sections}
-      class="group"
-      data-row="media_types"
-      id={"#{@id}_media_types_section"}
-      phx-mounted={Phoenix.LiveView.JS.ignore_attributes("open")}
+      id={@id}
+      name="media_types"
+      label={l("Media")}
+      value_class="max-w-45"
+      active={Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :media_types)}
+      value={Bonfire.UI.Social.FeedFiltersModalContentLive.media_summary(@pending_filters, @media_types)}
     >
-      <summary class="feed-filter-summary">
-        <h4 class="text-sm font-normal text-muted">{l("Media")}</h4>
-        <span class="flex items-center gap-2 min-w-0">
-          <span
-            data-role="row_value"
-            class={
-              "text-sm truncate max-w-45",
-              "text-primary":
-                Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :media_types),
-              "text-muted":
-                !Bonfire.UI.Social.FeedFiltersModalContentLive.types_filtered?(@pending_filters, :media_types)
-            }
-          >{Bonfire.UI.Social.FeedFiltersModalContentLive.media_summary(@pending_filters, @media_types)}</span>
-          <span
-            aria-hidden="true"
-            class="text-muted text-lg transition-transform duration-150 motion-reduce:transition-none group-open:rotate-90"
-          >›</span>
-        </span>
-      </summary>
       <div class="pb-3 flex flex-col gap-1">
         {!-- quick actions for the common cases --}
         <div class="flex flex-wrap gap-1.5 pb-2">
@@ -674,7 +579,21 @@
           />
         {/for}
       </div>
-    </details>
+    </Bonfire.UI.Common.FeedFilterRowLive>
+
+    {!-- the other declared rows, last --}
+    {#for control <- @controls,
+        control[:after] != :happening,
+        control.name in @sections,
+        module_enabled?(control.module, @__context__)}
+      <StatelessComponent
+        module={control.module}
+        id={@id}
+        feed_filters={@pending_filters}
+        target={@myself}
+        control_state={@control_state}
+      />
+    {/for}
 
     <Bonfire.UI.Social.SaveFeedPresetLive
       :if={:save_preset in @sections}
@@ -683,7 +602,7 @@
     />
   </div>
 
-  <div class="flex items-center justify-end gap-2 pt-3 shrink-0">
+  <div :if={!@apply_on_change} class="flex items-center justify-end gap-2 pt-3 shrink-0">
     <button
       type="button"
       phx-click="apply"
