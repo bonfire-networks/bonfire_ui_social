@@ -5,8 +5,9 @@
   {!-- overflow-hidden always: the flush cover and the hover fill are clipped by the card's
        corners, also when MediaLive passes its own css_borders --}
   <div class={[@css_borders || "rounded-box border-hair border-divider", "overflow-hidden"]}>
+    {!-- a link someone posted, as body links are (see `Bonfire.Common.Text.prepare_links_for_local_render/1`): also where its card takes the link's place in the text --}
     <LinkLive
-      opts={"data-id": "media_link"}
+      opts={"data-id": "media_link", rel: "nofollow noopener ugc"}
       to={if !@download_url, do: @media_url || @preview_img}
       class={
         "flex w-full items-center media_container hover:bg-fill overflow-hidden",

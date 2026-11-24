@@ -182,6 +182,88 @@ defmodule Bonfire.UI.Social.ArticleMediaRegressionTest do
       assert Types.object_type(object) == Article,
              "expected the published object to be an Article, got: #{inspect(Types.object_type(object))}"
     end
+
+    test "each upload preview has an Insert in text button placing it in the editor", %{
+      conn: conn
+    } do
+      file = Path.expand("../fixtures/icon.png", __DIR__)
+
+      conn
+      |> visit("/write")
+      |> upload("Upload an attachment", file)
+      |> PhoenixTest.unwrap(fn view ->
+        html = Phoenix.LiveViewTest.render(view)
+        [_, ref] = Regex.run(~r/upload_metadata\[([^\]]+)\]/, html)
+
+        # the button dispatches `bonfire:insert_at_cursor` on itself with the upload's placeholder, as markdown: `milkdown.hooks.js` sends it to the plain field last written in, else to the editor
+        [button] =
+          html
+          |> LazyHTML.from_document()
+          |> LazyHTML.query("[data-role=insert_in_text]")
+          |> LazyHTML.attribute("phx-click")
+
+        assert button =~ "bonfire:insert_at_cursor"
+        refute button =~ ~s("to":)
+        assert button =~ "upload:#{ref}"
+        assert button =~ ~s("markdown":true)
+
+        # the newest upload shows its alt text without Edit; Done, in the Edit button's place meanwhile, puts it back in the strip of thumbnails
+        doc = LazyHTML.from_document(html)
+        [done] = doc |> LazyHTML.query("[data-role=alt_done]") |> LazyHTML.attribute("phx-click")
+        assert done =~ "alt_done"
+        refute done =~ "expanded"
+
+        # Edit and Collapse also close it, so it doesn't reopen on its own row after a collapse
+        [toggle] =
+          doc |> LazyHTML.query("[data-role=upload_toggle]") |> LazyHTML.attribute("phx-click")
+
+        assert toggle =~ "expanded"
+        assert toggle =~ "alt_done"
+
+        # one Done for the list, not one per upload
+        assert doc
+               |> LazyHTML.query("[data-role=upload_entry] [data-role=alt_done]")
+               |> Enum.count() == 0
+
+        html
+      end)
+    end
+
+    # the composer writes `upload:<ref>` for a file it hasn't uploaded yet: publishing stores the file and puts its URL there
+    test "an upload placed in the text gets its stored URL in the published body", %{
+      conn: conn,
+      me: me
+    } do
+      file = Path.expand("../fixtures/icon.png", __DIR__)
+
+      conn
+      |> visit("/write")
+      |> upload("Upload an attachment", file)
+      |> PhoenixTest.unwrap(fn view ->
+        # the upload entry's ref, as the composer's metadata inputs name it
+        [_, ref] = Regex.run(~r/upload_metadata\[([^\]]+)\]/, Phoenix.LiveViewTest.render(view))
+
+        view
+        |> Phoenix.LiveViewTest.element("#smart_input_form")
+        |> Phoenix.LiveViewTest.render_submit(%{
+          "post" => %{
+            "post_content" => %{"html_body" => "Intro\n\n![](upload:#{ref})\n\nmore"}
+          }
+        })
+      end)
+      |> wait_async()
+
+      [media] = repo().all(from(m in Bonfire.Files.Media, where: m.creator_id == ^id(me)))
+      [%{id: post_id}] = repo().all(from(f in Bonfire.Files, where: f.media_id == ^id(media)))
+
+      body =
+        Bonfire.Common.Needles.get!(post_id, skip_boundary_check: true)
+        |> repo().maybe_preload(:post_content)
+        |> e(:post_content, :html_body, nil)
+
+      refute body =~ "upload:"
+      assert Bonfire.Files.InlineMedia.inline_ids(body, [media]) == [id(media)]
+    end
   end
 
   # media placed in the body (see `Bonfire.Files.InlineMedia`) renders there, where it sits, and not again in the attachment list
@@ -285,6 +367,9 @@ defmodule Bonfire.UI.Social.ArticleMediaRegressionTest do
       assert count(page, inline_file) == count(body_html, inline_file)
       refute body_html =~ other_file
       assert page =~ other_file
+
+      # in the body, an image shows at its own size at most (Q7): its wrapper keeps it from being stretched to the column, which the attachment list does
+      assert body_html =~ ~r/data-role="inline_media"[^>]*>.*data-id="article_media"/s
     end
 
     test "control: without inline media, the article page lists its media as before", %{
