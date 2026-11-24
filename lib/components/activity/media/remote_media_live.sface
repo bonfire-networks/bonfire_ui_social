@@ -23,7 +23,10 @@
                     e(@media, :metadata, "other", "video_width", nil) || "800"}
                   height={e(@media, :metadata, "facebook", "video:height", nil) ||
                     e(@media, :metadata, "other", "video_height", nil) || "500"} --}
-                <div class="aspect-video rounded-t-box">
+                <div
+                  class={"rounded-t-box", "aspect-video": !embed_height_style(@media)}
+                  style={embed_height_style(@media) || ""}
+                >
                   {!-- TODO: only load external embed if autoplay or user clicks on a play button --}
                   <iframe
                     src={rewrite_embed_url(url, %{"autoplay" => if(@autoplay, do: "1", else: "0")})}
@@ -44,7 +47,7 @@
                     with no playable file) — those belong to the iframe/preview path below. --}
                   {#if (MediaLive.is_video?(media_url, e(@media, :media_type, nil)) or
                        MediaLive.is_hls?(media_url, e(@media, :media_type, nil))) and
-                      not MediaLive.has_video_page_metadata?(@media)}
+                      not MediaLive.has_embed_player?(@media)}
                     {#if MediaLive.is_gif?(@media.path, e(@media, :media_type, nil), @media)}
                       {!-- GIF-labeled MP4 (converted GIF): autoplay/loop, no controls --}
                       <div
@@ -230,7 +233,7 @@
                             </div>
                           {#else}
                             {!-- Embedded iframe --}
-                            <div class="aspect-video">
+                            <div class={"aspect-video": !embed_height_style(@media)} style={embed_height_style(@media) || ""}>
                               <iframe
                                 src={rewrite_embed_url(embed_url, %{"autoplay" => if(@autoplay, do: "1", else: "0")})}
                                 frameborder="0"

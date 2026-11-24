@@ -385,7 +385,172 @@ defmodule Bonfire.UI.Social.ArticleMediaRegressionTest do
       assert page =~ Path.basename(other.path)
     end
 
-    # a real announcement post: a player alone in its paragraph, and a link on the line after its label
+    # as an author does it: only the player's URL, alone on its line; the link preview (`URLPreviews`) finds its oEmbed and attaches it, and the body shows the player there
+    test "a player's URL alone on its line shows as its player, in place, once", %{
+      conn: conn,
+      me: me
+    } do
+      youtube = "https://www.youtube.com/watch?v=inlinePlay1"
+      Process.put(:req_adapter, fn request -> {request, Req.Response.new(status: 404)} end)
+
+      Tesla.Mock.mock_global(fn
+        %{method: :get, url: "https://www.youtube.com/oembed" <> _} ->
+          %Tesla.Env{
+            status: 200,
+            headers: [{"content-type", "application/json"}],
+            body:
+              Jason.encode!(%{
+                "type" => "video",
+                "title" => "An inline player",
+                "provider_name" => "YouTube",
+                "html" => ~s(<iframe src="https://www.youtube.com/embed/inlinePlay1"></iframe>)
+              })
+          }
+
+        %{method: :get, url: "https://www.youtube.com/watch" <> _} = env ->
+          %Tesla.Env{
+            env
+            | status: 200,
+              headers: [{"content-type", "text/html"}],
+              body:
+                ~s(<html><head><title>An inline player</title><meta property="og:title" content="An inline player"><link rel="alternate" type="application/json+oembed" href="https://www.youtube.com/oembed?url=#{URI.encode_www_form(youtube)}&format=json"></head><body></body></html>)
+          }
+
+        _ ->
+          %Tesla.Env{status: 404, body: ""}
+      end)
+
+      {:ok, post} =
+        Bonfire.Posts.publish(
+          current_user: me,
+          post_attrs: %{post_content: %{html_body: "Watch this:\n\n#{youtube}\n\nafter"}},
+          boundary: "public"
+        )
+
+      assert [_ | _] = loaded_files(post), "control: the link preview attached the player's link"
+
+      {body_html, page} = body_and_page(conn, "/post/#{id(post)}")
+
+      # its iframe (YouTube's, as its privacy-enhanced `youtube-nocookie.com`) between the text before and after it
+      assert body_html =~ ~r/Watch this:.*<iframe[^>]*\/embed\/inlinePlay1.*after/s
+      assert count(page, "/embed/inlinePlay1") == count(body_html, "/embed/inlinePlay1")
+    end
+
+    # a remote post's body is HTML: a link alone in its paragraph places its player there, as a URL alone on its line does in a local post. Received as from Mastodon, whose link text is split in spans, with the link preview (`URLPreviews`) finding the player's oEmbed
+    for {name, link} <- [
+          {"a link",
+           ~s(<a href="https://www.youtube.com/watch?v=remotePlay1">https://www.youtube.com/watch?v=remotePlay1</a>)},
+          {"a Mastodon link",
+           ~s(<a href="https://www.youtube.com/watch?v=remotePlay1" target="_blank" rel="nofollow noopener" translate="no"><span class="invisible">https://www.</span><span class="ellipsis">youtube.com/watch?v=remotePl</span><span class="invisible">ay1</span></a>)}
+        ] do
+      test "in a remote post, #{name} alone in its paragraph shows as its player, in place, once",
+           %{conn: conn} do
+        username = "inline_player_#{System.unique_integer([:positive])}"
+        remote_actor = "https://mocked.local/users/#{username}"
+        youtube = "https://www.youtube.com/watch?v=remotePlay1"
+        Process.put(:req_adapter, fn request -> {request, Req.Response.new(status: 404)} end)
+        Process.put(:federating, true)
+
+        Tesla.Mock.mock_global(fn
+          %{method: :get, url: ^remote_actor} ->
+            Tesla.Mock.json(
+              Bonfire.Federate.ActivityPub.Simulate.actor_json(remote_actor, username)
+            )
+
+          %{method: :get, url: "https://www.youtube.com/oembed" <> _} ->
+            %Tesla.Env{
+              status: 200,
+              headers: [{"content-type", "application/json"}],
+              body:
+                Jason.encode!(%{
+                  "type" => "video",
+                  "title" => "A remote player",
+                  "provider_name" => "YouTube",
+                  "html" => ~s(<iframe src="https://www.youtube.com/embed/remotePlay1"></iframe>)
+                })
+            }
+
+          %{method: :get, url: "https://www.youtube.com/watch" <> _} = env ->
+            %Tesla.Env{
+              env
+              | status: 200,
+                headers: [{"content-type", "text/html"}],
+                body:
+                  ~s(<html><head><title>A remote player</title><link rel="alternate" type="application/json+oembed" href="https://www.youtube.com/oembed?url=#{URI.encode_www_form(youtube)}&format=json"></head><body></body></html>)
+            }
+
+          _ ->
+            %Tesla.Env{status: 404, body: ""}
+        end)
+
+        object_id =
+          "https://mocked.local/objects/inline-player-#{System.unique_integer([:positive])}"
+
+        public = "https://www.w3.org/ns/activitystreams#Public"
+
+        {:ok, data} =
+          ActivityPub.Federator.Transformer.handle_incoming(%{
+            "@context" => "https://www.w3.org/ns/activitystreams",
+            "type" => "Create",
+            "id" => object_id <> "/activity",
+            "actor" => remote_actor,
+            "to" => [public],
+            "object" => %{
+              "id" => object_id,
+              "type" => "Note",
+              "attributedTo" => remote_actor,
+              "to" => [public],
+              "cc" => [],
+              "content" => "<p>Intro</p><p>#{unquote(link)}</p><p>after</p>"
+            }
+          })
+
+        assert {:ok, post} = Bonfire.Federate.ActivityPub.Incoming.receive_activity(data)
+
+        assert [_ | _] = loaded_files(post),
+               "control: the link preview attached the player's link"
+
+        {body_html, page} = body_and_page(conn, "/post/#{id(post)}")
+
+        assert body_html =~ ~r/Intro.*<iframe[^>]*\/embed\/remotePlay1.*after/s
+        assert count(page, "/embed/remotePlay1") == count(body_html, "/embed/remotePlay1")
+      end
+    end
+
+    # an uploaded video or audio placed in the text (`![](URL)`, as the composer places any file) shows as its player there, not as a broken image
+    test "an uploaded video placed in the text shows as its player, in place, once", %{
+      conn: conn,
+      me: me
+    } do
+      {:ok, video} = Files.upload(Bonfire.Files.VideoUploader, me, video_file())
+      body = "Intro\n\n![](#{Bonfire.Files.inline_url(video)})\n\nmore"
+      article = publish_article_with_body!(me, body, [video])
+
+      {body_html, page} = body_and_page(conn, "/post/#{id(article)}")
+
+      video_file = Path.basename(video.path)
+      assert body_html =~ ~r/Intro.*<video.*#{video_file}.*more/s
+      refute body_html =~ ~r/<img[^>]*#{video_file}/
+      assert count(page, video_file) == count(body_html, video_file)
+    end
+
+    test "an uploaded audio file placed in the text shows as its player, in place, once", %{
+      conn: conn,
+      me: me
+    } do
+      {:ok, audio} = Files.upload(Bonfire.Files.DocumentUploader, me, audio_file())
+      body = "Intro\n\n![](#{Bonfire.Files.inline_url(audio)})\n\nmore"
+      article = publish_article_with_body!(me, body, [audio])
+
+      {body_html, page} = body_and_page(conn, "/post/#{id(article)}")
+
+      audio_file = Path.basename(audio.path)
+      assert body_html =~ ~r/Intro.*<audio.*#{audio_file}.*more/s
+      refute body_html =~ ~r/<img[^>]*#{audio_file}/
+      assert count(page, audio_file) == count(body_html, audio_file)
+    end
+
+    # a real announcement post: a player alone in its paragraph, and a link on the line after itslabel
     test "the announcement fixture shows its player and its blog link in place, once each", %{
       conn: conn,
       me: me

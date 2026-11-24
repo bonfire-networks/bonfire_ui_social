@@ -69,7 +69,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
 
           # Embeds (YouTube, Vimeo, PeerTube, etc.) - check BEFORE video files since embeds
           # may have video/* media_type but should render with 16:9 aspect ratio
-          has_video_page_metadata?(m) ->
+          has_embed_player?(m) ->
             {image_list, video_list, gif_list, [m | audio_embed_list], link_list}
 
           # Direct video files + HLS streams go to video_list (for carousel with images)
@@ -212,13 +212,16 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   Checks if a media item is a video page link (rather than a raw video file),
   based on oEmbed/OG metadata or a federated PeerTube video object.
   """
-  def has_video_page_metadata?(%{metadata: metadata} = media) when is_map(metadata) do
+  # a `rich` oEmbed with an iframe (SoundCloud, Spotify, Bandcamp…: oEmbed has no `audio` type, but it's taken too) plays in place as a `video` one does, from our own iframe of its `src`
+  def has_embed_player?(%{metadata: metadata} = media) when is_map(metadata) do
     e(metadata, "oembed", "type", nil) == "video" or
+      (e(metadata, "oembed", "type", nil) in ["rich", "audio"] and
+         is_binary(extract_oembed_url(e(metadata, "oembed", "html", nil)))) or
       String.starts_with?(e(metadata, "facebook", "type", nil) || "", "video") or
       is_binary(peertube_embed_url(media))
   end
 
-  def has_video_page_metadata?(_), do: false
+  def has_embed_player?(_), do: false
 
   @doc """
   Returns the PeerTube embed-player URL for a federated PeerTube video, or nil.
@@ -251,9 +254,12 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   """
   def extract_oembed_url(nil), do: nil
 
+  @doc "The `src` of the iframe in an oEmbed's `html`, if it's an https URL: what we put in our own iframe, never the provider's HTML (which may hold scripts, or a `javascript:` URL)."
   def extract_oembed_url(html) when is_binary(html) do
-    case Regex.run(~r/src=["']([^"']+)["']/, html) do
-      [_, url] -> url
+    with [_, url] <- Regex.run(~r/<iframe\b[^>]*\bsrc=["']([^"']+)["']/i, html),
+         %URI{scheme: "https"} <- URI.parse(url) do
+      url
+    else
       _ -> nil
     end
   end

@@ -79,6 +79,71 @@ defmodule Bonfire.UI.Social.Activity.MediaPlayerRenderTest do
     refute html =~ "data-vidstack"
   end
 
+  # a `rich` oEmbed (SoundCloud, Spotify, Bandcamp…: oEmbed has no `audio` type) plays in place as a `video` one does: our own iframe of the provider's iframe `src`, never the provider's HTML
+  describe "rich oEmbed players" do
+    @soundcloud_html ~s|<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1"></iframe><script>alert(1)</script>|
+
+    defp rich(html, extra \\ %{}) do
+      media(
+        path: "https://soundcloud.com/someone/a-track",
+        media_type: "rich",
+        metadata: %{"oembed" => Map.merge(%{"type" => "rich", "html" => html}, extra)}
+      )
+    end
+
+    test "a rich oEmbed with an iframe is a player, at the height it gives" do
+      media = rich(@soundcloud_html, %{"height" => 166})
+      assert Bonfire.UI.Social.Activity.MediaLive.has_embed_player?(media)
+
+      html = render_media(media)
+      assert html =~ ~r/<iframe[^>]*src="https:\/\/w\.soundcloud\.com\/player\//
+      assert html =~ "height: 166px"
+      refute html =~ "alert(1)", "the provider's own HTML isn't rendered"
+    end
+
+    test "control: a rich oEmbed without an iframe (eg. a quoted post with a script) stays a link card" do
+      media =
+        rich(
+          ~s(<blockquote>a post</blockquote><script src="https://platform.example.com/widgets.js"></script>)
+        )
+
+      refute Bonfire.UI.Social.Activity.MediaLive.has_embed_player?(media)
+    end
+
+    test "an embed URL that isn't https is never put in an iframe" do
+      assert nil ==
+               Bonfire.UI.Social.Activity.MediaLive.extract_oembed_url(
+                 ~s|<iframe src="javascript:alert(1)"></iframe>|
+               )
+
+      assert nil ==
+               Bonfire.UI.Social.Activity.RemoteMediaLive.rewrite_embed_url("javascript:alert(1)")
+
+      html =
+        render_media(
+          media(
+            path: "https://video.example.com/watch/1",
+            media_type: "video",
+            metadata: %{
+              "oembed" => %{
+                "type" => "video",
+                "html" => ~s|<iframe src="javascript:alert(1)"></iframe>|
+              }
+            }
+          )
+        )
+
+      refute html =~ "javascript:"
+    end
+
+    test "control: an https embed URL is kept" do
+      assert "https://w.soundcloud.com/player/?url=x" ==
+               Bonfire.UI.Social.Activity.MediaLive.extract_oembed_url(
+                 ~s(<script src="https://a.example/x.js"></script><iframe src="https://w.soundcloud.com/player/?url=x"></iframe>)
+               )
+    end
+  end
+
   describe "PeerTube embeds" do
     # A federated PeerTube video (AP object in metadata.json_ld) must render the
     # origin instance's own player iframe (/videos/embed/<id>) — like Mastodon —

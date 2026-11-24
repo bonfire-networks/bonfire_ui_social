@@ -128,7 +128,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLinkLiveTest do
       media = array_json_ld_media()
 
       assert MediaLive.the_medias([media]) == [media]
-      assert MediaLive.has_video_page_metadata?(media) == false
+      assert MediaLive.has_embed_player?(media) == false
       assert MediaLive.peertube_embed_url(media) == nil
     end
 
