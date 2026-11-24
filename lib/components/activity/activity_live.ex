@@ -938,7 +938,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
             object_type,
             activity,
             object,
-            activity_inception
+            activity_inception,
+            viewing_main_object
           )
 
         # of its media, only the one flagged as its primary image (a cover), whatever its type
@@ -2948,7 +2949,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
          object_type,
          activity,
          object,
-         _activity_inception
+         _activity_inception,
+         viewing_main_object
        ) do
     do_primary_image_and_component_maybe_attachments(
       id(object) || id(activity),
@@ -2964,7 +2966,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
         ],
         &Enums.filter_empty(&1, nil)
       ),
-      object_type
+      object_type,
+      e(object, :post_content, :html_body, nil),
+      viewing_main_object
     )
 
     # |> debug("prim_img")
@@ -2974,7 +2978,23 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
   # `restricted_primary_image/2` moved to `Bonfire.Social.RestrictedContent.preview/2` on 2 November, shared with the API's statuses
 
-  def do_primary_image_and_component_maybe_attachments(_id, files, object_type)
+  # `body`: the object's body, whose media (see `Bonfire.Files.InlineMedia`) are shown there, where they sit, rather than in the attachment list
+  # `viewing_main_object`: on the object's own page a card may not take the cover (see `split_media_for_cover/3`)
+  def do_primary_image_and_component_maybe_attachments(
+        id,
+        files,
+        object_type,
+        body \\ nil,
+        viewing_main_object \\ false
+      )
+
+  def do_primary_image_and_component_maybe_attachments(
+        _id,
+        files,
+        object_type,
+        body,
+        viewing_main_object
+      )
       when (is_list(files) and files != []) or is_map(files) do
     # for articles, the media flagged as `primary_image` becomes the cover; any
     # remaining attachments still render via MediaLive like they do for posts
@@ -2983,8 +3003,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
     # whichever card shows its primary image as a cover says so (articles, events), rather than a list of types here
     {primary_image, files} =
       if primary_image_as_cover?(object_type),
-        do: Bonfire.Files.split_primary_image(files),
+        do: split_media_for_cover(object_type, files, viewing_main_object),
         else: {nil, files}
+
+    files =
+      maybe_apply(Bonfire.Files.InlineMedia, :reject_placed, [files, body],
+        fallback_return: files
+      )
 
     {primary_image,
      if files == [] or is_nil(files) do
@@ -2992,6 +3017,17 @@ defmodule Bonfire.UI.Social.ActivityLive do
      else
        [{Bonfire.UI.Social.Activity.MediaLive, %{media: files}}]
      end}
+  end
+
+  # the card may split its media itself (`split_media/2`, given whether the object's own page is shown: the cover, and the media to list), else the primary image is the cover and the rest is listed
+  defp split_media_for_cover(object_type, files, viewing_main_object) do
+    with module when is_atom(module) and not is_nil(module) <-
+           Bonfire.Common.Config.get([:ui, :object_preview, object_type]),
+         true <- Code.ensure_loaded?(module) and function_exported?(module, :split_media, 2) do
+      module.split_media(files, viewing_main_object)
+    else
+      _ -> Bonfire.Files.split_primary_image(files)
+    end
   end
 
   @doc "Whether the card registered for `object_type` (`[:ui, :object_preview]`) shows the object's primary image as its cover, which it says with `primary_image_as_cover?/0`."
@@ -3008,7 +3044,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
   # when the object IS itself a media (link/article/image/audio/video/Media),
   # it is already rendered by its own object component — don't also emit a
   # (never-resolving) attachment skeleton from the cached media counts
-  def do_primary_image_and_component_maybe_attachments(_id, _other, object_type)
+  def do_primary_image_and_component_maybe_attachments(
+        _id,
+        _other,
+        object_type,
+        _body,
+        _viewing_main_object
+      )
       when object_type in [
              Bonfire.Files.Media,
              :link,
@@ -3020,7 +3062,13 @@ defmodule Bonfire.UI.Social.ActivityLive do
     {nil, []}
   end
 
-  def do_primary_image_and_component_maybe_attachments(id, other, _object_type) do
+  def do_primary_image_and_component_maybe_attachments(
+        id,
+        other,
+        _object_type,
+        _body,
+        _viewing_main_object
+      ) do
     # use cached amounts of images to display from MediaLive in case media is preloaded async
     case Bonfire.Common.Cache.get("num_media:#{id}") do
       {:ok, %{} = media_skeleton} ->

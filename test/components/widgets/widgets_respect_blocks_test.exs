@@ -176,6 +176,14 @@ defmodule Bonfire.UI.Social.WidgetsRespectBlocksTest do
     reset.()
     on_exit(reset)
 
+    # only some flavours list it on the dashboard: add it to this flavour's sidebar
+    widgets = Bonfire.Common.Config.get([Bonfire.Web.Views.DashboardLive, :widgets], [])
+
+    Process.put(
+      [:bonfire, Bonfire.Web.Views.DashboardLive, :widgets],
+      Keyword.update(widgets, :sidebar, [:recent_articles], &(&1 ++ [:recent_articles]))
+    )
+
     # the positive first, which also fills the cache
     dashboard(conn)
     |> assert_has("[data-id=recent_articles]", text: "Article by the author")

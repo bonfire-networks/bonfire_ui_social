@@ -88,4 +88,50 @@ defmodule Bonfire.UI.Social.PostEdit.Test do
     |> visit("/discussion/#{post.id}")
     |> assert_has("article", text: "after edit")
   end
+
+  # the edit form sends HTML as typed: markup that would run is neither stored nor shown, in the title or the body
+  test "markup that would run, typed in the edit form, isn't shown live", %{conn: conn, me: me} do
+    {:ok, post} =
+      Posts.publish(
+        current_user: me,
+        post_attrs: %{post_content: %{html_body: "a body to edit"}},
+        boundary: "public"
+      )
+
+    conn
+    |> visit("/discussion/#{post.id}")
+    |> open_edit()
+    |> fill_in("Title", with: "<img src=x onerror=alert(1)>Title kept")
+    |> fill_in("Text", with: "<img src=x onerror=alert(2)><script>alert(3)</script>Body kept")
+    |> click_button("Done")
+    |> assert_has("[role=alert]", text: "Edited")
+
+    conn
+    |> visit("/discussion/#{post.id}")
+    |> assert_has("article", text: "Body kept")
+    # avatars have an onerror fallback of their own, so only the typed handlers are looked for
+    |> refute_has("img[onerror*=alert]")
+    |> refute_has("article script")
+  end
+
+  # the control for the test above: the same edit with harmless markup shows it
+  test "harmless markup typed in the edit form is shown", %{conn: conn, me: me} do
+    {:ok, post} =
+      Posts.publish(
+        current_user: me,
+        post_attrs: %{post_content: %{html_body: "a body to edit"}},
+        boundary: "public"
+      )
+
+    conn
+    |> visit("/discussion/#{post.id}")
+    |> open_edit()
+    |> fill_in("Text", with: "<b>Bold kept</b> and the rest")
+    |> click_button("Done")
+    |> assert_has("[role=alert]", text: "Edited")
+
+    conn
+    |> visit("/discussion/#{post.id}")
+    |> assert_has("article b", text: "Bold kept")
+  end
 end

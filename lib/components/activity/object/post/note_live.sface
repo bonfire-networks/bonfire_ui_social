@@ -86,6 +86,8 @@
                     showing_within={@showing_within}
                     viewing_main_object={@viewing_main_object}
                     activity_inception={@activity_inception}
+                    inline_media={maybe_apply(Bonfire.Files.InlineMedia, :url_map_for, [@activity, @object], fallback_return: %{})}
+                    cw={@cw}
                   />
               {/case}
             </div>

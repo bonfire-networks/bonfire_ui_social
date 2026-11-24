@@ -183,4 +183,219 @@ defmodule Bonfire.UI.Social.ArticleMediaRegressionTest do
              "expected the published object to be an Article, got: #{inspect(Types.object_type(object))}"
     end
   end
+
+  # media placed in the body (see `Bonfire.Files.InlineMedia`) renders there, where it sits, and not again in the attachment list
+  describe "inline media in the body" do
+    defp publish_article_with_body!(me, body, media_list) do
+      Bonfire.Articles.Fake.fake_article!(me, "public", %{
+        post_content: %{name: "Article #{System.unique_integer()}", html_body: body},
+        uploaded_media: media_list
+      })
+    end
+
+    defp loaded_files(object) do
+      object |> repo().maybe_preload([files: [:media]], force: true) |> e(:files, [])
+    end
+
+    # the inner HTML of the rendered body, and the whole page
+    defp body_and_page(conn, path) do
+      conn
+      |> visit(path)
+      |> PhoenixTest.unwrap(fn view ->
+        html = Phoenix.LiveViewTest.render(view)
+
+        body =
+          html
+          |> LazyHTML.from_document()
+          |> LazyHTML.query("[data-id=object_body]")
+          |> LazyHTML.to_html()
+
+        send(self(), {:rendered, body, html})
+        html
+      end)
+
+      assert_received {:rendered, body, html}
+      {body, html}
+    end
+
+    defp count(html, text), do: length(String.split(html, text)) - 1
+
+    test "the attachment list leaves out inline media (unit)", %{me: me} do
+      inline = upload_image!(me)
+      other = upload_image!(me)
+      body = "Intro\n\n![](#{Bonfire.Files.inline_url(inline)})\n\nmore"
+      article = publish_article_with_body!(me, body, [inline, other])
+
+      assert {nil, [{Bonfire.UI.Social.Activity.MediaLive, %{media: listed}}]} =
+               ActivityLive.do_primary_image_and_component_maybe_attachments(
+                 id(article),
+                 loaded_files(article),
+                 :article,
+                 body
+               )
+
+      assert Enum.map(listed, &e(&1, :media_id, nil)) == [id(other)]
+    end
+
+    test "with all its media inline, there's no attachment list (unit)", %{me: me} do
+      inline = upload_image!(me)
+      body = "![](#{Bonfire.Files.inline_url(inline)})"
+      article = publish_article_with_body!(me, body, [inline])
+
+      assert {nil, []} =
+               ActivityLive.do_primary_image_and_component_maybe_attachments(
+                 id(article),
+                 loaded_files(article),
+                 :article,
+                 body
+               )
+    end
+
+    test "an inline image flagged as the cover stays the cover (unit)", %{me: me} do
+      cover = upload_image!(me, %{metadata: %{"primary_image" => "true"}})
+      body = "![](#{Bonfire.Files.inline_url(cover)})"
+      article = publish_article_with_body!(me, body, [cover])
+
+      assert {primary_image, _} =
+               ActivityLive.do_primary_image_and_component_maybe_attachments(
+                 id(article),
+                 loaded_files(article),
+                 :article,
+                 body
+               )
+
+      assert e(primary_image, :media_id, nil) == id(cover)
+    end
+
+    test "the article page shows inline media in the body, once, and the rest in the list", %{
+      conn: conn,
+      me: me
+    } do
+      inline = upload_image!(me)
+      other = upload_image!(me)
+      body = "Intro\n\n![](#{Bonfire.Files.inline_url(inline)})\n\nmore"
+      article = publish_article_with_body!(me, body, [inline, other])
+
+      {body_html, page} = body_and_page(conn, "/post/#{id(article)}")
+
+      inline_file = Path.basename(inline.path)
+      other_file = Path.basename(other.path)
+
+      assert body_html =~ ~r/Intro.*data-id="article_media".*#{inline_file}.*more/s
+      assert count(page, inline_file) == count(body_html, inline_file)
+      refute body_html =~ other_file
+      assert page =~ other_file
+    end
+
+    test "control: without inline media, the article page lists its media as before", %{
+      conn: conn,
+      me: me
+    } do
+      other = upload_image!(me)
+      article = publish_article_with_body!(me, "no media in the text", [other])
+
+      {body_html, page} = body_and_page(conn, "/post/#{id(article)}")
+
+      refute body_html =~ Path.basename(other.path)
+      assert page =~ Path.basename(other.path)
+    end
+
+    # a real announcement post: a player alone in its paragraph, and a link on the line after its label
+    test "the announcement fixture shows its player and its blog link in place, once each", %{
+      conn: conn,
+      me: me
+    } do
+      # link previews find nothing: the links are attached as given
+      Tesla.Mock.mock(fn _ -> %Tesla.Env{status: 404, body: ""} end)
+
+      youtube = "https://www.youtube.com/watch?v=q0BvUFpVJMs"
+      blog = "https://bonfirenetworks.org/posts/for-the-things-we-can-only-do-together/"
+      image = upload_image!(me)
+
+      body =
+        "Bonfire for Communities 1.1 is out today: For the things we can only do together.\n\n#{youtube}\n\nGroups now federate, so you can find, follow and join one from a different Bonfire instance, from the threadiverse, and even from Mastodon, with the account you already have. Take your community back!\n\n![](#{Bonfire.Files.inline_url(image)})\n\nBlog post: \n#{blog}\n\n#bonfire #fediverse\n"
+
+      {:ok, _post} =
+        Bonfire.Posts.publish(
+          current_user: me,
+          post_attrs: %{
+            post_content: %{html_body: body},
+            uploaded_media: [%{"href" => youtube}, %{"href" => blog}, image]
+          },
+          boundary: "public"
+        )
+
+      conn
+      |> visit("/feed/local")
+      |> wait_async()
+      |> open_browser()
+      |> assert_has("[data-id=object_body] [data-id=media_link][href='#{blog}']")
+
+      {body_html, page} = body_and_page(conn, "/feed/local")
+
+      image_file = Path.basename(image.path)
+
+      assert body_html =~
+               ~r/Bonfire for Communities.*q0BvUFpVJMs.*Take your community back!.*#{image_file}.*Blog post:.*for-the-things-we-can-only-do-together/s
+
+      # each media once on the page: in the body, where it sits, not again in the list below
+      assert count(page, "href=\"#{blog}\"") == count(body_html, "href=\"#{blog}\"")
+      assert count(page, "q0BvUFpVJMs") == count(body_html, "q0BvUFpVJMs")
+      assert count(page, image_file) == count(body_html, image_file)
+    end
+
+    test "a sensitive post shows its inline media in its body, blurred, once", %{
+      conn: conn,
+      me: me
+    } do
+      inline = upload_image!(me)
+
+      {:ok, _post} =
+        Bonfire.Posts.publish(
+          current_user: me,
+          post_attrs: %{
+            sensitive: true,
+            post_content: %{
+              html_body: "Intro\n\n![](#{Bonfire.Files.inline_url(inline)})\n\nmore"
+            },
+            uploaded_media: [inline]
+          },
+          boundary: "public"
+        )
+
+      {body_html, page} = body_and_page(conn, "/feed/local")
+
+      assert body_html =~ ~s(data-id="article_media")
+      # the blur `MediaLive` puts over a sensitive image
+      assert body_html =~ "backdrop-blur-sm"
+
+      assert count(page, Path.basename(inline.path)) ==
+               count(body_html, Path.basename(inline.path))
+    end
+
+    test "a post in the feed shows inline media in its body, and the rest in the list", %{
+      conn: conn,
+      me: me
+    } do
+      inline = upload_image!(me)
+      other = upload_image!(me)
+
+      {:ok, _post} =
+        Bonfire.Posts.publish(
+          current_user: me,
+          post_attrs: %{
+            post_content: %{
+              html_body: "Intro\n\n![](#{Bonfire.Files.inline_url(inline)})\n\nmore"
+            },
+            uploaded_media: [inline, other]
+          },
+          boundary: "public"
+        )
+
+      {body_html, _page} = body_and_page(conn, "/feed/local")
+
+      assert body_html =~ ~r/Intro.*data-id="article_media".*#{Path.basename(inline.path)}.*more/s
+      refute body_html =~ Path.basename(other.path)
+    end
+  end
 end
