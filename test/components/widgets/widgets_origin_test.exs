@@ -113,6 +113,16 @@ defmodule Bonfire.UI.Social.WidgetsOriginTest do
     local = post!(me, "local discussion")
     far = incoming!(remote, "Note", "remote discussion")
 
+    # top discussions lists only posts with at least one reply
+    for post <- [local, far] do
+      {:ok, _} =
+        Bonfire.Posts.publish(
+          current_user: me,
+          post_attrs: %{post_content: %{html_body: "a reply"}, reply_to_id: id(post)},
+          boundary: "public"
+        )
+    end
+
     # the positive first: by default both are listed
     ids = object_ids(Bonfire.Social.Threads.list_trending(me, @limit, cache: :refresh))
     assert id(local) in ids

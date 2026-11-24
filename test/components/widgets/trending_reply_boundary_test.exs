@@ -22,6 +22,14 @@ defmodule Bonfire.UI.Social.WidgetTrendingReplyBoundaryTest do
         boundary: "local"
       )
 
+    # top discussions lists only posts with at least one reply
+    {:ok, _} =
+      Bonfire.Posts.publish(
+        current_user: other,
+        post_attrs: %{post_content: %{html_body: "a reply"}, reply_to_id: post.id},
+        boundary: "local"
+      )
+
     # capture what the reply handler sends to the composer; `mode: :shared` because
     # the handler runs in the LiveView process, not the test process
     test_pid = self()
@@ -86,6 +94,14 @@ defmodule Bonfire.UI.Social.WidgetTrendingReplyBoundaryTest do
         "<p>group trending post</p>"
       )
 
+    # top discussions lists only posts with at least one reply
+    {:ok, _} =
+      Bonfire.Posts.publish(
+        current_user: other,
+        post_attrs: %{post_content: %{html_body: "a reply"}, reply_to_id: id(group_post)},
+        boundary: "public"
+      )
+
     {:ok, view, _html} = live(conn, "/dashboard")
 
     assert render(view) =~ "group trending post"
@@ -109,8 +125,9 @@ defmodule Bonfire.UI.Social.WidgetTrendingReplyBoundaryTest do
 
     assert render(view) =~ "trending boundary post"
 
+    # the post's own reply button: its reply (which top discussions needs) is in the feed too
     view
-    |> element("[data-id=action_reply]")
+    |> element("article[data-object_id='#{id(post)}'] [data-id=action_reply]")
     |> render_click()
 
     assert_receive {:composer_opened, assigns}, 2000

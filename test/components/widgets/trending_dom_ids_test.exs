@@ -17,6 +17,12 @@ defmodule Bonfire.UI.Social.WidgetTrendingDomIdsTest do
         post_content: %{html_body: "trending and in my feed"}
       })
 
+    # top discussions lists only posts with at least one reply; this one is by someone I don't follow, so it isn't in my feed
+    Bonfire.Posts.Fake.fake_post!(fake_user!(), "public", %{
+      post_content: %{html_body: "a reply"},
+      reply_to_id: post.id
+    })
+
     # the dashboard's feed is off unless the user turns it on
     Bonfire.Common.Settings.put([Bonfire.Web.Views.DashboardLive, :include, :feed], true,
       current_user: me

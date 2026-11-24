@@ -94,10 +94,9 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
   end
 
   describe "Media feed pagination order" do
-    # Defect under test (Q423): `:per_media` feeds (any `media_types` filter) paginate a Media-rooted query ordered by `newest_activity_id`, but the Paginator cursor is the Media's own `:id`. When media ids and newest-activity ids order differently, page 2 (`id < last_media_id`) repeats or skips items.
-    # Deferred: media feeds paginate on the Media id while ordering by newest activity, so page 2 skips items; see the custom feeds perf plan.
-    @tag :todo
-    test "load more on the media feed shows each media once, newest activity first", %{
+    # `:per_media` feeds (any `media_types` filter) page on the Media's own id, so they also order by it: ordered by newest activity instead, page 2 (`id < last_media_id`) repeated or skipped items whenever media ids and newest-activity ids ordered differently
+    # @tag :todo
+    test "load more on the media feed shows each media once, newest media first", %{
       user1: user1,
       account: account,
       limit: limit
@@ -110,7 +109,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
           Fake.upload_media(:images, user1, "Order #{label}")
         end)
 
-      # then post in an order that differs from the media ids, so newest activity first is: a, c, b, d
+      # then post in an order that differs from the media ids (newest activity first would be: a, c, b, d), so the feed must follow the media ids: d, c, b, a
       for {label, media} <- [{"d", d}, {"b", b}, {"c", c}, {"a", a}] do
         Fake.post_with_media(user1, media, "order-#{label}")
       end
@@ -124,7 +123,7 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
         |> visit("/feed/local_media")
         |> wait_async()
         |> assert_has("[data-id=top_level_media]", count: 2)
-        |> assert_has(item.(a), count: 1)
+        |> assert_has(item.(d), count: 1)
         |> assert_has(item.(c), count: 1)
         |> click_button("[data-id=load_more]", "Load more")
         |> wait_async()

@@ -13,6 +13,10 @@ defmodule Bonfire.UI.Social.Activity.NoteLive do
   prop activity_component_id, :string, default: nil
   prop parent_id, :any, default: nil
 
+  @doc "The media its body places, by URL, and the body already cut there, when the caller found them (`Bonfire.UI.Social.ActivityLive`, with `Bonfire.Files.InlineMedia.split/3`), so they aren't found again. Without them, it finds the media itself"
+  prop inline_media, :map, default: nil
+  prop body_parts, :any, default: nil
+
   @doc "Whether to offer translating it. Off for a stand-in text (eg. the placeholder for a post matching the viewer's filtered keywords), since translating loads the post itself"
   prop translatable, :boolean, default: true
 

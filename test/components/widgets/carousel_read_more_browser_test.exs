@@ -130,6 +130,7 @@ defmodule Bonfire.UI.Social.CarouselReadMoreBrowserTest do
 
   defp long_post!(user) do
     Bonfire.Posts.Fake.fake_post!(user, "public", %{post_content: %{html_body: @long_body}})
+    |> with_reply(user)
   end
 
   # with its text clamped to 5 lines a post stays under the card cap, so only an image makes the card clip and show its Show more pill
@@ -138,6 +139,17 @@ defmodule Bonfire.UI.Social.CarouselReadMoreBrowserTest do
       post_content: %{html_body: @long_body},
       uploaded_media: [Bonfire.Social.Fake.upload_media(:images, user)]
     })
+    |> with_reply(user)
+  end
+
+  # top discussions lists only posts with at least one reply
+  defp with_reply(post, user) do
+    Bonfire.Posts.Fake.fake_post!(user, "public", %{
+      post_content: %{html_body: "a reply"},
+      reply_to_id: post.id
+    })
+
+    post
   end
 
   @trending "[data-id=trending_discussions]"

@@ -111,10 +111,13 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
         {"reply_count", l("Most replied")},
         {"boost_count", l("Most boosted")},
         {"like_count", l("Most liked")},
-        {"latest_reply", l("Latest reply")},
-        {"popularity_score", l("Popularity")}
-      ]
+        {"latest_reply", l("Latest reply")}
+      ] ++
+      if(media_feed?(filters), do: [{"popularity_score", l("Popularity")}], else: [])
   end
+
+  # the popularity score can't be indexed: media feeds page their ranked aggregate, activity feeds get popularity through the cached `trending` preset instead
+  defp media_feed?(filters), do: List.wrap(e(filters, :media_types, nil)) != []
 
   defp starts_sort_offered?(filters) do
     Bonfire.UI.Social.SortItemsDropdownLive.starts_sort?(filters) or events_only?(filters)

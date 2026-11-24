@@ -166,7 +166,7 @@
                           hide_activity={@hide_activities}
                           subject_user={@subject_user}
                           activity_preloads={@activity_preloads}
-                          check_object_boundary={@check_object_boundary}
+                          check_object_boundary={check_object_boundary?(@check_object_boundary, @__context__)}
                           show_restricted={@show_restricted}
                         />
                     {/case}
@@ -228,7 +228,7 @@
                                       else: resolved_multiply_limit}
                                   >
                                     <:if_no_more>
-                                      {#if time_limit != 0}
+                                      {#if time_limit != 0 and !@time_limit_fixed}
                                         <div class="flex items-center gap-4 mx-6 mt-6 mb-2 text-xs text-muted">
                                           <span aria-hidden="true" class="h-px flex-1 bg-fill-strong" />
                                           <p class="text-center">{lp(
@@ -271,7 +271,8 @@
                                         {/if}
                                       {/if}
 
-                                      {#if !@loading and time_limit != 0}
+                                      {#if !@loading and time_limit != 0 and !@time_limit_fixed and
+                                          can_widen_window?(@feed_filters, time_limit)}
                                         {#if user_socket_connected?(@__context__)}
                                           {#if ((end_cursor || previous_end_cursor || final_end_cursor) &&
                                                !e(@feed_filters, :sort_by, nil)) ||

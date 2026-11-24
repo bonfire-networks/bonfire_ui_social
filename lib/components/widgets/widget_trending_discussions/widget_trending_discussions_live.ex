@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.WidgetTrendingDiscussionsLive do
   @moduledoc """
-  Widget rendering the most replied discussions of the last day
+  Widget rendering the most replied discussions of the last few days
   (`:trending_discussions` preset), as the shared carousel (`Bonfire.UI.Common.CarouselLive`). Each card is a standard `ActivityLive`
   whose actions are swapped for `DiscussionPreviewActionsLive` (reply counter
   + participants facepile) via the `custom_actions` prop.
