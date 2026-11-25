@@ -1,0 +1,36 @@
+{!-- a size container: when the tile is narrow, its audio player's secondary controls are hidden (vidstack lays all ten in one row, about 30rem wide, that overflows; the mute button can come without its `.vds-volume` wrapper), keeping play, the time slider and the time; in a post the player keeps them all. `!important`, since vidstack's own CSS is outside Tailwind's layers and so would win otherwise --}
+<div
+  data-id="media_tile"
+  data-media-id={id(@object)}
+  draggable="true"
+  data-wide={!visual?(@object)}
+  class="flex flex-col gap-2 min-w-0 @container @max-lg:[&_.vds-volume]:hidden! @max-lg:[&_.vds-mute-button]:hidden! @max-lg:[&_.vds-settings-menu]:hidden! @max-lg:[&_.vds-chapters-menu]:hidden! @max-lg:[&_.vds-seek-button]:hidden! @max-lg:[&_.vds-download-button]:hidden! @max-lg:[&_.vds-caption-button]:hidden! @max-lg:[&_.vds-airplay-button]:hidden!"
+>
+  {#case Bonfire.Files.Media.media_caption(@object)}
+    {#match nil}
+    {#match caption}
+      <p data-role="media_caption" class="text-sm truncate" title={caption}>{caption}</p>
+  {/case}
+  {!-- the media as a post shows it, so a click opens the same viewer --}
+  <StatelessComponent
+    module={maybe_component(Bonfire.UI.Social.Activity.MediaLive, @__context__)}
+    media={[@object]}
+    showing_within={@showing_within}
+    mark_missing_alt
+    parent_id={deterministic_dom_id(__MODULE__, id(@object), "tile", @parent_id)}
+  />
+  <div class="flex items-center gap-2 text-xs text-base-content/70 min-w-0">
+    {!-- as the trending media feed shows it: an icon and the number, the words in its title --}
+    <span
+      data-role="used_count"
+      class="flex items-center gap-1"
+      title={lp("Used in %{count} post", "Used in %{count} posts", e(@object, :object_count, 0),
+        count: e(@object, :object_count, 0)
+      )}
+    >
+      <#Icon iconify="ph:note-fill" class="size-4" />
+      {e(@object, :object_count, 0)}
+    </span>
+  </div>
+  <#slot />
+</div>

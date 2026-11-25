@@ -127,7 +127,8 @@
                     {/if}
                   {#elseif MediaLive.is_supported_audio_format?(@media.path, e(@media, :media_type, nil)) or
                       e(@media, :media_type, nil) == "audio"}
-                    <div id={"#{@id}_audio_wrapper"} :hook class="w-full">
+                    {!-- vidstack's audio layout puts its controls in one row of fixed-size buttons, which overflows a narrow container (eg. a tile in the composer's media picker): this wrapper is a size container, and when it's narrow the secondary controls hide, keeping play, the time slider and the time --}
+                    <div id={"#{@id}_audio_wrapper"} :hook data-role="audio_player" class="w-full">
                       <div class="flex items-center gap-3">
                         {#case MediaLive.preview_img(@media)}
                           {#match nil}

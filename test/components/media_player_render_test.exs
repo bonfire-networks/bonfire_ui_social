@@ -58,6 +58,15 @@ defmodule Bonfire.UI.Social.Activity.MediaPlayerRenderTest do
     assert html =~ ~s(<source src="#{url}")
   end
 
+  # in a post the player keeps all its controls: hiding the secondary ones when narrow is the media grid's (see `Bonfire.UI.Social.MediaGridTest`), not the player's own
+  test "an audio player in a post keeps all its controls" do
+    html =
+      render_media(media(path: "https://example.com/an-episode.mp3", media_type: "audio/mpeg"))
+
+    assert html =~ ~s(data-role="audio_player")
+    refute html =~ "[&_.vds-volume]:hidden"
+  end
+
   test "a YouTube/oEmbed video page renders an inline iframe, NOT the vidstack player" do
     # media_type "video" is the oEmbed *type*, not a playable file — it must go to
     # the iframe/embed path, not vidstack (which would fail canPlayType).

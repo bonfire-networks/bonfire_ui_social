@@ -541,6 +541,7 @@
               {:image, l("Images")},
               {:video, l("Videos")},
               {:audio, l("Audio")},
+              {:document, l("Documents")},
               {:research, l("Research publications")}
             ],
             key in @media_types}
@@ -561,11 +562,13 @@
                  :audio,
                  :video,
                  :research,
+                 :document,
                  "image",
                  "link",
                  "audio",
                  "video",
-                 "research"
+                 "research",
+                 "document"
                ] <-
             @pending_filters[:media_types] || []}
           <Bonfire.UI.Social.ToggleTypeLive

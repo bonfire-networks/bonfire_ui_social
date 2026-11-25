@@ -71,6 +71,11 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop tab_primary_class, :css_class, default: nil
 
   prop activity_class, :string, default: nil
+  # the classes of the list of entries, in place of the default column (eg. a grid of tiles)
+  prop list_class, :css_class, default: nil
+
+  @doc "Actions the page adds to each entry, given the entry as `object` (eg. the composer's media picker: Insert and Attach under each tile). Passed into the `custom_preview`'s default slot; nothing when not given."
+  slot activity_extra_actions, arg: %{object: :any}
   prop feed_filters, :any, default: nil
 
   @doc "Filters the page worked out for its reader (eg. the outboxes of the groups they joined): they scope the query, through the socket's assigns (`to_options/1`) on every load, but stay out of `feed_filters`, so saving the feed can't keep them"

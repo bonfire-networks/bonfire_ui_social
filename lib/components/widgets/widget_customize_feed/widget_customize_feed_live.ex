@@ -21,6 +21,9 @@ defmodule Bonfire.UI.Social.WidgetCustomizeFeedLive do
   @doc "Sections of the \"More filters\" editor (`FeedFiltersModalContentLive.sections/0`) to show above it instead, as the same rows, eg. `[:happening, :nearby]` on a page of events. They apply as soon as they change, as the sort and the switches do, and are not in \"More filters\" too. Keys in `hide_filters` stay hidden"
   prop top_sections, :list, default: []
 
+  @doc "The media types the media row offers (see `Bonfire.UI.Social.FeedFiltersModalContentLive`'s `media_types`), eg. `[:image, :video, :audio, :document]` for a list of one's own files, where links don't apply; its default when not given"
+  prop media_types, :list, default: nil
+
   @doc "Whether the feed can be saved as a custom feed: false for a preset with its own query (`base_query_fun`), as only filters carry over to a saved feed"
   prop can_save, :boolean, default: true
 

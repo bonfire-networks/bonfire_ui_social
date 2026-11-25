@@ -929,7 +929,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
 
     # the media its body places and the body cut there, found once for both the attachment list and the note's body
     # not for a quote request, which shows neither the quoted post's body nor its attachments here: the quoted post is its own `ActivityLive`, which finds them
-    inline = if can_read? and experience != :quote_request, do: split_inline_media(activity, object)
+    inline =
+      if can_read? and experience != :quote_request, do: split_inline_media(activity, object)
 
     {primary_image, attachments_component} =
       cond do

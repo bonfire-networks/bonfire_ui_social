@@ -22,6 +22,9 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop small_icon, :boolean, default: false
   prop disable_lazy, :boolean, default: false
 
+  # show the alt button on an image even when it has no alt text, marked as missing it (eg. for its author to notice)
+  prop mark_missing_alt, :boolean, default: false
+
   # media keeps its own `creator` rather than the `created` mixin, so the feed's `:with_creator` preload doesn't reach it
   def preloads(),
     do: [

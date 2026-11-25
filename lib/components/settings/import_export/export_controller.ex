@@ -934,16 +934,6 @@ defmodule Bonfire.UI.Social.ExportController do
     </html>"])
   end
 
-  # def media_stream(path, %Entrepot.Locator{storage: storage} = locator, fun) when storage in [Entrepot.Storages.Disk, "Elixir.Entrepot.Storages.Disk"] do
-  #  # stream files from Disk
-  #   path = Entrepot.Storages.Disk.path(locator)
-
-  #   if is_binary(path) and File.exists?(path) do
-  #     fun.(path, File.stream!(path, 512))
-  #   else
-  #     fun.("#{path}.txt", ["File not found"])
-  #   end
-  # end
   def media_stream(path, %struct{id: id} = locator, fun) when struct == Entrepot.Locator do
     # stream files from Disk or S3 with error handling
     try do
@@ -969,16 +959,6 @@ defmodule Bonfire.UI.Social.ExportController do
     end
   end
 
-  # def media_stream(path, %Entrepot.Locator{} = locator, fun) do
-  #  # copy S3 files to Disk
-  #   with {:ok, new_locator} <- Entrepot.copy(locator, Entrepot.Storages.Disk, skip_existing: true)
-  #     |> debug() do
-  #     media_stream(path, new_locator, fun)
-  #   else
-  #     {:error, error} when is_binary(error) -> fun.("#{path}.txt", [error])
-  #     other -> raise other
-  #   end
-  # end
   def media_stream(path, path, fun) when is_binary(path) do
     try do
       if File.exists?(path) do

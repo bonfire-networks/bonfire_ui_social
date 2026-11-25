@@ -20,7 +20,8 @@ defmodule Bonfire.UI.Social.FeedControlsLive do
       feed_id: assigns[:feed_id],
       feed_name: assigns[:feed_name],
       feed_filters: assigns[:feed_filters]
-    ]
+    ] ++
+      if(media_types = assigns[:media_types], do: [media_types: media_types], else: [])
   end
 
   defp filter_recipient("#" <> id), do: {Bonfire.UI.Social.FeedLive, id}

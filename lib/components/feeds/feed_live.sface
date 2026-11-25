@@ -124,7 +124,7 @@
             role="feed"
             aria-busy={to_string(@loading || @reloading || false)}
             phx-update="stream"
-            class="flex flex-col flex-1 h-full grow gap-(--feed-gap)"
+            class={@list_class || "flex flex-col flex-1 h-full grow gap-(--feed-gap)"}
           >
             {!-- custom actions (eg. a group page's discussion footer) are for one-entry-per-thread feeds; ungrouped (eg. "Latest updates" or a group's posts tab), each entry gets the feed's normal actions. Worked out once per render, and only when the page sends custom actions --}
             {#case if @custom_actions && thread_grouped?(@feed_filters, @feed_name, @__context__),
@@ -142,11 +142,22 @@
                   >
                     {#case entry}
                       {#match %Bonfire.Files.Media{}}
-                        <Bonfire.UI.Social.TopLevelMediaLive
-                          link={entry}
-                          show_thumbnail
-                          featured={e(entry, :featured, false)}
-                        />
+                        {!-- a media feed's row (one per `Media`): the page's own preview when it gives one (eg. a tile in a grid), else a link card --}
+                        {#if @custom_preview}
+                          <StatelessComponent
+                            module={maybe_component(@custom_preview, @__context__)}
+                            object={entry}
+                            parent_id={entry_id}
+                          >
+                            <#slot {@activity_extra_actions, object: entry} />
+                          </StatelessComponent>
+                        {#else}
+                          <Bonfire.UI.Social.TopLevelMediaLive
+                            link={entry}
+                            show_thumbnail
+                            featured={e(entry, :featured, false)}
+                          />
+                        {/if}
                       {#match _}
                         <ActivityLive
                           id={ActivityLive.component_id(

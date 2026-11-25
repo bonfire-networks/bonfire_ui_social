@@ -15,4 +15,7 @@ defmodule Bonfire.UI.Social.Activity.AltCaptionLive do
   prop id, :string, required: true
 
   prop media_label, :any, required: true
+
+  @doc "The media has no alt text of its own: the button shows anyway, marked (see `Bonfire.UI.Social.Activity.MediaLive`'s `mark_missing_alt`)"
+  prop missing_alt, :boolean, default: false
 end
