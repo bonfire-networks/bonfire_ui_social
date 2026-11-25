@@ -14,16 +14,23 @@ defmodule Bonfire.UI.Social.WidgetFeedSelectLive do
   data feed, :any, default: nil
 
   def render(assigns) do
-    available =
-      assigns.presets || FeedNavigation.list_presets(current_user: current_user(assigns))
-
-    scoped = Bonfire.Common.Settings.LiveHandler.scoped(assigns.scope, assigns[:__context__])
+    {options, feed} = options_and_value(assigns.presets, assigns.scope, assigns)
 
     assigns
-    |> assign(
-      options: FeedNavigation.select_options(available),
-      feed: FeedNavigation.widget_feed(available, scoped)
-    )
+    |> assign(options: options, feed: feed)
     |> render_sface()
+  end
+
+  @doc "The name of the feed the widget shows, for edit mode's tile."
+  def current_label(context) do
+    {options, feed} = options_and_value(nil, nil, context)
+    Enum.find_value(options, fn {slug, name} -> to_string(slug) == to_string(feed) && name end)
+  end
+
+  defp options_and_value(presets, scope, context) do
+    available = presets || FeedNavigation.list_presets(current_user: current_user(context))
+    scoped = Bonfire.Common.Settings.LiveHandler.scoped(scope, context[:__context__] || context)
+
+    {FeedNavigation.select_options(available), FeedNavigation.widget_feed(available, scoped)}
   end
 end

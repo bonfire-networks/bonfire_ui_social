@@ -4,7 +4,8 @@ defmodule Bonfire.UI.Social.WidgetSuggestedProfilesLive do
   declare_widget(l("Who to follow"),
     id: :suggested_profiles,
     current_user_required: true,
-    props: [widget_title: l("Who to follow")]
+    props: [widget_title: l("Who to follow")],
+    skeleton: :people
   )
 
   prop widget_title, :string, default: nil

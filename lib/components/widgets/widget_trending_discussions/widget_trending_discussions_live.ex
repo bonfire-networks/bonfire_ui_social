@@ -14,7 +14,8 @@ defmodule Bonfire.UI.Social.WidgetTrendingDiscussionsLive do
   declare_widget(l("Top discussions"),
     id: :trending_discussions,
     current_user_required: true,
-    props: [limit: 5]
+    props: [limit: 5],
+    skeleton: :list
   )
 
   prop limit, :integer, default: 3

@@ -3,7 +3,8 @@ defmodule Bonfire.UI.Social.WidgetDiscussionsLive do
 
   declare_widget(l("Popular discussions"),
     id: :popular_discussions,
-    props: [widget_title: l("Popular discussions")]
+    props: [widget_title: l("Popular discussions")],
+    skeleton: :list
   )
 
   prop feed_name, :any, default: :explore

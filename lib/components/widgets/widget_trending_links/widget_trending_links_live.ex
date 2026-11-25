@@ -12,7 +12,7 @@ defmodule Bonfire.UI.Social.WidgetTrendingLinksLive do
   """
   use Bonfire.UI.Common.Web, :stateless_component
 
-  declare_widget(l("Popular links"), width: :narrow)
+  declare_widget(l("Popular links"), width: :narrow, skeleton: :list)
 
   prop limit, :integer, default: 5
   prop widget_title, :string, default: nil

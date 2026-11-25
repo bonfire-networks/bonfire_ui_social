@@ -10,7 +10,13 @@ defmodule Bonfire.UI.Social.WidgetFeedLive do
 
   alias Bonfire.Common.Settings
 
-  declare_widget(l("Feed"), id: :feed, width: :wide)
+  declare_widget(l("Feed"),
+    id: :feed,
+    width: :wide,
+    # which feed it shows, chosen in edit mode and in the dashboard settings
+    settings: Bonfire.UI.Social.WidgetFeedSelectLive,
+    skeleton: :feed
+  )
 
   @doc "A feed slug asked for, eg. from the dashboard's `?feed=` tabs. Only used when it's one of the viewer's feeds."
   prop requested_feed, :string, default: nil
