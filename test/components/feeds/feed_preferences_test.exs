@@ -22,6 +22,15 @@ defmodule Bonfire.UI.Social.FeedPreferencesTest do
     assert "starts_at" in values(%{object_types: ["Event"]})
   end
 
+  # the popularity score can't be indexed, so only media feeds (which page their ranked aggregate) offer it; activity feeds get it through the cached `trending` preset
+  test "Popularity is offered on media feeds only" do
+    assert "popularity_score" in values(%{media_types: ["image"]})
+    assert "popularity_score" in values(%{media_types: [:link]})
+    refute "popularity_score" in values(%{})
+    refute "popularity_score" in values(nil)
+    refute "popularity_score" in values(%{media_types: []})
+  end
+
   test "ordering by the start date is earliest first, latest first for the past" do
     assert @widget.order_filters("starts_at", %{}) == %{sort_by: :starts_at, sort_order: :asc}
 

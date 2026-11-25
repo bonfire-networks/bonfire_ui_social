@@ -223,7 +223,8 @@ defmodule Bonfire.UI.Social.Benchmark do
        catching(fn ->
          Bonfire.Social.FeedLoader.feed(base, maybe_override_time_limit(filters),
            limit: limit,
-           current_user: subject
+           current_user: subject,
+           unbounded_sort: unbounded_sort?()
          )
        end)}
     end
@@ -265,11 +266,16 @@ defmodule Bonfire.UI.Social.Benchmark do
 
   # named presets + BENCH_TIME_LIMIT need the 3-arity feed (preset, extra_filters, opts)
   defp call_feed(preset_or_filters, opts) do
+    opts = Keyword.put(opts, :unbounded_sort, unbounded_sort?())
+
     case maybe_override_time_limit(preset_or_filters) do
       {preset, extra_filters} -> Bonfire.Social.FeedLoader.feed(preset, extra_filters, opts)
       other -> Bonfire.Social.FeedLoader.feed(other, opts)
     end
   end
+
+  # `BENCH_TIME_LIMIT=0` measures the unbounded sort, which feeds otherwise clamp to a max window
+  defp unbounded_sort?, do: System.get_env("BENCH_TIME_LIMIT") == "0"
 
   defp maybe_override_time_limit(preset_or_filters) do
     case System.get_env("BENCH_TIME_LIMIT") do

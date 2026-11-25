@@ -3,20 +3,25 @@
      where it sits inside the image link (the logged-out branch) tapping "alt" only
      shows the caption instead of also opening the image. --}
 <div
-  :if={@media_label}
+  :if={@media_label || @missing_alt}
   data-id="media_alt"
+  data-missing-alt={@missing_alt}
   class="absolute z-50 bottom-3 left-3"
   onclick="event.preventDefault(); event.stopPropagation()"
+  title={if @missing_alt, do: l("No alt text")}
 >
   <Bonfire.UI.Common.DropdownLive
     id={@id}
     position="top-start"
     menu={false}
-    trigger_class="text-white border-none btn btn-sm bg-black/60"
-    label={l("Show alt text")}
+    trigger_class={[
+      "text-white border-none btn btn-sm bg-black/60",
+      "gap-1.5": @missing_alt
+    ]}
+    label={if @missing_alt, do: l("No alt text"), else: l("Show alt text")}
     panel_class="p-2 !w-52"
   >
-    <:trigger>{l("alt")}</:trigger>
-    <div class="prose-sm prose text-base-content">{@media_label}</div>
+    <:trigger><span :if={@missing_alt} class="status status-warning" aria-hidden="true" />{l("alt")}</:trigger>
+    <div class="prose-sm prose text-base-content">{if @missing_alt, do: l("No alt text"), else: @media_label}</div>
   </Bonfire.UI.Common.DropdownLive>
 </div>

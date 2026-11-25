@@ -927,6 +927,11 @@ defmodule Bonfire.UI.Social.ActivityLive do
     warn? = opts[:hide_content] == :warn
     cw = opts[:cw] || warn?
 
+    # the media its body places and the body cut there, found once for both the attachment list and the note's body
+    # not for a quote request, which shows neither the quoted post's body nor its attachments here: the quoted post is its own `ActivityLive`, which finds them
+    inline =
+      if can_read? and experience != :quote_request, do: split_inline_media(activity, object)
+
     {primary_image, attachments_component} =
       cond do
         # Replaced by the `:warn` and `:reject` verdicts: a match is no longer shown as a placeholder
@@ -938,7 +943,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
             object_type,
             activity,
             object,
-            activity_inception,
+            inline,
             viewing_main_object
           )
 
@@ -977,7 +982,9 @@ defmodule Bonfire.UI.Social.ActivityLive do
           # component_object(object, object_type, %{primary_image: primary_image})
           component_object(object, object_type, %{
             primary_image: primary_image,
-            viewing_main_object: viewing_main_object
+            viewing_main_object: viewing_main_object,
+            inline_media: inline[:inline_media],
+            body_parts: inline[:parts]
           })
       end
 
@@ -1493,6 +1500,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                   hide_actions={@hide_actions}
                   translatable={maybe_get(component_assigns, :translatable, true)}
                   cw_label={maybe_get(component_assigns, :cw_label, nil)}
+                  inline_media={maybe_get(component_assigns, :inline_media, nil)}
+                  body_parts={maybe_get(component_assigns, :body_parts, nil)}
                 />
               {#match _
                 when component in [
@@ -1704,6 +1713,7 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       thread_title={maybe_get(component_assigns, :thread_title, @thread_title)}
                       subject={maybe_get(component_assigns, :subject, @subject_user)}
                       primary_image={maybe_get(component_assigns, :primary_image, nil)}
+                      inline_media={maybe_get(component_assigns, :inline_media, nil)}
                     />
                   {#match _}
                     <StatelessComponent
@@ -1745,6 +1755,8 @@ defmodule Bonfire.UI.Social.ActivityLive do
                       thread_title={maybe_get(component_assigns, :thread_title, @thread_title)}
                       subject={maybe_get(component_assigns, :subject, @subject_user)}
                       primary_image={maybe_get(component_assigns, :primary_image, nil)}
+                      inline_media={maybe_get(component_assigns, :inline_media, nil)}
+                      body_parts={maybe_get(component_assigns, :body_parts, nil)}
                     />
                 {/case}
             {/case}
@@ -2945,18 +2957,31 @@ defmodule Bonfire.UI.Social.ActivityLive do
     [Bonfire.UI.Social.Activity.UnknownLive]
   end
 
+  # `inline`: what `split_inline_media/2` found
   defp primary_image_and_component_maybe_attachments(
          object_type,
          activity,
          object,
-         _activity_inception,
+         inline,
          viewing_main_object
        ) do
     do_primary_image_and_component_maybe_attachments(
       id(object) || id(activity),
-      # e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
-      #   e(object, :media, nil),
-      # the first that has any: an empty list is truthy, so a loaded but empty `activity.files` hid the object's own
+      inline[:media],
+      object_type,
+      inline,
+      viewing_main_object
+    )
+
+    # |> debug("prim_img")
+  end
+
+  # the object's attached media, the media its body places and the body cut there, in one pass (`Bonfire.Files.InlineMedia.split/3`), cut with the options its body is rendered with (`Bonfire.UI.Common.HtmlBodyLive`, which a note never gives `is_remote`)
+  defp split_inline_media(activity, object) do
+    # e(activity, :files, nil) || e(object, :files, nil) || e(activity, :media, nil) ||
+    #   e(object, :media, nil),
+    # the first that has any: an empty list is truthy, so a loaded but empty `activity.files` hid the object's own
+    media =
       Enum.find_value(
         [
           e(activity, :files, nil),
@@ -2965,20 +2990,26 @@ defmodule Bonfire.UI.Social.ActivityLive do
           e(object, :media, nil)
         ],
         &Enums.filter_empty(&1, nil)
-      ),
-      object_type,
-      e(object, :post_content, :html_body, nil),
-      viewing_main_object
-    )
+      )
 
-    # |> debug("prim_img")
+    maybe_apply(
+      Bonfire.Files.InlineMedia,
+      :split,
+      [
+        media,
+        e(object, :post_content, :html_body, nil),
+        Bonfire.UI.Common.HtmlBodyPartsLive.parts_opts(Bonfire.UI.Common.HtmlBodyLive.rich_opts())
+      ],
+      fallback_return: %{parts: nil, inline_media: %{}, unplaced: List.wrap(media)}
+    )
+    |> Map.put(:media, media)
   end
 
   # defp primary_image_and_component_maybe_attachments(_, _activity, _object, _activity_inception), do: []
 
   # `restricted_primary_image/2` moved to `Bonfire.Social.RestrictedContent.preview/2` on 2 November, shared with the API's statuses
 
-  # `body`: the object's body, whose media (see `Bonfire.Files.InlineMedia`) are shown there, where they sit, rather than in the attachment list
+  # `body`: the object's body, whose media (see `Bonfire.Files.InlineMedia`) are shown there, where they sit, rather than in the attachment list; or what `Bonfire.Files.InlineMedia.split/3` already found in it
   # `viewing_main_object`: on the object's own page a card may not take the cover (see `split_media_for_cover/3`)
   def do_primary_image_and_component_maybe_attachments(
         id,
@@ -3007,9 +3038,22 @@ defmodule Bonfire.UI.Social.ActivityLive do
         else: {nil, files}
 
     files =
-      maybe_apply(Bonfire.Files.InlineMedia, :reject_placed, [files, body],
-        fallback_return: files
-      )
+      if is_list(files) do
+        unplaced =
+          case body do
+            %{unplaced: unplaced} ->
+              unplaced
+
+            body ->
+              maybe_apply(Bonfire.Files.InlineMedia, :split, [files, body],
+                fallback_return: %{unplaced: files}
+              )[:unplaced]
+          end
+
+        Enum.filter(files, &(&1 in unplaced))
+      else
+        files
+      end
 
     {primary_image,
      if files == [] or is_nil(files) do

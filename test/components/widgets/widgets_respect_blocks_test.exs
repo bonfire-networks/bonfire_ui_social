@@ -35,6 +35,19 @@ defmodule Bonfire.UI.Social.WidgetsRespectBlocksTest do
       )
 
     Pins.pin(admin, control_post, :instance)
+
+    # top discussions lists only posts with at least one reply
+    replier = fake_user!(fake_account!())
+
+    for replied <- [post, control_post] do
+      {:ok, _} =
+        Bonfire.Posts.publish(
+          current_user: replier,
+          post_attrs: %{post_content: %{html_body: "a reply"}, reply_to_id: replied.id},
+          boundary: "public"
+        )
+    end
+
     Pins.list_spotlight_activities(cache: :reset)
 
     on_exit(fn -> Pins.list_spotlight_activities(cache: :reset) end)

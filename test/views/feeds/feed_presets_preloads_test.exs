@@ -54,6 +54,8 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
                :trending,
                :research,
                :local_media,
+               # one row per Media, like local_media: covered by bonfire_files' my_media_feed_test
+               :my_media,
                # #1586 bucket presets: need write-addressing + specific viewers: covered by feed_addressing_presets_test
                :public,
                :local_instance_only,

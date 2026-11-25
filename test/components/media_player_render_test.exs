@@ -58,6 +58,15 @@ defmodule Bonfire.UI.Social.Activity.MediaPlayerRenderTest do
     assert html =~ ~s(<source src="#{url}")
   end
 
+  # in a post the player keeps all its controls: hiding the secondary ones when narrow is the media grid's (see `Bonfire.UI.Social.MediaGridTest`), not the player's own
+  test "an audio player in a post keeps all its controls" do
+    html =
+      render_media(media(path: "https://example.com/an-episode.mp3", media_type: "audio/mpeg"))
+
+    assert html =~ ~s(data-role="audio_player")
+    refute html =~ "[&_.vds-volume]:hidden"
+  end
+
   test "a YouTube/oEmbed video page renders an inline iframe, NOT the vidstack player" do
     # media_type "video" is the oEmbed *type*, not a playable file — it must go to
     # the iframe/embed path, not vidstack (which would fail canPlayType).
@@ -108,6 +117,41 @@ defmodule Bonfire.UI.Social.Activity.MediaPlayerRenderTest do
         )
 
       refute Bonfire.UI.Social.Activity.MediaLive.has_embed_player?(media)
+    end
+
+    test "an article embed (a quote of the post with an iframe of it, as WordPress gives) stays a link card" do
+      media =
+        rich(
+          ~s|<blockquote class="wp-embedded-content" data-secret="x"><a href="https://blog.example.com/a-post/">A post</a></blockquote><iframe class="wp-embedded-content" sandbox="allow-scripts" security="restricted" src="https://blog.example.com/a-post/embed/#?secret=x" width="500" height="282"></iframe>|
+        )
+
+      refute Bonfire.Files.Media.player_type(media)
+      refute Bonfire.UI.Social.Activity.MediaLive.has_embed_player?(media)
+      refute render_media(media) =~ "<iframe"
+    end
+
+    test "a video oEmbed with no iframe to play (eg. a quote and a script, as TikTok gives) stays a link card" do
+      media =
+        media(
+          path: "https://www.tiktok.com/t/x/",
+          media_type: "video",
+          metadata: %{
+            "oembed" => %{
+              "type" => "video",
+              "html" =>
+                ~s(<blockquote class="tiktok-embed" cite="https://www.tiktok.com/@a/video/1"><a href="https://www.tiktok.com/@a">@a</a></blockquote><script async src="https://www.tiktok.com/embed.js"></script>)
+            }
+          }
+        )
+
+      refute Bonfire.Files.Media.player_type(media)
+      refute Bonfire.UI.Social.Activity.MediaLive.has_embed_player?(media)
+    end
+
+    test "control: the rich player is a player for both, so the two checks agree" do
+      media = rich(@soundcloud_html)
+      assert Bonfire.Files.Media.player_type(media)
+      assert Bonfire.UI.Social.Activity.MediaLive.has_embed_player?(media)
     end
 
     test "an embed URL that isn't https is never put in an iframe" do
@@ -208,5 +252,110 @@ defmodule Bonfire.UI.Social.Activity.MediaPlayerRenderTest do
 
     refute html =~ "data-vidstack"
     assert html =~ "gif-as-mp4"
+  end
+
+  # a link preview with a player has media_type `video/embed` or `audio/embed`: a link, never a file, so no `<source type>` of it and no vidstack
+  describe "embed link previews" do
+    alias Bonfire.UI.Social.Activity.MediaLive
+
+    defp video_embed do
+      media(
+        path: "https://www.youtube.com/watch?v=abc",
+        media_type: "video/embed",
+        metadata: %{
+          "oembed" => %{
+            "type" => "video",
+            "html" => ~s(<iframe src="https://www.youtube.com/embed/abc"></iframe>)
+          }
+        }
+      )
+    end
+
+    defp audio_embed do
+      media(
+        path: "https://open.spotify.com/track/1",
+        media_type: "audio/embed",
+        metadata: %{
+          "oembed" => %{
+            "type" => "rich",
+            "html" => ~s(<iframe src="https://open.spotify.com/embed/track/1"></iframe>)
+          }
+        }
+      )
+    end
+
+    test "a video/embed renders its iframe, not a file player" do
+      html = render_media(video_embed())
+
+      assert html =~ "youtube-nocookie.com/embed/abc"
+      refute html =~ ~s(type="video/embed")
+      refute html =~ "data-vidstack"
+    end
+
+    test "an audio/embed renders its iframe, not an audio element" do
+      html = render_media(audio_embed())
+
+      assert html =~ "https://open.spotify.com/embed/track/1"
+      refute html =~ ~s(type="audio/embed")
+      refute html =~ "<audio"
+    end
+
+    test "the media list gives a video/embed and an audio/embed the link player, not the file players" do
+      # control: a video file gets the file player, so its marker is what tells the two apart
+      file_html =
+        render_media_list(media(path: "https://example.com/v.mp4", media_type: "video/mp4"))
+
+      assert file_html =~ ~s(<figcaption class="sr-only")
+
+      for m <- [video_embed(), audio_embed()] do
+        html = render_media_list(m)
+
+        assert html =~ "<iframe"
+        refute html =~ ~s(<figcaption class="sr-only")
+        refute html =~ "data-vidstack"
+      end
+    end
+
+    defp render_media_list(m) do
+      Phoenix.LiveViewTest.render_component(&MediaLive.render/1,
+        media: [m],
+        parent_id: "list-test",
+        showing_within: nil,
+        cw: nil,
+        muted: false,
+        autoplay: nil,
+        label: nil,
+        viewing_main_object: false,
+        activity_inception: false,
+        media_text_up_font?: false,
+        css_borders: "",
+        small_icon: false,
+        disable_lazy: false,
+        mark_missing_alt: false,
+        multimedia_exts: [],
+        multimedia_types: [],
+        __context__: %{}
+      )
+    end
+
+    test "embed types are not files" do
+      url = "https://example.com/a-page"
+
+      refute MediaLive.is_video?(url, "video/embed")
+      refute MediaLive.is_audio?(url, "audio/embed")
+      assert MediaLive.is_embeddable?("video/embed")
+      assert MediaLive.is_embeddable?("audio/embed")
+      refute MediaLive.is_embeddable?("video/mp4")
+      assert Bonfire.Files.Media.embed_type?("audio/embed")
+      assert Bonfire.Files.Media.embed_type?("video/embed")
+      assert Bonfire.Files.Media.embed_type?(%{media_type: "video/embed"})
+      refute Bonfire.Files.Media.embed_type?("video/mp4")
+      refute Bonfire.Files.Media.embed_type?(nil)
+    end
+
+    test "control: real files keep being files" do
+      assert MediaLive.is_video?("https://example.com/a.mp4", "video/mp4")
+      assert MediaLive.is_audio?("https://example.com/a.mp3", "audio/mpeg")
+    end
   end
 end

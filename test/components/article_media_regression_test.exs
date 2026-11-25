@@ -436,6 +436,109 @@ defmodule Bonfire.UI.Social.ArticleMediaRegressionTest do
       assert count(page, "/embed/inlinePlay1") == count(body_html, "/embed/inlinePlay1")
     end
 
+    # a link in the middle of a sentence isn't cut, so it shows only as a link in the text: its player stays in the attachment list rather than going nowhere
+    test "a player's URL in the middle of a sentence keeps its player in the attachment list", %{
+      conn: conn,
+      me: me
+    } do
+      youtube = "https://www.youtube.com/watch?v=midPlay1"
+      Process.put(:req_adapter, fn request -> {request, Req.Response.new(status: 404)} end)
+
+      Tesla.Mock.mock_global(fn
+        %{method: :get, url: "https://www.youtube.com/oembed" <> _} ->
+          %Tesla.Env{
+            status: 200,
+            headers: [{"content-type", "application/json"}],
+            body:
+              Jason.encode!(%{
+                "type" => "video",
+                "title" => "A player in a sentence",
+                "provider_name" => "YouTube",
+                "html" => ~s(<iframe src="https://www.youtube.com/embed/midPlay1"></iframe>)
+              })
+          }
+
+        %{method: :get, url: "https://www.youtube.com/watch" <> _} = env ->
+          %Tesla.Env{
+            env
+            | status: 200,
+              headers: [{"content-type", "text/html"}],
+              body:
+                ~s(<html><head><title>A player in a sentence</title><meta property="og:title" content="A player in a sentence"><link rel="alternate" type="application/json+oembed" href="https://www.youtube.com/oembed?url=#{URI.encode_www_form(youtube)}&format=json"></head><body></body></html>)
+          }
+
+        _ ->
+          %Tesla.Env{status: 404, body: ""}
+      end)
+
+      {:ok, post} =
+        Bonfire.Posts.publish(
+          current_user: me,
+          post_attrs: %{post_content: %{html_body: "Watch #{youtube} before the talk"}},
+          boundary: "public"
+        )
+
+      assert [_ | _] = loaded_files(post), "control: the link preview attached the player's link"
+
+      {body_html, page} = body_and_page(conn, "/post/#{id(post)}")
+
+      refute body_html =~ "/embed/midPlay1"
+      assert count(page, "/embed/midPlay1") == 1
+    end
+
+    # an article goes by the same split as a post: its own-line image in place, once, and a link in a sentence keeping its player in the list
+    test "an article shows its own-line image in place once, and a player linked in a sentence in its list",
+         %{conn: conn, me: me} do
+      youtube = "https://www.youtube.com/watch?v=articleMid1"
+      Process.put(:req_adapter, fn request -> {request, Req.Response.new(status: 404)} end)
+
+      Tesla.Mock.mock_global(fn
+        %{method: :get, url: "https://www.youtube.com/oembed" <> _} ->
+          %Tesla.Env{
+            status: 200,
+            headers: [{"content-type", "application/json"}],
+            body:
+              Jason.encode!(%{
+                "type" => "video",
+                "title" => "A player in an article",
+                "provider_name" => "YouTube",
+                "html" => ~s(<iframe src="https://www.youtube.com/embed/articleMid1"></iframe>)
+              })
+          }
+
+        %{method: :get, url: "https://www.youtube.com/watch" <> _} = env ->
+          %Tesla.Env{
+            env
+            | status: 200,
+              headers: [{"content-type", "text/html"}],
+              body:
+                ~s(<html><head><title>A player in an article</title><meta property="og:title" content="A player in an article"><link rel="alternate" type="application/json+oembed" href="https://www.youtube.com/oembed?url=#{URI.encode_www_form(youtube)}&format=json"></head><body></body></html>)
+          }
+
+        _ ->
+          %Tesla.Env{status: 404, body: ""}
+      end)
+
+      image = upload_image!(me)
+
+      body =
+        "Intro\n\n![](#{Bonfire.Files.inline_url(image)})\n\nWatch #{youtube} before the talk"
+
+      article = publish_article_with_body!(me, body, [image])
+
+      assert length(loaded_files(article)) == 2,
+             "control: the link preview attached the player's link next to the image"
+
+      {body_html, page} = body_and_page(conn, "/post/#{id(article)}")
+
+      image_file = Path.basename(image.path)
+      assert body_html =~ ~r/data-role="inline_media"[^>]*>.*#{image_file}/s
+      assert count(page, image_file) == count(body_html, image_file)
+
+      refute body_html =~ "/embed/articleMid1"
+      assert count(page, "/embed/articleMid1") == 1
+    end
+
     # a remote post's body is HTML: a link alone in its paragraph places its player there, as a URL alone on its line does in a local post. Received as from Mastodon, whose link text is split in spans, with the link preview (`URLPreviews`) finding the player's oEmbed
     for {name, link} <- [
           {"a link",
@@ -514,6 +617,71 @@ defmodule Bonfire.UI.Social.ArticleMediaRegressionTest do
 
         assert body_html =~ ~r/Intro.*<iframe[^>]*\/embed\/remotePlay1.*after/s
         assert count(page, "/embed/remotePlay1") == count(body_html, "/embed/remotePlay1")
+      end
+    end
+
+    # a remote post's image alone in its paragraph shows as its attachment there (with the lightbox and blur the attachment list gives), not as a plain `<img>`; one in a sentence stays the plain `<img>`. Either way it shows once: the attachment leaves the list
+    for {name, paragraph, inline?} <- [
+          {"alone in its paragraph", ~s(<p><img src="IMG"></p>), true},
+          {"in a sentence", ~s(<p>see <img src="IMG"> here</p>), false}
+        ] do
+      test "in a remote post, an image #{name} shows once, #{if inline?, do: "as its attachment, in place", else: "as the plain image"}",
+           %{conn: conn} do
+        username = "inline_image_#{System.unique_integer([:positive])}"
+        remote_actor = "https://mocked.local/users/#{username}"
+        image = "https://mocked.local/media/inline-#{System.unique_integer([:positive])}.png"
+        Process.put(:federating, true)
+
+        Tesla.Mock.mock_global(fn
+          %{method: :get, url: ^remote_actor} ->
+            Tesla.Mock.json(
+              Bonfire.Federate.ActivityPub.Simulate.actor_json(remote_actor, username)
+            )
+
+          _ ->
+            %Tesla.Env{status: 404, body: ""}
+        end)
+
+        object_id =
+          "https://mocked.local/objects/inline-image-#{System.unique_integer([:positive])}"
+
+        public = "https://www.w3.org/ns/activitystreams#Public"
+
+        {:ok, data} =
+          ActivityPub.Federator.Transformer.handle_incoming(%{
+            "@context" => "https://www.w3.org/ns/activitystreams",
+            "type" => "Create",
+            "id" => object_id <> "/activity",
+            "actor" => remote_actor,
+            "to" => [public],
+            "object" => %{
+              "id" => object_id,
+              "type" => "Note",
+              "attributedTo" => remote_actor,
+              "to" => [public],
+              "cc" => [],
+              "content" =>
+                "<p>Intro</p>#{String.replace(unquote(paragraph), "IMG", image)}<p>after</p>",
+              "attachment" => [%{"type" => "Image", "mediaType" => "image/png", "url" => image}]
+            }
+          })
+
+        assert {:ok, post} = Bonfire.Federate.ActivityPub.Incoming.receive_activity(data)
+
+        assert [_] = loaded_files(post), "control: the image is attached"
+
+        {body_html, page} = body_and_page(conn, "/post/#{id(post)}")
+
+        if unquote(inline?) do
+          assert body_html =~
+                   ~r/Intro.*data-role="inline_media".*#{Regex.escape(image)}.*after/s
+        else
+          assert body_html =~ ~r/see <img[^>]*src="#{Regex.escape(image)}"[^>]*> here/s
+          refute body_html =~ ~s(data-role="inline_media")
+        end
+
+        assert count(body_html, image) > 0
+        assert count(page, image) == count(body_html, image)
       end
     end
 

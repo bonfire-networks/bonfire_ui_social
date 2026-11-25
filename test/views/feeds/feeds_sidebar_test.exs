@@ -265,6 +265,8 @@ defmodule Bonfire.UI.Social.FeedsSidebarTest do
     conn(user: user)
     |> visit("/settings/user/feeds")
     |> assert_has("#default-feed-select option[value='sidebar_custom']", text: name)
+    # a `hidden` preset is loaded by name, never picked: the moderation one only means something with a group's feeds
+    |> refute_has("#default-feed-select option[value='moderation']")
     |> PhoenixTest.select("Default feed", option: name)
     |> visit("/")
     |> wait_async()

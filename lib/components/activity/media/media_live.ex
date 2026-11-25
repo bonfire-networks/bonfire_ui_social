@@ -22,6 +22,9 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   prop small_icon, :boolean, default: false
   prop disable_lazy, :boolean, default: false
 
+  # show the alt button on an image even when it has no alt text, marked as missing it (eg. for its author to notice)
+  prop mark_missing_alt, :boolean, default: false
+
   # media keeps its own `creator` rather than the `created` mixin, so the feed's `:with_creator` preload doesn't reach it
   def preloads(),
     do: [
@@ -69,7 +72,7 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
 
           # Embeds (YouTube, Vimeo, PeerTube, etc.) - check BEFORE video files since embeds
           # may have video/* media_type but should render with 16:9 aspect ratio
-          has_embed_player?(m) ->
+          has_embed_player?(m) or Bonfire.Files.Media.embed_type?(m) ->
             {image_list, video_list, gif_list, [m | audio_embed_list], link_list}
 
           # Direct video files + HLS streams go to video_list (for carousel with images)
@@ -205,7 +208,8 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
 
   def is_embeddable?(media_type, oembed \\ nil) do
     e(oembed, "html", nil) || e(oembed, "url", nil) ||
-      String.starts_with?(media_type || "", "embed")
+      String.starts_with?(media_type || "", "embed") ||
+      Bonfire.Files.Media.embed_type?(media_type)
   end
 
   @doc """
@@ -214,14 +218,21 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   """
   # a `rich` oEmbed with an iframe (SoundCloud, Spotify, Bandcamp…: oEmbed has no `audio` type, but it's taken too) plays in place as a `video` one does, from our own iframe of its `src`
   def has_embed_player?(%{metadata: metadata} = media) when is_map(metadata) do
-    e(metadata, "oembed", "type", nil) == "video" or
-      (e(metadata, "oembed", "type", nil) in ["rich", "audio"] and
-         is_binary(extract_oembed_url(e(metadata, "oembed", "html", nil)))) or
-      String.starts_with?(e(metadata, "facebook", "type", nil) || "", "video") or
+    (e(metadata, "oembed", "type", nil) in ["video", "rich", "audio"] and
+       Bonfire.Files.Media.embed_iframe?(metadata)) or
+      Bonfire.Files.Media.og_video_player?(metadata) or
       is_binary(peertube_embed_url(media))
   end
 
   def has_embed_player?(_), do: false
+
+  @doc "The `src` of a link's oEmbed player iframe, or nil when its oEmbed gives no player (see `Bonfire.Files.Media.embed_iframe?/1`)."
+  def oembed_player_url(%{metadata: metadata}) when is_map(metadata) do
+    if Bonfire.Files.Media.embed_iframe?(metadata),
+      do: extract_oembed_url(e(metadata, "oembed", "html", nil))
+  end
+
+  def oembed_player_url(_), do: nil
 
   @doc """
   Returns the PeerTube embed-player URL for a federated PeerTube video, or nil.
@@ -268,8 +279,9 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
 
   def is_video?(url, media_type),
     do:
-      is_video?(url) or String.starts_with?(media_type || "", @video_types) or
-        is_hls?(url, media_type)
+      not Bonfire.Files.Media.embed_type?(media_type) and
+        (is_video?(url) or String.starts_with?(media_type || "", @video_types) or
+           is_hls?(url, media_type))
 
   @doc "Whether the URL/media_type is an HLS stream (m3u8), which needs an HLS-capable player."
   def is_hls?(url, media_type) do
@@ -286,7 +298,9 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
   def is_audio?(url), do: Files.has_extension?(url, @audio_exts)
 
   def is_audio?(url, media_type),
-    do: is_audio?(url) or String.starts_with?(media_type || "", @audio_types)
+    do:
+      not Bonfire.Files.Media.embed_type?(media_type) and
+        (is_audio?(url) or String.starts_with?(media_type || "", @audio_types))
 
   def is_supported_audio_format?(url, media_type),
     do: is_audio?(url, media_type) and String.ends_with?(media_type || "", @audio_formats)
@@ -320,7 +334,8 @@ defmodule Bonfire.UI.Social.Activity.MediaLive do
 
   defp is_likely_converted_gif?(url, media_type, media) do
     # Only treat a video as a (converted) GIF when it is *explicitly* marked as one
-    String.starts_with?(media_type || "", "video/") and gif_explicitly_mentioned?(media, url)
+    String.starts_with?(media_type || "", "video/") and
+      not Bonfire.Files.Media.embed_type?(media_type) and gif_explicitly_mentioned?(media, url)
   end
 
   # Check if GIF is explicitly mentioned in metadata or filename

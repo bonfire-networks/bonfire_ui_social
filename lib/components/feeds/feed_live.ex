@@ -71,6 +71,11 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop tab_primary_class, :css_class, default: nil
 
   prop activity_class, :string, default: nil
+  # the classes of the list of entries, in place of the default column (eg. a grid of tiles)
+  prop list_class, :css_class, default: nil
+
+  @doc "Actions the page adds to each entry, given the entry as `object` (eg. the composer's media picker: Insert and Attach under each tile). Passed into the `custom_preview`'s default slot; nothing when not given."
+  slot activity_extra_actions, arg: %{object: :any}
   prop feed_filters, :any, default: nil
 
   @doc "Filters the page worked out for its reader (eg. the outboxes of the groups they joined): they scope the query, through the socket's assigns (`to_options/1`) on every load, but stay out of `feed_filters`, so saving the feed can't keep them"
@@ -94,7 +99,11 @@ defmodule Bonfire.UI.Social.FeedLive do
   prop custom_preview, :any, default: nil
   prop custom_actions, :any, default: nil
   @doc "Passed on to each `ActivityLive`, eg. by a widget showing a cached feed"
+  # what each card checks for the viewer: passed to `ActivityLive` as given, guests included, except `{:signed_in, verbs}`, which checks only signed-in viewers (for a feed served from a list cached per circle, whose guest list already holds only what guests may see)
   prop check_object_boundary, :any, default: false
+
+  # the time window is part of the feed (eg. a preset served from a cached list, which may also end at its page cap): the end of the list shows no "Last N days" and no way to widen the window
+  prop time_limit_fixed, :boolean, default: false
   prop show_restricted, :boolean, default: true
 
   slot bottom_or_empty_feed
@@ -1300,4 +1309,16 @@ defmodule Bonfire.UI.Social.FeedLive do
       socket
     end
   end
+
+  # a popularity sort can't go past the max window (asking for none gets it), so once there, "Show older" would only reload the same window
+  defp can_widen_window?(filters, time_limit) do
+    e(filters, :sort_by, nil) not in [:popularity_score, "popularity_score"] or
+      time_limit < Bonfire.Social.FeedLoader.max_sort_window_days()
+  end
+
+  # see the `check_object_boundary` prop: only the explicit `{:signed_in, verbs}` skips guests
+  defp check_object_boundary?({:signed_in, verbs}, context),
+    do: (current_user_id(context) && verbs) || false
+
+  defp check_object_boundary?(check, _context), do: check
 end

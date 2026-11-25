@@ -55,9 +55,18 @@ defmodule Bonfire.UI.Social.WidgetTrendingDiscussionsTitleTest do
     do: Floki.find(doc, ~s(#{@widget} a[href$="/feed/trending_discussions"]))
 
   defp fake_discussion(me) do
+    post =
+      Bonfire.Posts.Fake.fake_post!(me, "public", %{
+        post_content: %{html_body: "something people are talking about"}
+      })
+
+    # top discussions lists only posts with at least one reply
     Bonfire.Posts.Fake.fake_post!(me, "public", %{
-      post_content: %{html_body: "something people are talking about"}
+      post_content: %{html_body: "a reply"},
+      reply_to_id: post.id
     })
+
+    post
   end
 
   test "without a choice the block keeps its title", %{conn: conn} do
