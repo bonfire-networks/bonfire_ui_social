@@ -23,33 +23,46 @@
                   </button>
                 {/if}
               </div> -->
-{#if to_int(@media.object_count) > 0}
-  <!-- <span class="text-subtle">·</span> -->
-  <LinkLive to={URIs.path(@media.newest_activity_id)}>
-    <span class="flex items-center gap-1" title={l("Shares")}>
+{#case count(@media, :object_count)}
+  {#match 0}
+  {#match object_count}
+    {!-- an icon and the number, the words in its title, linking to the newest post using it --}
+    <LinkLive
+      to={URIs.path(e(@media, :newest_activity_id, nil))}
+      class="flex items-center gap-1 hover:underline"
+      opts={[
+        "data-role": "used_count",
+        title: lp("Used in %{count} post", "Used in %{count} posts", object_count, count: object_count)
+      ]}
+    >
       <#Icon iconify="ph:note-fill" class="size-4" />
-      {@media.object_count}
+      {object_count}
+    </LinkLive>
+{/case}
+{#case count(@media, :reply_count)}
+  {#match 0}
+  {#match reply_count}
+    <span class="text-subtle">·</span>
+    <span class="flex items-center gap-1" title={l("Replies")}>
+      <#Icon iconify="ph:chat-teardrop-text-fill" class="size-4" />
+      {reply_count}
     </span>
-  </LinkLive>
-{/if}
-{#if to_int(@media.reply_count) > 0}
-  <span class="text-subtle">·</span>
-  <span class="flex items-center gap-1" title={l("Replies")}>
-    <#Icon iconify="ph:chat-teardrop-text-fill" class="size-4" />
-    {@media.reply_count}
-  </span>
-{/if}
-{#if to_int(@media.boost_count) > 0}
-  <span class="text-subtle">·</span>
-  <span class="flex items-center gap-1" title={l("Boosts")}>
-    <#Icon iconify="ph:rocket-launch-fill" class="size-4" />
-    {@media.boost_count}
-  </span>
-{/if}
-{#if to_int(@media.like_count) > 0}
-  <span class="text-subtle">·</span>
-  <span class="flex items-center gap-1" title={l("Likes")}>
-    <#Icon iconify="ph:fire-fill" class="size-4" />
-    {@media.like_count}
-  </span>
-{/if}
+{/case}
+{#case count(@media, :boost_count)}
+  {#match 0}
+  {#match boost_count}
+    <span class="text-subtle">·</span>
+    <span class="flex items-center gap-1" title={l("Boosts")}>
+      <#Icon iconify="ph:rocket-launch-fill" class="size-4" />
+      {boost_count}
+    </span>
+{/case}
+{#case count(@media, :like_count)}
+  {#match 0}
+  {#match like_count}
+    <span class="text-subtle">·</span>
+    <span class="flex items-center gap-1" title={l("Likes")}>
+      <#Icon iconify="ph:fire-fill" class="size-4" />
+      {like_count}
+    </span>
+{/case}

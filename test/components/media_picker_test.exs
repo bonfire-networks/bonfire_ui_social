@@ -49,6 +49,12 @@ defmodule Bonfire.UI.Social.MediaPickerTest do
     with_picker(conn, fn composer ->
       tile = "[data-id=media_picker] [data-id=media_tile][data-media-id='#{mine.id}']"
       assert has_element?(composer, tile)
+      # the picker alone lays the tiles out in a grid (feeds and `/media` show one per row)
+      assert has_element?(
+               composer,
+               "[data-id=media_picker] [data-id=feed_activity_list][class*='grid-cols']"
+             )
+
       assert has_element?(composer, "#{tile} [data-role=pick_insert]")
       assert has_element?(composer, "#{tile} [data-role=pick_attach]")
       refute has_element?(composer, "[data-id=media_picker] [data-media-id='#{theirs.id}']")

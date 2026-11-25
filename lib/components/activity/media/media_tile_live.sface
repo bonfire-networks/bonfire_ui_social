@@ -20,17 +20,7 @@
     parent_id={deterministic_dom_id(__MODULE__, id(@object), "tile", @parent_id)}
   />
   <div class="flex items-center gap-2 text-xs text-base-content/70 min-w-0">
-    {!-- as the trending media feed shows it: an icon and the number, the words in its title --}
-    <span
-      data-role="used_count"
-      class="flex items-center gap-1"
-      title={lp("Used in %{count} post", "Used in %{count} posts", e(@object, :object_count, 0),
-        count: e(@object, :object_count, 0)
-      )}
-    >
-      <#Icon iconify="ph:note-fill" class="size-4" />
-      {e(@object, :object_count, 0)}
-    </span>
+    <Bonfire.UI.Social.MediaActionsLive media={@object} />
   </div>
   <#slot />
 </div>

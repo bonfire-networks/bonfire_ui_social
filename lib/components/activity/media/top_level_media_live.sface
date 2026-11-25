@@ -57,7 +57,7 @@
       {/case}
 
       <div class="flex items-center gap-2 text-base text-muted">
-        <Bonfire.UI.Social.TrendingMediaActionsLive media={@link} />
+        <Bonfire.UI.Social.MediaActionsLive media={@link} />
       </div>
     </div>
   </div>
@@ -87,7 +87,7 @@
       </Bonfire.UI.Common.OpenExternalLinkLive>
 
       <div class="flex items-center gap-2 text-base text-muted">
-        <Bonfire.UI.Social.TrendingMediaActionsLive media={@link} />
+        <Bonfire.UI.Social.MediaActionsLive media={@link} />
       </div>
     </div>
 

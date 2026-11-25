@@ -1,6 +1,6 @@
 defmodule Bonfire.UI.Social.Activity.MediaTileLive do
   @moduledoc """
-  A piece of media as a tile, for a grid of a media feed's rows (one per `Bonfire.Files.Media`, eg. `/media`, or the composer's media picker): a one-line caption (see `Bonfire.Files.Media.media_caption/1`), then the media as `Bonfire.UI.Social.Activity.MediaLive` shows it in a post (so it can be viewed bigger, or played, and with its alt button marked when an image has no alt text), then how many posts use it.
+  A piece of media as a tile, for a media feed's rows (one per `Bonfire.Files.Media`: `/media` and the media feed presets, one per row, or the composer's media picker, in a grid): a one-line caption (see `Bonfire.Files.Media.media_caption/1`), then the media as `Bonfire.UI.Social.Activity.MediaLive` shows it in a post (so it can be viewed bigger, or played, and with its alt button marked when an image has no alt text), then how many posts use it, linking to the newest of them.
 
   It is a `custom_preview` for `Bonfire.UI.Social.FeedLive`, which gives it each media row as `object`. Anything in its default slot (eg. the picker's actions) goes under the caption.
   """

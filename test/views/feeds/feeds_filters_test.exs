@@ -233,7 +233,7 @@ defmodule Bonfire.UI.Social.FeedsFilters.Test do
       conn(user: user)
       |> visit("/feed/images")
       # |> PhoenixTest.open_browser()
-      |> assert_has("[data-id=top_level_media]")
+      |> assert_has("[data-id=media_tile]")
       |> refute_has("article", text: "default post")
     end
   end

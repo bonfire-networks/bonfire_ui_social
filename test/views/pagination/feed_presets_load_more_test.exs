@@ -116,20 +116,20 @@ defmodule Bonfire.UI.Social.Feeds.FeedsPresets.PaginationTest do
 
       conn = conn(user: user1, account: account)
 
-      item = fn media -> "[data-id=top_level_media][data-object_id='#{media.id}']" end
+      item = fn media -> "[data-id=media_tile][data-media-id='#{media.id}']" end
 
       session =
         conn
         |> visit("/feed/local_media")
         |> wait_async()
-        |> assert_has("[data-id=top_level_media]", count: 2)
+        |> assert_has("[data-id=media_tile]", count: 2)
         |> assert_has(item.(d), count: 1)
         |> assert_has(item.(c), count: 1)
         |> click_button("[data-id=load_more]", "Load more")
         |> wait_async()
 
       session
-      |> assert_has("[data-id=top_level_media]", count: 4)
+      |> assert_has("[data-id=media_tile]", count: 4)
       |> assert_has(item.(a), count: 1)
       |> assert_has(item.(b), count: 1)
       |> assert_has(item.(c), count: 1)

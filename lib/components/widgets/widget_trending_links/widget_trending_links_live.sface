@@ -37,7 +37,7 @@
 
               {!-- Engagement metrics --}
               <div class="flex items-center mt-1.5 gap-2 text-xs text-muted">
-                <Bonfire.UI.Social.TrendingMediaActionsLive media={media} />
+                <Bonfire.UI.Social.MediaActionsLive media={media} />
               </div>
             </div>
 

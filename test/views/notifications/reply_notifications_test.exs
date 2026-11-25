@@ -130,28 +130,37 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
            "the reply shows once, not also as the thread's start"
   end
 
-  test "a like on a direct message leads to its thread, with the message, not back to the notifications",
-       %{alice: alice, bob: bob, conn_alice: conn_alice} do
-    {:ok, message} =
-      Bonfire.Messages.send(alice, %{post_content: %{html_body: "a private hello to bob"}}, [bob])
+  # a like on a message is not in the notifications feed, which leaves messages out: its push is what leads here, to the thread with the liked message in it
+  test "the page a like on a direct message's push opens shows the thread, and the liked message",
+       %{alice: alice, bob: bob, conn_bob: conn_bob} do
+    {:ok, op} = Bonfire.Messages.send(alice, %{post_content: %{html_body: "kickoff"}}, [bob])
 
-    {:ok, _like} = Likes.like(bob, message)
+    {:ok, answer} =
+      Bonfire.Messages.send(bob, %{post_content: %{html_body: "bob's answer"}, reply_to_id: op.id}, [
+        alice
+      ])
 
-    {:ok, view, _html} = live(conn_alice, "/notifications")
+    {:ok, _like} = Likes.like(alice, answer)
 
-    # the positive first: the like's row is there
-    row = "article[data-verb=like]"
-    assert has_element?(view, row)
+    conn_bob
+    |> visit("/discussion/#{op.id}/reply/1/#{answer.id}")
+    |> assert_has("article", text: "kickoff")
+    |> assert_has("article", text: "bob's answer")
+    |> assert_has("article.active-activity", text: "bob's answer")
+  end
 
-    href = view |> element(row) |> render() |> Floki.parse_fragment!() |> Floki.attribute("data-href")
+  test "the page a like on a direct message that starts a thread opens shows it to its author", %{
+    alice: alice,
+    bob: bob,
+    conn_alice: conn_alice
+  } do
+    {:ok, op} = Bonfire.Messages.send(alice, %{post_content: %{html_body: "kickoff"}}, [bob])
+    {:ok, _like} = Likes.like(bob, op)
 
-    assert [<<"/discussion/", _::binary>>] = href
-
-    view
-    |> with_target("#{row} [id*='_open_preview_']")
-    |> render_hook("open", %{})
-
-    assert view |> element("#preview_content") |> render() =~ "a private hello to bob"
+    conn_alice
+    |> visit("/discussion/#{op.id}")
+    |> assert_path("/discussion/#{op.id}")
+    |> assert_has("article", text: "kickoff")
   end
 
   # the same, for a reply that arrives while the notifications page is open: its row comes from the live push, not from the feed query
