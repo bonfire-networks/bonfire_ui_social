@@ -1,4 +1,4 @@
-{#case load(@limit)}
+{#case load(current_user(@__context__), @limit)}
   {#match [links: links] when links != []}
     <Bonfire.UI.Common.WidgetBlockLive widget_title={@widget_title || l("Popular Links")}>
       <div class="flex flex-col   divide-hair divide-divider">

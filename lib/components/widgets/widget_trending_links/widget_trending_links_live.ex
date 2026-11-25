@@ -8,21 +8,24 @@ defmodule Bonfire.UI.Social.WidgetTrendingLinksLive do
   - Total boost count across all shares
   - Number of unique users who shared the link
 
-  Data is cached globally (1 hour TTL) since trending links are public content.
+  The list is the one the feed loader caches for the viewer's circle (guests, or everyone signed in), as the other cached feeds do, then what the viewer may not see is left out. It follows the instance's setting for what widgets show (`[Bonfire.Social.Feeds, :widget_origin]`).
   """
   use Bonfire.UI.Common.Web, :stateless_component
 
-  declare_widget(l("Popular links"), width: :narrow, skeleton: :list)
+  declare_widget(l("Trending links"), width: :narrow, skeleton: :list)
 
   prop limit, :integer, default: 5
   prop widget_title, :string, default: nil
   prop showing_within, :atom, default: nil
 
-  def load(_limit \\ 5) do
-    # Only return cached data - don't trigger slow queries from UI
-    # Cache is warmed by TrendingLinksCacheWorker Oban cron job
-    # Note: We don't pass limit option to match the cache key used by warm_cache()
-    # The default limit (5) is already applied in list_trending_paginated
-    [links: Bonfire.Social.Media.cached_trending_links() || []]
+  def load(current_user, limit \\ 5) do
+    [
+      links:
+        Bonfire.Social.Media.trending_links(
+          current_user: current_user,
+          limit: limit,
+          filters: Bonfire.Social.Feeds.widget_origin_filters()
+        )
+    ]
   end
 end

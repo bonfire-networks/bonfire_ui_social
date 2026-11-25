@@ -130,6 +130,27 @@ defmodule Bonfire.UI.Social.Activity.MediaPlayerRenderTest do
       refute render_media(media) =~ "<iframe"
     end
 
+    test "a news article's oEmbed card (a rich iframe of the article, on a page that says it's an article) stays a link card" do
+      media =
+        media(
+          path: "https://news.example.com/2026/11/13/a-story.html",
+          media_type: "article",
+          metadata: %{
+            "oembed" => %{
+              "type" => "rich",
+              "html" =>
+                ~s(<iframe src="https://news.example.com/svc/oembed/html/?url=https%3A%2F%2Fnews.example.com%2F2026%2F11%2F13%2Fa-story.html" scrolling="no" frameborder="0"></iframe>)
+            },
+            "facebook" => %{"type" => "article"},
+            "json_ld" => [%{"@type" => "NewsArticle"}]
+          }
+        )
+
+      refute Bonfire.Files.Media.player_type(media)
+      refute Bonfire.UI.Social.Activity.MediaLive.has_embed_player?(media)
+      refute render_media(media) =~ "<iframe"
+    end
+
     test "a video oEmbed with no iframe to play (eg. a quote and a script, as TikTok gives) stays a link card" do
       media =
         media(

@@ -136,9 +136,13 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
     {:ok, op} = Bonfire.Messages.send(alice, %{post_content: %{html_body: "kickoff"}}, [bob])
 
     {:ok, answer} =
-      Bonfire.Messages.send(bob, %{post_content: %{html_body: "bob's answer"}, reply_to_id: op.id}, [
-        alice
-      ])
+      Bonfire.Messages.send(
+        bob,
+        %{post_content: %{html_body: "bob's answer"}, reply_to_id: op.id},
+        [
+          alice
+        ]
+      )
 
     {:ok, _like} = Likes.like(alice, answer)
 

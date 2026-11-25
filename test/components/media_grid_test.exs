@@ -180,7 +180,8 @@ defmodule Bonfire.UI.Social.MediaGridTest do
     |> wait_async()
     |> assert_has(tile(link))
     |> refute_has("[data-id=top_level_media]")
-    |> assert_has("#{tile(link)} a[data-role=used_count][title='Used in 2 posts'][href*='#{newest.id}']",
+    |> assert_has(
+      "#{tile(link)} a[data-role=used_count][title='Used in 2 posts'][href*='#{newest.id}']",
       text: "2"
     )
     |> assert_has("#{tile(link)} [title=Boosts]", text: "1")
