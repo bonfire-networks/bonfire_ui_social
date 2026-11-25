@@ -19,7 +19,7 @@
                     :if={@cw || Settings.get([Bonfire.UI.Social.Activity.MediaLive, :hide], false, @__context__)}
                   />
                   <figure class="h-full">
-                    {#if String.starts_with?(m.media_type || "", "video")}
+                    {#if String.starts_with?(m.media_type || "", "video") and not Bonfire.Files.Media.embed_type?(m)}
                       <Bonfire.UI.Social.Activity.VideoLinkLive
                         media={m}
                         media_label={media_label}
@@ -28,7 +28,7 @@
                         parent_id={deterministic_dom_id(__MODULE__, m, nil, @parent_id)}
                       />
                     {#else}
-                      {#if String.starts_with?(m.media_type || "", "audio")}
+                      {#if String.starts_with?(m.media_type || "", "audio") and not Bonfire.Files.Media.embed_type?(m)}
                         <Bonfire.UI.Social.Activity.AudioLive
                           media={m}
                           media_label={media_label}

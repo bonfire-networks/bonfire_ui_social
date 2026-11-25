@@ -16,7 +16,7 @@
             {#case e(@media, :metadata, "facebook", "video", nil) ||
                 e(@media, :metadata, "twitter", "player", nil) ||
                 e(@media, :metadata, "facebook", "video", nil) ||
-                MediaLive.extract_oembed_url(e(@media, :metadata, "oembed", "html", nil))}
+                MediaLive.oembed_player_url(@media)}
               {#match url when is_binary(url)}
                 {!-- TODO: url |> String.replace("youtube.com", "yewtu.be") --}
                 {!-- width={e(@media, :metadata, "facebook", "video:width", nil) ||
@@ -47,7 +47,8 @@
                     with no playable file) — those belong to the iframe/preview path below. --}
                   {#if (MediaLive.is_video?(media_url, e(@media, :media_type, nil)) or
                        MediaLive.is_hls?(media_url, e(@media, :media_type, nil))) and
-                      not MediaLive.has_embed_player?(@media)}
+                      not MediaLive.has_embed_player?(@media) and
+                      not Bonfire.Files.Media.embed_type?(@media)}
                     {#if MediaLive.is_gif?(@media.path, e(@media, :media_type, nil), @media)}
                       {!-- GIF-labeled MP4 (converted GIF): autoplay/loop, no controls --}
                       <div
@@ -197,7 +198,7 @@
                     {!-- Handle media with preview images (like video.movie, video.other, etc.) --}
                     <div class="rounded-box border border-divider overflow-hidden">
                       {#case MediaLive.peertube_embed_url(@media) ||
-                          MediaLive.extract_oembed_url(e(@media, :metadata, "oembed", "html", nil)) ||
+                          MediaLive.oembed_player_url(@media) ||
                           e(@media, :metadata, "facebook", "video", nil) ||
                           e(@media, :metadata, "twitter", "player", nil)}
                         {#match embed_url when is_binary(embed_url)}

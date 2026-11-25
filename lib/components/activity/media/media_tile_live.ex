@@ -22,6 +22,8 @@ defmodule Bonfire.UI.Social.Activity.MediaTileLive do
   @doc "Whether `media` is an image or a video, which fit a grid's column; anything else (eg. an audio player or a document) takes the grid's full width."
   def visual?(media) do
     type = e(media, :media_type, "") || ""
-    String.starts_with?(type, "image") or String.starts_with?(type, "video")
+
+    not Bonfire.Files.Media.embed_type?(type) and
+      (String.starts_with?(type, "image") or String.starts_with?(type, "video"))
   end
 end
