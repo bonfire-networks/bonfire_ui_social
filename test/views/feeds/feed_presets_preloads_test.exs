@@ -46,8 +46,11 @@ defmodule Bonfire.UI.Social.PreloadPresetTest do
                :user_by_object_type,
                :hashtag,
                :mentions,
+               # the media presets: covered by bonfire_files' media_presets_test
                :audio,
                :videos,
+               :images,
+               :documents,
                :curated,
                :trending_links,
                :trending_discussions,

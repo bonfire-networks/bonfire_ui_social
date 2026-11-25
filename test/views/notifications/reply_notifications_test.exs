@@ -130,6 +130,30 @@ defmodule Bonfire.Social.Notifications.Threads.Test do
            "the reply shows once, not also as the thread's start"
   end
 
+  test "a like on a direct message leads to its thread, with the message, not back to the notifications",
+       %{alice: alice, bob: bob, conn_alice: conn_alice} do
+    {:ok, message} =
+      Bonfire.Messages.send(alice, %{post_content: %{html_body: "a private hello to bob"}}, [bob])
+
+    {:ok, _like} = Likes.like(bob, message)
+
+    {:ok, view, _html} = live(conn_alice, "/notifications")
+
+    # the positive first: the like's row is there
+    row = "article[data-verb=like]"
+    assert has_element?(view, row)
+
+    href = view |> element(row) |> render() |> Floki.parse_fragment!() |> Floki.attribute("data-href")
+
+    assert [<<"/discussion/", _::binary>>] = href
+
+    view
+    |> with_target("#{row} [id*='_open_preview_']")
+    |> render_hook("open", %{})
+
+    assert view |> element("#preview_content") |> render() =~ "a private hello to bob"
+  end
+
   # the same, for a reply that arrives while the notifications page is open: its row comes from the live push, not from the feed query
   test "opening a reply's notification that arrived live previews the thread from its original post, with the reply once",
        %{alice: alice, bob: bob, conn_alice: conn_alice} do
