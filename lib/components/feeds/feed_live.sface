@@ -148,6 +148,7 @@
                             module={maybe_component(@custom_preview, @__context__)}
                             object={entry}
                             parent_id={entry_id}
+                            showing_within={@showing_within}
                           >
                             <#slot {@activity_extra_actions, object: entry} />
                           </StatelessComponent>

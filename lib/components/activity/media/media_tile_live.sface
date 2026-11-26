@@ -4,23 +4,115 @@
   data-media-id={id(@object)}
   draggable="true"
   data-wide={!visual?(@object)}
-  class="flex flex-col gap-2 min-w-0 @container @max-lg:[&_.vds-volume]:hidden! @max-lg:[&_.vds-mute-button]:hidden! @max-lg:[&_.vds-settings-menu]:hidden! @max-lg:[&_.vds-chapters-menu]:hidden! @max-lg:[&_.vds-seek-button]:hidden! @max-lg:[&_.vds-download-button]:hidden! @max-lg:[&_.vds-caption-button]:hidden! @max-lg:[&_.vds-airplay-button]:hidden!"
+  class="group/tile relative flex flex-col gap-2 min-w-0 @container @max-lg:[&_.vds-volume]:hidden! @max-lg:[&_.vds-mute-button]:hidden! @max-lg:[&_.vds-settings-menu]:hidden! @max-lg:[&_.vds-chapters-menu]:hidden! @max-lg:[&_.vds-seek-button]:hidden! @max-lg:[&_.vds-download-button]:hidden! @max-lg:[&_.vds-caption-button]:hidden! @max-lg:[&_.vds-airplay-button]:hidden!"
 >
-  {#case Bonfire.Files.Media.media_caption(@object)}
-    {#match nil}
-    {#match caption}
-      <p data-role="media_caption" class="text-sm truncate" title={caption}>{caption}</p>
-  {/case}
-  {!-- the media as a post shows it, so a click opens the same viewer --}
-  <StatelessComponent
-    module={maybe_component(Bonfire.UI.Social.Activity.MediaLive, @__context__)}
-    media={[@object]}
-    showing_within={@showing_within}
-    mark_missing_alt
-    parent_id={deterministic_dom_id(__MODULE__, id(@object), "tile", @parent_id)}
-  />
-  <div class="flex items-center gap-2 text-xs text-base-content/70 min-w-0">
-    <Bonfire.UI.Social.MediaActionsLive media={@object} />
-  </div>
-  <#slot />
+  {#if @showing_within == :media_picker}
+    {#if visual?(@object)}
+      <figure class="relative aspect-square overflow-hidden rounded-box bg-fill">
+        {#case Bonfire.UI.Social.Activity.MediaLive.preview_img(@object)}
+          {#match nil}
+            {!-- a video with no poster shows its first frame --}
+            <video
+              src={Bonfire.Common.Media.media_url(@object)}
+              preload="metadata"
+              muted
+              playsinline
+              class="size-full object-cover"
+            />
+          {#match src}
+            <img
+              src={src}
+              alt={Bonfire.Files.Media.media_alt(@object, false) || ""}
+              loading="lazy"
+              class="size-full object-cover"
+            />
+        {/case}
+        <span
+          :if={is_nil(Bonfire.Files.Media.media_alt(@object, false))}
+          data-role="missing_alt"
+          class="absolute top-1.5 left-1.5 rounded-field bg-black/55 px-2 type-caption font-medium text-white"
+        >{l("No alt")}</span>
+        <span
+          :if={String.starts_with?(e(@object, :media_type, "") || "", "video")}
+          class="absolute top-1.5 right-1.5 grid size-6 place-items-center rounded-full bg-black/55 text-white"
+          aria-hidden="true"
+        ><#Icon iconify="ph:play-fill" class="size-3.5" /></span>
+        <figcaption class="sr-only">{Bonfire.Files.Media.media_caption(@object)}</figcaption>
+      </figure>
+      <div
+        data-role="pick_actions"
+        class="absolute inset-x-0 bottom-0 z-10 flex gap-1.5 rounded-b-box bg-gradient-to-t from-black/60 to-transparent p-2 pt-8 *:flex-1 opacity-0 pointer-events-none transition-opacity focus-within:opacity-100 focus-within:pointer-events-auto group-hover/tile:opacity-100 group-hover/tile:pointer-events-auto [@media(hover:none)]:opacity-100 [@media(hover:none)]:pointer-events-auto motion-reduce:transition-none"
+      >
+        <#slot />
+      </div>
+    {#else}
+      {#case Bonfire.UI.Common.UploadPreviewEntryLive.preview_kind(e(@object, :media_type, nil))}
+        {#match kind}
+          {!-- ignored by patches, so a playing preview isn't reset --}
+          <div
+            id={deterministic_dom_id(__MODULE__, id(@object), "row", @parent_id)}
+            phx-update="ignore"
+            data-role="media_row"
+            data-preview={kind}
+            class="flex items-center gap-3 rounded-box bg-surface p-2 pr-3 min-w-0"
+          >
+            {#if kind == "audio"}
+              <span
+                id={deterministic_dom_id(__MODULE__, id(@object), "play", @parent_id)}
+                :hook
+                class="group/play shrink-0"
+              >
+                <button
+                  type="button"
+                  data-role="media_play"
+                  aria-pressed="false"
+                  aria-label={l("Play")}
+                  class="btn btn-circle btn-sm border-none bg-base-100 touch-target-expanded"
+                >
+                  <span class="touch-target-hit-area" aria-hidden="true" />
+                  <#Icon iconify="ph:play-fill" class="size-4 group-data-[playing]/play:hidden" />
+                  <#Icon iconify="ph:pause-fill" class="size-4 hidden group-data-[playing]/play:block" />
+                </button>
+                <audio preload="none" src={Bonfire.Common.Media.media_url(@object)} class="hidden" />
+              </span>
+            {#else}
+              <span class="size-8 shrink-0 grid place-items-center rounded-field bg-base-100" aria-hidden="true">
+                <#Icon :if={kind == "pdf"} iconify="bxs:file-pdf" class="size-4 text-subtle" />
+                <#Icon :if={kind != "pdf"} iconify="ph:file-text-duotone" class="size-4 text-subtle" />
+              </span>
+            {/if}
+            <div class="min-w-0 flex-1">
+              <p data-role="media_caption" class="type-meta font-medium truncate">
+                {Bonfire.Files.Media.media_caption(@object) || l("Untitled")}
+              </p>
+              <p class="type-caption text-muted">{kind_label(kind)}</p>
+            </div>
+          </div>
+      {/case}
+      <div
+        data-role="pick_actions"
+        class="absolute inset-y-0 right-0 z-10 flex items-center gap-1.5 rounded-r-box bg-gradient-to-l from-surface from-60% to-transparent pl-10 pr-2 opacity-0 pointer-events-none transition-opacity focus-within:opacity-100 focus-within:pointer-events-auto group-hover/tile:opacity-100 group-hover/tile:pointer-events-auto [@media(hover:none)]:opacity-100 [@media(hover:none)]:pointer-events-auto motion-reduce:transition-none"
+      >
+        <#slot />
+      </div>
+    {/if}
+  {#else}
+    {#case Bonfire.Files.Media.media_caption(@object)}
+      {#match nil}
+      {#match caption}
+        <p data-role="media_caption" class="text-sm truncate" title={caption}>{caption}</p>
+    {/case}
+    {!-- as a post shows it, so a click opens the same viewer --}
+    <StatelessComponent
+      module={maybe_component(Bonfire.UI.Social.Activity.MediaLive, @__context__)}
+      media={[@object]}
+      showing_within={@showing_within}
+      mark_missing_alt
+      parent_id={deterministic_dom_id(__MODULE__, id(@object), "tile", @parent_id)}
+    />
+    <div class="flex items-center gap-2 text-xs text-base-content/70 min-w-0">
+      <Bonfire.UI.Social.MediaActionsLive media={@object} />
+    </div>
+    <#slot />
+  {/if}
 </div>
