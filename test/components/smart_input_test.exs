@@ -432,6 +432,238 @@ defmodule Bonfire.UI.Social.SmartInputTest do
       |> visit("/feed/local")
       |> assert_has_or_open_browser("[data-id=feed] article", text: content)
     end
+
+    test "a clean image with location-free metadata is published with the post", %{conn: conn} do
+      content = "post with a clean image #{System.unique_integer()}"
+      file = Path.expand("../../../bonfire_files/test/fixtures/gps/clean.jpg", __DIR__)
+
+      conn
+      |> visit("/write")
+      |> upload("Upload an attachment", file)
+      |> submit_composer(content)
+      |> visit("/feed/local")
+      |> assert_has_or_open_browser("[data-id=feed] article", text: content)
+      |> assert_has_or_open_browser("[data-id=feed] article[data-id=article_media]")
+    end
+
+    test "an image that carries a location is refused: the error is shown and no post is created",
+         %{conn: conn} do
+      content = "post with a located image #{System.unique_integer()}"
+      file = Path.expand("../../../bonfire_files/test/fixtures/gps/gps.pdf", __DIR__)
+
+      conn
+      |> visit("/write")
+      |> upload("Upload an attachment", file)
+      |> submit_composer(content)
+      |> assert_has_or_open_browser("[role=alert], #flash-error, .alert", text: "gps.pdf")
+      |> assert_has_or_open_browser("[role=alert], #flash-error, .alert", text: "location data")
+      |> visit("/feed/local")
+      |> refute_has("[data-id=feed] article", text: content)
+    end
+
+    @upload_fixtures Path.expand("../../../bonfire_files/test/fixtures/gps", __DIR__)
+
+    defp stored_media(me) do
+      {:ok, media} = Bonfire.Files.Media.many(creator: id(me))
+      media
+    end
+
+    # every file stored for this user, whatever its version (files are kept under the creator's id)
+    defp stored_files(me) do
+      root =
+        Application.get_env(:entrepot, Entrepot.Storages.Disk, [])[:root_dir] || "data/uploads"
+
+      Path.join([root, id(me), "**", "*"])
+      |> Path.wildcard()
+      |> Enum.reject(&File.dir?/1)
+      |> MapSet.new()
+    end
+
+    # one file input holding all the files (uploading again would replace the entries)
+    defp attach_files(session, names) do
+      entries =
+        for name <- names do
+          path =
+            Enum.find(
+              [
+                @upload_fixtures,
+                Path.join(@upload_fixtures, "../corrupted"),
+                Path.join(@upload_fixtures, "..")
+              ],
+              &File.exists?(Path.join(&1, name))
+            )
+            |> Path.join(name)
+
+          stat = File.stat!(path)
+
+          %{
+            last_modified: stat.mtime,
+            name: name,
+            content: File.read!(path),
+            size: stat.size,
+            type: MIME.from_path(path)
+          }
+        end
+
+      input =
+        PhoenixTest.EndpointHelpers.file_input(
+          session.view,
+          session.conn,
+          "#smart_input_form",
+          :files,
+          entries
+        )
+
+      Enum.each(names, &render_upload(input, &1))
+      session
+    end
+
+    # the entries' refs are random: the n-th "Remove" button, in the order the files were attached
+    defp remove_entry(session, nth) do
+      PhoenixTest.unwrap(session, fn view ->
+        composer = composer_view(view)
+
+        [_, ref] =
+          Regex.run(
+            ~r/phx-click="Bonfire.UI.Common.SmartInput:cancel-upload"[^>]*phx-value-ref="([^"]*)"[^>]*aria-label="Remove"/,
+            render(composer)
+            |> String.split("<button")
+            |> Enum.filter(&String.contains?(&1, "aria-label=\"Remove\""))
+            |> Enum.at(nth)
+          )
+
+        composer
+        |> element(~s|button[aria-label="Remove"][phx-value-ref="#{ref}"]|)
+        |> render_click()
+      end)
+    end
+
+    test "a clean file sent alone keeps its media, stored on disk", %{conn: conn, me: me} do
+      assert stored_files(me) == MapSet.new()
+
+      conn
+      |> visit("/write")
+      |> upload("Upload an attachment", Path.join(@upload_fixtures, "clean.jpg"))
+      |> submit_composer("post with a clean image #{System.unique_integer()}")
+
+      assert [media] = stored_media(me)
+      assert path = Bonfire.Files.local_path(media)
+      assert File.exists?(path)
+      assert MapSet.member?(stored_files(me), path)
+    end
+
+    for fixture <- ["gps.heic", "gps.avif"] do
+      test "#{fixture} can be attached in the composer and is published as a WebP with no GPS",
+           %{conn: conn, me: me} do
+        content = "post with #{unquote(fixture)} #{System.unique_integer()}"
+
+        conn
+        |> visit("/write")
+        |> upload(
+          "Upload an attachment",
+          Path.expand("../../../bonfire_files/test/fixtures/formats/#{unquote(fixture)}", __DIR__)
+        )
+        |> submit_composer(content)
+        |> visit("/feed/local")
+        |> assert_has_or_open_browser("[data-id=feed] article", text: content)
+
+        assert [media] = stored_media(me)
+        assert path = Bonfire.Files.local_path(media)
+        assert Path.extname(path) == ".webp"
+        assert media.media_type == "image/webp"
+
+        if System.find_executable("exiftool") do
+          {out, _} =
+            System.cmd("exiftool", ["-a", "-G1", "-s", "-ee", path], stderr_to_stdout: true)
+
+          refute out =~ ~r/GPS/i
+        end
+      end
+    end
+
+    test "a send refused on its second file deletes the first one's media and files, and the next send stores it once",
+         %{conn: conn, me: me} do
+      content = "post with a clean and a located file #{System.unique_integer()}"
+      assert [] = stored_media(me)
+      assert stored_files(me) == MapSet.new()
+
+      session =
+        conn
+        |> visit("/write")
+        |> attach_files(["clean.jpg", "gps.pdf"])
+        |> submit_composer(content)
+        |> assert_has_or_open_browser("[role=alert], #flash-error, .alert", text: "gps.pdf")
+
+      assert [] = stored_media(me)
+      assert stored_files(me) == MapSet.new()
+
+      session
+      |> remove_entry(1)
+      |> submit_composer(content)
+
+      # one stored copy: the media's own file and nothing else
+      assert [media] = stored_media(me)
+      assert stored_files(me) == MapSet.new([Bonfire.Files.local_path(media)])
+    end
+
+    # the temp copies a send stores from (see `Bonfire.UI.Common.live_upload_files_checked/5`)
+    defp temp_copies do
+      Path.join(System.tmp_dir!(), "**/*.copy") |> Path.wildcard() |> MapSet.new()
+    end
+
+    test "a refused send is handled as an error: nothing crashes in the publish epic", %{
+      conn: conn
+    } do
+      log =
+        ExUnit.CaptureLog.capture_log(fn ->
+          conn
+          |> visit("/write")
+          |> attach_files(["clean.jpg", "gps.pdf"])
+          |> submit_composer("post with a located file #{System.unique_integer()}")
+          |> assert_has_or_open_browser("[role=alert], #flash-error, .alert", text: "gps.pdf")
+        end)
+
+      refute log =~ "badarg"
+      refute log =~ "attach_media_act"
+    end
+
+    for refused <- ["gps.pdf", "corrupted.jpg"] do
+      test "a send refused on #{refused} leaves no temp copy", %{conn: conn} do
+        before = temp_copies()
+
+        conn
+        |> visit("/write")
+        |> attach_files(["clean.jpg", unquote(refused)])
+        |> submit_composer("post with a refused file #{System.unique_integer()}")
+        |> assert_has_or_open_browser("[role=alert], #flash-error, .alert",
+          text: unquote(refused)
+        )
+
+        assert MapSet.difference(temp_copies(), before) == MapSet.new()
+      end
+    end
+
+    test "a send that succeeds leaves no temp copy", %{conn: conn} do
+      before = temp_copies()
+
+      conn
+      |> visit("/write")
+      |> upload("Upload an attachment", Path.join(@upload_fixtures, "clean.jpg"))
+      |> submit_composer("post with a clean image #{System.unique_integer()}")
+
+      assert MapSet.difference(temp_copies(), before) == MapSet.new()
+    end
+
+    test "a send refused on its first file stores nothing", %{conn: conn, me: me} do
+      conn
+      |> visit("/write")
+      |> attach_files(["gps.pdf", "clean.jpg"])
+      |> submit_composer("post with a located and a clean file #{System.unique_integer()}")
+      |> assert_has_or_open_browser("[role=alert], #flash-error, .alert", text: "gps.pdf")
+
+      assert [] = stored_media(me)
+      assert stored_files(me) == MapSet.new()
+    end
   end
 
   describe "reply context" do
