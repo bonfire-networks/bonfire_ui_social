@@ -1,5 +1,9 @@
 <div id={@id} data-role="feed_preferences_widget">
-  <Bonfire.UI.Common.WidgetBlockLive widget_title={@widget_title || l("Feed preferences")}>
+  {!-- standalone for the events page; the sidebar's rules override it --}
+  <Bonfire.UI.Common.WidgetBlockLive
+    widget_title={@widget_title || l("Feed preferences")}
+    standalone
+  >
     <:action>
       <button
         id={"feed_reset_#{@feed_name}"}

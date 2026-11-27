@@ -66,7 +66,6 @@
                   module={maybe_component(Bonfire.UI.Me.ProfileItemLive)}
                   character={e(p, :character, nil) || e(p, :activity, :subject, :character, nil)}
                   profile={e(p, :profile, nil) || e(p, :activity, :subject, :profile, nil)}
-                  class="btn btn-square btn-ghost btn-sm"
                 />
               </div>
             {/for}

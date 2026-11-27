@@ -1,7 +1,7 @@
 defmodule Bonfire.UI.Social.WidgetTrendingDiscussionsLive do
   @moduledoc """
   Widget rendering the most replied discussions of the last few days
-  (`:trending_discussions` preset), as the shared carousel (`Bonfire.UI.Common.CarouselLive`). Each card is a standard `ActivityLive`
+  (`:trending_discussions` preset), as a carousel or stacked (`layout/1`). Each card is a standard `ActivityLive`
   whose actions are swapped for `DiscussionPreviewActionsLive` (reply counter
   + participants facepile) via the `custom_actions` prop.
   Results are cached per user and limit for 1 hour to avoid reloading on
@@ -15,8 +15,18 @@ defmodule Bonfire.UI.Social.WidgetTrendingDiscussionsLive do
     id: :trending_discussions,
     current_user_required: true,
     props: [limit: 5],
+    # carousel or stacked: a member's choice, or the instance's default
+    settings: Bonfire.UI.Social.WidgetTrendingDiscussionsLayoutLive,
     skeleton: :list
   )
+
+  @doc "The layout the viewer chose: `\"stacked\"`, else `\"carousel\"`."
+  def layout(context) do
+    case Bonfire.Common.Settings.get([__MODULE__, :layout], "carousel", context) do
+      layout when layout in ["stacked", :stacked] -> "stacked"
+      _ -> "carousel"
+    end
+  end
 
   prop limit, :integer, default: 3
   prop widget_title, :string, default: nil

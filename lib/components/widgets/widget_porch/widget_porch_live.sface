@@ -1,0 +1,111 @@
+{#case load()}
+  {#match %{milestones: milestones, newcomers: newcomers}}
+    {#case shown(milestones)}
+      {#match {state, items, more}}
+        <div data-id="porch_widget">
+          <Bonfire.UI.Common.WidgetBlockLive
+            widget_title={@widget_title ||
+              l("Around %{name} today", name: Bonfire.UI.Common.GuestBoardLive.instance_name())}
+            reset_cache_event="Bonfire.UI.Social.WidgetPorchLive:reset_porch"
+            empty={items == [] and newcomers == []}
+            empty_icon="ph:campfire-fill"
+            empty_message={l("Nothing new this week yet.")}
+          >
+            <:action>
+              <LinkLive to={~p"/feed/local"} class="widget-link" label={l("Local feed")}>
+                {l("Local feed")}
+              </LinkLive>
+            </:action>
+
+            {!-- `widget-body` takes the area's side padding, as the other widgets' bodies do --}
+            <div data-role="widget-body" data-id="porch">
+              <p :if={state == :quiet and items != []} class="type-meta text-muted">
+                {l("Quiet so far today. Last time people were around:")}
+              </p>
+
+              {#for {date, day_items} <- by_day(items)}
+                <h3 class="type-caption text-subtle pt-3">{day_label(date)}</h3>
+                <ul class="widget-rows" data-role="porch-milestones">
+                  {#for %{activity: activity} <- day_items}
+                    <li class="widget-row" data-role="porch-milestone">
+                      <Bonfire.UI.Common.AvatarLive
+                        parent_id={deterministic_dom_id(__MODULE__, id(activity), "porch_avatar")}
+                        user_id={id(e(activity, :subject, nil))}
+                        src={Media.avatar_url(e(activity, :subject, nil))}
+                        title={e(activity, :subject, :profile, :name, nil)}
+                        showing_within={:widget}
+                        wrapper_class="widget-row-media rounded-full border-0 avatar !flex"
+                        class="size-10 rounded-full bg-base-100"
+                        bg_class="h-full w-full overflow-hidden rounded-full"
+                      />
+                      <div class="min-w-0 flex-1">
+                        <LinkLive
+                          to={URIs.path(e(activity, :object, nil) || e(activity, :object_id, nil))}
+                          class="widget-row-title hover:underline"
+                        >
+                          {title(activity)}
+                        </LinkLive>
+                        <div class="widget-row-meta">
+                          {#if event?(activity)}
+                            {l("%{name} posted an event", name: e(activity, :subject, :profile, :name, nil))}
+                          {#else}
+                            {e(activity, :subject, :profile, :name, nil)}
+                            {#case e(activity, :replied, :nested_replies_count, 0)}
+                              {#match 0}
+                              {#match replies}
+                                · {lp("%{count} reply", "%{count} replies", replies, count: replies)}
+                            {/case}
+                          {/if}
+                          · {DatesTimes.date_from_now(id(activity), format: :short)}
+                        </div>
+                      </div>
+                    </li>
+                  {/for}
+                </ul>
+              {/for}
+
+              <LinkLive :if={more > 0} to={~p"/feed/local"} class="widget-link block pt-2">
+                {lp("%{count} more thing today", "%{count} more things today", more, count: more)}
+              </LinkLive>
+
+              {!-- newcomers this week, with a hello that opens the composer mentioning them --}
+              <div
+                :if={newcomers != []}
+                class="mt-3 flex flex-wrap items-center gap-3 rounded-box border border-divider px-3 py-2.5"
+                data-role="porch-newcomers"
+              >
+                <span class="flex shrink-0 -space-x-1.5">
+                  {#for user <- Enum.take(newcomers, 3)}
+                    <Bonfire.UI.Common.AvatarLive
+                      parent_id={deterministic_dom_id(__MODULE__, id(user), "porch_newcomer")}
+                      user_id={id(user)}
+                      src={Media.avatar_url(user)}
+                      title={e(user, :profile, :name, nil) || e(user, :character, :username, nil)}
+                      showing_within={:widget}
+                      wrapper_class="size-6 border-0 avatar !flex"
+                      class="size-6 rounded-full bg-base-100 ring-2 ring-base-100"
+                      bg_class="h-full w-full overflow-hidden rounded-full"
+                    />
+                  {/for}
+                </span>
+                <span class="flex-1 min-w-0 type-meta text-muted">
+                  {lp("%{count} person joined this week", "%{count} people joined this week", length(newcomers),
+                    count: length(newcomers)
+                  )}
+                </span>
+                <Bonfire.UI.Common.SmartInputButtonLive
+                  :if={current_user_id(@__context__) &&
+                    hello_text(newcomers, current_user(@__context__)) != " "}
+                  prompt={l("Say hi")}
+                  without_icon
+                  smart_input_opts={%{
+                    text_suggestion: hello_text(newcomers, current_user(@__context__))
+                  }}
+                  class="btn btn-sm border-0 bg-fill hover:bg-fill-strong"
+                />
+              </div>
+            </div>
+          </Bonfire.UI.Common.WidgetBlockLive>
+        </div>
+    {/case}
+{/case}

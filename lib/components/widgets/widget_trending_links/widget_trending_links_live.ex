@@ -16,7 +16,6 @@ defmodule Bonfire.UI.Social.WidgetTrendingLinksLive do
 
   prop limit, :integer, default: 5
   prop widget_title, :string, default: nil
-  prop showing_within, :atom, default: nil
 
   def load(current_user, limit \\ 5) do
     [
@@ -51,7 +50,9 @@ defmodule Bonfire.UI.Social.WidgetTrendingLinksLive do
     used = lp("Used in %{count} post", "Used in %{count} posts", posts, count: posts)
 
     if boosts > 0,
-      do: used <> ", " <> lp("boosted %{count} time", "boosted %{count} times", boosts, count: boosts),
+      do:
+        used <>
+          ", " <> lp("boosted %{count} time", "boosted %{count} times", boosts, count: boosts),
       else: used
   end
 end

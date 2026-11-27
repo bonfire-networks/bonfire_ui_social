@@ -3,7 +3,7 @@
   {#case Bonfire.UI.Social.WidgetFeedLive.feed_props(@__context__, @requested_feed)}
     {#match nil}
     {#match feed}
-      <Bonfire.UI.Common.WidgetBlockLive class="w-full">
+      <Bonfire.UI.Common.WidgetBlockLive>
         {!-- on the dashboard, below 80rem the heading is visually hidden (interface.css, next to the page header rule) --}
         <div data-role="widget-header" class="flex items-center">
           <h2 id="feed_heading" data-role="widget-heading">{if current_user_id(@__context__),

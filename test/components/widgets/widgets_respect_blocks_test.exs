@@ -229,12 +229,12 @@ defmodule Bonfire.UI.Social.WidgetsRespectBlocksTest do
       name = e(author, :profile, :name, nil)
 
       dashboard(conn)
-      |> assert_has("#suggested-profiles-carousel", text: name)
+      |> assert_has("[data-id=suggested-profiles]", text: name)
 
       Blocks.block(author, :silence, current_user: me)
 
       dashboard(conn)
-      |> refute_has("#suggested-profiles-carousel", text: name)
+      |> refute_has("[data-id=suggested-profiles]", text: name)
     end
   end
 

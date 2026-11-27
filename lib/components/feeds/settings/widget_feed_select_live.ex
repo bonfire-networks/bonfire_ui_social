@@ -21,9 +21,9 @@ defmodule Bonfire.UI.Social.WidgetFeedSelectLive do
     |> render_sface()
   end
 
-  @doc "The name of the feed the widget shows, for edit mode's tile."
-  def current_label(context) do
-    {options, feed} = options_and_value(nil, nil, context)
+  @doc "The name of the feed the widget shows, for edit mode's tile: the viewer's, or with `:instance` the instance's default."
+  def current_label(context, scope) do
+    {options, feed} = options_and_value(nil, scope, context)
     Enum.find_value(options, fn {slug, name} -> to_string(slug) == to_string(feed) && name end)
   end
 

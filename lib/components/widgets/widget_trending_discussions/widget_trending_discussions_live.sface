@@ -1,55 +1,73 @@
-{#case load(current_user(@__context__), @limit)}
-  {#match discussions}
+{#case {load(current_user(@__context__), @limit), layout(@__context__)}}
+  {#match {discussions, layout}}
     {#case Vocabulary.preset(:top_discussions, @__context__)}
       {#match vocab}
         <div data-id="trending_discussions_widget">
           <Bonfire.UI.Common.WidgetBlockLive
-            class="w-full relative overflow-hidden"
+            class="relative overflow-hidden"
             widget_title={@widget_title || Vocabulary.phrase(vocab, :title)}
             reset_cache_event="Bonfire.UI.Social.WidgetTrendingDiscussionsLive:reset_trending_discussions"
             reset_cache_values={%{limit: @limit}}
             empty={discussions == []}
             empty_icon="ph:chats-circle-fill"
             empty_message={Vocabulary.phrase(vocab, :empty)}
+            view_all_to={~p"/feed/trending_discussions"}
+            view_all_label={Vocabulary.phrase(vocab, :view_all)}
           >
             <:action>
-              <div class="flex items-center gap-3">
-                {!-- `label` is what `LinkLive` turns into the aria-label, an `aria-label` attribute is not passed on --}
-                <LinkLive
-                  to={~p"/feed/trending_discussions"}
-                  class="text-xs font-medium text-muted hover:text-primary"
-                  label={Vocabulary.phrase(vocab, :view_all)}
-                >
-                  {l("View all")}
-                </LinkLive>
-                <Bonfire.UI.Common.CarouselArrowsLive
-                  track="trending-discussions-carousel"
-                  count={length(discussions)}
-                />
-              </div>
+              <Bonfire.UI.Common.CarouselArrowsLive
+                :if={layout == "carousel"}
+                track="trending-discussions-carousel"
+                count={length(discussions)}
+              />
             </:action>
 
             {!-- `data-id` for the typographic preset's styles and the tests --}
             <div data-id="trending_discussions">
-              <Bonfire.UI.Common.CarouselLive id="trending-discussions-carousel" items={discussions} expandable>
-                <:card :let={item: fp}>
-                  <div id={"trending_discussion_#{card_id(fp)}"} class="spotlight_clamp rounded-box p-card">
-                    <Bonfire.UI.Social.ActivityLive
-                      id={Bonfire.UI.Social.ActivityLive.component_id(
-                        card_id(fp),
-                        "trending_discussion",
-                        "trending_"
-                      )}
-                      activity={fp.activity}
-                      class="flex-1 spotlight_activity"
-                      showing_within={:widget}
-                      check_object_boundary={current_user_id(@__context__) && [:see, :read]}
-                      show_restricted={false}
-                      custom_actions={Bonfire.UI.Social.Activity.DiscussionPreviewActionsLive}
-                    />
-                  </div>
-                </:card>
-              </Bonfire.UI.Common.CarouselLive>
+              {#if layout == "stacked"}
+                {!-- the same card as the carousel's, so a member can switch without the preview changing. `widget-body` takes the place's gutter; a hidden first row drops the next one's top hairline --}
+                <div
+                  role="list"
+                  data-role="widget-body"
+                  class="widget-rows [&>:first-child:has(>[hidden],[data-id=activity_not_visible][hidden])+*]:border-t-0"
+                >
+                  {#for fp <- discussions}
+                    {!-- a discussion the viewer may not see renders an empty `hidden` root; hide its card too. `py-2.5` is `widget-row`'s spacing without its flex row, which would squash the card --}
+                    <div
+                      id={"trending_discussion_#{card_id(fp)}"}
+                      role="listitem"
+                      class="py-2.5 [&:has(>[hidden],[data-id=activity_not_visible][hidden])]:hidden"
+                    >
+                      <Bonfire.UI.Social.ActivityLive
+                        id={Bonfire.UI.Social.ActivityLive.component_id(card_id(fp), "trending_discussion", "trending_")}
+                        activity={fp.activity}
+                        class="flex-1 spotlight_activity"
+                        showing_within={:widget}
+                        check_object_boundary={current_user_id(@__context__) && [:see, :read]}
+                        show_restricted={false}
+                        custom_actions={Bonfire.UI.Social.Activity.DiscussionPreviewActionsLive}
+                      />
+                    </div>
+                  {/for}
+                </div>
+              {#else}
+                {!-- the card is repeated rather than shared: a function component doesn't pass the page context on to `ActivityLive` (tried, the cards rendered empty) --}
+                <Bonfire.UI.Common.CarouselLive id="trending-discussions-carousel" items={discussions} expandable>
+                  <:card :let={item: fp}>
+                    <div id={"trending_discussion_#{card_id(fp)}"} class="spotlight_clamp rounded-box p-card">
+                      <Bonfire.UI.Social.ActivityLive
+                        id={Bonfire.UI.Social.ActivityLive.component_id(card_id(fp), "trending_discussion", "trending_")}
+                        activity={fp.activity}
+                        class="flex-1 spotlight_activity"
+                        showing_within={:widget}
+                        check_object_boundary={current_user_id(@__context__) && [:see, :read]}
+                        show_restricted={false}
+                        custom_actions={Bonfire.UI.Social.Activity.DiscussionPreviewActionsLive}
+                      />
+                    </div>
+                  </:card>
+                </Bonfire.UI.Common.CarouselLive>
+              {/if}
             </div>
           </Bonfire.UI.Common.WidgetBlockLive>
         </div>

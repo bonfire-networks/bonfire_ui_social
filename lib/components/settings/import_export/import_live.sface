@@ -219,7 +219,6 @@
                     show_controls={[:follows_me]}
                     character={character}
                     profile={profile}
-                    class="btn btn-square btn-ghost btn-sm"
                     avatar_class="size-10 rounded-full"
                   />
                 </li>

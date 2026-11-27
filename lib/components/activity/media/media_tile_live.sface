@@ -76,7 +76,10 @@
                 <audio preload="none" src={Bonfire.Common.Media.media_url(@object)} class="hidden" />
               </span>
             {#else}
-              <span class="size-8 shrink-0 grid place-items-center rounded-field bg-base-100" aria-hidden="true">
+              <span
+                class="size-8 shrink-0 grid place-items-center rounded-field bg-base-100"
+                aria-hidden="true"
+              >
                 <#Icon :if={kind == "pdf"} iconify="bxs:file-pdf" class="size-4 text-subtle" />
                 <#Icon :if={kind != "pdf"} iconify="ph:file-text-duotone" class="size-4 text-subtle" />
               </span>

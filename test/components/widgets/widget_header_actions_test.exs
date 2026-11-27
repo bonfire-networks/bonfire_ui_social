@@ -68,23 +68,24 @@ defmodule Bonfire.UI.Social.WidgetHeaderActionsTest do
       user
     end
 
-    test "has no carousel arrows for a single suggestion", %{me: me} do
+    # one row per suggestion, as the other people widgets
+    test "shows a suggestion as a row, with no carousel", %{me: me} do
       suggest!(fake_user!())
 
       html = render_widget(Bonfire.UI.Social.WidgetSuggestedProfilesLive, me)
 
-      assert html =~ "suggested-profiles-carousel"
-      refute html =~ "data-carousel-scroll"
+      assert html =~ ~s(data-role="suggested-profile-row")
     end
 
-    test "has carousel arrows for several suggestions", %{me: me} do
-      suggest!(fake_user!())
-      suggest!(fake_user!())
+    test "shows at most three suggestions", %{me: me} do
+      for _ <- 1..4, do: suggest!(fake_user!())
 
-      html = render_widget(Bonfire.UI.Social.WidgetSuggestedProfilesLive, me)
+      rows =
+        render_widget(Bonfire.UI.Social.WidgetSuggestedProfilesLive, me)
+        |> Floki.parse_fragment!()
+        |> Floki.find("[data-role=suggested-profile-row]")
 
-      assert html =~ ~s(data-carousel-scroll="previous")
-      assert html =~ ~s(data-carousel-scroll="next")
+      assert length(rows) == 3
     end
   end
 end

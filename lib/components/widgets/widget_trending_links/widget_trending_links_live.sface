@@ -1,80 +1,85 @@
 {#case load(current_user(@__context__), @limit)}
   {#match [links: links] when links != []}
     <Bonfire.UI.Common.WidgetBlockLive widget_title={@widget_title || l("Popular Links")}>
-      {!-- Lead story: the top link gets its image; the others are text rows --}
-      <div class="flex flex-col divide-hair divide-divider">
+      {!-- the top link gets its image; the others are text rows --}
+      <div class="widget-rows" data-role="widget-body">
         {#for {media, index} <- Enum.with_index(links)}
-          <article class="flex flex-col gap-1 py-3 first:pt-0 last:pb-0">
-            {#if index == 0}
-              {#case Bonfire.UI.Social.Activity.MediaLive.preview_img(media)}
-                {#match preview_img when is_binary(preview_img)}
-                  <Bonfire.UI.Common.OpenExternalLinkLive
-                    id={deterministic_dom_id("trending_link_thumb", media.path)}
-                    class="mb-2"
-                  >
-                    <LinkLive to={media.path} target="_blank" class="block" opts={["aria-hidden": "true", tabindex: "-1"]}>
+          <article class={"pb-3 last:pb-0": index == 0, "widget-row": index != 0}>
+            <div class="flex min-w-0 flex-1 flex-col gap-1">
+              {#if index == 0}
+                {#case Bonfire.UI.Social.Activity.MediaLive.preview_img(media)}
+                  {#match preview_img when is_binary(preview_img)}
+                    <Bonfire.UI.Common.OpenExternalLinkLive
+                      id={deterministic_dom_id("trending_link_thumb", media.path)}
+                      class="mb-2"
+                    >
+                      <LinkLive
+                        to={media.path}
+                        target="_blank"
+                        class="block"
+                        opts={["aria-hidden": "true", tabindex: "-1"]}
+                      >
+                        <LazyImage
+                          parent_id={deterministic_dom_id("trending_widget_thumb", media.path)}
+                          class="w-full aspect-video rounded-field object-cover"
+                          fallback_class="size-6 text-muted"
+                          src={preview_img}
+                          media={media}
+                          fallback_icon="ion:newspaper-outline"
+                        />
+                      </LinkLive>
+                    </Bonfire.UI.Common.OpenExternalLinkLive>
+                  {#match _}
+                {/case}
+              {/if}
+
+              <div class="flex items-center gap-1.5 min-w-0 type-caption text-subtle">
+                {#case e(media, :metadata, "favicon", nil) || Bonfire.Files.FaviconStore.favicon_url(media.path)}
+                  {#match favicon_url when is_binary(favicon_url)}
+                    {!-- LazyImage shows the fallback icon for a favicon not fetched yet; the wrapper sizes its w-full box --}
+                    <div class="size-3.5 shrink-0">
                       <LazyImage
-                        parent_id={deterministic_dom_id("trending_widget_thumb", media.path)}
-                        class="w-full aspect-video rounded-field object-cover"
-                        fallback_class="size-6 text-muted"
-                        src={preview_img}
+                        parent_id={deterministic_dom_id("trending_link_favicon", media.path)}
+                        class="size-3.5 rounded-sm object-contain"
+                        fallback_class="size-3.5"
+                        src={favicon_url}
                         media={media}
+                        disable_lazy
                         fallback_icon="ion:newspaper-outline"
                       />
-                    </LinkLive>
-                  </Bonfire.UI.Common.OpenExternalLinkLive>
-                {#match _}
-              {/case}
-            {/if}
+                    </div>
+                  {#match _}
+                    <#Icon iconify="ion:newspaper-outline" class="size-3.5 shrink-0" />
+                {/case}
+                <span class="truncate">{source(media)}</span>
+              </div>
 
-            {!-- Source: favicon and site name (or host) --}
-            <div class="flex items-center gap-1.5 min-w-0 type-caption text-subtle">
-              {#case e(media, :metadata, "favicon", nil) || Bonfire.Files.FaviconStore.favicon_url(media.path)}
-                {#match favicon_url when is_binary(favicon_url)}
-                  {!-- LazyImage, as the link card does, so a favicon not fetched yet shows the fallback icon instead of an empty gap --}
-                  {!-- sized wrapper as in the link card: LazyImage's own box is w-full --}
-                  <div class="size-3.5 shrink-0">
-                    <LazyImage
-                      parent_id={deterministic_dom_id("trending_link_favicon", media.path)}
-                      class="size-3.5 rounded-sm object-contain"
-                      fallback_class="size-3.5"
-                      src={favicon_url}
-                      media={media}
-                      disable_lazy
-                      fallback_icon="ion:newspaper-outline"
-                    />
-                  </div>
-                {#match _}
-                  <#Icon iconify="ion:newspaper-outline" class="size-3.5 shrink-0" />
-              {/case}
-              <span class="truncate">{source(media)}</span>
-            </div>
+              <Bonfire.UI.Common.OpenExternalLinkLive id={deterministic_dom_id("trending_link", media.path)}>
+                <LinkLive
+                  to={media.path}
+                  target="_blank"
+                  class={
+                    "link link-hover text-pretty",
+                    "type-heading line-clamp-3": index == 0,
+                    "type-name line-clamp-2": index != 0
+                  }
+                >
+                  {Bonfire.Files.Media.media_label_and_alt(media)}
+                </LinkLive>
+              </Bonfire.UI.Common.OpenExternalLinkLive>
 
-            <Bonfire.UI.Common.OpenExternalLinkLive id={deterministic_dom_id("trending_link", media.path)}>
+              {!-- share count, linking to the newest post using it --}
               <LinkLive
-                to={media.path}
-                target="_blank"
-                class={
-                  "link link-hover text-pretty",
-                  "type-heading line-clamp-3": index == 0,
-                  "type-name line-clamp-2": index != 0
-                }
+                to={URIs.path(e(media, :newest_activity_id, nil))}
+                class="self-start type-caption text-muted hover:underline"
+                opts={[
+                  "data-role": "shares_count",
+                  title: shares_title(media)
+                ]}
               >
-                {Bonfire.Files.Media.media_label_and_alt(media)}
+                {lp("%{count} share", "%{count} shares", shares(media), count: shares(media))}
               </LinkLive>
-            </Bonfire.UI.Common.OpenExternalLinkLive>
-
-            {!-- One number: how many times it was shared, linking to the newest post using it --}
-            <LinkLive
-              to={URIs.path(e(media, :newest_activity_id, nil))}
-              class="self-start type-caption text-muted hover:underline"
-              opts={[
-                "data-role": "shares_count",
-                title: shares_title(media)
-              ]}
-            >
-              {lp("%{count} share", "%{count} shares", shares(media), count: shares(media))}
-            </LinkLive>
+            </div>
           </article>
         {/for}
       </div>

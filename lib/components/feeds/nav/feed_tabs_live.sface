@@ -19,11 +19,7 @@
       <LinkLive
         to={preset.href}
         opts={[id: "feed-tab-" <> preset.slug, "aria-current": if(preset.active?, do: "page", else: nil)]}
-        class={[
-          "flex h-8 items-center whitespace-nowrap rounded-full px-3 text-sm font-bold transition-[color,background-color,scale] duration-150 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-base-content",
-          "bg-base-content text-base-100": preset.active?,
-          "text-subtle hover:bg-fill hover:text-base-content": not preset.active?
-        ]}
+        class="tab-chip"
       >
         {preset.name}
       </LinkLive>
