@@ -51,7 +51,9 @@ defmodule Bonfire.UI.Social.WidgetTrendingLinksLive do
     used = lp("Used in %{count} post", "Used in %{count} posts", posts, count: posts)
 
     if boosts > 0,
-      do: used <> ", " <> lp("boosted %{count} time", "boosted %{count} times", boosts, count: boosts),
+      do:
+        used <>
+          ", " <> lp("boosted %{count} time", "boosted %{count} times", boosts, count: boosts),
       else: used
   end
 end

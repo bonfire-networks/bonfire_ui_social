@@ -12,7 +12,12 @@
                     id={deterministic_dom_id("trending_link_thumb", media.path)}
                     class="mb-2"
                   >
-                    <LinkLive to={media.path} target="_blank" class="block" opts={["aria-hidden": "true", tabindex: "-1"]}>
+                    <LinkLive
+                      to={media.path}
+                      target="_blank"
+                      class="block"
+                      opts={["aria-hidden": "true", tabindex: "-1"]}
+                    >
                       <LazyImage
                         parent_id={deterministic_dom_id("trending_widget_thumb", media.path)}
                         class="w-full aspect-video rounded-field object-cover"

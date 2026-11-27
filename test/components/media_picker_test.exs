@@ -41,7 +41,10 @@ defmodule Bonfire.UI.Social.MediaPickerTest do
 
   defp entry(media), do: "[data-role=upload_entry][data-media-id='#{media.id}']"
 
-  test "lists my media as tiles, each with Insert and Attach, without the use count", %{conn: conn, mine: mine} do
+  test "lists my media as tiles, each with Insert and Attach, without the use count", %{
+    conn: conn,
+    mine: mine
+  } do
     other = fake_user!()
     theirs = Fake.upload_media(:images, other, "theirs")
     Fake.post_with_media(other, theirs, "their post")
@@ -57,6 +60,7 @@ defmodule Bonfire.UI.Social.MediaPickerTest do
 
       assert has_element?(composer, "#{tile} [data-role=pick_insert]")
       assert has_element?(composer, "#{tile} [data-role=pick_attach]")
+
       # the picker's tiles are only the media: no "Used in N" (it stays on `/media`, `media_grid_test.exs`)
       refute has_element?(composer, "#{tile} [data-role=used_count]")
       refute has_element?(composer, "[data-id=media_picker] [data-media-id='#{theirs.id}']")
@@ -64,7 +68,11 @@ defmodule Bonfire.UI.Social.MediaPickerTest do
   end
 
   # a row of media type pills, one type at a time, sent as the feed's tab filter buttons send it
-  test "the media type pills narrow the tiles, and All lists them again", %{conn: conn, me: me, mine: mine} do
+  test "the media type pills narrow the tiles, and All lists them again", %{
+    conn: conn,
+    me: me,
+    mine: mine
+  } do
     audio = Fake.upload_media(:audio, me, "a recording")
     Fake.post_with_media(me, audio, "a recording")
 
@@ -97,11 +105,16 @@ defmodule Bonfire.UI.Social.MediaPickerTest do
     Fake.post_with_media(me, audio, "a recording")
 
     with_picker(conn, fn composer ->
-      row = "[data-id=media_picker] [data-media-id='#{audio.id}'] [data-role=media_row][data-preview=audio]"
+      row =
+        "[data-id=media_picker] [data-media-id='#{audio.id}'] [data-role=media_row][data-preview=audio]"
 
       assert has_element?(composer, "#{row} [data-role=media_play]")
       assert has_element?(composer, row, "Audio")
-      refute has_element?(composer, "[data-id=media_picker] [data-media-id='#{audio.id}'] [data-role=audio_player]")
+
+      refute has_element?(
+               composer,
+               "[data-id=media_picker] [data-media-id='#{audio.id}'] [data-role=audio_player]"
+             )
     end)
   end
 
@@ -130,9 +143,11 @@ defmodule Bonfire.UI.Social.MediaPickerTest do
 
     with_picker(conn, fn composer ->
       tile = &"[data-id=media_picker] [data-id=media_tile][data-media-id='#{&1.id}']"
+
       composer
       |> element("[data-id=media_picker] [data-role=media_type_pill][data-type=video]")
       |> render_click()
+
       render_async(composer)
 
       assert has_element?(composer, tile.(video))
