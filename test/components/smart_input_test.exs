@@ -552,7 +552,9 @@ defmodule Bonfire.UI.Social.SmartInputTest do
       assert MapSet.member?(stored_files(me), path)
     end
 
-    for fixture <- ["gps.heic", "gps.avif"] do
+    # the picker only offers the formats this machine can decode (libheif's HEVC decoder for HEIC is a separate package on some systems)
+    for {fixture, format} <- [{"gps.heic", :heic}, {"gps.avif", :avif}],
+        Bonfire.Files.MediaEdit.capabilities()[format] do
       test "#{fixture} can be attached in the composer and is published as a WebP with no GPS",
            %{conn: conn, me: me} do
         content = "post with #{unquote(fixture)} #{System.unique_integer()}"
