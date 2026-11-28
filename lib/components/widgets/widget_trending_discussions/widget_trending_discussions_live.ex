@@ -16,17 +16,12 @@ defmodule Bonfire.UI.Social.WidgetTrendingDiscussionsLive do
     current_user_required: true,
     props: [limit: 5],
     # carousel or stacked: a member's choice, or the instance's default
-    settings: Bonfire.UI.Social.WidgetTrendingDiscussionsLayoutLive,
+    settings: Bonfire.UI.Common.WidgetLayoutLive,
     skeleton: :list
   )
 
   @doc "The layout the viewer chose: `\"stacked\"`, else `\"carousel\"`."
-  def layout(context) do
-    case Bonfire.Common.Settings.get([__MODULE__, :layout], "carousel", context) do
-      layout when layout in ["stacked", :stacked] -> "stacked"
-      _ -> "carousel"
-    end
-  end
+  def layout(context), do: Bonfire.UI.Common.WidgetLayoutLive.layout(__MODULE__, context, "carousel")
 
   prop limit, :integer, default: 3
   prop widget_title, :string, default: nil
